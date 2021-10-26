@@ -1,17 +1,23 @@
-import Head from 'next/head'
-import { AppProps } from 'next/app'
-import '../styles/index.css'
+import React from "react";
+import Head from "next/head";
+import { AppProps } from "next/app";
+import "../styles/index.css";
+import BaseLayout from "../components/layouts/BaseLayout";
 
-function MyApp({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps }: AppProps) {
+  const getLayout =
+    // @ts-ignore
+    Component.getLayout || ((page) => <BaseLayout>{page}</BaseLayout>);
+
   return (
-    <>
+    <React.Fragment>
       <Head>
         <title>NextJS TailwindCSS TypeScript Starter</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <Component {...pageProps} />
-    </>
-  )
+      {getLayout(<Component {...pageProps} />)}
+    </React.Fragment>
+  );
 }
 
-export default MyApp
+export default App;
