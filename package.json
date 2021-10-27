@@ -17,6 +17,7 @@
     "dayjs": "^1.10.7",
     "framer-motion": "^4.1.17",
     "next": "11.1.2",
+    "nprogress": "^0.2.0",
     "plyr": "^3.6.9",
     "react": "17.0.2",
     "react-dom": "17.0.2",

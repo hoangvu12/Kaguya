@@ -1,9 +1,16 @@
-import Head from "@/components/shared/Head";
-import { AnimateSharedLayout } from "framer-motion";
 import { AppProps } from "next/app";
 import React from "react";
-import BaseLayout from "../components/layouts/BaseLayout";
-import "../styles/index.css";
+import Router from "next/router";
+import NProgress from "nprogress";
+
+import BaseLayout from "@/components/layouts/BaseLayout";
+import Head from "@/components/shared/Head";
+
+import "@/styles/index.css";
+
+Router.events.on("routeChangeStart", NProgress.start);
+Router.events.on("routeChangeComplete", NProgress.done);
+Router.events.on("routeChangeError", NProgress.done);
 
 function App({ Component, pageProps }: AppProps) {
   const getLayout =

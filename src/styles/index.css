@@ -1,8 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Fira+Sans&family=Nunito+Sans&display=swap");
-@import "./swiper.css";
-@import "./popup.css";
+
 @import "tailwindcss/base";
 @import "tailwindcss/components";
+
+@import "./swiper.css";
+@import "./popup.css";
+@import "./progress.css";
 
 body {
   font-family: "Fira Sans", Arial, sans-serif;
