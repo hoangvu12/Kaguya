@@ -1,3 +1,11 @@
+import {
+  CHARACTERS_ROLES,
+  FORMATS,
+  GENRES,
+  SEASONS,
+  STATUSES,
+} from "./constants";
+
 export interface AnimeTitle {
   romaji: string;
   english: string;
@@ -17,8 +25,9 @@ export interface CharacterImage {
   medium: string;
 }
 
+export type CharacterRole = typeof CHARACTERS_ROLES[number];
 export interface Character {
-  role: string;
+  role: CharacterRole;
   name: string;
   image: CharacterImage;
 }
@@ -43,6 +52,11 @@ export interface RelationAnime {
   anime: Anime;
 }
 
+export type Season = typeof SEASONS[number];
+export type Format = typeof FORMATS[number];
+export type Status = typeof STATUSES[number];
+export type Genre = typeof GENRES[number];
+
 export interface Anime {
   title: AnimeTitle;
   cover_image: AnimeCoverImage;
@@ -51,12 +65,12 @@ export interface Anime {
   popularity?: number;
   favourites?: number;
   banner_image?: string;
-  season?: string;
+  season?: Season;
   season_year?: number;
-  format?: string;
-  status?: string;
+  format?: Format;
+  status?: Status;
   duration?: number;
-  genres?: string[];
+  genres?: Genre[];
   is_adult?: boolean;
   country_of_origin?: string;
   average_score?: number;

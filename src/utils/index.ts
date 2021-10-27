@@ -1,3 +1,16 @@
+import {
+  CHARACTERS_ROLES,
+  FORMATS,
+  GENRES,
+  SEASONS,
+  STATUSES,
+  VIETNAMESE_CHARACTERS_ROLES,
+  VIETNAMESE_FORMATS,
+  VIETNAMESE_GENRES,
+  VIETNAMESE_SEASONS,
+  VIETNAMESE_STATUSES,
+} from "@/constants";
+
 export const randomElement = <T>(array: T[]): T => {
   const index = Math.floor(Math.random() * array.length);
 
@@ -34,7 +47,11 @@ export function contrast(rgb1: number[], rgb2: number[]) {
 export function hexToRgb(hex: string) {
   var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result
-    ? [parseInt(result[1], 16), parseInt(result[2], 16),parseInt(result[3], 16)]
+    ? [
+        parseInt(result[1], 16),
+        parseInt(result[2], 16),
+        parseInt(result[3], 16),
+      ]
     : null;
 }
 
@@ -46,10 +63,52 @@ export const isColorVisible = (
   const textColorRgb = hexToRgb(textColor);
   const backgroundColorRgb = hexToRgb(backgroundColor);
 
-  return (
-    contrast(
-      textColorRgb,
-      backgroundColorRgb
-    ) >= ratio
-  );
+  return contrast(textColorRgb, backgroundColorRgb) >= ratio;
+};
+
+type ConvertType = "season" | "format" | "status" | "genre" | "characterRole";
+
+const constants = {
+  season: {
+    from: SEASONS,
+    to: VIETNAMESE_SEASONS,
+  },
+
+  format: {
+    from: FORMATS,
+    to: VIETNAMESE_FORMATS,
+  },
+
+  status: {
+    from: STATUSES,
+    to: VIETNAMESE_STATUSES,
+  },
+
+  genre: {
+    from: GENRES,
+    to: VIETNAMESE_GENRES,
+  },
+
+  characterRole: {
+    from: CHARACTERS_ROLES,
+    to: VIETNAMESE_CHARACTERS_ROLES,
+  },
+};
+
+export const convert = (
+  text: string,
+  type: ConvertType,
+  reverse: boolean = false
+) => {
+  const { from, to } = constants[type];
+
+  if (reverse) {
+    const index = to.findIndex((el) => el === text);
+
+    return from[index];
+  }
+
+  const index = from.findIndex((el) => el === text);
+
+  return to[index];
 };

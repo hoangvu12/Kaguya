@@ -1,6 +1,7 @@
 import { Character } from "@/types";
 import React from "react";
 import Image from "@/components/shared/Image";
+import { convert } from "@/utils";
 
 interface CharacterCardProps {
   character: Character;
@@ -14,9 +15,9 @@ const CharacterCard: React.FC<CharacterCardProps> = ({ character }) => {
       </div>
 
       <div className="py-2 flex flex-col justify-between">
-        <p>{character.name}</p>
+        <p className="font-semibold">{character.name}</p>
 
-        <p>{character.role}</p>
+        <p>{convert(character.role, "characterRole")}</p>
       </div>
     </div>
   );

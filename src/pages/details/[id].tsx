@@ -7,9 +7,11 @@ import DotList from "@/components/shared/DotList";
 import Head from "@/components/shared/Head";
 import Image from "@/components/shared/Image";
 import InfoItem from "@/components/shared/InfoItem";
+import { FORMATS, VIETNAMESE_FORMATS } from "@/constants";
 import dayjs from "@/lib/dayjs";
 import supabase from "@/lib/supabase";
 import { Anime } from "@/types";
+import { convert } from "@/utils";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import React from "react";
 import { BsFillPlayFill } from "react-icons/bs";
@@ -55,6 +57,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                 <p className="text-3xl font-semibold">
                   {anime.title.user_preferred}
                 </p>
+
                 {nextAiringSchedule && (
                   <p className="text-primary-300">
                     Tập tiếp theo (dự kiến): Tập {nextAiringSchedule.episode} -{" "}
@@ -64,10 +67,10 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
               </div>
 
               <DotList dotClassName="bg-gray-200">
-                <p>{anime.format}</p>
-                <p>{anime.duration} phút / tập</p>
+                <p>{convert(anime.format, "format")}</p>
+                <p>{anime.duration} phút</p>
                 <p>
-                  {anime.season} {anime.season_year}
+                  {convert(anime.season, "season")} {anime.season_year}
                 </p>
               </DotList>
 
@@ -79,15 +82,21 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
         <div className="space-y-8 md:space-y-0 px-4 md:grid md:grid-cols-10 w-full min-h-screen mt-8 sm:px-12 gap-8">
           <div className="md:col-span-2 bg-background-900 rounded-md p-4 space-y-4 h-[max-content]">
             <InfoItem title="Số tập" value={anime.total_episodes} />
-            <InfoItem title="Thời lượng" value={anime.duration} />
-            <InfoItem title="Tình trạng" value={anime.status} />
+            <InfoItem title="Thời lượng" value={`${anime.duration} phút`} />
+            <InfoItem
+              title="Tình trạng"
+              value={convert(anime.status, "status")}
+            />
             <InfoItem
               title="Mùa"
-              value={`${anime.season} ${anime.season_year}`}
+              value={`${convert(anime.season, "season")} ${anime.season_year}`}
             />
             <InfoItem
               title="Thể loại"
-              value={anime.genres.slice(0, 3).join(", ")}
+              value={anime.genres
+                .slice(0, 3)
+                .map((genre) => convert(genre, "genre"))
+                .join(", ")}
             />
             <InfoItem title="Điểm dánh giá" value={anime.average_score + "%"} />
             <InfoItem title="Nổi bật" value={anime.popularity} />
