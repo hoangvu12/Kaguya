@@ -45,7 +45,9 @@ const Header = () => {
       )}
     >
       <div className="relative h-2/3 w-10">
-        <Image src="/logo.png" layout="fill" objectFit="contain" />
+        <NavItem href="/">
+          {() => <Image src="/logo.png" layout="fill" objectFit="contain" />}
+        </NavItem>
       </div>
 
       <div className="flex items-center space-x-6 font-semibold text-typography-secondary">
