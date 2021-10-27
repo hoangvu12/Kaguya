@@ -7,11 +7,9 @@ import DotList from "@/components/shared/DotList";
 import Head from "@/components/shared/Head";
 import Image from "@/components/shared/Image";
 import InfoItem from "@/components/shared/InfoItem";
-import data from "@/data.json";
 import dayjs from "@/lib/dayjs";
 import supabase from "@/lib/supabase";
 import { Anime } from "@/types";
-import { motion } from "framer-motion";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import React from "react";
 import { BsFillPlayFill } from "react-icons/bs";
@@ -115,7 +113,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
             {!!anime?.relations?.length && (
               <DetailsSection
                 title="Anime liên quan"
-                className="flex justify-between flex-wrap"
+                className="flex flex-wrap gap-y-8"
               >
                 <AnimeList
                   data={anime.relations.map((relation) => relation.anime)}
@@ -150,7 +148,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         *,
         airing_schedule(*),
         characters(*),
-        recommendations!original_id(anime:recommend_id(*))
+        recommendations!original_id(anime:recommend_id(*)),
         relations!original_id(anime:relation_id(*))
       `
     )
