@@ -3,7 +3,7 @@ import Image from "@/components/shared/Image";
 import Popup from "@/components/shared/Popup";
 import TextIcon from "@/components/shared/TextIcon";
 import DotList from "@/components/shared/DotList";
-import { isColorVisible } from "@/utils";
+import { isColorVisible, numberWithCommas } from "@/utils";
 import { Anime } from "@/types";
 
 import classNames from "classnames";
@@ -61,7 +61,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({ anime, className }) => {
           </TextIcon>
 
           <TextIcon LeftIcon={AiFillHeart} iconClassName="text-red-400">
-            <p>{anime.favourites}</p>
+            <p>{numberWithCommas(anime.favourites)}</p>
           </TextIcon>
         </div>
       </div>

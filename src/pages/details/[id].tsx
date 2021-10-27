@@ -7,11 +7,10 @@ import DotList from "@/components/shared/DotList";
 import Head from "@/components/shared/Head";
 import Image from "@/components/shared/Image";
 import InfoItem from "@/components/shared/InfoItem";
-import { FORMATS, VIETNAMESE_FORMATS } from "@/constants";
 import dayjs from "@/lib/dayjs";
 import supabase from "@/lib/supabase";
 import { Anime } from "@/types";
-import { convert } from "@/utils";
+import { convert, numberWithCommas } from "@/utils";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import React from "react";
 import { BsFillPlayFill } from "react-icons/bs";
@@ -49,7 +48,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
             </div>
 
             <div className="text-center md:text-left flex flex-col items-center md:items-start py-4 mt-4 md:-mt-16">
-              <Button primary LeftIcon={BsFillPlayFill} className="mb-4">
+              <Button primary LeftIcon={BsFillPlayFill} className="mb-8">
                 <p>Xem ngay</p>
               </Button>
 
@@ -99,9 +98,18 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                 .join(", ")}
             />
             <InfoItem title="Điểm dánh giá" value={anime.average_score + "%"} />
-            <InfoItem title="Nổi bật" value={anime.popularity} />
-            <InfoItem title="Yêu thích" value={anime.favourites} />
-            <InfoItem title="Xu hướng" value={anime.trending} />
+            <InfoItem
+              title="Nổi bật"
+              value={numberWithCommas(anime.popularity)}
+            />
+            <InfoItem
+              title="Yêu thích"
+              value={numberWithCommas(anime.favourites)}
+            />
+            <InfoItem
+              title="Xu hướng"
+              value={numberWithCommas(anime.trending)}
+            />
             <InfoItem
               title="Studio"
               value={anime.studios.slice(0, 3).join(", ")}
