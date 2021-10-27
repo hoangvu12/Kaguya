@@ -1,13 +1,16 @@
+import React, { useState } from "react";
+
 import BannerSwiper from "@/components/seldom/BannerSwiper";
 import Image from "@/components/shared/Image";
 import { SwiperProps } from "@/components/shared/Swiper";
 import TextIcon from "@/components/shared/TextIcon";
+import CircleButton from "@/components/shared/CircleButton";
+
 import anime from "@/data.json";
 import { Anime } from "@/types";
-import React, { useState } from "react";
+
 import { AiFillHeart, AiFillPlayCircle } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
-import CircleButton from "../shared/CircleButton";
 
 const trendingAnime = anime
   .sort((a, b) => b.trending - a.trending)

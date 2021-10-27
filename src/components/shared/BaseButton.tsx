@@ -6,58 +6,61 @@ export interface BaseButtonProps
   LeftIcon?: React.ComponentType<{ className: string }>;
   RightIcon?: React.ComponentType<{ className: string }>;
   iconClassName?: string;
-  as?: string | React.ComponentType<{ className: string }>;
   primary?: boolean;
   outline?: boolean;
 }
 
-const BaseButton: React.FC<BaseButtonProps> = ({
-  className,
-  iconClassName,
-  LeftIcon,
-  RightIcon,
-  as: Component = "button",
-  primary = false,
-  outline = false,
-  children,
-  ...props
-}) => {
-  // If class name contains 'w-' or 'h-' then override default className
-  const iconClass =
-    !iconClassName?.includes("w-") || !iconClassName?.includes("h-")
-      ? classNames("w-6 h-6", iconClassName)
-      : iconClassName;
+const BaseButton = React.forwardRef<HTMLButtonElement, BaseButtonProps>(
+  (props, ref) => {
+    const {
+      className,
+      iconClassName,
+      LeftIcon,
+      RightIcon,
+      primary = false,
+      outline = false,
+      children,
+      ...rest
+    } = props;
 
-  let buttonClassName;
+    // If class name contains 'w-' or 'h-' then override default className
+    const iconClass =
+      !iconClassName?.includes("w-") || !iconClassName?.includes("h-")
+        ? classNames("w-6 h-6", iconClassName)
+        : iconClassName;
 
-  if (primary) {
-    if (outline) {
-      buttonClassName = "border-2 border-primary-500";
+    let buttonClassName;
+
+    if (primary) {
+      if (outline) {
+        buttonClassName = "border-2 border-primary-500";
+      } else {
+        buttonClassName = "bg-primary-500";
+      }
     } else {
-      buttonClassName = "bg-primary-500";
+      if (outline) {
+        buttonClassName = "border-2 border-white";
+      } else {
+        buttonClassName = "bg-white";
+      }
     }
-  } else {
-    if (outline) {
-      buttonClassName = "border-2 border-white";
-    } else {
-      buttonClassName = "bg-white";
-    }
+
+    return (
+      <button
+        className={classNames(
+          "transition duration-300",
+          className,
+          buttonClassName
+        )}
+        ref={ref}
+        {...rest}
+      >
+        {LeftIcon && <LeftIcon className={iconClass} />}
+        {children}
+        {RightIcon && <RightIcon className={iconClass} />}
+      </button>
+    );
   }
-
-  return (
-    <Component
-      className={classNames(
-        "transition duration-300",
-        className,
-        buttonClassName
-      )}
-      {...props}
-    >
-      {LeftIcon && <LeftIcon className={iconClass} />}
-      {children}
-      {RightIcon && <RightIcon className={iconClass} />}
-    </Component>
-  );
-};
+);
 
 export default BaseButton;

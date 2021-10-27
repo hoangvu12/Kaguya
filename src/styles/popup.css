@@ -1,0 +1,33 @@
+.popup__arrow,
+.popup__arrow::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: inherit;
+}
+
+.popup__arrow {
+  visibility: hidden;
+}
+
+.popup__arrow::before {
+  visibility: visible;
+  content: "";
+  transform: rotate(45deg);
+}
+
+.popup[data-popper-placement^="top"] > .popup__arrow {
+  bottom: -4px;
+}
+
+.popup[data-popper-placement^="bottom"] > .popup__arrow {
+  top: -4px;
+}
+
+.popup[data-popper-placement^="left"] > .popup__arrow {
+  right: -4px;
+}
+
+.popup[data-popper-placement^="right"] > .popup__arrow {
+  left: -4px;
+}

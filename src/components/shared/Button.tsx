@@ -9,7 +9,10 @@ const Button: React.FC<BaseButtonProps> = ({
 }) => {
   return (
     <BaseButton
-      className={classNames("px-3 py-2 rounded-md", className)}
+      className={classNames(
+        "flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-opacity-80",
+        className
+      )}
       {...props}
     >
       {children}

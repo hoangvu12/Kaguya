@@ -34,41 +34,40 @@ export interface AiringSchedule {
 
 export interface Episode {
   name: string;
-  episode_id: string;
-  source_id: string;
+  episode_id: number;
+  source_id: number;
   source: string;
 }
 
 export interface RelationAnime {
-  relation_type: string;
   anime: Anime;
 }
 
 export interface Anime {
   title: AnimeTitle;
   cover_image: AnimeCoverImage;
-  start_date: number;
-  trending: number;
-  popularity: number;
-  favourites: number;
+  start_date?: number;
+  trending?: number;
+  popularity?: number;
+  favourites?: number;
   banner_image?: string;
-  season: string;
-  season_year: number;
-  format: string;
-  status: string;
-  duration: number;
-  genres: string[];
-  is_adult: boolean;
-  country_of_origin: string;
-  average_score: number;
-  studios: string[];
-  characters: Character[];
-  relations: RelationAnime[];
-  recommendations: Recommendation[];
-  airing_schedule: AiringSchedule[];
+  season?: string;
+  season_year?: number;
+  format?: string;
+  status?: string;
+  duration?: number;
+  genres?: string[];
+  is_adult?: boolean;
+  country_of_origin?: string;
+  average_score?: number;
+  studios?: string[];
+  characters?: Character[];
+  relations?: RelationAnime[];
+  recommendations?: Recommendation[];
+  airing_schedule?: AiringSchedule[];
   total_episodes?: number;
-  ani_id: number;
-  description: string;
-  episodes: Episode[];
-  source_d: string;
+  ani_id?: number;
+  description?: string;
+  episodes?: Episode[];
+  source_id?: number;
 }
