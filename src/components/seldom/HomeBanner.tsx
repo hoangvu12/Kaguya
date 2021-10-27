@@ -12,12 +12,14 @@ import { Anime } from "@/types";
 import { AiFillHeart, AiFillPlayCircle } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
 import DotList from "../shared/DotList";
+import { useRouter } from "next/dist/client/router";
 
 const trendingAnime = anime
   .sort((a, b) => b.trending - a.trending)
   .slice(0, 15);
 
 const HomeBanner = () => {
+  const router = useRouter();
   const [activeAnime, setActiveAnime] = useState<Anime>(
     trendingAnime[0] as any
   );
@@ -55,7 +57,7 @@ const HomeBanner = () => {
 
               <DotList>
                 {activeAnime.genres.slice(0, 3).map((genre) => (
-                  <p>{genre}</p>
+                  <p key={genre}>{genre}</p>
                 ))}
               </DotList>
             </div>
@@ -68,6 +70,9 @@ const HomeBanner = () => {
 
         <CircleButton
           LeftIcon={AiFillPlayCircle}
+          onClick={() => {
+            router.push(`/details/${activeAnime.ani_id}`);
+          }}
           outline
           className="absolute left-2/3 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100"
           iconClassName="w-16 h-16"
