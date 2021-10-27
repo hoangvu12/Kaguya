@@ -11,6 +11,7 @@ import { Anime } from "@/types";
 
 import { AiFillHeart, AiFillPlayCircle } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
+import DotList from "../shared/DotList";
 
 const trendingAnime = anime
   .sort((a, b) => b.trending - a.trending)
@@ -52,7 +53,11 @@ const HomeBanner = () => {
                 <p>{activeAnime.favourites}</p>
               </TextIcon>
 
-              <p>{activeAnime.genres.slice(0, 3).join(" | ")}</p>
+              <DotList>
+                {activeAnime.genres.slice(0, 3).map((genre) => (
+                  <p>{genre}</p>
+                ))}
+              </DotList>
             </div>
 
             <p className="mt-2 text-base text-typography-secondary line-clamp-5">
