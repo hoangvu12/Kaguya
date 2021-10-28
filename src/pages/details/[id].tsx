@@ -5,8 +5,8 @@ import Button from "@/components/shared/Button";
 import CharacterCard from "@/components/shared/CharacterCard";
 import DotList from "@/components/shared/DotList";
 import Head from "@/components/shared/Head";
-import Image from "@/components/shared/Image";
 import InfoItem from "@/components/shared/InfoItem";
+import PlainAnimeCard from "@/components/shared/PlainAnimeCard";
 import dayjs from "@/lib/dayjs";
 import supabase from "@/lib/supabase";
 import { Anime } from "@/types";
@@ -38,14 +38,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
         <div className="relative px-4 sm:px-12 z-10 bg-background-900 pb-16">
           <div className="flex flex-col md:flex-row md:space-x-6">
             <div className="flex-shrink-0 relative left-1/2 -translate-x-1/2 md:static md:left-0 md:-translate-x-0 w-[186px] -mt-20">
-              <div className="relative aspect-w-9 aspect-h-16">
-                <Image
-                  src={anime.cover_image.extra_large}
-                  layout="fill"
-                  objectFit="cover"
-                  alt={`${anime.title.user_preferred} cover`}
-                />
-              </div>
+              <PlainAnimeCard anime={anime} />
             </div>
 
             <div className="text-center md:text-left flex flex-col items-center md:items-start py-4 mt-4 md:-mt-16">

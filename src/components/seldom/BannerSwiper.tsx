@@ -3,6 +3,7 @@ import { Anime } from "@/types";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import React from "react";
+import PlainAnimeCard from "../shared/PlainAnimeCard";
 
 interface BannerSwiperProps extends SwiperProps {
   data: Anime[];
@@ -34,16 +35,10 @@ const BannerSwiper: React.FC<BannerSwiperProps> = ({ data, ...props }) => {
           {({ isActive }) => (
             <motion.div
               variants={slideVariants}
-              className="relative w-full aspect-w-9 aspect-h-16"
+              className="w-full"
               animate={isActive ? "enter" : "exit"}
             >
-              <Image
-                objectFit="cover"
-                layout="fill"
-                className="rounded-md"
-                src={anime.cover_image.extra_large}
-                alt={`${anime.title.user_preferred} card`}
-              />
+              <PlainAnimeCard anime={anime} />
             </motion.div>
           )}
         </SwiperSlide>
