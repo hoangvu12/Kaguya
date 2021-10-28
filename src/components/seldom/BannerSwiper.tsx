@@ -42,6 +42,7 @@ const BannerSwiper: React.FC<BannerSwiperProps> = ({ data, ...props }) => {
                 layout="fill"
                 className="rounded-md"
                 src={anime.cover_image.extra_large}
+                alt={`${anime.title.user_preferred} card`}
               />
             </motion.div>
           )}

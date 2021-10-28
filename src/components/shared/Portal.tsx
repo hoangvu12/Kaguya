@@ -11,7 +11,7 @@ const Portal: React.FC<PortalProps> = ({ children, element }) => {
 
   useEffect(() => {
     setEl(element || document.querySelector("main"));
-  }, []);
+  }, [element]);
 
   return el ? ReactDOM.createPortal(children, el) : null;
 };

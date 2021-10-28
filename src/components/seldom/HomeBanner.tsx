@@ -37,6 +37,7 @@ const HomeBanner = () => {
             layout="fill"
             objectFit="cover"
             objectPosition="50% 35%"
+            alt={`${activeAnime.title.user_preferred} banner`}
           />
         )}
 

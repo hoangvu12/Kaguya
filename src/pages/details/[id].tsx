@@ -43,6 +43,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                   src={anime.cover_image.extra_large}
                   layout="fill"
                   objectFit="cover"
+                  alt={`${anime.title.user_preferred} cover`}
                 />
               </div>
             </div>

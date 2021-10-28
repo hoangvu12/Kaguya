@@ -41,6 +41,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({ anime, className }) => {
                 layout="fill"
                 objectFit="cover"
                 className="rounded-sm"
+                alt={`${anime.title.user_preferred} card`}
               />
             </div>
           </a>

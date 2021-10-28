@@ -46,7 +46,14 @@ const Header = () => {
     >
       <div className="relative h-2/3 w-10">
         <NavItem href="/">
-          {() => <Image src="/logo.png" layout="fill" objectFit="contain" />}
+          {() => (
+            <Image
+              src="/logo.png"
+              layout="fill"
+              objectFit="contain"
+              alt="logo"
+            />
+          )}
         </NavItem>
       </div>
 

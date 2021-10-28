@@ -24,4 +24,6 @@ const CircleButton = React.forwardRef<HTMLButtonElement, BaseButtonProps>(
   }
 );
 
+CircleButton.displayName = "CircleButton";
+
 export default CircleButton;
