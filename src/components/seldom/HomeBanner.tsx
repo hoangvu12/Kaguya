@@ -10,10 +10,11 @@ import DotList from "@/components/shared/DotList";
 
 import anime from "@/data.json";
 import { Anime } from "@/types";
-import { numberWithCommas, convert } from "@/utils";
+import { numberWithCommas } from "@/utils";
 
 import { AiFillHeart, AiFillPlayCircle } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
+import { convert } from "@/utils/anime";
 
 const trendingAnime = anime
   .sort((a, b) => b.trending - a.trending)

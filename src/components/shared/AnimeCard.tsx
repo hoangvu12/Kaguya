@@ -1,17 +1,15 @@
-import React from "react";
+import DotList from "@/components/shared/DotList";
 import Image from "@/components/shared/Image";
 import Popup from "@/components/shared/Popup";
 import TextIcon from "@/components/shared/TextIcon";
-import DotList from "@/components/shared/DotList";
-import { isColorVisible, numberWithCommas } from "@/utils";
 import { Anime } from "@/types";
-
+import { isColorVisible, numberWithCommas } from "@/utils";
+import { convert } from "@/utils/anime";
 import classNames from "classnames";
-import { motion } from "framer-motion";
 import Link from "next/link";
-
-import { MdTagFaces } from "react-icons/md";
+import React from "react";
 import { AiFillHeart } from "react-icons/ai";
+import { MdTagFaces } from "react-icons/md";
 
 interface AnimeCardProps {
   anime: Anime;
@@ -76,7 +74,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({ anime, className }) => {
             }}
             key={genre}
           >
-            {genre}
+            {convert(genre, "genre")}
           </p>
         ))}
       </DotList>

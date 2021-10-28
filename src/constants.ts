@@ -62,27 +62,7 @@ export const VIETNAMESE_STATUSES = [
   "Đã hủy bỏ",
   "Tạm hoãn",
 ] as const;
-export const VIETNAMESE_GENRES = [
-  "Hành động",
-  "Phiêu lưu",
-  "Hài hước",
-  "Drama",
-  "Ecchi",
-  "Fantasy",
-  "Hentai",
-  "Kinh dị",
-  "Mahou Shoujo",
-  "Mecha",
-  "Nhạc",
-  "Mystery",
-  "Psychological",
-  "Tình cảm",
-  "Sci-Fi",
-  "Đời thường",
-  "Thể thao",
-  "Siêu nhiên",
-  "Thriller",
-];
+
 export const VIETNAMESE_CHARACTERS_ROLES = [
   "Nhân vật chính",
   "Nhân vật phụ",
