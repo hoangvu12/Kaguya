@@ -1,18 +1,19 @@
 import React, { useState } from "react";
+import { useRouter } from "next/router";
 
 import BannerSwiper from "@/components/seldom/BannerSwiper";
 import Image from "@/components/shared/Image";
 import { SwiperProps } from "@/components/shared/Swiper";
 import TextIcon from "@/components/shared/TextIcon";
 import CircleButton from "@/components/shared/CircleButton";
+import DotList from "@/components/shared/DotList";
 
 import anime from "@/data.json";
 import { Anime } from "@/types";
+import { numberWithCommas, convert } from "@/utils";
 
 import { AiFillHeart, AiFillPlayCircle } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
-import DotList from "../shared/DotList";
-import { useRouter } from "next/dist/client/router";
 
 const trendingAnime = anime
   .sort((a, b) => b.trending - a.trending)
@@ -53,12 +54,12 @@ const HomeBanner = () => {
               </TextIcon>
 
               <TextIcon LeftIcon={AiFillHeart} iconClassName="text-red-400">
-                <p>{activeAnime.favourites}</p>
+                <p>{numberWithCommas(activeAnime.favourites)}</p>
               </TextIcon>
 
               <DotList>
                 {activeAnime.genres.slice(0, 3).map((genre) => (
-                  <p key={genre}>{genre}</p>
+                  <p key={genre}>{convert(genre, "genre")}</p>
                 ))}
               </DotList>
             </div>
