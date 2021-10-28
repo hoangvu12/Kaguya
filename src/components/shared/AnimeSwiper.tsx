@@ -1,28 +1,43 @@
+import supabase from "@/lib/supabase";
+import { Anime } from "@/types";
+import { SupabaseQueryFunction, useSupabaseQuery } from "@/utils/supabase";
+import { PostgrestError } from "@supabase/postgrest-js";
 import React from "react";
-import Swiper, { SwiperSlide } from "./Swiper";
-
-import data from "@/data.json";
-import { randomElements } from "@/utils";
+import { QueryFunction, QueryOptions, useQuery } from "react-query";
+import AnimeSwiperSkeleton from "../skeletons/AnimeSwiperSkeleton";
 import AnimeCard from "./AnimeCard";
+import Swiper, { SwiperSlide } from "./Swiper";
 
 interface AnimeSwiperProps {
   title: string;
   viewAllRedirect?: string;
+  query: {
+    key: string;
+    queryFn: SupabaseQueryFunction<Anime>;
+    options?: QueryOptions<Anime>;
+  };
 }
 
-// const randomAnime = randomElements(data, 1);
-
-// console.log(randomAnime);
-
 const AnimeSwiper: React.FC<AnimeSwiperProps> = (props) => {
-  const { title } = props;
+  const { title, query } = props;
+  const { data, isLoading } = useSupabaseQuery<Anime>(
+    query.key,
+    query.queryFn,
+    query.options
+  );
+
+  if (isLoading) {
+    return <AnimeSwiperSkeleton />;
+  }
+
+  if (!Array.isArray(data)) return null;
 
   return (
     <div className="px-12 space-y-4">
       <h1 className="uppercase text-2xl font-semibold">{title}</h1>
 
       <Swiper slidesPerGroup={6} speed={500}>
-        {data.slice(0, 10).map((anime, index) => (
+        {data.map((anime, index) => (
           <SwiperSlide key={index}>
             <AnimeCard anime={anime} />
           </SwiperSlide>

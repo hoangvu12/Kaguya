@@ -1,33 +1,39 @@
-import React, { useState } from "react";
-import { useRouter } from "next/router";
-
 import BannerSwiper from "@/components/seldom/BannerSwiper";
+import CircleButton from "@/components/shared/CircleButton";
+import DotList from "@/components/shared/DotList";
 import Image from "@/components/shared/Image";
 import { SwiperProps } from "@/components/shared/Swiper";
 import TextIcon from "@/components/shared/TextIcon";
-import CircleButton from "@/components/shared/CircleButton";
-import DotList from "@/components/shared/DotList";
+import HomeBannerSkeleton from "@/components/skeletons/HomeBannerSkeleton";
 
-import anime from "@/data.json";
-import { Anime } from "@/types";
+import useTrendingAnime from "@/hooks/useTrendingAnime";
+
 import { numberWithCommas } from "@/utils";
+import { convert } from "@/utils/anime";
+
+import { Anime } from "@/types";
+
+import { useRouter } from "next/router";
+import React, { useState } from "react";
 
 import { AiFillHeart, AiFillPlayCircle } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
-import { convert } from "@/utils/anime";
-
-const trendingAnime = anime
-  .sort((a, b) => b.trending - a.trending)
-  .slice(0, 15);
 
 const HomeBanner = () => {
   const router = useRouter();
-  const [activeAnime, setActiveAnime] = useState<Anime>(
-    trendingAnime[0] as any
-  );
+
+  const { data: trendingAnime, isLoading } = useTrendingAnime();
+
+  const [index, setIndex] = useState<number>(0);
+
+  if (isLoading) {
+    return <HomeBannerSkeleton />;
+  }
+
+  const activeAnime = trendingAnime[index];
 
   const handleSlideChange: SwiperProps["onSlideChange"] = (swiper) => {
-    setActiveAnime(trendingAnime[swiper.realIndex] as any);
+    setIndex(swiper.realIndex);
   };
 
   return (
@@ -86,7 +92,7 @@ const HomeBanner = () => {
       <div className="px-12 pb-12 w-full">
         <BannerSwiper
           onSlideChange={handleSlideChange}
-          data={trendingAnime as any}
+          data={trendingAnime as Anime[]}
         />
       </div>
     </React.Fragment>

@@ -7,10 +7,21 @@ import BaseLayout from "@/components/layouts/BaseLayout";
 import Head from "@/components/shared/Head";
 
 import "@/styles/index.css";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 Router.events.on("routeChangeStart", NProgress.start);
 Router.events.on("routeChangeComplete", NProgress.done);
 Router.events.on("routeChangeError", NProgress.done);
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+    },
+  },
+});
 
 function App({ Component, pageProps }: AppProps) {
   const getLayout =
@@ -21,7 +32,9 @@ function App({ Component, pageProps }: AppProps) {
     <React.Fragment>
       <Head />
 
-      {getLayout(<Component {...pageProps} />)}
+      <QueryClientProvider client={queryClient}>
+        {getLayout(<Component {...pageProps} />)}
+      </QueryClientProvider>
     </React.Fragment>
   );
 }
