@@ -46,7 +46,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({ anime, className }) => {
         </Link>
       }
     >
-      <div className="flex items-center justify-between space-x-8">
+      <div className="flex items-center justify-between space-x-8 max-w-[500px]">
         <div>
           <p className="text-lg font-semibold">{anime.title.user_preferred}</p>
           <p className="text-base" style={{ color: primaryColor }}>
