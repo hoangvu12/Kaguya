@@ -10,11 +10,12 @@ import PlainAnimeCard from "@/components/shared/PlainAnimeCard";
 import dayjs from "@/lib/dayjs";
 import supabase from "@/lib/supabase";
 import { Anime } from "@/types";
-import { numberWithCommas } from "@/utils";
+import { isColorVisible, numberWithCommas } from "@/utils";
 import { convert } from "@/utils/anime";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import React from "react";
 import { BsFillPlayFill } from "react-icons/bs";
+import { GENRES } from "@/constants";
 
 interface DetailsPageProps {
   anime: Anime;
@@ -24,6 +25,10 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
   const nextAiringSchedule = anime.airing_schedule.length
     ? anime.airing_schedule[0]
     : null;
+
+  const color = isColorVisible(anime?.cover_image?.color || "#ffffff")
+    ? anime.cover_image.color
+    : "black";
 
   return (
     <React.Fragment>
@@ -36,7 +41,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
       <div className="pb-8">
         <DetailsBanner image={anime.banner_image} />
 
-        <div className="relative px-4 sm:px-12 z-10 bg-background-900 pb-16">
+        <div className="relative px-4 sm:px-12 z-10 bg-background-900 pb-4">
           <div className="flex flex-col md:flex-row md:space-x-6">
             <div className="flex-shrink-0 relative left-1/2 -translate-x-1/2 md:static md:left-0 md:-translate-x-0 w-[186px] -mt-20">
               <PlainAnimeCard anime={anime} />
@@ -47,52 +52,50 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                 <p>Xem ngay</p>
               </Button>
 
-              <div className="flex flex-col md:flex-row items-center space-x-4 space-y-2 mb-2">
-                <p className="text-3xl font-semibold">
-                  {anime.title.user_preferred}
-                </p>
+              <p className="text-3xl font-semibold mb-2">
+                {anime.title.user_preferred}
+              </p>
 
-                {nextAiringSchedule && (
-                  <p className="text-primary-300">
-                    Tập tiếp theo (dự kiến): Tập {nextAiringSchedule.episode} -{" "}
-                    {dayjs.unix(nextAiringSchedule.airing_at).fromNow()}
-                  </p>
-                )}
-              </div>
-
-              <DotList dotClassName="bg-gray-200">
-                <p>{convert(anime.format, "format")}</p>
-                <p>{anime.duration} phút</p>
-                <p>
-                  {convert(anime.season, "season")} {anime.season_year}
-                </p>
+              <DotList>
+                {anime.genres.map((genre) => (
+                  <p key={genre}>{convert(genre, "genre")}</p>
+                ))}
               </DotList>
 
               <p className="mt-4 text-gray-300">{anime.description}</p>
+
+              <div className="flex items-center gap-8 md:gap-x-16 mt-8">
+                <InfoItem title="Số tập" value={anime.total_episodes} />
+                <InfoItem title="Thời lượng" value={`${anime.duration} phút`} />
+                <InfoItem
+                  title="Tình trạng"
+                  value={convert(anime.status, "status")}
+                />
+                <InfoItem
+                  title="Giới hạn tuổi"
+                  value={anime.is_adult ? "18+" : ""}
+                />
+                <InfoItem
+                  className="!text-primary-300"
+                  title="Tập tiếp theo"
+                  value={`Tập ${nextAiringSchedule.episode}: ${dayjs
+                    .unix(nextAiringSchedule.airing_at)
+                    .fromNow()}`}
+                />
+              </div>
             </div>
           </div>
         </div>
 
         <div className="space-y-8 md:space-y-0 px-4 md:grid md:grid-cols-10 w-full min-h-screen mt-8 sm:px-12 gap-8">
           <div className="md:col-span-2 bg-background-900 rounded-md p-4 space-y-4 h-[max-content]">
-            <InfoItem title="Số tập" value={anime.total_episodes} />
-            <InfoItem title="Thời lượng" value={`${anime.duration} phút`} />
             <InfoItem
-              title="Tình trạng"
-              value={convert(anime.status, "status")}
+              title="Định dạng"
+              value={convert(anime.format, "format")}
             />
-            <InfoItem
-              title="Mùa"
-              value={`${convert(anime.season, "season")} ${anime.season_year}`}
-            />
-            <InfoItem
-              title="Thể loại"
-              value={anime.genres
-                .slice(0, 3)
-                .map((genre) => convert(genre, "genre"))
-                .join(", ")}
-            />
-            <InfoItem title="Điểm dánh giá" value={anime.average_score + "%"} />
+            <InfoItem title="English" value={anime.title.english} />
+            <InfoItem title="Native" value={anime.title.native} />
+            <InfoItem title="Romanji" value={anime.title.romaji} />
             <InfoItem
               title="Nổi bật"
               value={numberWithCommas(anime.popularity)}
@@ -108,6 +111,10 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
             <InfoItem
               title="Studio"
               value={anime.studios.slice(0, 3).join(", ")}
+            />
+            <InfoItem
+              title="Mùa"
+              value={`${convert(anime.season, "season")} ${anime.season_year}`}
             />
           </div>
           <div className="md:col-span-8 space-y-12">
