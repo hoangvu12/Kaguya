@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import React from "react";
 
-interface SkeletonProps {
+export interface SkeletonProps {
   className?: string;
 }
 

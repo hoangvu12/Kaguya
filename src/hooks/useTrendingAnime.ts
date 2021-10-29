@@ -6,7 +6,11 @@ export const QUERY_KEY = "trending-anime";
 
 const useTrendingAnime = () => {
   return useSupabaseQuery<Anime>(QUERY_KEY, () =>
-    supabase.from<Anime>("anime").select("*").limit(15)
+    supabase
+      .from<Anime>("anime")
+      .select("*")
+      .order("trending", { ascending: false })
+      .limit(15)
   );
 };
 

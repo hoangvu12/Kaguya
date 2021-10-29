@@ -1,26 +1,20 @@
+import AnimeSection from "@/components/seldom/AnimeSection";
 import HomeBanner from "@/components/seldom/HomeBanner";
 import AnimeSwiper from "@/components/shared/AnimeSwiper";
+import TopAnimeCard from "@/components/shared/TopAnimeCard";
+import TopAnimeList from "@/components/shared/TopAnimeList";
+import AnimeSwiperSkeleton from "@/components/skeletons/AnimeSwiperSkeleton";
 import supabase from "@/lib/supabase";
 import { Anime } from "@/types";
 import { getSeason } from "@/utils";
+import data from "@/data.json";
+import TopAnimeListSkeleton from "@/components/skeletons/TopAnimeListSkeleton";
 
 const currentSeason = getSeason();
 
 const swipers = [
   {
-    title: "Xu hướng",
-    query: {
-      key: "trending-anime",
-      queryFn: () =>
-        supabase
-          .from<Anime>("anime")
-          .select("*")
-          .order("trending", { ascending: false })
-          .limit(30),
-    },
-  },
-  {
-    title: "Nổi bật mùa này",
+    title: "Nổi bật",
     query: {
       key: "popular-anime",
       queryFn: () =>
@@ -34,7 +28,7 @@ const swipers = [
     },
   },
   {
-    title: "Được yêu thích mùa này",
+    title: "Được yêu thích",
     query: {
       key: "favourite-anime",
       queryFn: () =>
@@ -56,8 +50,32 @@ export default function Home() {
 
       <div className="space-y-8">
         {swipers.map((swiper) => (
-          <AnimeSwiper {...swiper} key={swiper.query.key} />
+          <AnimeSection
+            skeleton={AnimeSwiperSkeleton}
+            key={swiper.query.key}
+            {...swiper}
+          >
+            {(data) => <AnimeSwiper data={data as Anime[]} />}
+          </AnimeSection>
         ))}
+
+        <AnimeSection
+          skeleton={TopAnimeListSkeleton}
+          query={{
+            key: "top-anime",
+            queryFn: () =>
+              supabase
+                .from<Anime>("anime")
+                .select("*")
+                .order("average_score", { ascending: false })
+                .eq("season", currentSeason.season)
+                .eq("season_year", currentSeason.year)
+                .limit(10),
+          }}
+          title="Top anime"
+        >
+          {(data) => <TopAnimeList anime={data as Anime[]} />}
+        </AnimeSection>
       </div>
     </div>
   );

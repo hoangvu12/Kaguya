@@ -1,6 +1,6 @@
 import { Anime } from "@/types";
 import React from "react";
-import AnimeCard from "../shared/AnimeCard";
+import AnimeCard from "./AnimeCard";
 
 interface AnimeListProps {
   data: Anime[];
