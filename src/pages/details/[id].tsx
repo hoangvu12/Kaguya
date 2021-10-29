@@ -1,11 +1,11 @@
-import AnimeList from "@/components/shared/AnimeList";
+import CharacterCard from "@/components/seldom/CharacterCard";
 import DetailsBanner from "@/components/seldom/DetailsBanner";
 import DetailsSection from "@/components/seldom/DetailsSection";
+import InfoItem from "@/components/seldom/InfoItem";
+import AnimeList from "@/components/shared/AnimeList";
 import Button from "@/components/shared/Button";
-import CharacterCard from "@/components/seldom/CharacterCard";
 import DotList from "@/components/shared/DotList";
 import Head from "@/components/shared/Head";
-import InfoItem from "@/components/seldom/InfoItem";
 import PlainAnimeCard from "@/components/shared/PlainAnimeCard";
 import dayjs from "@/lib/dayjs";
 import supabase from "@/lib/supabase";
@@ -15,7 +15,6 @@ import { convert } from "@/utils/anime";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import React from "react";
 import { BsFillPlayFill } from "react-icons/bs";
-import { GENRES } from "@/constants";
 
 interface DetailsPageProps {
   anime: Anime;
@@ -23,12 +22,10 @@ interface DetailsPageProps {
 
 const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
   const nextAiringSchedule = anime.airing_schedule.length
-    ? anime.airing_schedule[0]
+    ? anime.airing_schedule.find((schedule) =>
+        dayjs.unix(schedule.airing_at).isAfter(dayjs())
+      )
     : null;
-
-  const color = isColorVisible(anime?.cover_image?.color || "#ffffff")
-    ? anime.cover_image.color
-    : "black";
 
   return (
     <React.Fragment>
