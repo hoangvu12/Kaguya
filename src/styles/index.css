@@ -9,7 +9,11 @@
 
 body {
   font-family: "Fira Sans", Arial, sans-serif;
-  @apply min-h-screen text-typography bg-background overflow-x-hidden;
+  @apply min-h-screen w-full text-typography bg-background overflow-x-hidden;
+}
+
+main {
+  @apply overflow-x-hidden;
 }
 
 .logo {
@@ -26,11 +30,19 @@ body {
 }
 
 .banner__overlay {
-  background-image: linear-gradient(
-    77deg,
-    rgba(0, 0, 0, 0.8) 25%,
-    transparent 85%
-  );
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+@media screen and (min-width: 768px) {
+  .banner__overlay {
+    background-image: linear-gradient(
+      77deg,
+      rgba(0, 0, 0, 0.8) 25%,
+      transparent 85%
+    );
+
+    background-color: transparent;
+  }
 }
 
 @import "tailwindcss/utilities";

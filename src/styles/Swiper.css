@@ -1,5 +1,5 @@
 .swiper {
-  @apply !overflow-visible;
+  @apply md:!overflow-visible;
 }
 
 .swiper-button {

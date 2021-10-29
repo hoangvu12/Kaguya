@@ -18,6 +18,7 @@ import React, { useState } from "react";
 
 import { AiFillHeart, AiFillPlayCircle } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
+import Button from "../shared/Button";
 
 const HomeBanner = () => {
   const router = useRouter();
@@ -50,7 +51,7 @@ const HomeBanner = () => {
         )}
 
         <div className="banner__overlay absolute inset-0 flex flex-col justify-center px-12">
-          <div className="w-[45%]">
+          <div className="w-full md:w-[45%]">
             <h1 className="text-4xl uppercase font-bold">
               {activeAnime.title.user_preferred}
             </h1>
@@ -71,9 +72,20 @@ const HomeBanner = () => {
               </DotList>
             </div>
 
-            <p className="mt-2 text-base text-typography-secondary line-clamp-5">
+            <p className="mt-2 mb-4 text-base text-typography-secondary line-clamp-3 md:line-clamp-5">
               {activeAnime.description}
             </p>
+
+            <Button
+              primary
+              LeftIcon={AiFillPlayCircle}
+              onClick={() => {
+                router.push(`/details/${activeAnime.ani_id}`);
+              }}
+              className="md:hidden"
+            >
+              <p>Xem ngay</p>
+            </Button>
           </div>
         </div>
 
@@ -83,7 +95,7 @@ const HomeBanner = () => {
             router.push(`/details/${activeAnime.ani_id}`);
           }}
           outline
-          className="absolute left-2/3 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100"
+          className="hidden md:block absolute left-2/3 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100"
           iconClassName="w-16 h-16"
         />
 

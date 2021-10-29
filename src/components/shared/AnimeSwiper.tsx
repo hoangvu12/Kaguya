@@ -12,7 +12,7 @@ const AnimeSwiper: React.FC<AnimeSwiperProps> = (props) => {
   const { data } = props;
 
   return (
-    <Swiper slidesPerGroup={6} speed={500}>
+    <Swiper speed={500}>
       {data.map((anime, index) => (
         <SwiperSlide key={index}>
           <AnimeCard anime={anime} />

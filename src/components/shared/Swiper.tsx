@@ -21,7 +21,26 @@ const Swiper: React.FC<SwiperProps> = ({ children, ...props }) => {
   return (
     <ReactSwiper
       spaceBetween={20}
-      slidesPerView={6}
+      slidesPerView={2}
+      slidesPerGroup={2}
+      breakpoints={{
+        1280: {
+          slidesPerView: 6,
+          slidesPerGroup: 6,
+        },
+        1024: {
+          slidesPerView: 5,
+          slidesPerGroup: 5,
+        },
+        768: {
+          slidesPerView: 4,
+          slidesPerGroup: 4,
+        },
+        640: {
+          slidesPerView: 3,
+          slidesPerGroup: 3,
+        },
+      }}
       modules={[Navigation]}
       onInit={(swiper) => {
         (swiper.params.navigation as NavigationOptions).prevEl =
