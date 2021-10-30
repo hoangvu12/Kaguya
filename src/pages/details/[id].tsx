@@ -127,10 +127,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
             )}
 
             {!!anime?.relations?.length && (
-              <DetailsSection
-                title="Anime liên quan"
-                className="flex flex-wrap gap-y-8"
-              >
+              <DetailsSection title="Anime liên quan">
                 <AnimeList
                   data={anime.relations.map((relation) => relation.anime)}
                 />
@@ -138,10 +135,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
             )}
 
             {!!anime?.recommendations?.length && (
-              <DetailsSection
-                title="Anime hay khác"
-                className="flex flex-wrap gap-y-8"
-              >
+              <DetailsSection title="Anime hay khác">
                 <AnimeList
                   data={anime.recommendations.map(
                     (recommendation) => recommendation.anime
