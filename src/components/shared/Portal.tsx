@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 
 interface PortalProps {
@@ -9,7 +9,7 @@ interface PortalProps {
 const Portal: React.FC<PortalProps> = ({ children, element }) => {
   const [el, setEl] = useState(null);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setEl(element || document.querySelector("main"));
   }, [element]);
 

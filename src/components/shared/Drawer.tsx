@@ -65,7 +65,7 @@ const Drawer: React.FC<DrawerProps> = (props) => {
         {button}
       </button>
 
-      <div>
+      <Portal>
         <AnimatePresence exitBeforeEnter>
           {isOpen && (
             <React.Fragment>
@@ -107,7 +107,7 @@ const Drawer: React.FC<DrawerProps> = (props) => {
             </React.Fragment>
           )}
         </AnimatePresence>
-      </div>
+      </Portal>
     </div>
   );
 };

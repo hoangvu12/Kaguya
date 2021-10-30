@@ -7,10 +7,10 @@ const HomeBannerSkeleton = () => {
     <Skeleton className="pb-12">
       <SkeletonItem className="relative w-full h-[500px]" container>
         <SkeletonItem
-          className="absolute inset-0 flex flex-col justify-center px-12"
+          className="absolute inset-0 flex flex-col justify-center px-4 md:px-12"
           container
         >
-          <SkeletonItem className="w-[45%]" container>
+          <SkeletonItem className="w-full md:w-[45%]" container>
             <SkeletonItem className="h-14 w-11/12 rounded-sm" />
             <SkeletonItem
               className="mt-4 flex items-center space-x-4"
