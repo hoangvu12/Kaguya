@@ -46,15 +46,19 @@ const Header = () => {
     >
       <Drawer
         containerClassName="sm:hidden mr-4"
-        className="py-16 space-y-2"
-        button={<GiHamburgerMenu className="sm:hidden w-6 h-6" />}
+        className="py-8 space-y-2"
+        button={<GiHamburgerMenu className="w-6 h-6" />}
       >
+        <div className="relative mx-auto h-24 w-20 border-b-2 border-gray-500 !mb-8">
+          <Image src="/logo.png" layout="fill" objectFit="contain" alt="logo" />
+        </div>
+
         {routes.map((route) => (
           <NavItem className="block" href={route.href} key={route.href}>
             {({ isActive }) => (
               <p
                 className={classNames(
-                  "pl-4 border-l-4 font-semibold text-lg transition duration-300",
+                  "pl-4 border-l-4 font-semibold text-2xl transition duration-300",
                   isActive
                     ? "border-primary-500 text-white"
                     : "border-background-900 text-typography-secondary"

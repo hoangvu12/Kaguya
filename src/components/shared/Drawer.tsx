@@ -65,10 +65,10 @@ const Drawer: React.FC<DrawerProps> = (props) => {
         {button}
       </button>
 
-      <Portal>
+      <div>
         <AnimatePresence exitBeforeEnter>
           {isOpen && (
-            <Portal>
+            <React.Fragment>
               {/* Overlay */}
               <motion.div
                 className={classNames(
@@ -104,10 +104,10 @@ const Drawer: React.FC<DrawerProps> = (props) => {
 
                 {children}
               </motion.div>
-            </Portal>
+            </React.Fragment>
           )}
         </AnimatePresence>
-      </Portal>
+      </div>
     </div>
   );
 };
