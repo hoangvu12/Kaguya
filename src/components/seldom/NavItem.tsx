@@ -4,6 +4,7 @@ import React from "react";
 
 interface NavItemProps extends LinkProps {
   children({ isActive: boolean }): React.ReactNode;
+  className?: string;
 }
 
 const NavItem: React.FC<NavItemProps> = (props) => {
@@ -12,7 +13,7 @@ const NavItem: React.FC<NavItemProps> = (props) => {
 
   return (
     <Link {...props}>
-      <a>{props.children({ isActive })}</a>
+      <a className={props.className}>{props.children({ isActive })}</a>
     </Link>
   );
 };
