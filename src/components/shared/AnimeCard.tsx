@@ -42,6 +42,13 @@ const AnimeCard: React.FC<AnimeCardProps> = ({ anime, className }) => {
                 alt={`${anime.title.user_preferred} card`}
               />
             </div>
+
+            <p
+              className="mt-2 text-lg font-semibold md:hidden line-clamp-2"
+              style={{ color: primaryColor }}
+            >
+              {anime.title.user_preferred}
+            </p>
           </a>
         </Link>
       }
