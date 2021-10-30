@@ -50,13 +50,13 @@ const HomeBanner = () => {
           />
         )}
 
-        <div className="banner__overlay absolute inset-0 flex flex-col justify-center px-12">
+        <div className="banner__overlay absolute inset-0 flex flex-col justify-center px-4 md:px-12">
           <div className="w-full md:w-[45%]">
-            <h1 className="text-4xl uppercase font-bold">
+            <h1 className="text-4xl uppercase font-bold line-clamp-3 md:line-clamp-none">
               {activeAnime.title.user_preferred}
             </h1>
 
-            <div className="text-lg mt-4 flex items-center space-x-8">
+            <div className="text-lg mt-4 flex flex-wrap items-center gap-x-8">
               <TextIcon LeftIcon={MdTagFaces} iconClassName="text-green-300">
                 <p>{activeAnime.average_score}%</p>
               </TextIcon>
@@ -101,7 +101,7 @@ const HomeBanner = () => {
 
         <div className="banner__overlay--down absolute bottom-0 h-16 w-full"></div>
       </div>
-      <div className="px-12 pb-12 w-full">
+      <div className="px-4 md:px-12 pb-12 w-full">
         <BannerSwiper
           onSlideChange={handleSlideChange}
           data={trendingAnime as Anime[]}

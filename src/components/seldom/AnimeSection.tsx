@@ -29,7 +29,7 @@ const AnimeSection: React.FC<AnimeSectionProps> = (props) => {
   }
 
   return (
-    <div className="px-12 space-y-4">
+    <div className="px-4 md:px-12 space-y-4">
       <h1 className="uppercase text-2xl font-semibold">{title}</h1>
 
       {children(data)}

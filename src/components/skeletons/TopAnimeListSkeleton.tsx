@@ -4,7 +4,7 @@ import TopAnimeCardSkeleton from "./TopAnimeCardSkeleton";
 
 const TopAnimeListSkeleton = () => {
   return (
-    <Skeleton className="space-y-10">
+    <Skeleton className="px-12 space-y-10">
       <TopAnimeCardSkeleton />
       <TopAnimeCardSkeleton />
       <TopAnimeCardSkeleton />

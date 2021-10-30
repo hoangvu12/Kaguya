@@ -30,7 +30,7 @@ const TopAnimeCard: React.FC<TopAnimeCardProps> = ({ anime, rank }) => {
         <span className="text-3xl">#</span>
         <span className="text-4xl">{rank}</span>
       </div>
-      <div className="flex col-span-11 space-x-4">
+      <div className="flex col-span-11 space-x-4 bg-background-900">
         <div
           className="cursor-pointer flex-shrink-0 relative h-full w-14"
           onClick={() => router.push(`/details/${anime.ani_id}`)}
@@ -42,7 +42,7 @@ const TopAnimeCard: React.FC<TopAnimeCardProps> = ({ anime, rank }) => {
             alt={`${anime.title.user_preferred}`}
           />
         </div>
-        <div className="flex-1 bg-background-900 md:grid grid-cols-12">
+        <div className="flex-1 md:grid grid-cols-12">
           <div className="col-span-4 flex items-center justify-center">
             <div
               className="py-2 flex flex-col justify-between w-full"
