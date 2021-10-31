@@ -7,6 +7,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 import AnimeList from "../shared/AnimeList";
 import Button from "../shared/Button";
 import Input from "../shared/Input";
+import InView from "../shared/InView";
 import Select from "../shared/Select";
 import AnimeListSkeleton from "../skeletons/AnimeListSkeleton";
 import SortSelector from "./SortSelector";
@@ -19,10 +20,17 @@ const BrowseList = () => {
     genre: "",
     season: "",
     seasonYear: "",
-    sort: "popularity",
+    sort: "average_score",
   });
-  const { data, isLoading } = useBrowse(query);
+  const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
+    useBrowse(query);
   const onSubmit = (data: UseBrowseOptions) => setQuery(data);
+
+  const handleFetch = () => {
+    if (isFetchingNextPage || !hasNextPage) return;
+
+    fetchNextPage();
+  };
 
   return (
     <div className="min-h-screen px-4 md:px-12">
@@ -125,7 +133,19 @@ const BrowseList = () => {
 
       <div className="mt-8">
         {!isLoading && query ? (
-          <AnimeList data={data} />
+          <React.Fragment>
+            <AnimeList data={data.pages.map((el) => el.data).flat()} />
+
+            {(!isFetchingNextPage || !hasNextPage) && (
+              <InView onInView={handleFetch} />
+            )}
+
+            {isFetchingNextPage && (
+              <div className="mt-4">
+                <AnimeListSkeleton />
+              </div>
+            )}
+          </React.Fragment>
         ) : (
           <AnimeListSkeleton />
         )}

@@ -1,8 +1,20 @@
+import supabase from "@/lib/supabase";
 import { PostgrestError, PostgrestFilterBuilder } from "@supabase/postgrest-js";
-import { QueryKey, useQuery, UseQueryOptions } from "react-query";
+import {
+  QueryKey,
+  useInfiniteQuery,
+  UseInfiniteQueryOptions,
+  useQuery,
+  UseQueryOptions,
+} from "react-query";
+import { getPagination } from ".";
 
 export interface SupabaseQueryFunction<T> {
   (): PostgrestFilterBuilder<T>;
+}
+
+export interface SupabaseInfiniteQueriesFunction<T> {
+  (from: number, to: number): PostgrestFilterBuilder<T>;
 }
 
 export interface UseSupabaseQueryOptions<T>
@@ -11,7 +23,10 @@ export interface UseSupabaseQueryOptions<T>
 export const useSupabaseQuery = <T>(
   key: QueryKey,
   queryFn: SupabaseQueryFunction<T>,
-  options?: UseQueryOptions<T[], PostgrestError>
+  options?: Omit<
+    UseQueryOptions<T[], PostgrestError, T[], QueryKey>,
+    "queryKey" | "queryFn"
+  >
 ) => {
   return useQuery<T[], PostgrestError>(
     key,
@@ -25,5 +40,28 @@ export const useSupabaseQuery = <T>(
       return data;
     },
     options
+  );
+};
+
+export const useSupaInfiniteQueries = <T>(
+  key: QueryKey,
+  queryFn: SupabaseInfiniteQueriesFunction<T>
+) => {
+  return useInfiniteQuery(
+    key,
+    async ({ pageParam = 1 }) => {
+      const { from, to } = getPagination(pageParam);
+
+      const { data, error } = await queryFn(from, to);
+
+      if (error) {
+        throw error;
+      }
+
+      return { data, nextPage: data.length ? pageParam + 1 : null };
+    },
+    {
+      getNextPageParam: (lastPage) => lastPage.nextPage,
+    }
   );
 };

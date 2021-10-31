@@ -75,6 +75,16 @@ export const includesArr = (text: string, array: any[]) => {
   return array.some((element) => text.includes(element));
 };
 
+export const getPagination = (page: number = 1, limit: number = 15) => {
+  const from = (page - 1 < 0 ? 0 : page - 1) * limit;
+  const to = from + limit;
+
+  return {
+    from,
+    to,
+  };
+};
+
 export const getSeason = () => {
   const month = dayjs().month();
   const year = dayjs().year();
