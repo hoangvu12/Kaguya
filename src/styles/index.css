@@ -41,6 +41,19 @@ main {
   .scroll-bar::-webkit-scrollbar-thumb {
     background: #888;
   }
+
+  .snap-x {
+    scroll-snap-type: x mandatory;
+  }
+
+  .snap-x > * {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+  }
+
+  .snap-none {
+    scroll-snap-type: none;
+  }
 }
 
 @media screen and (min-width: 768px) {

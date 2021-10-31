@@ -27,76 +27,86 @@ const BrowseList = () => {
   return (
     <div className="min-h-screen px-4 md:px-12">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div className="flex flex-col md:flex-row space-y-2 items-center md:justify-between md:space-y-0">
+        <div className="space-y-4 items-center overflow-visible">
           <Input
+            containerClassName="md:hidden"
             {...register("keyword")}
             LeftIcon={AiOutlineSearch}
             label="Tìm kiếm"
           />
 
-          <Controller
-            name="genre"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <Select
-                label="Thể loại"
-                data={GENRES.map((genre) => ({
-                  value: genre as string,
-                  placeholder: convert(genre, "genre"),
-                }))}
-                onChange={({ value }) => field.onChange(value)}
-              />
-            )}
-          />
+          <div className="flex justify-between items-center gap-x-2 overflow-x-auto md:overflow-x-visible snap-x md:snap-none">
+            <Input
+              containerClassName="hidden md:block"
+              {...register("keyword")}
+              LeftIcon={AiOutlineSearch}
+              label="Tìm kiếm"
+            />
 
-          <Controller
-            name="seasonYear"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <Select
-                label="Năm"
-                data={SEASON_YEARS.map((year) => ({
-                  value: year.toString(),
-                  placeholder: year.toString(),
-                }))}
-                onChange={({ value }) => field.onChange(value)}
-              />
-            )}
-          />
+            <Controller
+              name="genre"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <Select
+                  label="Thể loại"
+                  data={GENRES.map((genre) => ({
+                    value: genre as string,
+                    placeholder: convert(genre, "genre"),
+                  }))}
+                  onChange={({ value }) => field.onChange(value)}
+                />
+              )}
+            />
 
-          <Controller
-            name="season"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <Select
-                label="Mùa"
-                data={SEASONS.map((season) => ({
-                  value: season,
-                  placeholder: convert(season, "season"),
-                }))}
-                onChange={({ value }) => field.onChange(value)}
-              />
-            )}
-          />
+            <Controller
+              name="seasonYear"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <Select
+                  label="Năm"
+                  data={SEASON_YEARS.map((year) => ({
+                    value: year.toString(),
+                    placeholder: year.toString(),
+                  }))}
+                  onChange={({ value }) => field.onChange(value)}
+                />
+              )}
+            />
 
-          <Controller
-            name="format"
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <Select
-                label="Định dạng"
-                data={FORMATS.map((format) => ({
-                  value: format,
-                  placeholder: convert(format, "format"),
-                }))}
-                onChange={({ value }) => field.onChange(value)}
-              />
-            )}
-          />
+            <Controller
+              name="season"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <Select
+                  label="Mùa"
+                  data={SEASONS.map((season) => ({
+                    value: season,
+                    placeholder: convert(season, "season"),
+                  }))}
+                  onChange={({ value }) => field.onChange(value)}
+                />
+              )}
+            />
+
+            <Controller
+              name="format"
+              control={control}
+              defaultValue=""
+              render={({ field }) => (
+                <Select
+                  label="Định dạng"
+                  data={FORMATS.map((format) => ({
+                    value: format,
+                    placeholder: convert(format, "format"),
+                  }))}
+                  onChange={({ value }) => field.onChange(value)}
+                />
+              )}
+            />
+          </div>
         </div>
 
         <div className="flex items-center space-x-4 justify-end">
