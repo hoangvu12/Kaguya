@@ -72,13 +72,16 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                   title="Giới hạn tuổi"
                   value={anime.is_adult ? "18+" : ""}
                 />
-                <InfoItem
-                  className="!text-primary-300"
-                  title="Tập tiếp theo"
-                  value={`Tập ${nextAiringSchedule.episode}: ${dayjs
-                    .unix(nextAiringSchedule.airing_at)
-                    .fromNow()}`}
-                />
+
+                {nextAiringSchedule && (
+                  <InfoItem
+                    className="!text-primary-300"
+                    title="Tập tiếp theo"
+                    value={`Tập ${nextAiringSchedule.episode}: ${dayjs
+                      .unix(nextAiringSchedule.airing_at)
+                      .fromNow()}`}
+                  />
+                )}
               </div>
             </div>
           </div>
