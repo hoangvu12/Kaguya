@@ -1,20 +1,19 @@
-import {
-  PostgrestError,
-  PostgrestFilterBuilder,
-  PostgrestSingleResponse,
-} from "@supabase/postgrest-js";
-import { QueryKey, QueryOptions, useQuery } from "react-query";
+import { PostgrestError, PostgrestFilterBuilder } from "@supabase/postgrest-js";
+import { QueryKey, useQuery, UseQueryOptions } from "react-query";
 
 export interface SupabaseQueryFunction<T> {
-  (): PostgrestSingleResponse<T> | PostgrestFilterBuilder<T>;
+  (): PostgrestFilterBuilder<T>;
 }
+
+export interface UseSupabaseQueryOptions<T>
+  extends UseQueryOptions<T[], PostgrestError> {}
 
 export const useSupabaseQuery = <T>(
   key: QueryKey,
   queryFn: SupabaseQueryFunction<T>,
-  options?: QueryOptions<T | T[]>
+  options?: UseQueryOptions<T[], PostgrestError>
 ) => {
-  return useQuery<T | T[], PostgrestError>(
+  return useQuery<T[], PostgrestError>(
     key,
     async () => {
       const { data, error } = await queryFn();

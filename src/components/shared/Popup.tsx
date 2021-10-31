@@ -1,4 +1,4 @@
-import { Options } from "@popperjs/core";
+import { Options, Placement } from "@popperjs/core";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useState } from "react";
@@ -9,6 +9,8 @@ import useDevice from "@/hooks/useDevice";
 interface PopupProps {
   reference?: React.ReactNode;
   options?: Options;
+  type?: "hover" | "click";
+  placement?: Placement;
 }
 
 const variants = {
@@ -25,13 +27,23 @@ const variants = {
   },
 };
 
+const emptyFn = () => {};
+
 const Popup: React.FC<PopupProps> = (props) => {
+  const {
+    children,
+    options,
+    reference,
+    type = "hover",
+    placement = "right-start",
+  } = props;
+
   const [referenceElement, setReferenceElement] = useState(null);
   const [popperElement, setPopperElement] = useState(null);
   const [arrowElement, setArrowElement] = useState(null);
   const { isMobile } = useDevice();
 
-  const [hover, setHover] = useState(false);
+  const [active, setActive] = useState(false);
 
   const { styles, attributes } = usePopper(referenceElement, popperElement, {
     modifiers: [
@@ -49,35 +61,50 @@ const Popup: React.FC<PopupProps> = (props) => {
         },
       },
     ],
-    placement: "right-start",
-    ...props.options,
+    placement,
+    ...options,
   });
 
   const handleMouseEnter = () => {
     if (isMobile) return;
 
-    setHover(true);
+    setActive(true);
   };
 
   const handleMouseLeave = () => {
-    setHover(false);
+    setActive(false);
   };
+
+  const handleToggle = () => {
+    setActive((prev) => !prev);
+  };
+
+  const handleDisable = () => {
+    setActive(false);
+  };
+
+  const isHover = type === "hover";
 
   return (
     <React.Fragment>
       <div
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        onClick={!isHover ? handleToggle : emptyFn}
+        onMouseEnter={isHover ? handleMouseEnter : emptyFn}
+        onMouseLeave={isHover ? handleMouseLeave : emptyFn}
         ref={setReferenceElement}
-        className={classNames(hover && "relative z-10")}
+        className={classNames(active && "cursor-pointer relative z-10")}
       >
-        {props.reference}
+        {reference}
       </div>
 
       <AnimatePresence exitBeforeEnter>
-        {hover && (
+        {active && (
           <React.Fragment>
             <Portal>
+              {!isHover && (
+                <div className="fixed inset-0" onClick={handleDisable}></div>
+              )}
+
               <motion.div
                 variants={variants}
                 animate="animate"
@@ -86,10 +113,10 @@ const Popup: React.FC<PopupProps> = (props) => {
                 transition={[0.83, 0, 0.17, 1]}
                 ref={setPopperElement}
                 style={styles.popper}
-                className="popup z-50 relatve bg-background-900 p-4 rounded-md drop-shadow-lg"
+                className="popup z-50 relative bg-background-900 p-4 rounded-md drop-shadow-lg max-w-[40vw]"
                 {...attributes.popper}
               >
-                {props.children}
+                {children}
 
                 <div
                   className="popup__arrow"

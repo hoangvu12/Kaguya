@@ -19,6 +19,7 @@ const TextIcon: React.FC<TextIconProps> = ({
   RightIcon,
   as: Component = "div",
   children,
+  className,
 }) => {
   const iconClass =
     !iconClassName?.includes("w-") || !iconClassName?.includes("h-")
@@ -26,7 +27,7 @@ const TextIcon: React.FC<TextIconProps> = ({
       : iconClassName;
 
   return (
-    <Component className="flex items-center space-x-1">
+    <Component className={classNames("flex items-center space-x-1", className)}>
       {LeftIcon && <LeftIcon className={iconClass} />}
       {children}
       {RightIcon && <RightIcon className={iconClass} />}

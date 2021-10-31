@@ -33,6 +33,16 @@ main {
   background-color: rgba(0, 0, 0, 0.6);
 }
 
+@layer utilities {
+  .scroll-bar::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .scroll-bar::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+}
+
 @media screen and (min-width: 768px) {
   .banner__overlay {
     background-image: linear-gradient(

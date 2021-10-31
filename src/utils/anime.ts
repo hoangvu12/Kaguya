@@ -3,14 +3,14 @@ import {
   FORMATS,
   GENRES,
   SEASONS,
+  SORTS,
   STATUSES,
   VIETNAMESE_CHARACTERS_ROLES,
   VIETNAMESE_FORMATS,
   VIETNAMESE_SEASONS,
+  VIETNAMESE_SORTS,
   VIETNAMESE_STATUSES,
 } from "@/constants";
-
-type ConvertType = "season" | "format" | "status" | "genre" | "characterRole";
 
 const constants = {
   season: {
@@ -37,11 +37,16 @@ const constants = {
     from: CHARACTERS_ROLES,
     to: VIETNAMESE_CHARACTERS_ROLES,
   },
+
+  sort: {
+    from: SORTS,
+    to: VIETNAMESE_SORTS,
+  },
 };
 
 export const convert = (
   text: string,
-  type: ConvertType,
+  type: keyof typeof constants,
   reverse: boolean = false
 ) => {
   const { from, to } = constants[type];
