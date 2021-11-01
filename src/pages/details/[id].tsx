@@ -181,7 +181,11 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const { data } = await supabase.from("anime").select("ani_id");
+  const { data } = await supabase
+    .from<Anime>("anime")
+    .select("ani_id")
+    .order("updated_at", { ascending: false })
+    .limit(200);
 
   const paths = data.map((anime: Anime) => ({
     params: { id: anime.ani_id.toString() },
