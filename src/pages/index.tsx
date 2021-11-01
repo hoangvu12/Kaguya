@@ -1,18 +1,30 @@
 import AnimeSection from "@/components/seldom/AnimeSection";
 import HomeBanner from "@/components/seldom/HomeBanner";
 import AnimeSwiper from "@/components/shared/AnimeSwiper";
-import TopAnimeCard from "@/components/shared/TopAnimeCard";
 import TopAnimeList from "@/components/shared/TopAnimeList";
 import AnimeSwiperSkeleton from "@/components/skeletons/AnimeSwiperSkeleton";
-import supabase from "@/lib/supabase";
-import { Anime } from "@/types";
-import { getSeason } from "@/utils";
-import data from "@/data.json";
 import TopAnimeListSkeleton from "@/components/skeletons/TopAnimeListSkeleton";
+import supabase from "@/lib/supabase";
+import { Anime, Section } from "@/types";
+import { getSeason } from "@/utils";
 
 const currentSeason = getSeason();
 
-const swipers = [
+const sections: Section<Anime>[] = [
+  {
+    title: "Mới cập nhật",
+    query: {
+      key: "new-episodes-anime",
+      queryFn: () =>
+        supabase
+          .from<Anime>("anime")
+          .select("*")
+          .order("episodes_updated_at", { ascending: false })
+          .limit(15),
+    },
+    skeleton: AnimeSwiperSkeleton,
+    render: (data) => <AnimeSwiper data={data} />,
+  },
   {
     title: "Nổi bật",
     query: {
@@ -24,8 +36,10 @@ const swipers = [
           .order("popularity", { ascending: false })
           .eq("season", currentSeason.season)
           .eq("season_year", currentSeason.year)
-          .limit(30),
+          .limit(15),
     },
+    skeleton: AnimeSwiperSkeleton,
+    render: (data) => <AnimeSwiper data={data} />,
   },
   {
     title: "Được yêu thích",
@@ -38,8 +52,26 @@ const swipers = [
           .order("favourites", { ascending: false })
           .eq("season", currentSeason.season)
           .eq("season_year", currentSeason.year)
-          .limit(30),
+          .limit(15),
     },
+    skeleton: AnimeSwiperSkeleton,
+    render: (data) => <AnimeSwiper data={data} />,
+  },
+  {
+    title: "Top anime",
+    skeleton: TopAnimeListSkeleton,
+    query: {
+      key: "top-anime",
+      queryFn: () =>
+        supabase
+          .from<Anime>("anime")
+          .select("*")
+          .order("average_score", { ascending: false })
+          .eq("season", currentSeason.season)
+          .eq("season_year", currentSeason.year)
+          .limit(10),
+    },
+    render: (data) => <TopAnimeList anime={data} />,
   },
 ];
 
@@ -49,33 +81,11 @@ export default function Home() {
       <HomeBanner />
 
       <div className="space-y-8">
-        {swipers.map((swiper) => (
-          <AnimeSection
-            skeleton={AnimeSwiperSkeleton}
-            key={swiper.query.key}
-            {...swiper}
-          >
-            {(data) => <AnimeSwiper data={data as Anime[]} />}
+        {sections.map(({ render, ...section }, index) => (
+          <AnimeSection key={index} {...section}>
+            {render}
           </AnimeSection>
         ))}
-
-        <AnimeSection
-          skeleton={TopAnimeListSkeleton}
-          query={{
-            key: "top-anime",
-            queryFn: () =>
-              supabase
-                .from<Anime>("anime")
-                .select("*")
-                .order("average_score", { ascending: false })
-                .eq("season", currentSeason.season)
-                .eq("season_year", currentSeason.year)
-                .limit(10),
-          }}
-          title="Top anime"
-        >
-          {(data) => <TopAnimeList anime={data as Anime[]} />}
-        </AnimeSection>
       </div>
     </div>
   );

@@ -1,3 +1,5 @@
+import { QueryKey } from "react-query";
+import { SkeletonProps } from "./components/shared/Skeleton";
 import {
   CHARACTERS_ROLES,
   FORMATS,
@@ -5,6 +7,10 @@ import {
   SEASONS,
   STATUSES,
 } from "./constants";
+import {
+  SupabaseQueryFunction,
+  UseSupabaseQueryOptions,
+} from "./utils/supabase";
 
 export interface AnimeTitle {
   romaji: string;
@@ -84,4 +90,18 @@ export interface Anime {
   description?: string;
   episodes?: Episode[];
   source_id?: number;
+  created_at?: Date;
+  updated_at?: Date;
+  episodes_updated_at?: Date;
+}
+
+export interface Section<T> {
+  title: string;
+  query: {
+    key: QueryKey;
+    queryFn: SupabaseQueryFunction<T>;
+    options?: UseSupabaseQueryOptions<T>;
+  };
+  skeleton: React.ComponentType<SkeletonProps>;
+  render: (data: T[]) => React.ReactNode;
 }

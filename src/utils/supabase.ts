@@ -17,8 +17,10 @@ export interface SupabaseInfiniteQueriesFunction<T> {
   (from: number, to: number): PostgrestFilterBuilder<T>;
 }
 
-export interface UseSupabaseQueryOptions<T>
-  extends UseQueryOptions<T[], PostgrestError> {}
+export type UseSupabaseQueryOptions<T> = Omit<
+  UseQueryOptions<T[], PostgrestError, T[], QueryKey>,
+  "queryKey" | "queryFn"
+>;
 
 export const useSupabaseQuery = <T>(
   key: QueryKey,

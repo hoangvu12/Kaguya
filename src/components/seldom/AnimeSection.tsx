@@ -1,16 +1,20 @@
 import { Anime } from "@/types";
-import { SupabaseQueryFunction, useSupabaseQuery } from "@/utils/supabase";
+import {
+  SupabaseQueryFunction,
+  useSupabaseQuery,
+  UseSupabaseQueryOptions,
+} from "@/utils/supabase";
 import React from "react";
-import { QueryOptions } from "react-query";
+import { QueryKey } from "react-query";
 import { SkeletonProps } from "../shared/Skeleton";
 
 interface AnimeSectionProps {
   skeleton: React.ComponentType<SkeletonProps>;
   title: string;
   query: {
-    key: string;
+    key: QueryKey;
     queryFn: SupabaseQueryFunction<Anime>;
-    options?: QueryOptions<Anime>;
+    options?: UseSupabaseQueryOptions<Anime>;
   };
   children(data: Anime | Anime[]): React.ReactNode;
 }
