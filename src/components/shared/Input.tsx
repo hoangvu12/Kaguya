@@ -13,9 +13,7 @@ interface InputProps extends React.HTMLProps<HTMLInputElement> {
   label?: string;
 }
 
-const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {  
-
-
+const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   const {
     label,
     containerClassName,
@@ -59,4 +57,4 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 
 Input.displayName = "Input";
 
-export default Input;
+export default React.memo(Input);

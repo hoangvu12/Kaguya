@@ -1,8 +1,9 @@
 import useClickOutside from "@/hooks/useClickOutside";
 import useDevice from "@/hooks/useDevice";
+import useDidMount from "@/hooks/useDidMount";
 import classNames from "classnames";
 import { AnimatePresence, motion, Variants } from "framer-motion";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { BsChevronExpand } from "react-icons/bs";
 import Input from "./Input";
 import Portal from "./Portal";
@@ -19,7 +20,7 @@ interface SelectProps {
   inputClassName?: string;
   defaultItem?: SelectItem;
   data: SelectItem[];
-  onChange?: (item: SelectItem) => void;
+  onChange?: (item: SelectItem["value"]) => void;
 }
 
 const variants: Variants = {
@@ -47,46 +48,52 @@ const Select: React.FC<SelectProps> = (props) => {
   const ref = useRef();
   const { isDesktop } = useDevice();
   const [query, setQuery] = useState("");
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [activeItem, setActiveItem] = useState(defaultItem || data[0]);
 
-  useEffect(() => {
-    setQuery("");
-    setIsOpen(false);
-    onChange?.(activeItem);
-  }, [activeItem, onChange]);
-
-  const handleToggle = () => {
+  const handleToggle = useCallback(() => {
     setIsOpen((prev) => !prev);
-  };
+  }, []);
 
-  const handleInputFocus = () => {
+  const handleInputFocus = useCallback(() => {
     setIsOpen(true);
-  };
+  }, []);
 
-  const handleInputBlur = () => {
+  const handleInputBlur = useCallback(() => {
     setIsOpen(false);
     setQuery("");
-  };
+  }, []);
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     setIsOpen(true);
-  };
+  }, []);
 
-  const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    setQuery(e.target.value);
-  };
+  const handleInputChange: React.ChangeEventHandler<HTMLInputElement> =
+    useCallback((e) => {
+      setQuery(e.target.value);
+    }, []);
+
+  const handleItemChange = useCallback(
+    (item) => {
+      setIsOpen(false);
+      onChange?.(item.value);
+      setActiveItem(item);
+    },
+    [onChange]
+  );
 
   useClickOutside(ref, () => setIsOpen(false));
 
-  const filteredItems = [defaultItem, ...data].filter(
-    ({ value, placeholder }) => {
-      const keyword = query.toLowerCase();
+  const filteredItems = useMemo<SelectItem[]>(
+    () =>
+      [defaultItem, ...data].filter(({ value, placeholder }) => {
+        const keyword = query.toLowerCase();
 
-      return (
-        value.includes(keyword) || placeholder.toLowerCase().includes(keyword)
-      );
-    }
+        return (
+          value.includes(keyword) || placeholder.toLowerCase().includes(keyword)
+        );
+      }),
+    [data, defaultItem, query]
   );
 
   return (
@@ -112,11 +119,7 @@ const Select: React.FC<SelectProps> = (props) => {
         />
 
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-
-            handleToggle();
-          }}
+          onClick={handleToggle}
           className="absolute top-1/2 -translate-y-1/2 right-3"
           type="button"
         >
@@ -126,28 +129,11 @@ const Select: React.FC<SelectProps> = (props) => {
         <AnimatePresence exitBeforeEnter>
           {isOpen &&
             (isDesktop ? (
-              <motion.ul
-                variants={variants}
-                transition={{ ease: "linear" }}
-                animate="enter"
-                exit="exit"
-                initial="exit"
+              <SelectItems
                 className="scroll-bar overflow-y-scroll max-h-[50vh] space-y-2 bg-background-800 absolute z-50 top-full mt-2 w-full p-2"
-              >
-                {filteredItems.length ? (
-                  filteredItems.map((item, index) => (
-                    <li
-                      key={index}
-                      className="cursor-pointer rounded-sm hover:bg-background-900 hover:text-primary-300 text-semibold p-2 transition duration-300"
-                      onClick={() => setActiveItem(item)}
-                    >
-                      {item.placeholder}
-                    </li>
-                  ))
-                ) : (
-                  <p className="text-center text-sm">Không tìm thấy kết quả</p>
-                )}
-              </motion.ul>
+                items={filteredItems}
+                onChange={handleItemChange}
+              />
             ) : (
               <Portal>
                 <motion.div
@@ -158,30 +144,11 @@ const Select: React.FC<SelectProps> = (props) => {
                   className="fixed z-50 inset-0 bg-black/60"
                 ></motion.div>
 
-                <motion.ul
-                  variants={variants}
-                  transition={{ ease: "linear" }}
-                  animate="enter"
-                  exit="exit"
-                  initial="exit"
+                <SelectItems
                   className="block fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-y-scroll w-[80vw] h-[60vh] bg-background-800 z-[9999] text-center"
-                >
-                  {filteredItems.length ? (
-                    filteredItems.map((item, index) => (
-                      <li
-                        key={index}
-                        className="text-2xl cursor-pointer rounded-sm hover:bg-background-900 hover:text-primary-300 text-semibold p-2 transition duration-300"
-                        onClick={() => setActiveItem(item)}
-                      >
-                        {item.placeholder}
-                      </li>
-                    ))
-                  ) : (
-                    <p className="text-center text-sm">
-                      Không tìm thấy kết quả
-                    </p>
-                  )}
-                </motion.ul>
+                  items={filteredItems}
+                  onChange={handleItemChange}
+                />
               </Portal>
             ))}
         </AnimatePresence>
@@ -190,4 +157,43 @@ const Select: React.FC<SelectProps> = (props) => {
   );
 };
 
-export default Select;
+interface SelectItemsProps {
+  items: SelectItem[];
+  className?: string;
+  onChange: (item: SelectItem) => any;
+}
+
+const SelectItems: React.FC<SelectItemsProps> = ({
+  items,
+  className,
+  onChange,
+}) => {
+  const handleItemClick = (item) => () => onChange(item);
+
+  return (
+    <motion.ul
+      variants={variants}
+      transition={{ ease: "linear" }}
+      animate="enter"
+      exit="exit"
+      initial="exit"
+      className={className}
+    >
+      {items.length ? (
+        items.map((item, index) => (
+          <li
+            key={index}
+            className="cursor-pointer rounded-sm hover:bg-background-900 hover:text-primary-300 text-semibold p-2 transition duration-300"
+            onClick={handleItemClick(item)}
+          >
+            {item.placeholder}
+          </li>
+        ))
+      ) : (
+        <p className="text-center text-sm">Không tìm thấy kết quả</p>
+      )}
+    </motion.ul>
+  );
+};
+
+export default React.memo(Select);

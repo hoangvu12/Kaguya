@@ -107,3 +107,18 @@ export const getSeason = () => {
     year,
   };
 };
+
+// https://github.com/react-hook-form/react-hook-form/discussions/1991
+export function dirtyValues(
+  dirtyFields: object | boolean,
+  allValues: object
+): object {
+  if (dirtyFields === true || Array.isArray(dirtyFields)) return allValues;
+
+  return Object.fromEntries(
+    Object.keys(dirtyFields).map((key) => [
+      key,
+      dirtyValues(dirtyFields[key], allValues[key]),
+    ])
+  );
+}
