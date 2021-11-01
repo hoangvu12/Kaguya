@@ -1,16 +1,7 @@
 import supabase from "@/lib/supabase";
 import { Anime } from "@/types";
-import {
-  UseSupabaseQueryOptions,
-  useSupaInfiniteQueries,
-} from "@/utils/supabase";
+import { useSupaInfiniteQuery } from "@/utils/supabase";
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
-
-interface SortOptions {
-  ascending?: boolean;
-  nullsFirst?: boolean;
-  foreignTable?: string;
-}
 
 export interface UseBrowseOptions {
   keyword?: string;
@@ -24,7 +15,7 @@ export interface UseBrowseOptions {
 }
 
 const useBrowse = (options: UseBrowseOptions) => {
-  return useSupaInfiniteQueries(["browse", options], (from, to) => {
+  return useSupaInfiniteQuery(["browse", options], (from, to) => {
     const { format, genre, keyword, season, seasonYear, select, sort, limit } =
       options;
 

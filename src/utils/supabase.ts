@@ -45,7 +45,7 @@ export const useSupabaseQuery = <T>(
   );
 };
 
-export const useSupaInfiniteQueries = <T>(
+export const useSupaInfiniteQuery = <T>(
   key: QueryKey,
   queryFn: SupabaseInfiniteQueriesFunction<T>
 ) => {
