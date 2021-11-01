@@ -2,6 +2,7 @@ import { AppProps } from "next/app";
 import React from "react";
 import Router from "next/router";
 import NProgress from "nprogress";
+import { ReactQueryDevtools } from "react-query/devtools";
 
 import BaseLayout from "@/components/layouts/BaseLayout";
 import Head from "@/components/shared/Head";
@@ -34,6 +35,7 @@ function App({ Component, pageProps }: AppProps) {
 
       <QueryClientProvider client={queryClient}>
         {getLayout(<Component {...pageProps} />)}
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </React.Fragment>
   );

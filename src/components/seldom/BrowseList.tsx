@@ -1,18 +1,16 @@
 import { FORMATS, GENRES, SEASONS, SEASON_YEARS } from "@/constants";
 import useBrowse, { UseBrowseOptions } from "@/hooks/useBrowse";
 import { convert } from "@/utils/anime";
-import React, { useCallback, useEffect, useState } from "react";
-import { Controller, useForm, useWatch } from "react-hook-form";
-import { AiOutlineSearch } from "react-icons/ai";
 import { debounce } from "debounce";
+import React from "react";
+import { Controller, useForm } from "react-hook-form";
+import { AiOutlineSearch } from "react-icons/ai";
 import AnimeList from "../shared/AnimeList";
-import Button from "../shared/Button";
 import Input from "../shared/Input";
 import InView from "../shared/InView";
 import Select from "../shared/Select";
 import AnimeListSkeleton from "../skeletons/AnimeListSkeleton";
 import SortSelector from "./SortSelector";
-import { dirtyValues } from "@/utils";
 
 const defaultValues = {
   format: "",

@@ -62,6 +62,9 @@ const useBrowse = (options: UseBrowseOptions) => {
       db = db.limit(limit);
     }
 
+    // https://stackoverflow.com/questions/13580826/postgresql-repeating-rows-from-limit-offset
+    db = db.order("ani_id", { ascending: false });
+
     db = db.range(from, to);
 
     return db;

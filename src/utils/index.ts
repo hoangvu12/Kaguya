@@ -75,13 +75,13 @@ export const includesArr = (text: string, array: any[]) => {
   return array.some((element) => text.includes(element));
 };
 
-export const getPagination = (page: number = 1, limit: number = 15) => {
-  const from = (page - 1 < 0 ? 0 : page - 1) * limit;
-  const to = from + limit;
+export const getPagination = (page?: number, limit: number = 15) => {
+  const from = page - 1 > 0 ? limit * (page - 1) + 1 : 0;
+  const to = page - 1 > 0 ? from + limit : limit;
 
   return {
     from,
-    to,
+    to: to - 1,
   };
 };
 
@@ -107,18 +107,3 @@ export const getSeason = () => {
     year,
   };
 };
-
-// https://github.com/react-hook-form/react-hook-form/discussions/1991
-export function dirtyValues(
-  dirtyFields: object | boolean,
-  allValues: object
-): object {
-  if (dirtyFields === true || Array.isArray(dirtyFields)) return allValues;
-
-  return Object.fromEntries(
-    Object.keys(dirtyFields).map((key) => [
-      key,
-      dirtyValues(dirtyFields[key], allValues[key]),
-    ])
-  );
-}

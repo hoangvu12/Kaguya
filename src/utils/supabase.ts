@@ -52,7 +52,7 @@ export const useSupaInfiniteQueries = <T>(
   return useInfiniteQuery(
     key,
     async ({ pageParam = 1 }) => {
-      const { from, to } = getPagination(pageParam);
+      const { from, to } = getPagination(pageParam, 30);
 
       const { data, error } = await queryFn(from, to);
 
