@@ -1,16 +1,22 @@
+import Portal from "@/components/shared/Portal";
 import { Options, Placement } from "@popperjs/core";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { usePopper } from "react-popper";
-import Portal from "@/components/shared/Portal";
-import useDevice from "@/hooks/useDevice";
 
 interface PopupProps {
   reference?: React.ReactNode;
   options?: Options;
   type?: "hover" | "click";
   placement?: Placement;
+  showArrow?: boolean;
+  offset?: number[];
+  className?: string;
+  portalSelector?: string;
+  referenceClassName?: string;
+  disabled?: boolean;
+  popperComponent?: string | React.ComponentType<any>;
 }
 
 const variants = {
@@ -36,28 +42,43 @@ const Popup: React.FC<PopupProps> = (props) => {
     reference,
     type = "hover",
     placement = "right-start",
+    showArrow,
+    offset = [10, 13],
+    className,
+    referenceClassName,
+    portalSelector,
+    disabled,
+    popperComponent: PopperComponent = motion.div,
   } = props;
 
   const [referenceElement, setReferenceElement] = useState(null);
   const [popperElement, setPopperElement] = useState(null);
   const [arrowElement, setArrowElement] = useState(null);
-  const { isMobile } = useDevice();
 
   const [active, setActive] = useState(false);
 
+  const arrowModifier = useMemo(
+    () =>
+      showArrow
+        ? [
+            {
+              name: "arrow",
+              options: {
+                element: arrowElement,
+              },
+            },
+          ]
+        : [],
+    [showArrow, arrowElement]
+  );
+
   const { styles, attributes } = usePopper(referenceElement, popperElement, {
     modifiers: [
-      {
-        name: "arrow",
-        options: {
-          element: arrowElement,
-          padding: 20,
-        },
-      },
+      ...arrowModifier,
       {
         name: "offset",
         options: {
-          offset: [10, 13],
+          offset,
         },
       },
     ],
@@ -65,25 +86,27 @@ const Popup: React.FC<PopupProps> = (props) => {
     ...options,
   });
 
-  const handleMouseEnter = () => {
-    if (isMobile) return;
+  const handleMouseEnter = useCallback(() => {
+    if (disabled) return;
 
     setActive(true);
-  };
+  }, [disabled]);
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = useCallback(() => {
     setActive(false);
-  };
+  }, []);
 
-  const handleToggle = () => {
+  const handleToggle = useCallback(() => {
+    if (disabled) return;
+
     setActive((prev) => !prev);
-  };
+  }, [disabled]);
 
-  const handleDisable = () => {
+  const handleDisable = useCallback(() => {
     setActive(false);
-  };
+  }, []);
 
-  const isHover = type === "hover";
+  const isHover = useMemo(() => type === "hover", [type]);
 
   return (
     <React.Fragment>
@@ -92,40 +115,46 @@ const Popup: React.FC<PopupProps> = (props) => {
         onMouseEnter={isHover ? handleMouseEnter : emptyFn}
         onMouseLeave={isHover ? handleMouseLeave : emptyFn}
         ref={setReferenceElement}
-        className={classNames(active && "cursor-pointer relative z-10")}
+        className={classNames(
+          referenceClassName,
+          active && "cursor-pointer relative z-10"
+        )}
       >
         {reference}
       </div>
 
       <AnimatePresence exitBeforeEnter>
         {active && (
-          <React.Fragment>
-            <Portal>
-              {!isHover && (
-                <div className="fixed inset-0" onClick={handleDisable}></div>
+          <Portal selector={portalSelector}>
+            {!isHover && (
+              <div className="fixed inset-0 z-40" onClick={handleDisable}></div>
+            )}
+
+            <PopperComponent
+              variants={variants}
+              animate="animate"
+              exit="exit"
+              initial="initial"
+              transition={[0.83, 0, 0.17, 1]}
+              ref={setPopperElement}
+              style={styles.popper}
+              className={classNames(
+                "popup z-50 relative bg-background-900 p-4 rounded-md drop-shadow-lg max-w-[40vw]",
+                className
               )}
+              {...attributes.popper}
+            >
+              {children}
 
-              <motion.div
-                variants={variants}
-                animate="animate"
-                exit="exit"
-                initial="initial"
-                transition={[0.83, 0, 0.17, 1]}
-                ref={setPopperElement}
-                style={styles.popper}
-                className="popup z-50 relative bg-background-900 p-4 rounded-md drop-shadow-lg max-w-[40vw]"
-                {...attributes.popper}
-              >
-                {children}
-
+              {showArrow && (
                 <div
                   className="popup__arrow"
                   ref={setArrowElement}
                   style={styles.arrow}
                 />
-              </motion.div>
-            </Portal>
-          </React.Fragment>
+              )}
+            </PopperComponent>
+          </Portal>
         )}
       </AnimatePresence>
     </React.Fragment>

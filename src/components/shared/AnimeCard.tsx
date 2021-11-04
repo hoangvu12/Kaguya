@@ -2,6 +2,7 @@ import DotList from "@/components/shared/DotList";
 import Image from "@/components/shared/Image";
 import Popup from "@/components/shared/Popup";
 import TextIcon from "@/components/shared/TextIcon";
+import useDevice from "@/hooks/useDevice";
 import { Anime } from "@/types";
 import { isColorVisible, numberWithCommas } from "@/utils";
 import { convert } from "@/utils/anime";
@@ -17,6 +18,8 @@ interface AnimeCardProps {
 }
 
 const AnimeCard: React.FC<AnimeCardProps> = ({ anime, className }) => {
+  const { isMobile } = useDevice();
+
   const primaryColor =
     anime.cover_image.color &&
     isColorVisible(anime.cover_image.color, "#3a3939")
@@ -25,6 +28,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({ anime, className }) => {
 
   return (
     <Popup
+      disabled={isMobile}
       reference={
         <Link href={`/details/${anime.ani_id}`}>
           <a>

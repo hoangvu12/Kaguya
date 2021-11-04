@@ -51,7 +51,7 @@ export interface Episode {
   name: string;
   episode_id: number;
   source_id: number;
-  source: string;
+  thumbnail_image?: string;
 }
 
 export interface RelationAnime {

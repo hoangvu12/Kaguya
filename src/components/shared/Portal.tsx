@@ -4,16 +4,25 @@ import ReactDOM from "react-dom";
 interface PortalProps {
   children: React.ReactNode;
   element?: HTMLElement;
+  selector?: string;
 }
 
-const Portal: React.FC<PortalProps> = ({ children, element }) => {
+const Portal: React.FC<PortalProps> = ({
+  children,
+  element,
+  selector = "body",
+}) => {
   const [el, setEl] = useState(null);
 
   useEffect(() => {
-    setEl(element || document.querySelector("main"));
-  }, [element]);
+    if (element) {
+      setEl(element);
+    } else {
+      setEl(document.querySelector(selector));
+    }
+  }, [element, selector]);
 
   return el ? ReactDOM.createPortal(children, el) : null;
 };
 
-export default Portal;
+export default React.memo(Portal);

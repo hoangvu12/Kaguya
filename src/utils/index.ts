@@ -1,14 +1,3 @@
-import {
-  CHARACTERS_ROLES,
-  FORMATS,
-  GENRES,
-  SEASONS,
-  STATUSES,
-  VIETNAMESE_CHARACTERS_ROLES,
-  VIETNAMESE_FORMATS,
-  VIETNAMESE_SEASONS,
-  VIETNAMESE_STATUSES,
-} from "@/constants";
 import dayjs from "@/lib/dayjs";
 
 export const randomElement = <T>(array: T[]): T => {
@@ -70,6 +59,43 @@ export const isColorVisible = (
 export function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
+
+export function parseTime(seconds: string | number) {
+  seconds = seconds.toString();
+  let minutes = Math.floor(Number(seconds) / 60).toString();
+  let hours = "";
+
+  if (Number(minutes) > 59) {
+    let hours = Math.floor(Number(minutes) / 60).toString();
+    hours = Number(hours) >= 10 ? hours : `0${hours}`;
+    minutes = (Number(minutes) - Number(hours) * 60).toString();
+    minutes = Number(minutes) >= 10 ? minutes : `0${minutes}`;
+  }
+
+  seconds = Math.floor(Number(seconds) % 60).toString();
+  seconds = Number(seconds) >= 10 ? seconds : "0" + seconds;
+
+  if (hours) {
+    return `${hours}:${minutes}:${seconds}`;
+  }
+
+  return `${minutes}:${seconds}`;
+}
+
+export function serialize(obj: any) {
+  return Object.keys(obj)
+    .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}`)
+    .join("&");
+}
+
+export const chunk = <T>(arr: T[], chunkSize: number): T[][] => {
+  const array: T[][] = [];
+
+  for (let i = 0; i < arr.length; i += chunkSize)
+    array.push(arr.slice(i, i + chunkSize));
+
+  return array;
+};
 
 export const includesArr = (text: string, array: any[]) => {
   return array.some((element) => text.includes(element));
