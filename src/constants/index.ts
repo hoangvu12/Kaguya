@@ -4,7 +4,7 @@ import { Anime } from "@/types";
 const START_YEAR = 1940;
 const CURRENT_YEAR = dayjs().year();
 
-export const WEBSITE_URL = "https://kaguya.vercel.app";
+export const WEBSITE_URL = "https://kaguya.live";
 
 export const SEASONS = ["WINTER", "SPRING", "SUMMER", "FALL"] as const;
 export const FORMATS = [
