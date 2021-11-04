@@ -5,6 +5,7 @@ import classNames from "classnames";
 import { AnimatePresence, motion, Variants } from "framer-motion";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { BsChevronExpand } from "react-icons/bs";
+import ClientOnly from "./ClientOnly";
 import Input from "./Input";
 import Portal from "./Portal";
 
@@ -46,7 +47,7 @@ const Select: React.FC<SelectProps> = (props) => {
   } = props;
 
   const ref = useRef();
-  const { isDesktop } = useDevice();
+  const { isDesktop, isMobile } = useDevice();
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [activeItem, setActiveItem] = useState(defaultItem || data[0]);
@@ -64,20 +65,16 @@ const Select: React.FC<SelectProps> = (props) => {
     setQuery("");
   }, []);
 
-  const handleClick = useCallback(() => {
-    setIsOpen(true);
+  const handleInputChange = useCallback((e: any) => {
+    setQuery(e.target.value);
   }, []);
-
-  const handleInputChange: React.ChangeEventHandler<HTMLInputElement> =
-    useCallback((e) => {
-      setQuery(e.target.value);
-    }, []);
 
   const handleItemChange = useCallback(
     (item) => {
       setIsOpen(false);
       onChange?.(item.value);
       setActiveItem(item);
+      setQuery(item.placeholder);
     },
     [onChange]
   );
@@ -97,26 +94,42 @@ const Select: React.FC<SelectProps> = (props) => {
   );
 
   return (
-    <div ref={ref} className={classNames(containerClassName)}>
+    <div className={classNames(containerClassName)}>
       {label && (
         <p className={classNames("mb-2 font-semibold", labelClassName)}>
           {label}
         </p>
       )}
 
-      <div className="relative">
-        <Input
-          placeholder={activeItem.placeholder}
-          className={classNames(
-            "shadow appearance-none rounded w-full py-2 px-3 text-gray-300 placeholder-gray-300 bg-background-800 leading-tight focus:ring focus:ring-primary-500 focus:outline-none focus:shadow-outline",
-            inputClassName
-          )}
-          value={query}
-          onChange={handleInputChange}
-          onFocus={handleInputFocus}
-          onBlur={handleInputBlur}
-          onClick={!isDesktop ? handleClick : emptyFn}
-        />
+      <div className="relative" ref={ref}>
+        {!isMobile ? (
+          <Input
+            placeholder={activeItem.placeholder}
+            className={classNames(
+              "shadow appearance-none rounded w-full py-2 px-3 text-gray-300 placeholder-gray-300 bg-background-800 leading-tight focus:ring focus:ring-primary-500 focus:outline-none focus:shadow-outline",
+              inputClassName
+            )}
+            value={query}
+            onChange={handleInputChange}
+            onFocus={handleInputFocus}
+            onBlur={handleInputBlur}
+          />
+        ) : (
+          <ClientOnly>
+            <button
+              type="button"
+              className={classNames(
+                "shadow appearance-none rounded w-52 h-10 py-2 px-3 text-gray-300 placeholder-gray-300 bg-background-800 leading-tight focus:ring focus:ring-primary-500 focus:outline-none focus:shadow-outline",
+                inputClassName
+              )}
+              onClick={handleToggle}
+            ></button>
+
+            <p className="absolute left-5 top-1/2 -translate-y-1/2">
+              {activeItem.placeholder}
+            </p>
+          </ClientOnly>
+        )}
 
         <button
           onClick={handleToggle}
