@@ -39,7 +39,7 @@ const HomeBanner = () => {
 
   return (
     <React.Fragment>
-      <div className="group relative w-full h-[500px]">
+      <div className="group relative w-full h-[320px] md:h-[500px]">
         {activeAnime.banner_image && (
           <Image
             src={activeAnime.banner_image}
@@ -52,7 +52,7 @@ const HomeBanner = () => {
 
         <div className="banner__overlay absolute inset-0 flex flex-col justify-center px-4 md:px-12">
           <div className="w-full md:w-[45%]">
-            <h1 className="text-4xl uppercase font-bold line-clamp-3 md:line-clamp-none">
+            <h1 className="text-2xl md:text-4xl uppercase font-bold line-clamp-2 sm:line-clamp-3 md:line-clamp-4">
               {activeAnime.title.user_preferred}
             </h1>
 
@@ -72,7 +72,7 @@ const HomeBanner = () => {
               </DotList>
             </div>
 
-            <p className="mt-2 mb-4 text-base text-typography-secondary line-clamp-3 md:line-clamp-5">
+            <p className="hidden md:block mt-2 text-base text-typography-secondary md:line-clamp-5">
               {activeAnime.description}
             </p>
 
@@ -82,7 +82,7 @@ const HomeBanner = () => {
               onClick={() => {
                 router.push(`/details/${activeAnime.ani_id}`);
               }}
-              className="md:hidden"
+              className="md:hidden mt-4"
             >
               <p>Xem ngay</p>
             </Button>
