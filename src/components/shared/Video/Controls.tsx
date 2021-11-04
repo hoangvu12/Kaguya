@@ -3,6 +3,8 @@ import FullscreenIcon from "@/components/icons/FullscreenIcon";
 import PlayIcon from "@/components/icons/PlayIcon";
 import RewindIcon from "@/components/icons/RewindIcon";
 import { useVideo } from "@/contexts/VideoContext";
+import useDevice from "@/hooks/useDevice";
+import useEventListener from "@/hooks/useEventListener";
 import { parseTime } from "@/utils";
 import React, { useCallback } from "react";
 import { AiOutlineLoading3Quarters, AiOutlinePause } from "react-icons/ai";
@@ -14,6 +16,7 @@ import VolumeControl from "./VolumeControl";
 
 const Controls: React.FC = () => {
   const { state, videoEl } = useVideo();
+  const { isMobile } = useDevice();
 
   const seek = useCallback(
     (time: number) => () => {
@@ -52,6 +55,12 @@ const Controls: React.FC = () => {
       screenfull.exit();
     }
   }, []);
+
+  useEventListener("video-fullscreen", () => {
+    if (!isMobile) return;
+
+    handleToggleFullscreen();
+  });
 
   return (
     <div className="z-40 relative w-full px-4 bg-gradient-to-t from-black/80 via-black/40 to-transparent">

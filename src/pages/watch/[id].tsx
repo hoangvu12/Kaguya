@@ -13,7 +13,7 @@ import { Anime } from "@/types";
 import { chunk } from "@/utils";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { BsArrowLeft } from "react-icons/bs";
 
@@ -57,6 +57,16 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   };
 
   const { data, isLoading } = useFetchSource(episode.episode_id);
+
+  useEffect(() => {
+    if (!isMobile) return;
+
+    const event = new Event("video-fullscreen");
+
+    screen.orientation.lock("landscape").then(() => {
+      window.dispatchEvent(event);
+    });
+  }, []);
 
   return (
     <div className="relative w-full h-screen">
