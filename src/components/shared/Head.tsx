@@ -12,7 +12,7 @@ const Head: React.FC<HeadProps> = (props) => {
   const {
     title = "Kaguya",
     description = "Website xem anime hoàn toàn miễn phí, không quảng cáo.",
-    image = "https://ibb.co/LSVVM3d",
+    image = "https://i.ibb.co/JnDDN9j/localhost-3000-2.png",
   } = props;
 
   return (
