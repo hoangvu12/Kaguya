@@ -10,9 +10,10 @@ import PlainAnimeCard from "@/components/shared/PlainAnimeCard";
 import dayjs from "@/lib/dayjs";
 import supabase from "@/lib/supabase";
 import { Anime } from "@/types";
-import { isColorVisible, numberWithCommas } from "@/utils";
+import { numberWithCommas } from "@/utils";
 import { convert } from "@/utils/anime";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import { useRouter } from "next/router";
 import React from "react";
 import { BsFillPlayFill } from "react-icons/bs";
 
@@ -21,17 +22,23 @@ interface DetailsPageProps {
 }
 
 const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
+  const router = useRouter();
+
   const nextAiringSchedule = anime.airing_schedule.length
     ? anime.airing_schedule.find((schedule) =>
         dayjs.unix(schedule.airing_at).isAfter(dayjs())
       )
     : null;
 
+  const handleWatchClick = () => {
+    router.push(`/watch/${anime.ani_id}`);
+  };
+
   return (
     <React.Fragment>
       <Head
         title={anime.title.user_preferred}
-        description={`Xem anime ${anime.title.user_preferred} ngay tại Kaguya!`}
+        description={anime.description}
         image={anime.banner_image}
       />
 
@@ -45,7 +52,12 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
             </div>
 
             <div className="text-center md:text-left flex flex-col items-center md:items-start py-4 mt-4 md:-mt-16">
-              <Button primary LeftIcon={BsFillPlayFill} className="mb-8">
+              <Button
+                primary
+                LeftIcon={BsFillPlayFill}
+                className="mb-8"
+                onClick={handleWatchClick}
+              >
                 <p>Xem ngay</p>
               </Button>
 
