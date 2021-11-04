@@ -1,12 +1,14 @@
 import AnimeSection from "@/components/seldom/AnimeSection";
 import HomeBanner from "@/components/seldom/HomeBanner";
 import AnimeSwiper from "@/components/shared/AnimeSwiper";
+import Head from "@/components/shared/Head";
 import TopAnimeList from "@/components/shared/TopAnimeList";
 import AnimeSwiperSkeleton from "@/components/skeletons/AnimeSwiperSkeleton";
 import TopAnimeListSkeleton from "@/components/skeletons/TopAnimeListSkeleton";
 import supabase from "@/lib/supabase";
 import { Anime, Section } from "@/types";
 import { getSeason } from "@/utils";
+import React from "react";
 
 const currentSeason = getSeason();
 
@@ -77,16 +79,20 @@ const sections: Section<Anime>[] = [
 
 export default function Home() {
   return (
-    <div className="pb-8">
-      <HomeBanner />
+    <React.Fragment>
+      <Head />
 
-      <div className="space-y-8">
-        {sections.map(({ render, ...section }, index) => (
-          <AnimeSection key={index} {...section}>
-            {render}
-          </AnimeSection>
-        ))}
+      <div className="pb-8">
+        <HomeBanner />
+
+        <div className="space-y-8">
+          {sections.map(({ render, ...section }, index) => (
+            <AnimeSection key={index} {...section}>
+              {render}
+            </AnimeSection>
+          ))}
+        </div>
       </div>
-    </div>
+    </React.Fragment>
   );
 }

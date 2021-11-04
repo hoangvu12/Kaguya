@@ -31,8 +31,6 @@ function App({ Component, pageProps }: AppProps) {
 
   return (
     <React.Fragment>
-      <Head />
-
       <QueryClientProvider client={queryClient}>
         {getLayout(<Component {...pageProps} />)}
         {/* <ReactQueryDevtools initialIsOpen={false} /> */}

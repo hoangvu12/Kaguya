@@ -35,7 +35,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
   };
 
   return (
-    <React.Fragment>
+    <>
       <Head
         title={anime.title.user_preferred}
         description={anime.description}
@@ -161,7 +161,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
           </div>
         </div>
       </div>
-    </React.Fragment>
+    </>
   );
 };
 
