@@ -50,7 +50,12 @@ const Controls: React.FC = () => {
     const videoWrapper = document.querySelector(".video-wrapper");
 
     if (!screenfull.isFullscreen) {
-      screenfull.request(videoWrapper);
+      screenfull
+        .request(videoWrapper)
+        .then(() => {
+          screen.orientation.lock("landscape").catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
     } else {
       screenfull.exit();
     }

@@ -63,10 +63,8 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
 
     const event = new Event("video-fullscreen");
 
-    screen.orientation.lock("landscape").then(() => {
-      window.dispatchEvent(event);
-    });
-  }, []);
+    window.dispatchEvent(event);
+  }, [isMobile]);
 
   return (
     <div className="relative w-full h-screen">
