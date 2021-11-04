@@ -3,10 +3,6 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 
-@import "./swiper.css";
-@import "./popup.css";
-@import "./progress.css";
-
 body {
   font-family: "Fira Sans", Arial, sans-serif;
   @apply min-h-screen w-full text-typography bg-background overflow-x-hidden;
@@ -69,3 +65,131 @@ main {
 }
 
 @import "tailwindcss/utilities";
+
+.popup__arrow,
+.popup__arrow::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: inherit;
+}
+
+.popup__arrow {
+  visibility: hidden;
+}
+
+.popup__arrow::before {
+  visibility: visible;
+  content: "";
+  transform: rotate(45deg);
+}
+
+.popup[data-popper-placement^="top"] > .popup__arrow {
+  bottom: -4px;
+}
+
+.popup[data-popper-placement^="bottom"] > .popup__arrow {
+  top: -4px;
+}
+
+.popup[data-popper-placement^="left"] > .popup__arrow {
+  right: -4px;
+}
+
+.popup[data-popper-placement^="right"] > .popup__arrow {
+  left: -4px;
+}
+
+/* Make clicks pass-through */
+#nprogress {
+  pointer-events: none;
+}
+
+#nprogress .bar {
+  @apply bg-primary-500;
+
+  position: fixed;
+  z-index: 1031;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 2px;
+}
+
+/* Fancy blur effect */
+#nprogress .peg {
+  display: block;
+  position: absolute;
+  right: 0px;
+  width: 100px;
+  height: 100%;
+  box-shadow: 0 0 10px var(--primary-color), 0 0 5px var(--primary-color);
+  opacity: 1;
+
+  -webkit-transform: rotate(3deg) translate(0px, -4px);
+  -ms-transform: rotate(3deg) translate(0px, -4px);
+  transform: rotate(3deg) translate(0px, -4px);
+}
+
+/* Remove these to get rid of the spinner */
+#nprogress .spinner {
+  display: block;
+  position: fixed;
+  z-index: 1031;
+  top: 15px;
+  right: 15px;
+}
+
+#nprogress .spinner-icon {
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+
+  border: solid 2px transparent;
+  border-top-color: var(--primary-color);
+  border-left-color: var(--primary-color);
+  border-radius: 50%;
+
+  -webkit-animation: nprogress-spinner 400ms linear infinite;
+  animation: nprogress-spinner 400ms linear infinite;
+}
+
+.nprogress-custom-parent {
+  overflow: hidden;
+  position: relative;
+}
+
+.nprogress-custom-parent #nprogress .spinner,
+.nprogress-custom-parent #nprogress .bar {
+  position: absolute;
+}
+
+@-webkit-keyframes nprogress-spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@keyframes nprogress-spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.swiper {
+  @apply !overflow-visible;
+}
+
+.swiper-button {
+  @apply cursor-pointer flex items-center justify-center p-2 rounded-full border-white text-white border-2 hover:bg-white hover:text-black transition duration-300;
+}
+
+.swiper-button-disabled {
+  @apply opacity-40 hover:text-white hover:bg-transparent cursor-not-allowed;
+}
