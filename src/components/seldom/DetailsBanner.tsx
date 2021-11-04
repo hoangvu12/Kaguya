@@ -3,7 +3,7 @@ import Image from "@/components/shared/Image";
 
 const DetailsBanner = ({ image }: { image?: string }) => {
   return (
-    <div className="relative z-0 w-full h-[400px]">
+    <div className="relative z-0 w-full h-[200px] md:h-[400px]">
       {image && (
         <Image
           src={image}
