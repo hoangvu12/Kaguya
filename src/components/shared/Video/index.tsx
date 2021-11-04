@@ -52,21 +52,19 @@ const Video: React.FC<VideoProps> = ({ overlaySlot, ...props }) => {
           className={classNames("video-wrapper relative overflow-hidden")}
           onMouseMove={() => setShowControls(true)}
         >
-          <div className="absolute inset-0 flex items-end z-50">
-            <motion.div
-              variants={{
-                show: { y: 0, opacity: 1 },
-                hidden: { y: "100%", opacity: 0 },
-              }}
-              animate={showControls ? "show" : "hidden"}
-              initial="hidden"
-              exit="hidden"
-              className="w-full"
-              transition={{ ease: "linear", duration: 0.2 }}
-            >
-              <Controls />
-            </motion.div>
-          </div>
+          <motion.div
+            variants={{
+              show: { y: 0, opacity: 1 },
+              hidden: { y: "100%", opacity: 0 },
+            }}
+            animate={showControls ? "show" : "hidden"}
+            initial="hidden"
+            exit="hidden"
+            className="absolute bottom-0 z-50 w-full"
+            transition={{ ease: "linear", duration: 0.2 }}
+          >
+            <Controls />
+          </motion.div>
 
           <Overlay>{overlaySlot}</Overlay>
 
