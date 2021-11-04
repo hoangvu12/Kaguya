@@ -89,15 +89,17 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
       {/* This bring them to the right position, but not being rerender by the parent */}
 
       <Portal selector=".right-controls-slot">
-        <NextEpisodeButton
-          onClick={handleNavigateEpisode(Number(episodeIndex) + 1)}
-        >
-          <div className="w-96">
-            <p className="text-xl">Tập tiếp theo</p>
+        {episodeIndex < sortedEpisodes.length - 1 && (
+          <NextEpisodeButton
+            onClick={handleNavigateEpisode(Number(episodeIndex) + 1)}
+          >
+            <div className="w-96">
+              <p className="text-xl">Tập tiếp theo</p>
 
-            <EpisodeCard episode={nextEpisode} />
-          </div>
-        </NextEpisodeButton>
+              <EpisodeCard episode={nextEpisode} />
+            </div>
+          </NextEpisodeButton>
+        )}
 
         <EpisodesButton>
           <div className="w-96 max-h-[40vh] overflow-y-scroll scroll-bar space-y-8">

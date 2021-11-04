@@ -29,6 +29,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({ anime, className }) => {
   return (
     <Popup
       disabled={isMobile}
+      className="max-w-[40vw]"
       reference={
         <Link href={`/details/${anime.ani_id}`}>
           <a>

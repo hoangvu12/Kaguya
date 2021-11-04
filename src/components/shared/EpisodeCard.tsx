@@ -20,7 +20,7 @@ const EpisodeCard: React.FC<EpisodeCardProps> = ({
     >
       <div className="relative col-span-7">
         <Image
-          src={episode.thumbnail_image || "/error.png"}
+          src={episode?.thumbnail_image || "/error.png"}
           layout="fill"
           alt={episode.name}
           objectFit="cover"

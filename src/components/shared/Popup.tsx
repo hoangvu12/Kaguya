@@ -92,7 +92,7 @@ const Popup: React.FC<PopupProps> = (props) => {
     if (disabled && isMobile) return;
 
     setActive(true);
-  }, [disabled]);
+  }, [disabled, isMobile]);
 
   const handleMouseLeave = useCallback(() => {
     setActive(false);
@@ -141,7 +141,7 @@ const Popup: React.FC<PopupProps> = (props) => {
               ref={setPopperElement}
               style={styles.popper}
               className={classNames(
-                "popup z-50 relative bg-background-900 p-4 rounded-md drop-shadow-lg max-w-[40vw]",
+                "popup z-50 relative bg-background-900 p-4 rounded-md drop-shadow-lg",
                 className
               )}
               {...attributes.popper}
