@@ -1,4 +1,5 @@
 import Portal from "@/components/shared/Portal";
+import useDevice from "@/hooks/useDevice";
 import { Options, Placement } from "@popperjs/core";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
@@ -56,6 +57,7 @@ const Popup: React.FC<PopupProps> = (props) => {
   const [arrowElement, setArrowElement] = useState(null);
 
   const [active, setActive] = useState(false);
+  const { isMobile } = useDevice();
 
   const arrowModifier = useMemo(
     () =>
@@ -87,7 +89,7 @@ const Popup: React.FC<PopupProps> = (props) => {
   });
 
   const handleMouseEnter = useCallback(() => {
-    if (disabled) return;
+    if (disabled && isMobile) return;
 
     setActive(true);
   }, [disabled]);
