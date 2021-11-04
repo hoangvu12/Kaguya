@@ -38,6 +38,13 @@ const Video: React.FC<VideoProps> = ({ overlaySlot, ...props }) => {
     return () => clearTimeout(timeout.current);
   }, [showControls]);
 
+  useEffect(() => {
+    const controlsShown = new Event("controls-shown");
+    const controlsHidden = new Event("controls-hidden");
+
+    window.dispatchEvent(showControls ? controlsShown : controlsHidden);
+  }, [showControls]);
+
   return (
     <VideoContextProvider el={refHolder}>
       <VideoOptionsProvider>
@@ -45,7 +52,7 @@ const Video: React.FC<VideoProps> = ({ overlaySlot, ...props }) => {
           className={classNames("video-wrapper relative overflow-hidden")}
           onMouseMove={() => setShowControls(true)}
         >
-          <div className="absolute inset-0 flex items-end z-10">
+          <div className="absolute inset-0 flex items-end z-50">
             <motion.div
               variants={{
                 show: { y: 0, opacity: 1 },

@@ -54,7 +54,7 @@ const Controls: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full px-4 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+    <div className="z-40 relative w-full px-4 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
       <div className="flex items-center space-x-4">
         <ProgressBar
           value={state.currentTime}

@@ -1,10 +1,14 @@
 import { useVideo } from "@/contexts/VideoContext";
 import useDevice from "@/hooks/useDevice";
-import React from "react";
+import useEventListener from "@/hooks/useEventListener";
+import classNames from "classnames";
+import { HTMLMotionProps, motion } from "framer-motion";
+import React, { useState } from "react";
 
-const Overlay: React.FC<React.HTMLProps<HTMLDivElement>> = (props) => {
+const Overlay: React.FC<HTMLMotionProps<"div">> = (props) => {
   const { videoEl } = useVideo();
   const { isMobile } = useDevice();
+  const [showOverlay, setShowOverlay] = useState(false);
 
   const handleOverlayClick = () => {
     if (!isMobile) return;
@@ -16,15 +20,27 @@ const Overlay: React.FC<React.HTMLProps<HTMLDivElement>> = (props) => {
     }
   };
 
+  useEventListener("controls-shown", () => {
+    setShowOverlay(true);
+  });
+
+  useEventListener("controls-hidden", () => {
+    setShowOverlay(false);
+  });
+
   return (
-    <div
-      className="absolute inset-0 w-full z-30"
-      style={{ height: "calc(100% - 6rem)" }}
+    <motion.div
+      variants={{ show: { opacity: 1 }, hide: { opacity: 0 } }}
+      animate={showOverlay ? "show" : "hide"}
+      className={classNames(
+        "absolute inset-0 w-full z-30",
+        isMobile && "bg-black/70"
+      )}
       onClick={handleOverlayClick}
       {...props}
     >
       {props.children}
-    </div>
+    </motion.div>
   );
 };
 

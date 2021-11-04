@@ -1,7 +1,7 @@
 import { useRef, useEffect } from "react";
 
 function useEventListener(
-  eventName: keyof WindowEventMap | keyof DocumentEventMap,
+  eventName: keyof WindowEventMap | keyof DocumentEventMap | string,
   handler: (event: any) => any,
   element?: any
 ) {
