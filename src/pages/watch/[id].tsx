@@ -115,11 +115,13 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
               const firstEpisode = chunk[0];
               const lastEpisode = chunk[chunk.length - 1];
 
+              const title =
+                chunk.length === 1
+                  ? `Tập ${firstEpisode.name}`
+                  : `Tập ${firstEpisode.name} - Tập ${lastEpisode.name}`;
+
               return (
-                <Accordion
-                  title={`Tập ${firstEpisode.name} - Tập ${lastEpisode.name}`}
-                  key={index}
-                >
+                <Accordion title={title} key={index}>
                   {chunk.map((episode, index) => (
                     <EpisodeCard
                       episode={episode}
