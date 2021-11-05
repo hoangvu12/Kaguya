@@ -32,11 +32,11 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   useEventListener("visibilitychange", () => {
     if (isMobile) return;
 
-    if (!document.hidden) return;
-
     if (showInfoTimeout.current) {
-      clearInterval(showInfoTimeout.current);
+      clearTimeout(showInfoTimeout.current);
     }
+
+    if (!document.hidden) return;
 
     showInfoTimeout.current = setTimeout(() => {
       setShowInfoOverlay(true);
