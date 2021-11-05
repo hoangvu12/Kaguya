@@ -89,7 +89,7 @@ const Popup: React.FC<PopupProps> = (props) => {
   });
 
   const handleMouseEnter = useCallback(() => {
-    if (disabled && isMobile) return;
+    if (disabled || isMobile) return;
 
     setActive(true);
   }, [disabled, isMobile]);
