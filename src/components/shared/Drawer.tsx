@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { AnimatePresence, motion, Transition, Variants } from "framer-motion";
-import React, { useState } from "react";
+import React, { useImperativeHandle, useState } from "react";
 import { ImCross } from "react-icons/im";
 import Portal from "./Portal";
 
@@ -10,6 +10,7 @@ interface DrawerProps {
   containerClassName?: string;
   buttonClassName?: string;
   overlayClassName?: string;
+  children: React.ReactNode;
 }
 
 const overlayVariants: Variants = {
@@ -44,7 +45,12 @@ const transition: Transition = {
   ease: "easeInOut",
 };
 
-const Drawer: React.FC<DrawerProps> = (props) => {
+export type DrawerRef = {
+  close: () => void;
+  open: () => void;
+};
+
+const Drawer = React.forwardRef<DrawerRef, DrawerProps>((props, ref) => {
   const {
     button,
     children,
@@ -58,6 +64,15 @@ const Drawer: React.FC<DrawerProps> = (props) => {
 
   const handleClose = () => setIsOpen(false);
   const handleOpen = () => setIsOpen(true);
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      close: handleClose,
+      open: handleOpen,
+    }),
+    []
+  );
 
   return (
     <div className={classNames(containerClassName)}>
@@ -110,6 +125,8 @@ const Drawer: React.FC<DrawerProps> = (props) => {
       </Portal>
     </div>
   );
-};
+});
+
+Drawer.displayName = "Drawer";
 
 export default Drawer;

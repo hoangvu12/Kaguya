@@ -1,9 +1,9 @@
 import classNames from "classnames";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import NavItem from "../seldom/NavItem";
-import Drawer from "../shared/Drawer";
+import Drawer, { DrawerRef } from "../shared/Drawer";
 
 const routes = [
   {
@@ -30,6 +30,7 @@ const routes = [
 
 const Header = () => {
   const [isTop, setIsTop] = useState(false);
+  const drawerRef = useRef<DrawerRef>();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -47,6 +48,7 @@ const Header = () => {
       )}
     >
       <Drawer
+        ref={drawerRef}
         containerClassName="sm:hidden mr-4"
         className="py-8 space-y-2"
         button={<GiHamburgerMenu className="w-6 h-6" />}
@@ -56,20 +58,22 @@ const Header = () => {
         </div>
 
         {routes.map((route) => (
-          <NavItem className="block" href={route.href} key={route.href}>
-            {({ isActive }) => (
-              <p
-                className={classNames(
-                  "pl-4 border-l-4 font-semibold text-2xl transition duration-300",
-                  isActive
-                    ? "border-primary-500 text-white"
-                    : "border-background-900 text-typography-secondary"
-                )}
-              >
-                {route.title}
-              </p>
-            )}
-          </NavItem>
+          <div onClick={drawerRef.current?.close} key={route.href}>
+            <NavItem className="block" href={route.href}>
+              {({ isActive }) => (
+                <p
+                  className={classNames(
+                    "pl-4 border-l-4 font-semibold text-2xl transition duration-300",
+                    isActive
+                      ? "border-primary-500 text-white"
+                      : "border-background-900 text-typography-secondary"
+                  )}
+                >
+                  {route.title}
+                </p>
+              )}
+            </NavItem>
+          </div>
         ))}
       </Drawer>
 
