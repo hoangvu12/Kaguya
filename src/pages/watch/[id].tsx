@@ -172,8 +172,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     .eq("ani_id", Number(params.id))
     .single();
 
-  console.log(error);
-
   if (error) {
     return { notFound: true };
   }
