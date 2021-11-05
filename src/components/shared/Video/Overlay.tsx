@@ -52,7 +52,7 @@ const Overlay: React.FC<HTMLMotionProps<"div">> = ({ className, ...props }) => {
 
   return (
     <AnimatePresence exitBeforeEnter>
-      {showOverlay && (
+      {showOverlay && isMobile && (
         <motion.div
           variants={{ show: { opacity: 1 }, hide: { opacity: 0 } }}
           initial="hide"
