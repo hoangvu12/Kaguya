@@ -37,7 +37,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
   return (
     <>
       <Head
-        title={anime.title.user_preferred}
+        title={`${anime.title.user_preferred} - Kaguya`}
         description={anime.description}
         image={anime.banner_image}
       />
