@@ -1,5 +1,4 @@
 import classNames from "classnames";
-import { useRouter } from "next/dist/client/router";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
@@ -23,11 +22,14 @@ const routes = [
     title: "Nổi bật",
     href: "/popular",
   },
+  {
+    title: "Donate",
+    href: "/donate",
+  },
 ];
 
 const Header = () => {
   const [isTop, setIsTop] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
