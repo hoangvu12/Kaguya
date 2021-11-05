@@ -10,6 +10,8 @@ import React, { useCallback, useState } from "react";
 import { AiOutlineLoading3Quarters, AiOutlinePause } from "react-icons/ai";
 import ControlsIcon from "./ControlsIcon";
 
+const variants = { show: { opacity: 1 }, hide: { opacity: 0 } };
+
 const Overlay: React.FC<HTMLMotionProps<"div">> = ({ className, ...props }) => {
   const { state, videoEl } = useVideo();
   const { isMobile } = useDevice();
@@ -34,13 +36,9 @@ const Overlay: React.FC<HTMLMotionProps<"div">> = ({ className, ...props }) => {
     [videoEl]
   );
 
-  const handlePlay = useCallback(() => {
-    videoEl.play();
-  }, [videoEl]);
+  const handlePlay = () => videoEl.play();
 
-  const handlePause = useCallback(() => {
-    videoEl.pause();
-  }, [videoEl]);
+  const handlePause = () => videoEl.pause();
 
   useEventListener("controls-shown", () => {
     setShowOverlay(true);
@@ -52,9 +50,9 @@ const Overlay: React.FC<HTMLMotionProps<"div">> = ({ className, ...props }) => {
 
   return (
     <AnimatePresence exitBeforeEnter>
-      {showOverlay && isMobile && (
+      {showOverlay && (
         <motion.div
-          variants={{ show: { opacity: 1 }, hide: { opacity: 0 } }}
+          variants={variants}
           initial="hide"
           animate="show"
           exit="hide"
@@ -66,45 +64,52 @@ const Overlay: React.FC<HTMLMotionProps<"div">> = ({ className, ...props }) => {
           onClick={handleOverlayClick}
           {...props}
         >
-          <div className="flex items-center justify-between w-2/3">
-            <ControlsIcon
-              width="3rem"
-              height="3rem"
-              Icon={RewindIcon}
-              onClick={seek(-10)}
-              whileTap={{ rotate: -20 }}
-            />
-
-            {state.buffering ? (
-              <ControlsIcon
-                Icon={AiOutlineLoading3Quarters}
-                className="animate-spin"
-              />
-            ) : state.paused ? (
-              <ControlsIcon
-                width="3.5rem"
-                height="3.5rem"
-                Icon={PlayIcon}
-                onClick={handlePlay}
-              />
-            ) : (
+          {isMobile && (
+            <motion.div
+              variants={variants}
+              initial="hide"
+              animate="show"
+              exit="hide"
+              className="flex items-center justify-between w-2/3"
+            >
               <ControlsIcon
                 width="3rem"
                 height="3rem"
-                Icon={AiOutlinePause}
-                onClick={handlePause}
+                Icon={RewindIcon}
+                onClick={seek(-10)}
+                whileTap={{ rotate: -20 }}
               />
-            )}
 
-            <ControlsIcon
-              width="3rem"
-              height="3rem"
-              Icon={ForwardIcon}
-              onClick={seek(10)}
-              whileTap={{ rotate: 20 }}
-            />
-          </div>
+              {state.buffering ? (
+                <ControlsIcon
+                  Icon={AiOutlineLoading3Quarters}
+                  className="animate-spin"
+                />
+              ) : state.paused ? (
+                <ControlsIcon
+                  width="3.5rem"
+                  height="3.5rem"
+                  Icon={PlayIcon}
+                  onClick={handlePlay}
+                />
+              ) : (
+                <ControlsIcon
+                  width="3rem"
+                  height="3rem"
+                  Icon={AiOutlinePause}
+                  onClick={handlePause}
+                />
+              )}
 
+              <ControlsIcon
+                width="3rem"
+                height="3rem"
+                Icon={ForwardIcon}
+                onClick={seek(10)}
+                whileTap={{ rotate: 20 }}
+              />
+            </motion.div>
+          )}
           {props.children}
         </motion.div>
       )}
