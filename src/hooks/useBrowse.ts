@@ -9,7 +9,7 @@ export interface UseBrowseOptions {
   seasonYear?: string;
   season?: string;
   format?: string;
-  sort?: string;
+  sort?: keyof Anime;
   select?: string;
   limit?: number;
 }
@@ -46,7 +46,7 @@ const useBrowse = (options: UseBrowseOptions) => {
     }
 
     if (sort) {
-      db = db.order(sort as keyof Anime, { ascending: false });
+      db = db.order(sort, { ascending: false });
     }
 
     if (limit) {

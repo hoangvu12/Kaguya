@@ -45,7 +45,13 @@ export const GENRES = [
   "Thriller",
 ] as const;
 
-export const SORTS = ["popularity", "trending", "favourites", "average_score"];
+export const SORTS = [
+  "popularity",
+  "trending",
+  "favourites",
+  "average_score",
+  "episodes_updated_at",
+];
 
 export const CHARACTERS_ROLES = ["MAIN", "SUPPORTING", "BACKGROUND"] as const;
 export const SEASON_YEARS = new Array(CURRENT_YEAR + 1 - START_YEAR)
@@ -58,6 +64,7 @@ export const VIETNAMESE_SORTS = [
   "Xu hướng",
   "Yêu thích",
   "Đánh giá",
+  "Mới cập nhật",
 ];
 export const VIETNAMESE_SEASONS = [
   "Mùa đông",

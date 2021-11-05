@@ -8,13 +8,13 @@ const browseQuery: UseBrowseOptions = {
   genre: "",
   season: "",
   seasonYear: "",
-  sort: "episodes_updated_at",
+  sort: "trending",
 };
 
 const LatestPage = () => {
   return (
     <div className="py-20">
-      <BrowseList title="Mới cập nhật" defaultQuery={browseQuery} />
+      <BrowseList title="Xu hướng hiện nay" defaultQuery={browseQuery} />
     </div>
   );
 };

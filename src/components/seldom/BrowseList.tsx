@@ -6,13 +6,14 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { AiOutlineSearch } from "react-icons/ai";
 import AnimeList from "../shared/AnimeList";
+import Head from "../shared/Head";
 import Input from "../shared/Input";
 import InView from "../shared/InView";
 import Select from "../shared/Select";
 import AnimeListSkeleton from "../skeletons/AnimeListSkeleton";
 import SortSelector from "./SortSelector";
 
-const defaultValues = {
+const defaultValues: UseBrowseOptions = {
   format: "",
   keyword: "",
   genre: "",
@@ -41,9 +42,17 @@ const formats = FORMATS.map((format) => ({
   placeholder: convert(format, "format"),
 }));
 
-const BrowseList = () => {
+interface BrowseListProps {
+  defaultQuery?: UseBrowseOptions;
+  title?: string;
+}
+
+const BrowseList: React.FC<BrowseListProps> = ({
+  defaultQuery = defaultValues,
+  title,
+}) => {
   const { control, register, watch, setValue } = useForm<UseBrowseOptions>({
-    defaultValues,
+    defaultValues: defaultQuery,
   });
 
   const query = watch();
@@ -65,6 +74,14 @@ const BrowseList = () => {
 
   return (
     <div className="min-h-screen px-4 md:px-12">
+      <Head title={`${title} - Kaguya` || "Kaguya"} />
+
+      {title && (
+        <p className="text-4xl text-center md:text-left font-semibold mb-8">
+          {title}
+        </p>
+      )}
+
       <form className="space-y-4">
         <div className="space-y-4 items-center overflow-visible">
           <Input
@@ -138,8 +155,13 @@ const BrowseList = () => {
           <Controller
             name="sort"
             control={control}
-            defaultValue="popularity"
-            render={({ field }) => <SortSelector onChange={field.onChange} />}
+            defaultValue={defaultQuery.sort}
+            render={({ field }) => (
+              <SortSelector
+                defaultValue={defaultQuery.sort}
+                onChange={field.onChange}
+              />
+            )}
           />
         </div>
       </form>

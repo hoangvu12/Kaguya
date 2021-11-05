@@ -7,11 +7,12 @@ import TextIcon from "../shared/TextIcon";
 
 interface SortSelectorProps {
   onChange?: (item: string) => void;
+  defaultValue?: string;
 }
 
 const SortSelector: React.FC<SortSelectorProps> = (props) => {
-  const { onChange } = props;
-  const [activeItem, setActiveItem] = useState("average_score");
+  const { onChange, defaultValue = "average_score" } = props;
+  const [activeItem, setActiveItem] = useState(defaultValue);
 
   const handleClick = (item: string) => {
     setActiveItem(item);
