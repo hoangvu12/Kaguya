@@ -193,3 +193,7 @@ main {
 .swiper-button-disabled {
   @apply opacity-40 hover:text-white hover:bg-transparent cursor-not-allowed;
 }
+
+.app {
+  @apply min-h-screen;
+}
