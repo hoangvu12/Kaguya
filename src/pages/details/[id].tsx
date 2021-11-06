@@ -73,7 +73,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
 
               <p className="mt-4 text-gray-300 mb-8">{anime.description}</p>
 
-              <div className="flex overflow-x-auto snap-x space-x-8 md:space-x-16">
+              <div className="flex overflow-x-auto md:scroll-bar snap-x space-x-8 md:space-x-16">
                 <InfoItem title="Số tập" value={anime.total_episodes} />
                 <InfoItem title="Thời lượng" value={`${anime.duration} phút`} />
 

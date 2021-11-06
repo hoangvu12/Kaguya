@@ -1,12 +1,12 @@
 import DotList from "@/components/shared/DotList";
 import Image from "@/components/shared/Image";
-import Popup from "@/components/shared/Popup";
 import TextIcon from "@/components/shared/TextIcon";
 import useDevice from "@/hooks/useDevice";
 import { Anime } from "@/types";
 import { isColorVisible, numberWithCommas } from "@/utils";
 import { convert } from "@/utils/anime";
 import classNames from "classnames";
+import { motion, Variants } from "framer-motion";
 import Link from "next/link";
 import React from "react";
 import { AiFillHeart } from "react-icons/ai";
@@ -17,8 +17,29 @@ interface AnimeCardProps {
   className?: string;
 }
 
+const imageVariants: Variants = {
+  animate: {
+    scale: 0.5,
+    y: -60,
+  },
+  exit: { scale: 1 },
+};
+const infoVariants: Variants = {
+  animate: { y: 0, opacity: 1 },
+  exit: { y: 20, opacity: 0, transition: { duration: 0.2 } },
+};
+
+const containerVariants: Variants = {
+  animate: {
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+  exit: {},
+};
+
 const AnimeCard: React.FC<AnimeCardProps> = ({ anime, className }) => {
-  const { isMobile } = useDevice();
+  const { isDesktop } = useDevice();
 
   const primaryColor =
     anime.cover_image.color &&
@@ -27,18 +48,21 @@ const AnimeCard: React.FC<AnimeCardProps> = ({ anime, className }) => {
       : "white";
 
   return (
-    <Popup
-      disabled={isMobile}
-      className="max-w-[40vw]"
-      reference={
-        <Link href={`/details/${anime.ani_id}`}>
-          <a>
-            <div
-              className={classNames(
-                "cursor-pointer aspect-w-9 aspect-h-16",
-                className
-              )}
-            >
+    <Link href={`/details/${anime.ani_id}`}>
+      <a>
+        <motion.div
+          variants={containerVariants}
+          whileHover={isDesktop ? "animate" : ""}
+          animate="exit"
+          initial="exit"
+        >
+          <div
+            className={classNames(
+              "relative cursor-pointer aspect-w-9 aspect-h-16 bg-background-900",
+              className
+            )}
+          >
+            <motion.div className="w-full h-full" variants={imageVariants}>
               <Image
                 src={anime.cover_image.extra_large}
                 layout="fill"
@@ -46,51 +70,59 @@ const AnimeCard: React.FC<AnimeCardProps> = ({ anime, className }) => {
                 className="rounded-sm"
                 alt={`${anime.title.user_preferred} card`}
               />
-            </div>
+            </motion.div>
 
+            <motion.div className="px-2 py-4 flex flex-col justify-end items-center text-center absolute bottom-0">
+              <motion.p
+                variants={infoVariants}
+                className="text-base font-semibold line-clamp-2"
+                style={{ color: primaryColor }}
+              >
+                {anime.title.user_preferred}
+              </motion.p>
+
+              <motion.div variants={infoVariants} className="mt-2 !mb-1">
+                <DotList>
+                  {anime.genres.slice(0, 2).map((genre) => (
+                    <p
+                      className="text-sm font-semibold"
+                      style={{
+                        color: primaryColor,
+                      }}
+                      key={genre}
+                    >
+                      {convert(genre, "genre")}
+                    </p>
+                  ))}
+                </DotList>
+              </motion.div>
+
+              <motion.div
+                variants={infoVariants}
+                className="flex items-center space-x-2"
+              >
+                <TextIcon LeftIcon={MdTagFaces} iconClassName="text-green-300">
+                  <p>{anime.average_score}%</p>
+                </TextIcon>
+
+                <TextIcon LeftIcon={AiFillHeart} iconClassName="text-red-400">
+                  <p>{numberWithCommas(anime.favourites)}</p>
+                </TextIcon>
+              </motion.div>
+            </motion.div>
+          </div>
+
+          {!isDesktop && (
             <p
-              className="mt-2 text-lg font-semibold md:hidden line-clamp-2"
+              className="mt-2 text-lg font-semibold line-clamp-2"
               style={{ color: primaryColor }}
             >
               {anime.title.user_preferred}
             </p>
-          </a>
-        </Link>
-      }
-    >
-      <div className="flex items-center justify-between space-x-8 max-w-[500px]">
-        <div>
-          <p className="text-lg font-semibold">{anime.title.user_preferred}</p>
-          <p className="text-base" style={{ color: primaryColor }}>
-            {anime.studios.slice(0, 2).join(", ")}
-          </p>
-        </div>
-
-        <div className="space-y-2 self-start">
-          <TextIcon LeftIcon={MdTagFaces} iconClassName="text-green-300">
-            <p>{anime.average_score}%</p>
-          </TextIcon>
-
-          <TextIcon LeftIcon={AiFillHeart} iconClassName="text-red-400">
-            <p>{numberWithCommas(anime.favourites)}</p>
-          </TextIcon>
-        </div>
-      </div>
-
-      <DotList className="mt-2">
-        {anime.genres.slice(0, 3).map((genre) => (
-          <p
-            className="text-base font-semibold"
-            style={{
-              color: primaryColor,
-            }}
-            key={genre}
-          >
-            {convert(genre, "genre")}
-          </p>
-        ))}
-      </DotList>
-    </Popup>
+          )}
+        </motion.div>
+      </a>
+    </Link>
   );
 };
 
