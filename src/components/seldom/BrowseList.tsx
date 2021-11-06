@@ -83,7 +83,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
       )}
 
       <form className="space-y-4">
-        <div className="flex md:justify-between gap-x-2 items-center overflow-x-auto md:flex-wrap md:overflow-x-hidden snap-x md:snap-none">
+        <div className="flex lg:justify-between space-x-2 lg:space-x-0 items-center overflow-x-auto lg:flex-wrap lg:overflow-x-hidden snap-x lg:snap-none">
           <Input
             {...register("keyword")}
             LeftIcon={AiOutlineSearch}
