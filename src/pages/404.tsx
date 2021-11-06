@@ -8,7 +8,7 @@ const ErrorPage = () => {
   const router = useRouter();
 
   return (
-    <div className="fixed inset-0 flex flex-col items-center justify-center">
+    <div className="text-center fixed inset-0 flex flex-col items-center justify-center">
       <Head title="Không tìm thấy trang này - Kaguya" />
 
       <Image
