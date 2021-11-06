@@ -106,7 +106,7 @@ const Controls: React.FC = () => {
             whileTap={{ rotate: 20 }}
           />
 
-          <VolumeControl />
+          {!isMobile && <VolumeControl />}
         </div>
 
         <div className="right-controls flex items-center space-x-6">

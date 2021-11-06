@@ -1,7 +1,6 @@
 import VolumeFullIcon from "@/components/icons/VolumeFullIcon";
 import VolumeMutedIcon from "@/components/icons/VolumeMutedIcon";
 import { useVideo } from "@/contexts/VideoContext";
-import useDevice from "@/hooks/useDevice";
 import { motion } from "framer-motion";
 import React, { useState } from "react";
 import ControlsIcon from "./ControlsIcon";
@@ -10,7 +9,6 @@ import ProgressBar from "./ProgressBar";
 const VolumeControl: React.FC = () => {
   const [hover, setHover] = useState(false);
   const { state, videoEl } = useVideo();
-  const { isMobile } = useDevice();
 
   const volume = (volume: number) => () => {
     if (!volume && volume !== 0) return videoEl.volume;
@@ -36,8 +34,8 @@ const VolumeControl: React.FC = () => {
       <motion.div
         initial={{ width: 0, opacity: 0 }}
         animate={{
-          width: hover || isMobile ? "5rem" : 0,
-          opacity: hover || isMobile ? 1 : 0,
+          width: hover ? "5rem" : 0,
+          opacity: hover ? 1 : 0,
         }}
       >
         <ProgressBar
