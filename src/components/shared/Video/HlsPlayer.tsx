@@ -1,18 +1,35 @@
+import { WEBSITE_URL } from "@/constants";
 import { useVideoOptions } from "@/contexts/VideoOptionsContext";
 import Hls, { Config } from "hls.js";
 import React, { MutableRefObject, useEffect, useRef } from "react";
 
 export interface HlsPlayerProps
   extends React.VideoHTMLAttributes<HTMLVideoElement> {
-  hlsConfig?: Config;
   src: string;
   autoPlay?: boolean;
 }
 
+let hostname;
+
+const config = {
+  enableWorker: false,
+  xhrSetup: (xhr, url) => {
+    let streamUrl = url;
+
+    if (!url.includes("playlist.m3u8")) {
+      streamUrl = `${hostname}/${url.replace(`${WEBSITE_URL}/api/`, "")}`;
+    } else {
+      hostname = url.replace("/playlist.m3u8", "");
+    }
+
+    xhr.open("GET", `${WEBSITE_URL}/api/proxy?url=${streamUrl}`, true);
+  },
+};
+
 const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
-  ({ hlsConfig, src, autoPlay, ...props }, ref) => {
+  ({ src, autoPlay, ...props }, ref) => {
     const myRef = useRef<HTMLVideoElement>(null);
-    const hls = useRef(new Hls({ enableWorker: false, ...hlsConfig }));
+    const hls = useRef(new Hls(config));
     const { options, setOptions } = useVideoOptions();
 
     useEffect(() => {
@@ -28,10 +45,7 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
         if (hls.current != null) {
           hls.current.destroy();
 
-          hls.current = new Hls({
-            enableWorker: false,
-            ...hlsConfig,
-          });
+          hls.current = new Hls(config);
         }
 
         if (myRef.current != null) {
@@ -99,7 +113,7 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
           hls.current.destroy();
         }
       };
-    }, [autoPlay, hlsConfig, setOptions, src]);
+    }, [autoPlay, setOptions, src]);
 
     return (
       <video
