@@ -1,5 +1,8 @@
 import { VideoContextProvider } from "@/contexts/VideoContext";
-import { VideoOptionsProvider } from "@/contexts/VideoOptionsContext";
+import {
+  useVideoOptions,
+  VideoOptionsProvider,
+} from "@/contexts/VideoOptionsContext";
 import classNames from "classnames";
 import { motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";

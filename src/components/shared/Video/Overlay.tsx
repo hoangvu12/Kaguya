@@ -2,6 +2,7 @@ import ForwardIcon from "@/components/icons/ForwardIcon";
 import PlayIcon from "@/components/icons/PlayIcon";
 import RewindIcon from "@/components/icons/RewindIcon";
 import { useVideo } from "@/contexts/VideoContext";
+import { useVideoOptions } from "@/contexts/VideoOptionsContext";
 import useDevice from "@/hooks/useDevice";
 import useEventListener from "@/hooks/useEventListener";
 import classNames from "classnames";
@@ -16,6 +17,7 @@ const Overlay: React.FC<HTMLMotionProps<"div">> = ({ className, ...props }) => {
   const { state, videoEl } = useVideo();
   const { isMobile } = useDevice();
   const [showOverlay, setShowOverlay] = useState(false);
+  const { options } = useVideoOptions();
 
   const handleOverlayClick = () => {
     if (isMobile) return;
@@ -48,7 +50,7 @@ const Overlay: React.FC<HTMLMotionProps<"div">> = ({ className, ...props }) => {
     setShowOverlay(false);
   });
 
-  return (
+  return !options.isLocked ? (
     <AnimatePresence exitBeforeEnter>
       {showOverlay && (
         <motion.div
@@ -114,7 +116,7 @@ const Overlay: React.FC<HTMLMotionProps<"div">> = ({ className, ...props }) => {
         </motion.div>
       )}
     </AnimatePresence>
-  );
+  ) : null;
 };
 
 export default Overlay;
