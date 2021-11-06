@@ -21,13 +21,12 @@ const Video: React.FC<VideoProps> = ({ overlaySlot, ...props }) => {
   const [showControls, setShowControls] = useState(true);
   const timeout = useRef<NodeJS.Timeout>(null);
 
-  useEffect(() => {
-    if (!ref.current) return;
+  const handleKeepControls = () => {
+    startControlsCycle();
+    setShowControls(true);
+  };
 
-    setRefHolder(ref.current);
-  }, [ref, props.src]);
-
-  useEffect(() => {
+  const startControlsCycle = () => {
     if (!showControls) return;
 
     if (timeout.current) {
@@ -37,6 +36,16 @@ const Video: React.FC<VideoProps> = ({ overlaySlot, ...props }) => {
     timeout.current = setTimeout(() => {
       setShowControls(false);
     }, 3000);
+  };
+
+  useEffect(() => {
+    if (!ref.current) return;
+
+    setRefHolder(ref.current);
+  }, [ref, props.src]);
+
+  useEffect(() => {
+    startControlsCycle();
 
     return () => clearTimeout(timeout.current);
   }, [showControls]);
@@ -53,7 +62,8 @@ const Video: React.FC<VideoProps> = ({ overlaySlot, ...props }) => {
       <VideoOptionsProvider>
         <div
           className={classNames("video-wrapper relative overflow-hidden")}
-          onMouseMove={() => setShowControls(true)}
+          onMouseMove={handleKeepControls}
+          onClick={handleKeepControls}
         >
           <motion.div
             variants={{
