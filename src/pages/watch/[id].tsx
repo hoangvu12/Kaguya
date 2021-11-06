@@ -110,7 +110,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
                 onClick={handleNavigateEpisode(Number(episodeIndex) + 1)}
               >
                 <div className="w-96">
-                  <p className="text-xl">Tập tiếp theo</p>
+                  <p className="text-xl mb-4">Tập tiếp theo</p>
 
                   <EpisodeCard episode={nextEpisode} />
                 </div>
@@ -129,7 +129,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
                       : `Tập ${firstEpisode.name} - Tập ${lastEpisode.name}`;
 
                   return (
-                    <Accordion title={title} key={index}>
+                    <Accordion title={title} key={index} className="space-y-4">
                       {chunk.map((episode, index) => (
                         <EpisodeCard
                           episode={episode}
