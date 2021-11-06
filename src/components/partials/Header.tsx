@@ -22,10 +22,6 @@ const routes = [
     title: "Nổi bật",
     href: "/popular",
   },
-  {
-    title: "Donate",
-    href: "/donate",
-  },
 ];
 
 const Header = () => {
