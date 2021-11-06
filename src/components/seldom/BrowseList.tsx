@@ -83,72 +83,60 @@ const BrowseList: React.FC<BrowseListProps> = ({
       )}
 
       <form className="space-y-4">
-        <div className="space-y-4 items-center overflow-visible">
+        <div className="flex md:justify-between gap-x-2 items-center overflow-x-auto md:flex-wrap md:overflow-x-hidden snap-x md:snap-none">
           <Input
-            containerClassName="md:hidden"
             {...register("keyword")}
             LeftIcon={AiOutlineSearch}
             onChange={handleInputChange}
             label="Tìm kiếm"
           />
+          <Controller
+            name="genre"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <Select
+                label="Thể loại"
+                data={genres}
+                onChange={field.onChange}
+              />
+            )}
+          />
 
-          <div className="flex justify-between items-center gap-x-2 overflow-x-auto md:overflow-x-visible snap-x md:snap-none">
-            <Input
-              containerClassName="hidden md:block"
-              {...register("keyword")}
-              LeftIcon={AiOutlineSearch}
-              label="Tìm kiếm"
-              onChange={handleInputChange}
-            />
+          <Controller
+            name="seasonYear"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <Select
+                label="Năm"
+                data={seasonYears}
+                onChange={field.onChange}
+              />
+            )}
+          />
 
-            <Controller
-              name="genre"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <Select
-                  label="Thể loại"
-                  data={genres}
-                  onChange={field.onChange}
-                />
-              )}
-            />
+          <Controller
+            name="season"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <Select label="Mùa" data={seasons} onChange={field.onChange} />
+            )}
+          />
 
-            <Controller
-              name="seasonYear"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <Select
-                  label="Năm"
-                  data={seasonYears}
-                  onChange={field.onChange}
-                />
-              )}
-            />
-
-            <Controller
-              name="season"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <Select label="Mùa" data={seasons} onChange={field.onChange} />
-              )}
-            />
-
-            <Controller
-              name="format"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <Select
-                  label="Định dạng"
-                  data={formats}
-                  onChange={field.onChange}
-                />
-              )}
-            />
-          </div>
+          <Controller
+            name="format"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <Select
+                label="Định dạng"
+                data={formats}
+                onChange={field.onChange}
+              />
+            )}
+          />
         </div>
 
         <div className="flex items-center space-x-4 justify-end">
