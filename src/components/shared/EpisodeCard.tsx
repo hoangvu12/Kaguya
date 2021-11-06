@@ -14,27 +14,26 @@ const EpisodeCard: React.FC<EpisodeCardProps> = ({
   ...props
 }) => {
   return (
-    <div
-      className="h-40 w-full grid grid-cols-10 gap-x-4 hover:bg-white/20 cursor-pointer p-4"
-      {...props}
-    >
-      <div className="relative col-span-7">
+    <React.Fragment>
+      <div
+        className="relative h-40 w-full hover:bg-white/20 cursor-pointer p-4"
+        {...props}
+      >
         <Image
           src={episode?.thumbnail_image || "/error.png"}
           layout="fill"
           alt={episode.name}
           objectFit="cover"
         />
-      </div>
-
-      <div className="col-span-3 flex flex-col items-center justify-center space-y-4">
-        <p>Tập {episode.name}</p>
 
         {isActive && (
-          <div className="bg-primary-500 p-2 rounded-md">Đang xem</div>
+          <div className="absolute bottom-4 bg-primary-500 p-2 rounded-md">
+            Đang xem
+          </div>
         )}
       </div>
-    </div>
+      <p className="mt-4 text-2xl font-bold">Tập {episode.name}</p>
+    </React.Fragment>
   );
 };
 

@@ -9,6 +9,7 @@ import {
 export interface VideoOptions {
   qualities?: number[];
   currentQuality?: number;
+  isLocked?: boolean;
 }
 
 interface ContextProps {
@@ -16,13 +17,15 @@ interface ContextProps {
   setOptions: Dispatch<SetStateAction<VideoOptions>>;
 }
 
-const VideoContext = createContext<ContextProps>({
-  options: { qualities: [], currentQuality: 0 },
+const defaultValue = {
+  options: { qualities: [], currentQuality: 0, isLocked: false },
   setOptions: () => {},
-});
+};
+
+const VideoContext = createContext<ContextProps>(defaultValue);
 
 export const VideoOptionsProvider: React.FC = ({ children }) => {
-  const [options, setOptions] = useState<VideoOptions>();
+  const [options, setOptions] = useState<VideoOptions>(defaultValue.options);
 
   return (
     <VideoContext.Provider value={{ options, setOptions }}>

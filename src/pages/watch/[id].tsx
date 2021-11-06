@@ -16,6 +16,11 @@ import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { BsArrowLeft } from "react-icons/bs";
+import { BrowserView, MobileView } from "react-device-detect";
+import MobileEpisodesButton from "@/components/shared/Video/MobileEpisodesButton";
+import classNames from "classnames";
+import MobileNextEpisode from "@/components/shared/MobileNextEpisode";
+import ClientOnly from "@/components/shared/ClientOnly";
 
 interface WatchPageProps {
   anime: Anime;
@@ -96,49 +101,100 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
       {/* It makes these two components perform really bad */}
       {/* This bring them to the right position, but not being rerender by the parent */}
 
-      <Portal selector=".right-controls-slot">
-        {episodeIndex < sortedEpisodes.length - 1 && (
-          <NextEpisodeButton
-            onClick={handleNavigateEpisode(Number(episodeIndex) + 1)}
-          >
-            <div className="w-96">
-              <p className="text-xl">Tập tiếp theo</p>
+      <ClientOnly>
+        {/* Browser Only */}
+        <BrowserView>
+          <Portal selector=".right-controls-slot">
+            {episodeIndex < sortedEpisodes.length - 1 && (
+              <NextEpisodeButton
+                onClick={handleNavigateEpisode(Number(episodeIndex) + 1)}
+              >
+                <div className="w-96">
+                  <p className="text-xl">Tập tiếp theo</p>
 
-              <EpisodeCard episode={nextEpisode} />
-            </div>
-          </NextEpisodeButton>
-        )}
+                  <EpisodeCard episode={nextEpisode} />
+                </div>
+              </NextEpisodeButton>
+            )}
 
-        <EpisodesButton>
-          <div className="w-96 max-h-[40vh] overflow-y-scroll scroll-bar space-y-8">
-            {chunk(sortedEpisodes, 12).map((chunk, index) => {
-              const firstEpisode = chunk[0];
-              const lastEpisode = chunk[chunk.length - 1];
+            <EpisodesButton>
+              <div className="w-96 max-h-[40vh] overflow-y-scroll scroll-bar space-y-8">
+                {chunk(sortedEpisodes, 12).map((chunk, index) => {
+                  const firstEpisode = chunk[0];
+                  const lastEpisode = chunk[chunk.length - 1];
 
-              const title =
-                chunk.length === 1
-                  ? `Tập ${firstEpisode.name}`
-                  : `Tập ${firstEpisode.name} - Tập ${lastEpisode.name}`;
+                  const title =
+                    chunk.length === 1
+                      ? `Tập ${firstEpisode.name}`
+                      : `Tập ${firstEpisode.name} - Tập ${lastEpisode.name}`;
 
-              return (
-                <Accordion title={title} key={index}>
-                  {chunk.map((episode, index) => (
-                    <EpisodeCard
-                      episode={episode}
-                      key={episode.episode_id}
-                      onClick={handleNavigateEpisode(index)}
-                      isActive={
-                        Number(episode.name) - 1 === Number(episodeIndex) ||
-                        false
-                      }
-                    />
-                  ))}
-                </Accordion>
-              );
-            })}
-          </div>
-        </EpisodesButton>
-      </Portal>
+                  return (
+                    <Accordion title={title} key={index}>
+                      {chunk.map((episode, index) => (
+                        <EpisodeCard
+                          episode={episode}
+                          key={episode.episode_id}
+                          onClick={handleNavigateEpisode(index)}
+                          isActive={
+                            Number(episode.name) - 1 === Number(episodeIndex) ||
+                            false
+                          }
+                        />
+                      ))}
+                    </Accordion>
+                  );
+                })}
+              </div>
+            </EpisodesButton>
+          </Portal>
+        </BrowserView>
+
+        {/* Mobile Only */}
+        <MobileView>
+          <Portal selector=".mobile-controls">
+            <MobileEpisodesButton>
+              {(isOpen, setIsOpen) => (
+                <div
+                  className={classNames(
+                    "fixed inset-0 z-[9999] flex items-center bg-background",
+                    !isOpen && "hidden"
+                  )}
+                >
+                  <BsArrowLeft
+                    className="absolute left-5 top-5 w-10 h-10 hover:text-gray-200 transition duration-300 cursor-pointer"
+                    onClick={() => setIsOpen(false)}
+                  />
+
+                  <div className="flex space-x-8 snap-x overflow-x-auto">
+                    {sortedEpisodes.map((episode, index) => (
+                      <div className="w-80" key={episode.episode_id}>
+                        <EpisodeCard
+                          episode={episode}
+                          onClick={handleNavigateEpisode(index)}
+                          isActive={
+                            Number(episode.name) - 1 === Number(episodeIndex) ||
+                            false
+                          }
+                        />
+                      </div>
+                    ))}
+                  </div>
+
+                  <p className="font-semibold absolute left-1/2 -translate-x-1/2 bottom-5 text-center text-xl mt-8">
+                    {anime.title.user_preferred} - Tập {episode.name}
+                  </p>
+                </div>
+              )}
+            </MobileEpisodesButton>
+
+            {episodeIndex < sortedEpisodes.length - 1 && (
+              <MobileNextEpisode
+                onClick={handleNavigateEpisode(Number(episodeIndex) + 1)}
+              />
+            )}
+          </Portal>
+        </MobileView>
+      </ClientOnly>
 
       {showInfoOverlay && (
         <Portal>

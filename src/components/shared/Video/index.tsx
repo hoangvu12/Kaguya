@@ -3,8 +3,11 @@ import { VideoOptionsProvider } from "@/contexts/VideoOptionsContext";
 import classNames from "classnames";
 import { motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
-import Controls from "./Controls";
+import { BrowserView, MobileView } from "react-device-detect";
+import ClientOnly from "../ClientOnly";
+import DesktopControls from "./DesktopControls";
 import HlsPlayer from "./HlsPlayer";
+import MobileControls from "./MobileControls";
 import Overlay from "./Overlay";
 
 interface VideoProps extends React.VideoHTMLAttributes<HTMLVideoElement> {
@@ -63,7 +66,15 @@ const Video: React.FC<VideoProps> = ({ overlaySlot, ...props }) => {
             className="absolute bottom-0 z-50 w-full"
             transition={{ ease: "linear", duration: 0.2 }}
           >
-            <Controls />
+            <ClientOnly>
+              <BrowserView>
+                <DesktopControls />
+              </BrowserView>
+
+              <MobileView>
+                <MobileControls />
+              </MobileView>
+            </ClientOnly>
           </motion.div>
 
           <Overlay>{overlaySlot}</Overlay>

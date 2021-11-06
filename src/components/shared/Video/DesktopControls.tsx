@@ -4,13 +4,11 @@ import PlayIcon from "@/components/icons/PlayIcon";
 import RewindIcon from "@/components/icons/RewindIcon";
 import { useVideo } from "@/contexts/VideoContext";
 import useDevice from "@/hooks/useDevice";
-import useEventListener from "@/hooks/useEventListener";
-import { parseTime } from "@/utils";
 import React, { useCallback } from "react";
 import { AiOutlineLoading3Quarters, AiOutlinePause } from "react-icons/ai";
 import screenfull from "screenfull";
 import ControlsIcon from "./ControlsIcon";
-import ProgressBar from "./ProgressBar";
+import ProgressControl from "./ProgressControl";
 import QualitiesSelector from "./QualitiesSelector";
 import VolumeControl from "./VolumeControl";
 
@@ -23,15 +21,6 @@ const Controls: React.FC = () => {
       if (!videoEl) return;
 
       videoEl.currentTime = videoEl.currentTime + time;
-    },
-    [videoEl]
-  );
-
-  const handleProgressSeek = useCallback(
-    (time) => {
-      videoEl.currentTime = time;
-
-      videoEl.pause();
     },
     [videoEl]
   );
@@ -61,26 +50,9 @@ const Controls: React.FC = () => {
     }
   }, []);
 
-  useEventListener("video-fullscreen", () => {
-    if (!isMobile) return;
-
-    handleToggleFullscreen();
-  });
-
   return (
     <div className="z-40 relative w-full px-4 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-      <div className="flex items-center space-x-4">
-        <ProgressBar
-          value={state.currentTime}
-          max={state.duration || 100}
-          onSeek={handleProgressSeek}
-          onChange={handlePlay}
-        />
-
-        <p className="text-gray-300">
-          {parseTime(state.duration - state.currentTime || 0)}
-        </p>
-      </div>
+      <ProgressControl />
 
       <div className="flex items-center justify-between py-4">
         <div className="left-controls flex items-center space-x-6">
