@@ -1,5 +1,6 @@
 import AnimeSection from "@/components/seldom/AnimeSection";
 import HomeBanner from "@/components/seldom/HomeBanner";
+import WatchedSection from "@/components/seldom/WatchedSection";
 import AnimeSwiper from "@/components/shared/AnimeSwiper";
 import Head from "@/components/shared/Head";
 import TopAnimeList from "@/components/shared/TopAnimeList";
@@ -86,6 +87,8 @@ export default function Home() {
         <HomeBanner />
 
         <div className="space-y-8">
+          <WatchedSection />
+
           {sections.map(({ render, ...section }, index) => (
             <AnimeSection key={index} {...section}>
               {render}

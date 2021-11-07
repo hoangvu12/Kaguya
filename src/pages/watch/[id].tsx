@@ -1,26 +1,28 @@
 import Accordion from "@/components/shared/Accordion";
+import ClientOnly from "@/components/shared/ClientOnly";
 import EpisodeCard from "@/components/shared/EpisodeCard";
 import Head from "@/components/shared/Head";
+import MobileNextEpisode from "@/components/shared/MobileNextEpisode";
 import Portal from "@/components/shared/Portal";
 import Video from "@/components/shared/Video";
 import EpisodesButton from "@/components/shared/Video/EpisodesButton";
+import MobileEpisodesButton from "@/components/shared/Video/MobileEpisodesButton";
 import NextEpisodeButton from "@/components/shared/Video/NextEpisodeButton";
 import useDevice from "@/hooks/useDevice";
+import useDidMount from "@/hooks/useDidMount";
 import useEventListener from "@/hooks/useEventListener";
 import { useFetchSource } from "@/hooks/useFetchSource";
 import supabase from "@/lib/supabase";
 import { Anime } from "@/types";
 import { chunk } from "@/utils";
+import Storage from "@/utils/storage";
+import classNames from "classnames";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
+import { BrowserView, MobileView } from "react-device-detect";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { BsArrowLeft } from "react-icons/bs";
-import { BrowserView, MobileView } from "react-device-detect";
-import MobileEpisodesButton from "@/components/shared/Video/MobileEpisodesButton";
-import classNames from "classnames";
-import MobileNextEpisode from "@/components/shared/MobileNextEpisode";
-import ClientOnly from "@/components/shared/ClientOnly";
 
 interface WatchPageProps {
   anime: Anime;
@@ -63,13 +65,28 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
 
   const { data, isLoading } = useFetchSource(episode.episode_id);
 
-  useEffect(() => {
+  useDidMount(() => {
     if (!isMobile) return;
 
     const event = new Event("video-fullscreen");
 
     window.dispatchEvent(event);
-  }, [isMobile]);
+  });
+
+  useEffect(() => {
+    const storage = new Storage("watched");
+
+    storage.update(
+      {
+        ani_id: Number(id),
+      },
+      {
+        ani_id: Number(id),
+        currentEpisode: episode,
+        ...anime,
+      }
+    );
+  }, [anime, episode, id]);
 
   return (
     <div className="relative w-full h-screen">

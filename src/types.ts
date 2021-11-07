@@ -97,11 +97,16 @@ export interface Anime {
 
 export interface Section<T> {
   title: string;
-  query: {
+  query?: {
     key: QueryKey;
     queryFn: SupabaseQueryFunction<T>;
     options?: UseSupabaseQueryOptions<T>;
   };
   skeleton: React.ComponentType<SkeletonProps>;
   render: (data: T[]) => React.ReactNode;
+  clientData?: () => void;
+}
+
+export interface Watched extends Anime {
+  currentEpisode: Episode;
 }
