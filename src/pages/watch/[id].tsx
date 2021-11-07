@@ -8,10 +8,12 @@ import Video from "@/components/shared/Video";
 import EpisodesButton from "@/components/shared/Video/EpisodesButton";
 import MobileEpisodesButton from "@/components/shared/Video/MobileEpisodesButton";
 import NextEpisodeButton from "@/components/shared/Video/NextEpisodeButton";
+import useBeforeLeave from "@/hooks/useBeforeLeave";
 import useDevice from "@/hooks/useDevice";
 import useDidMount from "@/hooks/useDidMount";
 import useEventListener from "@/hooks/useEventListener";
 import { useFetchSource } from "@/hooks/useFetchSource";
+import useSaveWatched from "@/hooks/useSaveWatched";
 import supabase from "@/lib/supabase";
 import { Anime } from "@/types";
 import { chunk } from "@/utils";
@@ -35,6 +37,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   const { isMobile } = useDevice();
   const [showInfoOverlay, setShowInfoOverlay] = useState(false);
   const showInfoTimeout = useRef<NodeJS.Timeout>(null);
+  const saveWatchedMutation = useSaveWatched();
 
   useEventListener("visibilitychange", () => {
     if (isMobile) return;
@@ -65,6 +68,13 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
 
   const { data, isLoading } = useFetchSource(episode.episode_id);
 
+  useBeforeLeave(() => {
+    saveWatchedMutation.mutate({
+      anime_id: Number(id),
+      episode_id: episode.episode_id,
+    });
+  });
+
   useDidMount(() => {
     if (!isMobile) return;
 
@@ -72,21 +82,6 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
 
     window.dispatchEvent(event);
   });
-
-  useEffect(() => {
-    const storage = new Storage("watched");
-
-    storage.update(
-      {
-        ani_id: Number(id),
-      },
-      {
-        ani_id: Number(id),
-        currentEpisode: episode,
-        ...anime,
-      }
-    );
-  }, [anime, episode, id]);
 
   return (
     <div className="relative w-full h-screen">

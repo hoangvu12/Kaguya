@@ -10,8 +10,6 @@ import supabase from "@/lib/supabase";
 const HeaderProfile = () => {
   const user = useUser();
 
-  console.log(user);
-
   if (!user) return null;
 
   return (
