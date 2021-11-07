@@ -1,19 +1,13 @@
-import { Watched } from "@/types";
-import Storage from "@/utils/storage";
-import React, { useEffect, useState } from "react";
+import useWatched from "@/hooks/useWatched";
+import React from "react";
+import WatchedSwiperSkeleton from "../skeletons/WatchedSwiperSkeleton";
 import WatchedSwiper from "./WatchedSwiper";
 
 const WatchedSection = () => {
-  const [data, setData] = useState<Watched[]>(null);
+  const { data, isLoading } = useWatched();
 
-  useEffect(() => {
-    const storage = new Storage("watched");
-
-    setData(storage.find<Watched>().reverse());
-  }, []);
-
-  if (!data?.length) {
-    return null;
+  if (isLoading) {
+    return <WatchedSwiperSkeleton />;
   }
 
   return (
@@ -21,6 +15,8 @@ const WatchedSection = () => {
       <h1 className="uppercase text-2xl font-semibold">Xem gần đây</h1>
       <WatchedSwiper
         data={data}
+        slidesPerView={5}
+        slidesPerGroup={5}
         breakpoints={{
           1280: {
             slidesPerView: 4,
@@ -34,7 +30,7 @@ const WatchedSection = () => {
             slidesPerView: 2,
             slidesPerGroup: 2,
           },
-          640: {
+          0: {
             slidesPerView: 1,
             slidesPerGroup: 1,
           },

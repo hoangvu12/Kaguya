@@ -107,6 +107,8 @@ export interface Section<T> {
   clientData?: () => void;
 }
 
-export interface Watched extends Anime {
-  currentEpisode: Episode;
+export interface Watched {
+  anime: Anime;
+  episode: Episode;
+  user_id: string;
 }
