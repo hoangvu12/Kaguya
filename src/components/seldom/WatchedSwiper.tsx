@@ -13,18 +13,16 @@ const WatchedSwiper: React.FC<WatchedSwiperProps> = ({ data, ...props }) => {
 
   return (
     <Swiper speed={500} {...props}>
-      {data.map((anime, index) => (
+      {data.map(({ anime, episode }, index) => (
         <SwiperSlide key={index}>
           <EpisodeCard
             onClick={() => {
               const episodeIndex =
-                anime.currentEpisode.name === "Full"
-                  ? 0
-                  : Number(anime.currentEpisode.name) - 1;
+                episode.name === "Full" ? 0 : Number(episode.name) - 1;
 
               router.push(`/watch/${anime.ani_id}?index=${episodeIndex}`);
             }}
-            episode={anime.currentEpisode}
+            episode={episode}
             title={anime.title.user_preferred}
           />
         </SwiperSlide>

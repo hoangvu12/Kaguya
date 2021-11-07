@@ -1,19 +1,13 @@
-import { Watched } from "@/types";
-import Storage from "@/utils/storage";
-import React, { useEffect, useState } from "react";
+import useWatched from "@/hooks/useWatched";
+import React from "react";
+import WatchedSwiperSkeleton from "../skeletons/WatchedSwiperSkeleton";
 import WatchedSwiper from "./WatchedSwiper";
 
 const WatchedSection = () => {
-  const [data, setData] = useState<Watched[]>(null);
+  const { data, isLoading } = useWatched();
 
-  useEffect(() => {
-    const storage = new Storage("watched");
-
-    setData(storage.find<Watched>().reverse());
-  }, []);
-
-  if (!data?.length) {
-    return null;
+  if (isLoading) {
+    return <WatchedSwiperSkeleton />;
   }
 
   return (
