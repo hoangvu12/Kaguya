@@ -118,8 +118,9 @@ const Popup: React.FC<PopupProps> = (props) => {
         onMouseLeave={isHover ? handleMouseLeave : emptyFn}
         ref={setReferenceElement}
         className={classNames(
+          "cursor-pointer",
           referenceClassName,
-          active && "cursor-pointer relative z-10"
+          active && "relative z-10"
         )}
       >
         {reference}

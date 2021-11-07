@@ -1,8 +1,12 @@
+import useUser from "@/hooks/useUser";
 import classNames from "classnames";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
+import HeaderProfile from "../seldom/HeaderProfile";
 import NavItem from "../seldom/NavItem";
+import Button from "../shared/Button";
 import Drawer, { DrawerRef } from "../shared/Drawer";
 
 const routes = [
@@ -27,6 +31,8 @@ const routes = [
 const Header = () => {
   const [isTop, setIsTop] = useState(false);
   const drawerRef = useRef<DrawerRef>();
+  const user = useUser();
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -101,6 +107,18 @@ const Header = () => {
             )}
           </NavItem>
         ))}
+      </div>
+
+      <div className="ml-auto">
+        {user ? (
+          <HeaderProfile />
+        ) : (
+          <div className="flex items-center space-x-2">
+            <Button primary onClick={() => router.push("/login")}>
+              <p>Đăng nhập</p>
+            </Button>
+          </div>
+        )}
       </div>
     </header>
   );

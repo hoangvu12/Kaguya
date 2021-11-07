@@ -241,13 +241,15 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         title,
         description,
         banner_image,
-        episodes(*)
+        episodes!anime_id(*)
       `
     )
     .eq("ani_id", Number(params.id))
     .single();
 
   if (error) {
+    console.log(error);
+
     return { notFound: true };
   }
 
