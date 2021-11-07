@@ -1,6 +1,6 @@
 import { WEBSITE_URL } from "@/constants";
 import { useVideoOptions } from "@/contexts/VideoOptionsContext";
-import Hls, { Config } from "hls.js";
+import Hls from "hls.js";
 import React, { MutableRefObject, useEffect, useRef } from "react";
 
 export interface HlsPlayerProps
@@ -13,17 +13,17 @@ let hostname;
 
 const config = {
   enableWorker: false,
-  xhrSetup: (xhr, url) => {
-    let streamUrl = url;
+  // xhrSetup: (xhr, url) => {
+  //   let streamUrl = url;
 
-    if (!url.includes("playlist.m3u8")) {
-      streamUrl = `${hostname}/${url.replace(`${WEBSITE_URL}/api/`, "")}`;
-    } else {
-      hostname = url.replace("/playlist.m3u8", "");
-    }
+  //   if (!url.includes("playlist.m3u8")) {
+  //     streamUrl = `${hostname}/${url.replace(`${WEBSITE_URL}/api/`, "")}`;
+  //   } else {
+  //     hostname = url.replace("/playlist.m3u8", "");
+  //   }
 
-    xhr.open("GET", `${WEBSITE_URL}/api/proxy?url=${streamUrl}`, true);
-  },
+  //   xhr.open("GET", `${WEBSITE_URL}/api/proxy?url=${streamUrl}`, true);
+  // },
 };
 
 const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
