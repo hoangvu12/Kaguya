@@ -21,6 +21,8 @@ const WatchedSection = () => {
       <h1 className="uppercase text-2xl font-semibold">Xem gần đây</h1>
       <WatchedSwiper
         data={data}
+        slidesPerView={5}
+        slidesPerGroup={5}
         breakpoints={{
           1280: {
             slidesPerView: 4,
@@ -34,7 +36,7 @@ const WatchedSection = () => {
             slidesPerView: 2,
             slidesPerGroup: 2,
           },
-          640: {
+          0: {
             slidesPerView: 1,
             slidesPerGroup: 1,
           },

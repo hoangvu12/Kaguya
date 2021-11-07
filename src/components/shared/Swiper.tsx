@@ -21,8 +21,6 @@ const Swiper: React.FC<SwiperProps> = ({ children, ...props }) => {
   return (
     <ReactSwiper
       spaceBetween={20}
-      slidesPerView={2}
-      slidesPerGroup={2}
       breakpoints={{
         1280: {
           slidesPerView: 6,
@@ -39,6 +37,10 @@ const Swiper: React.FC<SwiperProps> = ({ children, ...props }) => {
         640: {
           slidesPerView: 3,
           slidesPerGroup: 3,
+        },
+        0: {
+          slidesPerView: 2,
+          slidesPerGroup: 2,
         },
       }}
       modules={[Navigation]}
