@@ -4,10 +4,14 @@ import WatchedSwiperSkeleton from "../skeletons/WatchedSwiperSkeleton";
 import WatchedSwiper from "./WatchedSwiper";
 
 const WatchedSection = () => {
-  const { data, isLoading } = useWatched();
+  const { data, isLoading, isError } = useWatched();
 
   if (isLoading) {
     return <WatchedSwiperSkeleton />;
+  }
+
+  if (!data?.length || isError) {
+    return null;
   }
 
   return (

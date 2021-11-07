@@ -1,11 +1,8 @@
 import { VideoContextProvider } from "@/contexts/VideoContext";
-import {
-  useVideoOptions,
-  VideoOptionsProvider,
-} from "@/contexts/VideoOptionsContext";
+import { VideoOptionsProvider } from "@/contexts/VideoOptionsContext";
 import classNames from "classnames";
 import { motion } from "framer-motion";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import ClientOnly from "../ClientOnly";
 import DesktopControls from "./DesktopControls";
@@ -29,7 +26,7 @@ const Video: React.FC<VideoProps> = ({ overlaySlot, ...props }) => {
     setShowControls(true);
   };
 
-  const startControlsCycle = () => {
+  const startControlsCycle = useCallback(() => {
     if (!showControls) return;
 
     if (timeout.current) {
@@ -39,7 +36,7 @@ const Video: React.FC<VideoProps> = ({ overlaySlot, ...props }) => {
     timeout.current = setTimeout(() => {
       setShowControls(false);
     }, 3000);
-  };
+  }, [showControls]);
 
   useEffect(() => {
     if (!ref.current) return;
@@ -51,7 +48,7 @@ const Video: React.FC<VideoProps> = ({ overlaySlot, ...props }) => {
     startControlsCycle();
 
     return () => clearTimeout(timeout.current);
-  }, [showControls]);
+  }, [startControlsCycle]);
 
   useEffect(() => {
     const controlsShown = new Event("controls-shown");
