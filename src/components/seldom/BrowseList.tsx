@@ -1,4 +1,4 @@
-import { FORMATS, GENRES, SEASONS, SEASON_YEARS, TAGS } from "@/constants";
+import { FORMATS, GENRES, SEASONS, SEASON_YEARS } from "@/constants";
 import useBrowse, { UseBrowseOptions } from "@/hooks/useBrowse";
 import { convert } from "@/utils/anime";
 import { debounce } from "debounce";
@@ -12,6 +12,7 @@ import InView from "../shared/InView";
 import Select from "../shared/Select";
 import AnimeListSkeleton from "../skeletons/AnimeListSkeleton";
 import SortSelector from "./SortSelector";
+import TAGS from "@/tags.json";
 
 const defaultValues: UseBrowseOptions = {
   format: "",
@@ -45,7 +46,7 @@ const formats = FORMATS.map((format) => ({
 
 const tags = TAGS.map((tag) => ({
   value: tag,
-  placeholder: convert(tag, "tag"),
+  placeholder: tag,
 }));
 
 interface BrowseListProps {
