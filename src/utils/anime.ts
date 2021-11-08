@@ -5,6 +5,7 @@ import {
   SEASONS,
   SORTS,
   STATUSES,
+  TAGS,
   VIETNAMESE_CHARACTERS_ROLES,
   VIETNAMESE_FORMATS,
   VIETNAMESE_SEASONS,
@@ -41,6 +42,11 @@ const constants = {
   sort: {
     from: SORTS,
     to: VIETNAMESE_SORTS,
+  },
+
+  tag: {
+    from: TAGS,
+    to: TAGS,
   },
 };
 

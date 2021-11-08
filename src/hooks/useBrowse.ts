@@ -12,12 +12,22 @@ export interface UseBrowseOptions {
   sort?: keyof Anime;
   select?: string;
   limit?: number;
+  tag?: string;
 }
 
 const useBrowse = (options: UseBrowseOptions) => {
   return useSupaInfiniteQuery(["browse", options], (from, to) => {
-    const { format, genre, keyword, season, seasonYear, select, sort, limit } =
-      options;
+    const {
+      format,
+      genre,
+      keyword,
+      season,
+      seasonYear,
+      select,
+      sort,
+      limit,
+      tag,
+    } = options;
 
     let db: PostgrestFilterBuilder<Anime>;
 
@@ -43,6 +53,10 @@ const useBrowse = (options: UseBrowseOptions) => {
 
     if (format) {
       db = db.eq("format", format);
+    }
+
+    if (tag) {
+      db = db.contains("tags", `{${tag}}`);
     }
 
     if (sort) {

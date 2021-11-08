@@ -93,6 +93,7 @@ export interface Anime {
   created_at?: Date;
   updated_at?: Date;
   episodes_updated_at?: Date;
+  tags?: string[];
 }
 
 export interface Section<T> {

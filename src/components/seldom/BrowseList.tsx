@@ -1,4 +1,4 @@
-import { FORMATS, GENRES, SEASONS, SEASON_YEARS } from "@/constants";
+import { FORMATS, GENRES, SEASONS, SEASON_YEARS, TAGS } from "@/constants";
 import useBrowse, { UseBrowseOptions } from "@/hooks/useBrowse";
 import { convert } from "@/utils/anime";
 import { debounce } from "debounce";
@@ -19,6 +19,7 @@ const defaultValues: UseBrowseOptions = {
   genre: "",
   season: "",
   seasonYear: "",
+  tag: "",
   sort: "average_score",
 };
 
@@ -40,6 +41,11 @@ const seasons = SEASONS.map((season) => ({
 const formats = FORMATS.map((format) => ({
   value: format,
   placeholder: convert(format, "format"),
+}));
+
+const tags = TAGS.map((tag) => ({
+  value: tag,
+  placeholder: convert(tag, "tag"),
 }));
 
 interface BrowseListProps {
@@ -83,13 +89,14 @@ const BrowseList: React.FC<BrowseListProps> = ({
       )}
 
       <form className="space-y-4">
-        <div className="flex lg:justify-between space-x-2 lg:space-x-0 items-center overflow-x-auto lg:flex-wrap lg:overflow-x-hidden snap-x lg:snap-none">
+        <div className="flex lg:justify-between space-x-2 lg:space-x-0 items-center overflow-x-auto lg:flex-wrap lg:overflow-x-visible snap-x lg:snap-none">
           <Input
             {...register("keyword")}
             LeftIcon={AiOutlineSearch}
             onChange={handleInputChange}
             label="Tìm kiếm"
           />
+
           <Controller
             name="genre"
             control={control}
@@ -139,7 +146,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
           />
         </div>
 
-        <div className="flex items-center space-x-4 justify-end">
+        <div className="flex items-end space-x-4 justify-end">
           <Controller
             name="sort"
             control={control}
@@ -149,6 +156,15 @@ const BrowseList: React.FC<BrowseListProps> = ({
                 defaultValue={defaultQuery.sort}
                 onChange={field.onChange}
               />
+            )}
+          />
+
+          <Controller
+            name="tag"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <Select label="Tag" data={tags} onChange={field.onChange} />
             )}
           />
         </div>
