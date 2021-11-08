@@ -17,11 +17,10 @@ import useSaveWatched from "@/hooks/useSaveWatched";
 import supabase from "@/lib/supabase";
 import { Anime } from "@/types";
 import { chunk } from "@/utils";
-import Storage from "@/utils/storage";
 import classNames from "classnames";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { BsArrowLeft } from "react-icons/bs";
@@ -93,8 +92,8 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   return (
     <div className="relative w-full h-screen">
       <Head
-        title={`${anime.title.user_preferred} (Tập ${episode.name}) - Kaguya`}
-        description={`Xem phim ${anime.title.user_preferred} tập ${episode.name} tại Kaguya. Hoàn toàn miễn phí, không quảng cáo`}
+        title={`${anime.title.user_preferred} - Kaguya`}
+        description={`Xem phim ${anime.title.user_preferred} tại Kaguya. Hoàn toàn miễn phí, không quảng cáo`}
         image={episode.thumbnail_image || anime.banner_image}
       />
 
