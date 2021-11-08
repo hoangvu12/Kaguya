@@ -56,7 +56,7 @@ const MobileControls = () => {
           />
 
           <MobileControlsIcon
-            title="Toán màn hình"
+            title="Toàn màn hình"
             Icon={FullscreenIcon}
             onClick={handleToggleFullscreen}
           />
