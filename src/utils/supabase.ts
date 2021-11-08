@@ -1,9 +1,7 @@
-import supabase from "@/lib/supabase";
 import { PostgrestError, PostgrestFilterBuilder } from "@supabase/postgrest-js";
 import {
   QueryKey,
   useInfiniteQuery,
-  UseInfiniteQueryOptions,
   useQuery,
   UseQueryOptions,
 } from "react-query";
@@ -52,15 +50,21 @@ export const useSupaInfiniteQuery = <T>(
   return useInfiniteQuery(
     key,
     async ({ pageParam = 1 }) => {
+      const LIMIT = 30;
       const { from, to } = getPagination(pageParam, 30);
 
       const { data, error } = await queryFn(from, to);
 
       if (error) {
-        throw error;
+        return {
+          data: [],
+          nextPage: null,
+        };
       }
 
-      return { data, nextPage: data.length ? pageParam + 1 : null };
+      const hasNextPage = data?.length && data?.length === LIMIT;
+
+      return { data, nextPage: hasNextPage ? pageParam + 1 : null };
     },
     {
       getNextPageParam: (lastPage) => lastPage.nextPage,

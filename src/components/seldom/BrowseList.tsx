@@ -85,6 +85,8 @@ const BrowseList: React.FC<BrowseListProps> = ({
     500
   );
 
+  const totalData = data?.pages.map((el) => el.data).flat();
+
   return (
     <div className="min-h-screen px-4 md:px-12">
       <Head title={`${title} - Kaguya` || "Kaguya"} />
@@ -180,11 +182,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
       <div className="mt-8">
         {!isLoading && query ? (
           <React.Fragment>
-            <AnimeList data={data.pages.map((el) => el.data).flat()} />
-
-            {(!isFetchingNextPage || hasNextPage) && (
-              <InView onInView={handleFetch} />
-            )}
+            <AnimeList data={totalData} />
 
             {isFetchingNextPage && !isError && (
               <div className="mt-4">
@@ -192,7 +190,13 @@ const BrowseList: React.FC<BrowseListProps> = ({
               </div>
             )}
 
-            {!hasNextPage && <p>Hết rồi...</p>}
+            {((totalData.length && !isFetchingNextPage) || hasNextPage) && (
+              <InView onInView={handleFetch} />
+            )}
+
+            {!hasNextPage && (
+              <p className="text-2xl text-center mt-8">Hết rồi...</p>
+            )}
           </React.Fragment>
         ) : (
           <AnimeListSkeleton />
