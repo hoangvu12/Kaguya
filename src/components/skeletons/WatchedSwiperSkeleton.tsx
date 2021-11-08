@@ -1,14 +1,13 @@
 import useBreakpoint from "@/hooks/useBreakpoint";
 import React from "react";
 import Skeleton, { SkeletonItem } from "../shared/Skeleton";
-import AnimeCardSkeleton from "./AnimeCardSkeleton";
 import EpisodeCardSkeleton from "./EpisodeCardSkeleton";
 
 const WatchedSwiperSkeleton = () => {
   const breakpoint = useBreakpoint();
 
   return (
-    <Skeleton>
+    <Skeleton className="md:px-6 space-y-4">
       <SkeletonItem className="ml-6 mb-4 h-8 w-52" />
 
       <SkeletonItem className="mx-4 flex flex-wrap" container>

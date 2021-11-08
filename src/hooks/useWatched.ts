@@ -12,7 +12,7 @@ const useWatched = () => {
       return supabase
         .from<Watched>("watched")
         .select(
-          "anime:anime_id(title), episode:episode_id(name, thumbnail_image)"
+          "anime:anime_id(ani_id, title), episode:episode_id(name, thumbnail_image)"
         )
         .eq("user_id", user.id);
     },
