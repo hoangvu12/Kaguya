@@ -63,8 +63,14 @@ const BrowseList: React.FC<BrowseListProps> = ({
 
   const query = watch();
 
-  const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } =
-    useBrowse(query);
+  const {
+    data,
+    isLoading,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+    isError,
+  } = useBrowse(query);
 
   const handleFetch = () => {
     if (isFetchingNextPage || !hasNextPage) return;
@@ -175,15 +181,17 @@ const BrowseList: React.FC<BrowseListProps> = ({
           <React.Fragment>
             <AnimeList data={data.pages.map((el) => el.data).flat()} />
 
-            {(!isFetchingNextPage || !hasNextPage) && (
+            {(!isFetchingNextPage || hasNextPage) && (
               <InView onInView={handleFetch} />
             )}
 
-            {isFetchingNextPage && (
+            {isFetchingNextPage && !isError && (
               <div className="mt-4">
                 <AnimeListSkeleton />
               </div>
             )}
+
+            {!hasNextPage && <p>Hết rồi...</p>}
           </React.Fragment>
         ) : (
           <AnimeListSkeleton />

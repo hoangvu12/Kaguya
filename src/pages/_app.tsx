@@ -1,13 +1,9 @@
+import BaseLayout from "@/components/layouts/BaseLayout";
+import "@/styles/index.css";
 import { AppProps } from "next/app";
-import React from "react";
 import Router from "next/router";
 import NProgress from "nprogress";
-import { ReactQueryDevtools } from "react-query/devtools";
-
-import BaseLayout from "@/components/layouts/BaseLayout";
-import Head from "@/components/shared/Head";
-
-import "@/styles/index.css";
+import React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 Router.events.on("routeChangeStart", NProgress.start);
@@ -20,6 +16,7 @@ const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false,
+      retry: 1,
     },
   },
 });
@@ -33,7 +30,6 @@ function App({ Component, pageProps }: AppProps) {
     <React.Fragment>
       <QueryClientProvider client={queryClient}>
         {getLayout(<Component {...pageProps} />)}
-        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
       </QueryClientProvider>
     </React.Fragment>
   );
