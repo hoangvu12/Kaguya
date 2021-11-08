@@ -68,12 +68,19 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
 
   const { data, isLoading } = useFetchSource(episode.episode_id);
 
-  useBeforeLeave(() => {
-    saveWatchedMutation.mutate({
-      anime_id: Number(id),
-      episode_id: episode.episode_id,
-    });
-  });
+  useBeforeLeave(
+    () => {
+      saveWatchedMutation.mutate({
+        anime_id: Number(id),
+        episode_id: episode.episode_id,
+      });
+    },
+    (currentUrl, navigateUrl) => {
+      if (currentUrl.split("?")[0] === navigateUrl.split("?")[0]) return false;
+
+      return true;
+    }
+  );
 
   useDidMount(() => {
     if (!isMobile) return;
