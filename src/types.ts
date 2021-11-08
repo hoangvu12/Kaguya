@@ -111,4 +111,6 @@ export interface Watched {
   anime: Anime;
   episode: Episode;
   user_id: string;
+  updated_at?: Date;
+  created_at?: Date;
 }

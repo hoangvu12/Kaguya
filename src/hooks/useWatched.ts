@@ -14,7 +14,8 @@ const useWatched = () => {
         .select(
           "anime:anime_id(ani_id, title), episode:episode_id(name, thumbnail_image)"
         )
-        .eq("user_id", user.id);
+        .eq("user_id", user.id)
+        .order("updated_at", { ascending: false });
     },
     { enabled: !!user }
   );
