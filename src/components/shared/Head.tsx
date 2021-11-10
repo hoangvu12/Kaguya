@@ -21,6 +21,8 @@ const Head: React.FC<HeadProps> = (props) => {
   return (
     <NextHead>
       <title>{title}</title>
+      <link rel="manifest" href="/manifest.json" />
+
       <meta name="title" content={title} />
       <meta name="description" content={description} />
 
@@ -35,6 +37,18 @@ const Head: React.FC<HeadProps> = (props) => {
       <meta property="twitter:title" content={title} />
       <meta property="twitter:description" content={description} />
       <meta property="twitter:image" content={image} />
+
+      <meta name="mobile-web-app-capable" content="yes" />
+      <meta name="apple-mobile-web-app-capable" content="yes" />
+      <meta name="application-name" content="Kaguya" />
+      <meta name="apple-mobile-web-app-title" content="Kaguya" />
+      <meta name="theme-color" content="#EF4444" />
+      <meta name="msapplication-navbutton-color" content="#EF4444" />
+      <meta
+        name="apple-mobile-web-app-status-bar-style"
+        content="black-translucent"
+      />
+      <meta name="msapplication-starturl" content="/" />
     </NextHead>
   );
 };
