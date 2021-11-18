@@ -115,3 +115,7 @@ export interface Watched {
   updated_at?: Date;
   created_at?: Date;
 }
+
+export type CallbackSetter<T> = (handler: T) => void;
+
+export type Noop = () => void;

@@ -2,9 +2,10 @@ import EpisodesIcon from "@/components/icons/EpisodesIcon";
 import FullscreenIcon from "@/components/icons/FullscreenIcon";
 import NextIcon from "@/components/icons/NextIcon";
 import { useVideoOptions } from "@/contexts/VideoOptionsContext";
+import useDidMount from "@/hooks/useDidMount";
 import useEventListener from "@/hooks/useEventListener";
 import classNames from "classnames";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { AiOutlineLock, AiOutlineUnlock } from "react-icons/ai";
 import screenfull from "screenfull";
 import CircleButton from "../CircleButton";
@@ -19,24 +20,30 @@ const MobileControls = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleToggleFullscreen = useCallback(() => {
+  const handleEnterFullScreen = useCallback(() => {
     if (!screenfull.isEnabled) return;
 
     const videoWrapper = document.querySelector(".video-wrapper");
 
+    screenfull
+      .request(videoWrapper)
+      .then(() => {
+        screen.orientation.lock("landscape");
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  const handleToggleFullscreen = useCallback(() => {
+    if (!screenfull.isEnabled) return;
+
     if (!screenfull.isFullscreen) {
-      screenfull
-        .request(videoWrapper)
-        .then(() => {
-          screen.orientation.lock("landscape").catch((err) => console.log(err));
-        })
-        .catch((err) => console.log(err));
+      handleEnterFullScreen();
     } else {
       screenfull.exit();
     }
-  }, []);
+  }, [handleEnterFullScreen]);
 
-  useEventListener("video-fullscreen", handleToggleFullscreen);
+  useDidMount(handleEnterFullScreen);
 
   return (
     <React.Fragment>

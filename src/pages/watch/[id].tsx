@@ -10,7 +10,6 @@ import MobileEpisodesButton from "@/components/shared/Video/MobileEpisodesButton
 import NextEpisodeButton from "@/components/shared/Video/NextEpisodeButton";
 import useBeforeLeave from "@/hooks/useBeforeLeave";
 import useDevice from "@/hooks/useDevice";
-import useDidMount from "@/hooks/useDidMount";
 import useEventListener from "@/hooks/useEventListener";
 import { useFetchSource } from "@/hooks/useFetchSource";
 import useSaveWatched from "@/hooks/useSaveWatched";
@@ -80,14 +79,6 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
       return true;
     }
   );
-
-  useDidMount(() => {
-    if (!isMobile) return;
-
-    const event = new Event("video-fullscreen");
-
-    window.dispatchEvent(event);
-  });
 
   return (
     <div className="relative w-full h-screen">

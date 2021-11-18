@@ -1,13 +1,22 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
+import useHandlerSetterRef from "@/hooks/useHandlerSetterRef";
+import { CallbackSetter, Noop } from "@/types";
 
-const useDidMount = (fn: () => void) => {
-  const didMount = useRef(false);
+/**
+ * Returns a callback setter for a function to be performed when the component did mount.
+ */
+const useDidMount = <T extends (...args: any[]) => any = Noop>(
+  callback?: T
+): CallbackSetter<T> => {
+  const [handler, setHandler] = useHandlerSetterRef<T>(callback);
 
   useEffect(() => {
-    if (didMount.current) return fn();
+    if (handler.current) {
+      handler.current();
+    }
+  }, [handler]);
 
-    didMount.current = true;
-  }, [didMount, fn]);
+  return setHandler;
 };
 
 export default useDidMount;
