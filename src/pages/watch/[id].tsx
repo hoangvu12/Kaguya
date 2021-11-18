@@ -51,9 +51,9 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
     }, 5000);
   });
 
-  const sortedEpisodes = anime.episodes.sort(
-    (a, b) => Number(a.name) - Number(b.name)
-  );
+  const sortedEpisodes = anime.episodes
+    .sort((a, b) => Number(a.name) - Number(b.name))
+    .map((episode, index) => ({ ...episode, episodeIndex: index }));
 
   const { index: episodeIndex = 0, id } = router.query;
 
@@ -139,13 +139,13 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
 
                   return (
                     <Accordion title={title} key={index} className="space-y-4">
-                      {chunk.map((episode, index) => (
+                      {chunk.map((episode) => (
                         <EpisodeCard
                           episode={episode}
                           key={episode.episode_id}
-                          onClick={handleNavigateEpisode(index)}
+                          onClick={handleNavigateEpisode(episode.episodeIndex)}
                           isActive={
-                            Number(episode.name) - 1 === Number(episodeIndex) ||
+                            episode.episodeIndex === Number(episodeIndex) ||
                             false
                           }
                         />
@@ -175,13 +175,13 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
                   />
 
                   <div className="flex space-x-8 snap-x overflow-x-auto">
-                    {sortedEpisodes.map((episode, index) => (
+                    {sortedEpisodes.map((episode) => (
                       <div className="w-80" key={episode.episode_id}>
                         <EpisodeCard
                           episode={episode}
-                          onClick={handleNavigateEpisode(index)}
+                          onClick={handleNavigateEpisode(episode.episodeIndex)}
                           isActive={
-                            Number(episode.name) - 1 === Number(episodeIndex) ||
+                            episode.episodeIndex === Number(episodeIndex) ||
                             false
                           }
                         />
