@@ -3,11 +3,6 @@ import { UseBrowseOptions } from "@/hooks/useBrowse";
 import React from "react";
 
 const browseQuery: UseBrowseOptions = {
-  format: "",
-  keyword: "",
-  genre: "",
-  season: "",
-  seasonYear: "",
   sort: "episodes_updated_at",
 };
 

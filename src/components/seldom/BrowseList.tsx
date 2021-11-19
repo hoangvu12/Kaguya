@@ -1,8 +1,10 @@
 import { FORMATS, GENRES, SEASONS, SEASON_YEARS } from "@/constants";
 import useBrowse, { UseBrowseOptions } from "@/hooks/useBrowse";
+import TAGS from "@/tags.json";
 import { convert } from "@/utils/anime";
 import { debounce } from "debounce";
-import React from "react";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { AiOutlineSearch } from "react-icons/ai";
 import AnimeList from "../shared/AnimeList";
@@ -12,15 +14,14 @@ import InView from "../shared/InView";
 import Select from "../shared/Select";
 import AnimeListSkeleton from "../skeletons/AnimeListSkeleton";
 import SortSelector from "./SortSelector";
-import TAGS from "@/tags.json";
 
-const defaultValues: UseBrowseOptions = {
-  format: "",
+const initialValues: UseBrowseOptions = {
+  format: undefined,
   keyword: "",
-  genre: "",
-  season: "",
-  seasonYear: "",
-  tag: "",
+  genre: undefined,
+  season: "FALL",
+  seasonYear: undefined,
+  tag: undefined,
   sort: "average_score",
 };
 
@@ -55,12 +56,23 @@ interface BrowseListProps {
 }
 
 const BrowseList: React.FC<BrowseListProps> = ({
-  defaultQuery = defaultValues,
+  defaultQuery = initialValues,
   title,
 }) => {
-  const { control, register, watch, setValue } = useForm<UseBrowseOptions>({
-    defaultValues: defaultQuery,
+  const defaultValues = { ...initialValues, ...defaultQuery };
+
+  const {
+    control,
+    register,
+    watch,
+    setValue,
+    reset,
+    formState: { isDirty },
+  } = useForm<UseBrowseOptions>({
+    defaultValues,
   });
+
+  const router = useRouter();
 
   const query = watch();
 
@@ -87,6 +99,24 @@ const BrowseList: React.FC<BrowseListProps> = ({
 
   const totalData = data?.pages.map((el) => el.data).flat();
 
+  useEffect(() => {
+    if (!isDirty) return;
+
+    // Reset isDirty to false
+    reset(query);
+
+    const truthyQuery = {};
+
+    Object.keys(query).forEach((key) => {
+      if (!query[key]) return;
+
+      truthyQuery[key] = query[key];
+    });
+
+    router.replace({ query: truthyQuery, pathname: "/browse" });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDirty]);
+
   return (
     <div className="min-h-screen px-4 md:px-12">
       <Head title={`${title} - Kaguya` || "Kaguya"} />
@@ -103,18 +133,20 @@ const BrowseList: React.FC<BrowseListProps> = ({
             {...register("keyword")}
             LeftIcon={AiOutlineSearch}
             onChange={handleInputChange}
+            defaultValue={defaultValues.keyword}
             label="Tìm kiếm"
           />
 
           <Controller
             name="genre"
             control={control}
-            defaultValue=""
-            render={({ field }) => (
+            defaultValue={defaultValues.genre}
+            render={({ field: { value, onChange } }) => (
               <Select
+                defaultValue={value}
                 label="Thể loại"
                 data={genres}
-                onChange={field.onChange}
+                onChange={onChange}
               />
             )}
           />
@@ -122,12 +154,13 @@ const BrowseList: React.FC<BrowseListProps> = ({
           <Controller
             name="seasonYear"
             control={control}
-            defaultValue=""
-            render={({ field }) => (
+            defaultValue={defaultValues.seasonYear}
+            render={({ field: { value, onChange } }) => (
               <Select
+                defaultValue={value}
                 label="Năm"
                 data={seasonYears}
-                onChange={field.onChange}
+                onChange={onChange}
               />
             )}
           />
@@ -135,21 +168,27 @@ const BrowseList: React.FC<BrowseListProps> = ({
           <Controller
             name="season"
             control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <Select label="Mùa" data={seasons} onChange={field.onChange} />
+            defaultValue={defaultValues.season}
+            render={({ field: { value, onChange } }) => (
+              <Select
+                defaultValue={value}
+                label="Mùa"
+                data={seasons}
+                onChange={onChange}
+              />
             )}
           />
 
           <Controller
             name="format"
             control={control}
-            defaultValue=""
-            render={({ field }) => (
+            defaultValue={defaultValues.format}
+            render={({ field: { value, onChange } }) => (
               <Select
+                defaultValue={value}
                 label="Định dạng"
                 data={formats}
-                onChange={field.onChange}
+                onChange={onChange}
               />
             )}
           />
@@ -160,20 +199,22 @@ const BrowseList: React.FC<BrowseListProps> = ({
             name="sort"
             control={control}
             defaultValue={defaultQuery.sort}
-            render={({ field }) => (
-              <SortSelector
-                defaultValue={defaultQuery.sort}
-                onChange={field.onChange}
-              />
+            render={({ field: { value, onChange } }) => (
+              <SortSelector defaultValue={value} onChange={onChange} />
             )}
           />
 
           <Controller
             name="tag"
             control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <Select label="Tag" data={tags} onChange={field.onChange} />
+            defaultValue={defaultValues.tag}
+            render={({ field: { value, onChange } }) => (
+              <Select
+                defaultValue={value}
+                label="Tag"
+                data={tags}
+                onChange={onChange}
+              />
             )}
           />
         </div>
@@ -194,7 +235,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
               <InView onInView={handleFetch} />
             )}
 
-            {!hasNextPage && (
+            {!hasNextPage && !!totalData.length && (
               <p className="text-2xl text-center mt-8">Hết rồi...</p>
             )}
           </React.Fragment>

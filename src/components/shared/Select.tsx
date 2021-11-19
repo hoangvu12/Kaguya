@@ -20,6 +20,7 @@ interface SelectProps {
   containerClassName?: string;
   inputClassName?: string;
   defaultItem?: SelectItem;
+  defaultValue?: string;
   data: SelectItem[];
   onChange?: (item: SelectItem["value"]) => void;
 }
@@ -33,7 +34,7 @@ const variants: Variants = {
   },
 };
 
-const emptyFn = () => {};
+const defaultItem = { placeholder: "Tất cả", value: "" };
 
 const Select: React.FC<SelectProps> = (props) => {
   const {
@@ -42,15 +43,18 @@ const Select: React.FC<SelectProps> = (props) => {
     containerClassName,
     inputClassName,
     data,
-    defaultItem = { placeholder: "Tất cả", value: "" },
+    defaultValue,
     onChange,
   } = props;
+  const customDefaultItem = data.find((item) => item.value === defaultValue);
 
   const ref = useRef();
   const { isDesktop, isMobile } = useDevice();
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [activeItem, setActiveItem] = useState(defaultItem || data[0]);
+  const [activeItem, setActiveItem] = useState(
+    customDefaultItem || defaultItem
+  );
 
   const handleToggle = useCallback(() => {
     setIsOpen((prev) => !prev);
@@ -90,7 +94,7 @@ const Select: React.FC<SelectProps> = (props) => {
           value.includes(keyword) || placeholder.toLowerCase().includes(keyword)
         );
       }),
-    [data, defaultItem, query]
+    [data, query]
   );
 
   return (
