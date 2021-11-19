@@ -128,9 +128,10 @@ const BrowseList: React.FC<BrowseListProps> = ({
       )}
 
       <form className="space-y-4">
-        <div className="flex lg:justify-between space-x-2 lg:space-x-0 items-center overflow-x-auto lg:flex-wrap lg:overflow-x-visible snap-x lg:snap-none">
+        <div className="flex lg:flex-wrap lg:justify-between space-x-2 -my-2 lg:space-x-0 items-center overflow-x-auto lg:overflow-x-visible snap-x lg:snap-none">
           <Input
             {...register("keyword")}
+            containerClassName="my-2"
             LeftIcon={AiOutlineSearch}
             onChange={handleInputChange}
             defaultValue={defaultValues.keyword}
@@ -143,6 +144,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
             defaultValue={defaultValues.genre}
             render={({ field: { value, onChange } }) => (
               <Select
+                containerClassName="my-2"
                 defaultValue={value}
                 label="Thể loại"
                 data={genres}
@@ -157,6 +159,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
             defaultValue={defaultValues.seasonYear}
             render={({ field: { value, onChange } }) => (
               <Select
+                containerClassName="my-2"
                 defaultValue={value}
                 label="Năm"
                 data={seasonYears}
@@ -171,6 +174,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
             defaultValue={defaultValues.season}
             render={({ field: { value, onChange } }) => (
               <Select
+                containerClassName="my-2"
                 defaultValue={value}
                 label="Mùa"
                 data={seasons}
@@ -185,9 +189,25 @@ const BrowseList: React.FC<BrowseListProps> = ({
             defaultValue={defaultValues.format}
             render={({ field: { value, onChange } }) => (
               <Select
+                containerClassName="my-2"
                 defaultValue={value}
                 label="Định dạng"
                 data={formats}
+                onChange={onChange}
+              />
+            )}
+          />
+
+          <Controller
+            name="tag"
+            control={control}
+            defaultValue={defaultValues.tag}
+            render={({ field: { value, onChange } }) => (
+              <Select
+                containerClassName="my-2"
+                defaultValue={value}
+                label="Tag"
+                data={tags}
                 onChange={onChange}
               />
             )}
@@ -201,20 +221,6 @@ const BrowseList: React.FC<BrowseListProps> = ({
             defaultValue={defaultQuery.sort}
             render={({ field: { value, onChange } }) => (
               <SortSelector defaultValue={value} onChange={onChange} />
-            )}
-          />
-
-          <Controller
-            name="tag"
-            control={control}
-            defaultValue={defaultValues.tag}
-            render={({ field: { value, onChange } }) => (
-              <Select
-                defaultValue={value}
-                label="Tag"
-                data={tags}
-                onChange={onChange}
-              />
             )}
           />
         </div>
