@@ -19,7 +19,7 @@ import { chunk } from "@/utils";
 import classNames from "classnames";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
-import React, { useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { BsArrowLeft } from "react-icons/bs";
@@ -51,14 +51,24 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
     }, 5000);
   });
 
-  const sortedEpisodes = anime.episodes
-    .sort((a, b) => Number(a.name) - Number(b.name))
-    .map((episode, index) => ({ ...episode, episodeIndex: index }));
+  const sortedEpisodes = useMemo(
+    () =>
+      anime.episodes
+        .sort((a, b) => a.episode_id - b.episode_id)
+        .map((episode, index) => ({ ...episode, episodeIndex: index })),
+    [anime.episodes]
+  );
 
   const { index: episodeIndex = 0, id } = router.query;
 
-  const episode = sortedEpisodes[Number(episodeIndex)];
-  const nextEpisode = sortedEpisodes[Number(episodeIndex) + 1];
+  const episode = useMemo(
+    () => sortedEpisodes[Number(episodeIndex)],
+    [sortedEpisodes, episodeIndex]
+  );
+  const nextEpisode = useMemo(
+    () => sortedEpisodes[Number(episodeIndex) + 1],
+    [episodeIndex, sortedEpisodes]
+  );
 
   const handleNavigateEpisode = (index: number) => () => {
     router.replace(`/watch/${id}?index=${index}`, null, { shallow: true });
