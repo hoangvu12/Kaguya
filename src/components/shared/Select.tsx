@@ -85,16 +85,19 @@ const Select: React.FC<SelectProps> = (props) => {
 
   useClickOutside(ref, () => setIsOpen(false));
 
+  // If mobile, don't filter the data
   const filteredItems = useMemo<SelectItem[]>(
     () =>
       [defaultItem, ...data].filter(({ value, placeholder }) => {
+        if (isMobile) return true;
+
         const keyword = query.toLowerCase();
 
         return (
           value.includes(keyword) || placeholder.toLowerCase().includes(keyword)
         );
       }),
-    [data, query]
+    [data, query, isMobile]
   );
 
   return (
