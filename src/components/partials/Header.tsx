@@ -3,6 +3,7 @@ import classNames from "classnames";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
+import { AiOutlineSearch } from "react-icons/ai";
 import { GiHamburgerMenu } from "react-icons/gi";
 import HeaderProfile from "../seldom/HeaderProfile";
 import NavItem from "../seldom/NavItem";
@@ -65,7 +66,7 @@ const Header = () => {
               {({ isActive }) => (
                 <p
                   className={classNames(
-                    "pl-4 border-l-4 font-semibold text-2xl transition duration-300",
+                    "pl-4 border-l-4 font-semibold text-2xl",
                     isActive
                       ? "border-primary-500 text-white"
                       : "border-background-900 text-typography-secondary"
@@ -98,7 +99,7 @@ const Header = () => {
             {({ isActive }) => (
               <p
                 className={classNames(
-                  "transition duration-300",
+                  "hover:text-white transition duration-300",
                   isActive && "text-primary-500"
                 )}
               >
@@ -109,7 +110,18 @@ const Header = () => {
         ))}
       </div>
 
-      <div className="ml-auto">
+      <div className="flex items-center space-x-4 ml-auto">
+        <NavItem href="/search">
+          {({ isActive }) => (
+            <AiOutlineSearch
+              className={classNames(
+                "w-7 h-7 font-semibold hover:text-primary-500 transition duration-300",
+                isActive && "text-primary-500"
+              )}
+            />
+          )}
+        </NavItem>
+
         {user ? (
           <HeaderProfile />
         ) : (

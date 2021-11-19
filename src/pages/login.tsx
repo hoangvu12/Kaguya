@@ -22,7 +22,11 @@ interface LoginPageProps {
 
 const LoginPage: NextPage<LoginPageProps> = ({ quotes }) => {
   const randomQuote = useMemo(() => randomElement(quotes), [quotes]);
-  const signInMutation = useSignIn({ redirectTo: "/" });
+  const isDev = process.env.NODE_ENV === "development";
+
+  const signInMutation = useSignIn({
+    redirectTo: isDev ? "http://localhost:3000" : "/",
+  });
 
   const handleSignIn = (provider: Provider) => () => {
     signInMutation.mutate(provider);
