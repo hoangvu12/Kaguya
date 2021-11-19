@@ -1,11 +1,14 @@
 import supabase from "@/lib/supabase";
 import { User } from "@supabase/gotrue-js";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import nookies from "nookies";
 
-const useUser = () => {
+const AuthContext = React.createContext(supabase.auth.user());
+
+export const AuthContextProvider: React.FC<{}> = ({ children }) => {
   const [user, setUser] = useState<User>(supabase.auth.user());
 
+  // Check if user session is invalid
   useEffect(() => {
     const currentDate = new Date();
     const session = supabase.auth.session();
@@ -19,10 +22,9 @@ const useUser = () => {
     if (currentDate.getMilliseconds() >= session.expires_at) {
       setUser(null);
     }
-
-    setUser(supabase.auth.user());
   }, []);
 
+  // Set cookies on auth state change
   useEffect(() => {
     const { data } = supabase.auth.onAuthStateChange((event, session) => {
       const user = supabase.auth.user();
@@ -43,8 +45,6 @@ const useUser = () => {
 
       const token = session.access_token;
 
-      setUser(user);
-
       nookies.destroy(null, "sb:token");
       nookies.set(null, "sb:token", token, { path: "/" });
     });
@@ -52,7 +52,11 @@ const useUser = () => {
     return data.unsubscribe;
   }, []);
 
-  return user;
+  return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
 };
 
-export default useUser;
+export const useUser = () => {
+  return React.useContext(AuthContext);
+};
+
+export default AuthContext;

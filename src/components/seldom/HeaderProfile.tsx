@@ -1,4 +1,4 @@
-import useUser from "@/hooks/useUser";
+import { useUser } from "@/contexts/AuthContext";
 import React from "react";
 import Image from "../shared/Image";
 import Popup from "../shared/Popup";

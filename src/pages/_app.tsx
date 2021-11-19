@@ -1,4 +1,5 @@
 import BaseLayout from "@/components/layouts/BaseLayout";
+import { AuthContextProvider } from "@/contexts/AuthContext";
 import "@/styles/index.css";
 import { AppProps } from "next/app";
 import Router from "next/router";
@@ -27,11 +28,11 @@ function App({ Component, pageProps }: AppProps) {
     Component.getLayout || ((page) => <BaseLayout>{page}</BaseLayout>);
 
   return (
-    <React.Fragment>
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <AuthContextProvider>
         {getLayout(<Component {...pageProps} />)}
-      </QueryClientProvider>
-    </React.Fragment>
+      </AuthContextProvider>
+    </QueryClientProvider>
   );
 }
 

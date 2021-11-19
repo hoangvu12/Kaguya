@@ -1,7 +1,7 @@
 import supabase from "@/lib/supabase";
 import { Watched } from "@/types";
 import { useSupabaseQuery } from "@/utils/supabase";
-import useUser from "./useUser";
+import { useUser } from "@/contexts/AuthContext";
 
 const useWatched = () => {
   const user = useUser();
