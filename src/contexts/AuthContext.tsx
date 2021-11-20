@@ -46,7 +46,7 @@ export const AuthContextProvider: React.FC<{}> = ({ children }) => {
       const token = session.access_token;
 
       nookies.destroy(null, "sb:token");
-      nookies.set(null, "sb:token", token, { path: "/" });
+      nookies.set(null, "sb:token", token, { path: "/", maxAge: 604800 });
     });
 
     return data.unsubscribe;
