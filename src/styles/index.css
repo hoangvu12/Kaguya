@@ -50,6 +50,14 @@ main {
   .snap-none {
     scroll-snap-type: none;
   }
+
+  .grid-cols-18 {
+    grid-template-columns: repeat(18, minmax(0, 1fr));
+  }
+
+  .col-span-16 {
+    grid-column: span 16 / span 16;
+  }
 }
 
 @media screen and (min-width: 768px) {

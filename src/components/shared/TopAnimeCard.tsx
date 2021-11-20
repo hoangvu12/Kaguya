@@ -26,15 +26,15 @@ const TopAnimeCard: React.FC<TopAnimeCardProps> = ({ anime, rank }) => {
   };
 
   return (
-    <div className="w-full h-[110px] grid grid-cols-12 gap-4">
+    <div className="w-full h-[110px] grid grid-cols-18 gap-4">
       <div
-        className="col-span-1 flex justify-center items-center font-semibold"
+        className="col-span-2 flex justify-center items-center font-semibold"
         style={{ color }}
       >
         <span className="text-3xl">#</span>
         <span className="text-4xl">{rank}</span>
       </div>
-      <div className="flex col-span-11 space-x-4 bg-background-900">
+      <div className="flex col-span-16 space-x-4 bg-background-900">
         <div
           className="cursor-pointer flex-shrink-0 relative h-full w-14"
           onClick={handleNavigate}
