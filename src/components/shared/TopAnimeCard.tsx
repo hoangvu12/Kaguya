@@ -21,6 +21,10 @@ const TopAnimeCard: React.FC<TopAnimeCardProps> = ({ anime, rank }) => {
     ? anime.cover_image.color
     : "white";
 
+  const handleNavigate = () => {
+    router.push(`/details/${anime.ani_id}`);
+  };
+
   return (
     <div className="w-full h-[110px] grid grid-cols-12 gap-4">
       <div
@@ -33,7 +37,7 @@ const TopAnimeCard: React.FC<TopAnimeCardProps> = ({ anime, rank }) => {
       <div className="flex col-span-11 space-x-4 bg-background-900">
         <div
           className="cursor-pointer flex-shrink-0 relative h-full w-14"
-          onClick={() => router.push(`/details/${anime.ani_id}`)}
+          onClick={handleNavigate}
         >
           <Image
             src={anime.cover_image.extra_large}
@@ -48,7 +52,10 @@ const TopAnimeCard: React.FC<TopAnimeCardProps> = ({ anime, rank }) => {
               className="py-2 flex flex-col justify-between w-full"
               style={{ color }}
             >
-              <p className="text-xl line-clamp-1">
+              <p
+                className="text-xl line-clamp-1 cursor-pointer"
+                onClick={handleNavigate}
+              >
                 {anime.title.user_preferred}
               </p>
               <p className="line-clamp-1 font-semibold">
