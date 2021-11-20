@@ -1,6 +1,7 @@
 import useWatched from "@/hooks/useWatched";
 import React from "react";
 import WatchedSwiperSkeleton from "../skeletons/WatchedSwiperSkeleton";
+import AnimeSection from "./AnimeSection";
 import WatchedSwiper from "./WatchedSwiper";
 
 const WatchedSection = () => {
@@ -15,8 +16,7 @@ const WatchedSection = () => {
   }
 
   return (
-    <div className="px-4 md:px-12 space-y-4">
-      <h1 className="uppercase text-2xl font-semibold">Xem gần đây</h1>
+    <AnimeSection title="Xem gần đây">
       <WatchedSwiper
         data={data}
         slidesPerView={5}
@@ -39,8 +39,8 @@ const WatchedSection = () => {
             slidesPerGroup: 1,
           },
         }}
-      ></WatchedSwiper>
-    </div>
+      />
+    </AnimeSection>
   );
 };
 

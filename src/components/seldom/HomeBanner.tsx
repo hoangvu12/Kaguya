@@ -20,18 +20,16 @@ import { AiFillHeart, AiFillPlayCircle } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
 import Button from "../shared/Button";
 
-const HomeBanner = () => {
-  const router = useRouter();
+interface HomeBannerProps {
+  anime: Anime[];
+}
 
-  const { data: trendingAnime, isLoading } = useTrendingAnime();
+const HomeBanner: React.FC<HomeBannerProps> = ({ anime }) => {
+  const router = useRouter();
 
   const [index, setIndex] = useState<number>(0);
 
-  if (isLoading) {
-    return <HomeBannerSkeleton />;
-  }
-
-  const activeAnime = trendingAnime[index];
+  const activeAnime = anime[index];
 
   const handleSlideChange: SwiperProps["onSlideChange"] = (swiper) => {
     setIndex(swiper.realIndex);
@@ -102,10 +100,7 @@ const HomeBanner = () => {
         <div className="banner__overlay--down absolute bottom-0 h-16 w-full"></div>
       </div>
       <div className="px-4 md:px-12 pb-12 w-full">
-        <BannerSwiper
-          onSlideChange={handleSlideChange}
-          data={trendingAnime as Anime[]}
-        />
+        <BannerSwiper onSlideChange={handleSlideChange} data={anime} />
       </div>
     </React.Fragment>
   );
