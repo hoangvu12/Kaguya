@@ -4,7 +4,7 @@ import Image from "@/components/shared/Image";
 import { useRouter } from "next/router";
 import React from "react";
 
-const ErrorPage = () => {
+const Error404Page = () => {
   const router = useRouter();
 
   return (
@@ -34,6 +34,6 @@ const ErrorPage = () => {
   );
 };
 
-ErrorPage.getLayout = (page) => page;
+Error404Page.getLayout = (page) => page;
 
-export default ErrorPage;
+export default Error404Page;
