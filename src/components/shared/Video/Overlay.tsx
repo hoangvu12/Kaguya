@@ -59,7 +59,7 @@ const Overlay: React.FC<HTMLMotionProps<"div">> = ({ className, ...props }) => {
           animate="show"
           exit="hide"
           className={classNames(
-            "absolute inset-0 w-full z-30 flex items-center justify-center",
+            "video-overlay absolute inset-0 w-full z-30 flex items-center justify-center",
             isMobile && "bg-black/70",
             className
           )}

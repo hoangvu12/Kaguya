@@ -1,5 +1,6 @@
 import { VideoContextProvider } from "@/contexts/VideoContext";
 import { VideoOptionsProvider } from "@/contexts/VideoOptionsContext";
+import useDevice from "@/hooks/useDevice";
 import classNames from "classnames";
 import { motion } from "framer-motion";
 import React, { useCallback, useEffect, useRef, useState } from "react";
@@ -20,10 +21,15 @@ const Video: React.FC<VideoProps> = ({ overlaySlot, ...props }) => {
   const [refHolder, setRefHolder] = useState<HTMLVideoElement>(null);
   const [showControls, setShowControls] = useState(true);
   const timeout = useRef<NodeJS.Timeout>(null);
+  const { isMobile } = useDevice();
 
-  const handleKeepControls = () => {
-    startControlsCycle();
-    setShowControls(true);
+  const handleKeepControls = (e) => {
+    if (e.target.classList.contains("video-overlay") && isMobile) {
+      setShowControls(false);
+    } else {
+      startControlsCycle();
+      setShowControls(true);
+    }
   };
 
   const startControlsCycle = useCallback(() => {
