@@ -45,7 +45,7 @@ const ShouldWatch: React.FC<ShouldWatchProps> = ({ anime }) => {
         <div className="absolute z-0 inset-0 opacity-0 group-hover:opacity-100 transition duration-300 bg-black/60"></div>
       </div>
 
-      <div className="!mt-8 flex items-center space-between space-x-8">
+      <div className="!mt-8 flex flex-col md:flex-row items-center space-between space-y-4 md:space-x-8">
         <div className="flex-shrink-0">
           <h1 className="uppercase text-2xl">{anime.title.user_preferred}</h1>
 
