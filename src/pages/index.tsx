@@ -31,9 +31,9 @@ const Home: NextPage<HomeProps> = ({
     <React.Fragment>
       <Head />
 
-      <div className="pb-8">
-        <HomeBanner anime={trendingAnime} />
-        <ClientOnly>
+      <ClientOnly>
+        <div className="pb-8">
+          <HomeBanner anime={trendingAnime} />
           <div className="space-y-8">
             <WatchedSection />
 
@@ -47,8 +47,8 @@ const Home: NextPage<HomeProps> = ({
               <TopAnimeList anime={topAnime} />
             </AnimeSection>
           </div>
-        </ClientOnly>
-      </div>
+        </div>
+      </ClientOnly>
     </React.Fragment>
   );
 };
