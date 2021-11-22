@@ -7,6 +7,7 @@ import Button from "@/components/shared/Button";
 import DotList from "@/components/shared/DotList";
 import Head from "@/components/shared/Head";
 import PlainAnimeCard from "@/components/shared/PlainAnimeCard";
+import { REVALIDATE_TIME } from "@/constants";
 import dayjs from "@/lib/dayjs";
 import supabase from "@/lib/supabase";
 import { Anime } from "@/types";
@@ -189,7 +190,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       anime: data as Anime,
     },
-    revalidate: 43200, // 12 hours
+    revalidate: REVALIDATE_TIME,
   };
 };
 

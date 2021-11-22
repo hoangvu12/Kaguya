@@ -8,6 +8,7 @@ import Video from "@/components/shared/Video";
 import EpisodesButton from "@/components/shared/Video/EpisodesButton";
 import MobileEpisodesButton from "@/components/shared/Video/MobileEpisodesButton";
 import NextEpisodeButton from "@/components/shared/Video/NextEpisodeButton";
+import { REVALIDATE_TIME } from "@/constants";
 import useBeforeLeave from "@/hooks/useBeforeLeave";
 import useDevice from "@/hooks/useDevice";
 import useEventListener from "@/hooks/useEventListener";
@@ -259,7 +260,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       anime: data as Anime,
     },
-    revalidate: 43200, // 12 hours
+    revalidate: REVALIDATE_TIME,
   };
 };
 

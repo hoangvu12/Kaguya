@@ -11,6 +11,7 @@ import { Anime } from "@/types";
 import { getSeason } from "@/utils";
 import { GetStaticProps, NextPage } from "next";
 import React from "react";
+import { REVALIDATE_TIME } from "../constants";
 
 const currentSeason = getSeason();
 
@@ -87,7 +88,7 @@ export const getStaticProps: GetStaticProps = async () => {
       topAnime,
     },
 
-    revalidate: 43200, // 12 hours
+    revalidate: REVALIDATE_TIME,
   };
 };
 

@@ -9,6 +9,7 @@ import { GetStaticProps, NextPage } from "next";
 import React, { useMemo } from "react";
 import { FaFacebookF } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import { REVALIDATE_TIME } from "../constants";
 
 interface Quote {
   anime: string;
@@ -100,7 +101,7 @@ export const getStaticProps: GetStaticProps = async () => {
       props: {
         quotes: data,
       },
-      revalidate: 86400,
+      revalidate: REVALIDATE_TIME,
     };
   } catch (err) {
     return {
