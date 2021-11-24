@@ -13,8 +13,6 @@ import { GetStaticProps, NextPage } from "next";
 import React from "react";
 import { REVALIDATE_TIME } from "../constants";
 
-const currentSeason = getSeason();
-
 interface HomeProps {
   trendingAnime: Anime[];
   topAnime: Anime[];
@@ -55,6 +53,8 @@ const Home: NextPage<HomeProps> = ({
 };
 
 export const getStaticProps: GetStaticProps = async () => {
+  const currentSeason = getSeason();
+
   const { data: trendingAnime } = await supabase
     .from<Anime>("anime")
     .select("*")
@@ -72,6 +72,7 @@ export const getStaticProps: GetStaticProps = async () => {
     .limit(1)
     .not("banner_image", "is", null)
     .single();
+
   const { data: topAnime } = await supabase
     .from<Anime>("anime")
     .select("*")
