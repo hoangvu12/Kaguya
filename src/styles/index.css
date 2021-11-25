@@ -190,7 +190,7 @@ main {
   }
 }
 
-.swiper {
+.swiper-container {
   @apply !overflow-visible;
 }
 

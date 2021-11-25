@@ -3,16 +3,18 @@ import {
   Swiper as ReactSwiper,
   SwiperSlide as ReactSwiperSlide,
 } from "swiper/react";
-import { Navigation } from "swiper";
+import SwiperCore, { Navigation } from "swiper";
 import type SwiperClass from "swiper/types/swiper-class";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
-import "swiper/css";
+import "swiper/swiper.min.css";
+
 import CircleButton from "./CircleButton";
-import { NavigationOptions } from "swiper/types";
 
 export type SwiperInstance = SwiperClass;
 export interface SwiperProps extends React.ComponentProps<typeof ReactSwiper> {}
+
+SwiperCore.use([Navigation]);
 
 const Swiper: React.FC<SwiperProps> = ({ children, ...props }) => {
   const prevButtonRef = useRef<HTMLButtonElement>(null);
@@ -43,13 +45,13 @@ const Swiper: React.FC<SwiperProps> = ({ children, ...props }) => {
           slidesPerGroup: 2,
         },
       }}
-      modules={[Navigation]}
       onInit={(swiper) => {
-        (swiper.params.navigation as NavigationOptions).prevEl =
-          prevButtonRef.current;
-        (swiper.params.navigation as NavigationOptions).nextEl =
-          nextButtonRef.current;
-        swiper.navigation.init();
+        // @ts-ignore
+        // eslint-disable-next-line no-param-reassign
+        swiper.params.navigation.prevEl = prevButtonRef.current;
+        // @ts-ignore
+        // eslint-disable-next-line no-param-reassign
+        swiper.params.navigation.nextEl = nextButtonRef.current;
         swiper.navigation.update();
       }}
       {...props}
