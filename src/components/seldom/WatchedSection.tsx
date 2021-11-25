@@ -1,7 +1,7 @@
 import useWatched from "@/hooks/useWatched";
 import React from "react";
 import WatchedSwiperSkeleton from "../skeletons/WatchedSwiperSkeleton";
-import AnimeSection from "./AnimeSection";
+import Section from "./Section";
 import WatchedSwiper from "./WatchedSwiper";
 
 const WatchedSection = () => {
@@ -16,7 +16,7 @@ const WatchedSection = () => {
   }
 
   return (
-    <AnimeSection title="Xem gần đây">
+    <Section title="Xem gần đây">
       <WatchedSwiper
         data={data}
         slidesPerView={5}
@@ -40,7 +40,7 @@ const WatchedSection = () => {
           },
         }}
       />
-    </AnimeSection>
+    </Section>
   );
 };
 

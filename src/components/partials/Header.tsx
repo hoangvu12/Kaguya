@@ -16,16 +16,12 @@ const routes = [
     href: "/",
   },
   {
-    title: "Phim mới",
-    href: "/latest",
+    title: "Anime",
+    href: "/anime",
   },
   {
-    title: "Xu hướng",
-    href: "/trending",
-  },
-  {
-    title: "Nổi bật",
-    href: "/popular",
+    title: "Manga",
+    href: "/manga",
   },
 ];
 

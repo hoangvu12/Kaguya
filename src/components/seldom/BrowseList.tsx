@@ -1,13 +1,13 @@
 import { FORMATS, GENRES, SEASONS, SEASON_YEARS } from "@/constants";
 import useBrowse, { UseBrowseOptions } from "@/hooks/useBrowse";
 import TAGS from "@/tags.json";
-import { convert } from "@/utils/anime";
+import { convert } from "@/utils/data";
 import { debounce } from "debounce";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { AiOutlineSearch } from "react-icons/ai";
-import AnimeList from "../shared/AnimeList";
+import List from "../shared/List";
 import Head from "../shared/Head";
 import Input from "../shared/Input";
 import InView from "../shared/InView";
@@ -229,7 +229,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
       <div className="mt-8">
         {!isLoading && query ? (
           <React.Fragment>
-            <AnimeList data={totalData} />
+            <List data={totalData} />
 
             {isFetchingNextPage && !isError && (
               <div className="mt-4">

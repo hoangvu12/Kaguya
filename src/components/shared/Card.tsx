@@ -2,9 +2,9 @@ import DotList from "@/components/shared/DotList";
 import Image from "@/components/shared/Image";
 import TextIcon from "@/components/shared/TextIcon";
 import useDevice from "@/hooks/useDevice";
-import { Anime } from "@/types";
+import { Anime, Manga } from "@/types";
 import { isColorVisible, numberWithCommas } from "@/utils";
-import { convert } from "@/utils/anime";
+import { convert } from "@/utils/data";
 import classNames from "classnames";
 import { motion, Variants } from "framer-motion";
 import Link from "next/link";
@@ -13,8 +13,9 @@ import { AiFillHeart } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
 
 interface AnimeCardProps {
-  anime: Anime;
+  data: Anime | Manga;
   className?: string;
+  type?: string;
 }
 
 const imageVariants: Variants = {
@@ -38,17 +39,28 @@ const containerVariants: Variants = {
   exit: {},
 };
 
-const AnimeCard: React.FC<AnimeCardProps> = ({ anime, className }) => {
+const Card: React.FC<AnimeCardProps> = ({
+  data,
+  className,
+  type = "anime",
+}) => {
   const { isDesktop } = useDevice();
 
   const primaryColor =
-    anime.cover_image.color &&
-    isColorVisible(anime.cover_image.color, "#3a3939")
-      ? anime.cover_image.color
+    data.cover_image.color && isColorVisible(data.cover_image.color, "#3a3939")
+      ? data.cover_image.color
       : "white";
 
+  const redirectUrl =
+    type === "anime"
+      ? `/anime/details/${data.ani_id}`
+      : `/manga/details/${data.ani_id}`;
+
+  const title =
+    typeof data.title === "string" ? data.title : data.title.user_preferred;
+
   return (
-    <Link href={`/details/${anime.ani_id}`}>
+    <Link href={redirectUrl}>
       <a>
         <motion.div
           variants={containerVariants}
@@ -64,11 +76,11 @@ const AnimeCard: React.FC<AnimeCardProps> = ({ anime, className }) => {
           >
             <motion.div className="w-full h-full" variants={imageVariants}>
               <Image
-                src={anime.cover_image.extra_large}
+                src={data.cover_image.extra_large}
                 layout="fill"
                 objectFit="cover"
                 className="rounded-sm"
-                alt={`${anime.title.user_preferred} card`}
+                alt={`${title} card`}
               />
             </motion.div>
 
@@ -78,12 +90,12 @@ const AnimeCard: React.FC<AnimeCardProps> = ({ anime, className }) => {
                 className="text-base font-semibold line-clamp-2"
                 style={{ color: primaryColor }}
               >
-                {anime.title.user_preferred}
+                {title}
               </motion.p>
 
               <motion.div variants={infoVariants} className="mt-2 !mb-1">
                 <DotList>
-                  {anime.genres.slice(0, 2).map((genre) => (
+                  {data.genres.slice(0, 2).map((genre) => (
                     <p
                       className="text-sm font-semibold"
                       style={{
@@ -101,12 +113,17 @@ const AnimeCard: React.FC<AnimeCardProps> = ({ anime, className }) => {
                 variants={infoVariants}
                 className="flex items-center space-x-2"
               >
-                <TextIcon LeftIcon={MdTagFaces} iconClassName="text-green-300">
-                  <p>{anime.average_score}%</p>
-                </TextIcon>
+                {data.average_score && (
+                  <TextIcon
+                    LeftIcon={MdTagFaces}
+                    iconClassName="text-green-300"
+                  >
+                    <p>{data.average_score}%</p>
+                  </TextIcon>
+                )}
 
                 <TextIcon LeftIcon={AiFillHeart} iconClassName="text-red-400">
-                  <p>{numberWithCommas(anime.favourites)}</p>
+                  <p>{numberWithCommas(data.favourites)}</p>
                 </TextIcon>
               </motion.div>
             </motion.div>
@@ -117,7 +134,7 @@ const AnimeCard: React.FC<AnimeCardProps> = ({ anime, className }) => {
               className="mt-2 text-lg font-semibold line-clamp-2"
               style={{ color: primaryColor }}
             >
-              {anime.title.user_preferred}
+              {title}
             </p>
           )}
         </motion.div>
@@ -126,4 +143,4 @@ const AnimeCard: React.FC<AnimeCardProps> = ({ anime, className }) => {
   );
 };
 
-export default AnimeCard;
+export default Card;

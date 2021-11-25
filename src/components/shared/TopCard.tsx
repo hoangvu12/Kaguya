@@ -1,29 +1,37 @@
-import DotList from "@/components/shared/DotList";
 import Image from "@/components/shared/Image";
 import TextIcon from "@/components/shared/TextIcon";
 import { Anime } from "@/types";
 import { isColorVisible, numberWithCommas } from "@/utils";
-import { convert } from "@/utils/anime";
+import { convert } from "@/utils/data";
 import { useRouter } from "next/router";
 import React from "react";
 import { AiFillHeart } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
 
-interface TopAnimeCardProps {
-  anime: Anime;
+interface TopCardProps {
+  data: Anime;
   rank: number;
+  type?: "manga" | "anime";
 }
 
-const TopAnimeCard: React.FC<TopAnimeCardProps> = ({ anime, rank }) => {
+const TopCard: React.FC<TopCardProps> = ({ data, rank, type = "anime" }) => {
   const router = useRouter();
 
-  const color = isColorVisible(anime?.cover_image?.color || "#ffffff")
-    ? anime.cover_image.color
+  const color = isColorVisible(data?.cover_image?.color || "#ffffff")
+    ? data.cover_image.color
     : "white";
 
+  const redirectUrl =
+    type === "anime"
+      ? `/anime/details/${data.ani_id}`
+      : `/manga/details/${data.ani_id}`;
+
   const handleNavigate = () => {
-    router.push(`/details/${anime.ani_id}`);
+    router.push(redirectUrl);
   };
+
+  const title =
+    typeof data.title === "string" ? data.title : data.title.user_preferred;
 
   return (
     <div className="w-full h-[110px] grid grid-cols-18 gap-4">
@@ -40,10 +48,10 @@ const TopAnimeCard: React.FC<TopAnimeCardProps> = ({ anime, rank }) => {
           onClick={handleNavigate}
         >
           <Image
-            src={anime.cover_image.extra_large}
+            src={data.cover_image.extra_large}
             layout="fill"
             objectFit="cover"
-            alt={`${anime.title.user_preferred}`}
+            alt={`${title}`}
           />
         </div>
         <div className="flex-1 md:grid grid-cols-12">
@@ -56,10 +64,10 @@ const TopAnimeCard: React.FC<TopAnimeCardProps> = ({ anime, rank }) => {
                 className="text-xl line-clamp-1 cursor-pointer"
                 onClick={handleNavigate}
               >
-                {anime.title.user_preferred}
+                {title}
               </p>
               <p className="line-clamp-1 font-semibold">
-                {anime.genres.join(", ")}
+                {data.genres.join(", ")}
               </p>
             </div>
           </div>
@@ -67,33 +75,39 @@ const TopAnimeCard: React.FC<TopAnimeCardProps> = ({ anime, rank }) => {
           <div className="col-span-8 md:grid grid-cols-4 flex items-center space-x-4">
             <div className="col-span-1 md:flex items-center justify-center">
               <TextIcon LeftIcon={MdTagFaces} iconClassName="text-green-300">
-                <p className="font-semibold">{anime.average_score}%</p>
+                <p className="font-semibold">{data.average_score}%</p>
               </TextIcon>
             </div>
 
             <div className="col-span-1 md:flex items-center justify-center">
               <TextIcon LeftIcon={AiFillHeart} iconClassName="text-red-400">
                 <p className="font-semibold">
-                  {numberWithCommas(anime.favourites)}
+                  {numberWithCommas(data.favourites)}
                 </p>
               </TextIcon>
             </div>
 
             <div className="hidden sm:block col-span-1 md:flex items-center justify-center">
               <div className="flex space-x-2 lg:space-x-0 lg:flex-col">
-                <p className="font-semibold">
-                  {convert(anime.format, "format")}
-                </p>
-                <p>{anime.duration} phút</p>
+                {data.format && (
+                  <p className="font-semibold">
+                    {convert(data.format, "format")}
+                  </p>
+                )}
+
+                {data.duration && <p>{data.duration} phút</p>}
               </div>
             </div>
 
             <div className="hidden sm:block col-span-1 md:flex items-center justify-center">
               <div className="flex space-x-2 lg:space-x-0 lg:flex-col">
-                <p className="font-semibold">
-                  {convert(anime.season, "season")} {anime.season_year}
-                </p>
-                <p>{convert(anime.status, "status")}</p>
+                {data.season && (
+                  <p className="font-semibold">
+                    {convert(data.season, "season")} {data.season_year}
+                  </p>
+                )}
+
+                {data.status && <p>{convert(data.status, "status")}</p>}
               </div>
             </div>
           </div>
@@ -103,4 +117,4 @@ const TopAnimeCard: React.FC<TopAnimeCardProps> = ({ anime, rank }) => {
   );
 };
 
-export default TopAnimeCard;
+export default TopCard;
