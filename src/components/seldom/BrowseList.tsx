@@ -23,6 +23,7 @@ const initialValues: UseBrowseOptions = {
   seasonYear: undefined,
   tag: undefined,
   sort: "average_score",
+  type: "anime",
 };
 
 const genres = GENRES.map((genre) => ({
@@ -198,23 +199,61 @@ const BrowseList: React.FC<BrowseListProps> = ({
             )}
           />
 
-          <Controller
-            name="tag"
-            control={control}
-            defaultValue={defaultValues.tag}
-            render={({ field: { value, onChange } }) => (
-              <Select
-                containerClassName="my-2"
-                defaultValue={value}
-                label="Tag"
-                data={tags}
-                onChange={onChange}
-              />
-            )}
-          />
+          <div className="flex items-center space-x-2 md:space-x-4">
+            <Controller
+              name="tag"
+              control={control}
+              defaultValue={defaultValues.tag}
+              render={({ field: { value, onChange } }) => (
+                <Select
+                  containerClassName="my-2"
+                  defaultValue={value}
+                  label="Tag"
+                  data={tags}
+                  onChange={onChange}
+                />
+              )}
+            />
+
+            <Controller
+              name="type"
+              control={control}
+              defaultValue={defaultValues.type}
+              render={({ field: { value, onChange } }) => (
+                <Select
+                  containerClassName="my-2"
+                  defaultValue={value}
+                  label="Loại tìm kiếm"
+                  data={[
+                    {
+                      value: "anime",
+                      placeholder: "Anime",
+                    },
+                    {
+                      value: "manga",
+                      placeholder: "Manga",
+                    },
+                  ]}
+                  onChange={onChange}
+                  defaultItem={{ value: "", placeholder: "" }}
+                />
+              )}
+            />
+          </div>
+
+          <div className="hidden lg:block">
+            <Controller
+              name="sort"
+              control={control}
+              defaultValue={defaultQuery.sort}
+              render={({ field: { value, onChange } }) => (
+                <SortSelector defaultValue={value} onChange={onChange} />
+              )}
+            />
+          </div>
         </div>
 
-        <div className="flex items-end space-x-4 justify-end">
+        <div className="lg:hidden flex items-end justify-end">
           <Controller
             name="sort"
             control={control}
@@ -229,7 +268,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
       <div className="mt-8">
         {!isLoading && query ? (
           <React.Fragment>
-            <List data={totalData} />
+            <List type={query.type} data={totalData} />
 
             {isFetchingNextPage && !isError && (
               <div className="mt-4">
