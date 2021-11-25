@@ -68,7 +68,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
         <motion.div
           variants={{ animate: { y: 0 }, exit: { y: "-100%" } }}
           transition={{ ease: "linear", duration: 0.2 }}
-          className="z-[1] absolute top-0 flex items-center justify-center w-full h-24 bg-background-900"
+          className="z-[1] fixed top-0 flex items-center justify-center w-full h-24 bg-background-900"
         >
           <div>
             <p className="text-2xl font-semibold">{manga.title}</p>
@@ -80,7 +80,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
         <motion.div
           variants={{ animate: { y: 0 }, exit: { y: "100%" } }}
           transition={{ ease: "linear", duration: 0.2 }}
-          className="flex px-8 items-center justify-evenly md:justify-center md:space-x-8 z-[1] absolute bottom-0 w-full h-24 bg-background-900"
+          className="flex px-8 items-center justify-evenly md:justify-center md:space-x-8 z-[1] fixed bottom-0 w-full h-24 bg-background-900"
         >
           <Button
             className="bg-transparent hover:bg-white/20"
