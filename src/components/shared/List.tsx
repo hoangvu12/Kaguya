@@ -1,13 +1,14 @@
-import { Anime } from "@/types";
+import { Anime, Manga } from "@/types";
 import classNames from "classnames";
 import React from "react";
-import AnimeCard from "./AnimeCard";
+import Card from "./Card";
 
-interface AnimeListProps {
-  data: Anime[];
+interface ListProps {
+  data: Anime[] | Manga[];
+  type?: "anime" | "manga";
 }
 
-const AnimeList: React.FC<AnimeListProps> = ({ data }) => {
+const List: React.FC<ListProps> = ({ data, type }) => {
   return (
     <div
       className={classNames(
@@ -15,12 +16,12 @@ const AnimeList: React.FC<AnimeListProps> = ({ data }) => {
       )}
     >
       {data.length ? (
-        data.map((anime) => (
+        data.map((item) => (
           <div
             className="w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6 px-2 snap-mandatory my-8"
-            key={anime.ani_id}
+            key={item.ani_id}
           >
-            <AnimeCard anime={anime} />
+            <Card data={item} type={type} />
           </div>
         ))
       ) : (
@@ -30,4 +31,4 @@ const AnimeList: React.FC<AnimeListProps> = ({ data }) => {
   );
 };
 
-export default AnimeList;
+export default List;

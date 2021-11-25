@@ -18,6 +18,7 @@ export const FORMATS = [
   "OVA",
   "ONA",
   "MUSIC",
+  "MANGA",
 ] as const;
 export const STATUSES = [
   "FINISHED",
@@ -83,6 +84,7 @@ export const VIETNAMESE_FORMATS = [
   "OVA",
   "ONA",
   "Music",
+  "Manga",
 ] as const;
 export const VIETNAMESE_STATUSES = [
   "Hoàn thành",

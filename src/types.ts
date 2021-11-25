@@ -12,14 +12,14 @@ import {
   UseSupabaseQueryOptions,
 } from "./utils/supabase";
 
-export interface AnimeTitle {
+export interface Title {
   romaji: string;
   english: string;
   native: string;
   user_preferred: string;
 }
 
-export interface AnimeCoverImage {
+export interface CoverImage {
   extra_large: string;
   large: string;
   medium: string;
@@ -38,10 +38,13 @@ export interface Character {
   image: CharacterImage;
 }
 
-export interface Recommendation {
+export interface AnimeRecommendation {
   anime: Anime;
 }
 
+export interface MangaRecommendation {
+  manga: Manga;
+}
 export interface AiringSchedule {
   airing_at: number;
   episode: number;
@@ -52,10 +55,22 @@ export interface Episode {
   episode_id: number;
   source_id: number;
   thumbnail_image?: string;
+  anime_id: number;
 }
 
-export interface RelationAnime {
+export interface Chapter {
+  name: string;
+  chapter_id: number;
+  source_id: number;
+  manga_id: number;
+}
+
+export interface AnimeRelation {
   anime: Anime;
+}
+
+export interface MangaRelation {
+  manga: Manga;
 }
 
 export type Season = typeof SEASONS[number];
@@ -64,8 +79,8 @@ export type Status = typeof STATUSES[number];
 export type Genre = typeof GENRES[number];
 
 export interface Anime {
-  title: AnimeTitle;
-  cover_image: AnimeCoverImage;
+  title: Title;
+  cover_image: CoverImage;
   start_date?: number;
   trending?: number;
   popularity?: number;
@@ -82,8 +97,8 @@ export interface Anime {
   average_score?: number;
   studios?: string[];
   characters?: Character[];
-  relations?: RelationAnime[];
-  recommendations?: Recommendation[];
+  relations?: AnimeRelation[];
+  recommendations?: AnimeRecommendation[];
   airing_schedule?: AiringSchedule[];
   total_episodes?: number;
   ani_id?: number;
@@ -94,6 +109,35 @@ export interface Anime {
   updated_at?: Date;
   episodes_updated_at?: Date;
   tags?: string[];
+}
+
+export interface Manga {
+  title: string;
+  cover_image: CoverImage;
+  start_date?: number;
+  trending?: number;
+  popularity?: number;
+  favourites?: number;
+  banner_image?: string;
+  season?: Season;
+  season_year?: number;
+  format?: Format;
+  status?: Status;
+  genres?: Genre[];
+  is_adult?: boolean;
+  country_of_origin?: string;
+  average_score?: number;
+  studios?: string[];
+  characters?: Character[];
+  relations?: MangaRelation[];
+  recommendations?: MangaRecommendation[];
+  ani_id?: number;
+  description?: string;
+  source_id?: number;
+  created_at?: Date;
+  updated_at?: Date;
+  tags?: string[];
+  slug?: string;
 }
 
 export interface Section<T> {

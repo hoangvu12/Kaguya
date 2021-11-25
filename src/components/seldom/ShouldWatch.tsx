@@ -1,6 +1,6 @@
-import { Anime } from "@/types";
+import { Anime, Manga } from "@/types";
 import { numberWithCommas } from "@/utils";
-import { convert } from "@/utils/anime";
+import { convert } from "@/utils/data";
 import router from "next/router";
 import React from "react";
 import { AiFillPlayCircle, AiFillHeart } from "react-icons/ai";
@@ -8,24 +8,33 @@ import { MdTagFaces } from "react-icons/md";
 import CircleButton from "@/components/shared/CircleButton";
 import DotList from "@/components/shared/DotList";
 import TextIcon from "@/components/shared/TextIcon";
-import AnimeSection from "./AnimeSection";
+import Section from "./Section";
 import Image from "@/components/shared/Image";
 
 interface ShouldWatchProps {
-  anime: Anime;
+  data: Anime | Manga;
+  type?: "anime" | "manga";
 }
 
-const ShouldWatch: React.FC<ShouldWatchProps> = ({ anime }) => {
+const ShouldWatch: React.FC<ShouldWatchProps> = ({ data, type = "anime" }) => {
+  const title =
+    typeof data.title === "string" ? data.title : data.title.user_preferred;
+
+  const redirectUrl =
+    type === "anime"
+      ? `/anime/details/${data.ani_id}`
+      : `/manga/details/${data.ani_id}`;
+
   return (
-    <AnimeSection title="Xem gì hôm nay?">
+    <Section title="Xem gì hôm nay?">
       <div
         className="cursor-pointer group relative z-0 w-full h-[200px] md:h-[400px] rounded-md"
         onClick={() => {
-          router.push(`/details/${anime.ani_id}`);
+          router.push(redirectUrl);
         }}
       >
         <Image
-          src={anime.banner_image}
+          src={data.banner_image}
           layout="fill"
           objectFit="cover"
           objectPosition="50% 35%"
@@ -47,29 +56,31 @@ const ShouldWatch: React.FC<ShouldWatchProps> = ({ anime }) => {
 
       <div className="!mt-8 flex flex-col md:flex-row items-center space-between space-y-4 md:space-x-8">
         <div className="flex-shrink-0">
-          <h1 className="uppercase text-2xl">{anime.title.user_preferred}</h1>
+          <h1 className="uppercase text-2xl">{title}</h1>
 
           <div className="text-lg mt-4 flex flex-wrap items-center gap-x-8">
-            <TextIcon LeftIcon={MdTagFaces} iconClassName="text-green-300">
-              <p>{anime.average_score}%</p>
-            </TextIcon>
+            {data.average_score && (
+              <TextIcon LeftIcon={MdTagFaces} iconClassName="text-green-300">
+                <p>{data.average_score}%</p>
+              </TextIcon>
+            )}
 
             <TextIcon LeftIcon={AiFillHeart} iconClassName="text-red-400">
-              <p>{numberWithCommas(anime.favourites)}</p>
+              <p>{numberWithCommas(data.favourites)}</p>
             </TextIcon>
 
             <DotList>
-              {anime.genres.slice(0, 3).map((genre) => (
+              {data.genres.slice(0, 3).map((genre) => (
                 <p key={genre}>{convert(genre, "genre")}</p>
               ))}
             </DotList>
           </div>
         </div>
         <p className="line-clamp-3 text-base text-gray-300">
-          {anime.description}
+          {data.description}
         </p>
       </div>
-    </AnimeSection>
+    </Section>
   );
 };
 

@@ -7,7 +7,7 @@ import ClientOnly from "@/components/shared/ClientOnly";
 import Head from "@/components/shared/Head";
 import TopList from "@/components/shared/TopList";
 import supabase from "@/lib/supabase";
-import { Anime, Manga } from "@/types";
+import { Anime } from "@/types";
 import { GetStaticProps, NextPage } from "next";
 import React from "react";
 import { REVALIDATE_TIME } from "@/constants";
@@ -18,8 +18,6 @@ interface HomeProps {
   topAnime: Anime[];
   randomAnime: Anime;
   recentlyUpdatedAnime: Anime[];
-  topManga: Manga[];
-  recentlyUpdatedManga: Manga[];
 }
 
 const Home: NextPage<HomeProps> = ({
@@ -27,8 +25,6 @@ const Home: NextPage<HomeProps> = ({
   topAnime,
   randomAnime,
   recentlyUpdatedAnime,
-  recentlyUpdatedManga,
-  topManga,
 }) => {
   return (
     <React.Fragment>
@@ -41,7 +37,7 @@ const Home: NextPage<HomeProps> = ({
           <div className="space-y-8">
             <WatchedSection />
 
-            <Section title="Anime mới cập nhật">
+            <Section title="Mới cập nhật">
               <CardSwiper data={recentlyUpdatedAnime} />
             </Section>
 
@@ -49,14 +45,6 @@ const Home: NextPage<HomeProps> = ({
 
             <Section title="Top anime">
               <TopList data={topAnime} />
-            </Section>
-
-            <Section title="Manga mới cập nhật">
-              <CardSwiper type="manga" data={recentlyUpdatedManga} />
-            </Section>
-
-            <Section title="Top manga">
-              <TopList type="manga" data={topManga} />
             </Section>
           </div>
         </div>
@@ -94,26 +82,12 @@ export const getStaticProps: GetStaticProps = async () => {
     .eq("season_year", currentSeason.year)
     .limit(10);
 
-  const { data: recentlyUpdatedManga } = await supabase
-    .from<Manga>("manga")
-    .select("*")
-    .order("updated_at", { ascending: false })
-    .limit(15);
-
-  const { data: topManga } = await supabase
-    .from<Manga>("manga")
-    .select("*")
-    .order("average_score", { ascending: false })
-    .limit(10);
-
   return {
     props: {
       trendingAnime,
       recentlyUpdatedAnime,
       randomAnime,
       topAnime,
-      recentlyUpdatedManga,
-      topManga,
     },
 
     revalidate: REVALIDATE_TIME,

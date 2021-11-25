@@ -1,5 +1,5 @@
 import { SORTS } from "@/constants";
-import { convert } from "@/utils/anime";
+import { convert } from "@/utils/data";
 import React, { useState } from "react";
 import { RiArrowUpDownFill } from "react-icons/ri";
 import Popup from "../shared/Popup";
