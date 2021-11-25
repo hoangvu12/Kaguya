@@ -39,6 +39,10 @@ const Header = () => {
     document.addEventListener("scroll", handleScroll);
   }, []);
 
+  const searchUrl = router.asPath.includes("anime")
+    ? "/search?type=anime"
+    : "/search?type=manga";
+
   return (
     <header
       className={classNames(
@@ -107,7 +111,7 @@ const Header = () => {
       </div>
 
       <div className="flex items-center space-x-4 ml-auto">
-        <NavItem href="/search">
+        <NavItem href={searchUrl}>
           {({ isActive }) => (
             <AiOutlineSearch
               className={classNames(

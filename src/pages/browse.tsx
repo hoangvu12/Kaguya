@@ -13,6 +13,7 @@ const BrowsePage = ({ query }) => {
     season = undefined,
     seasonYear = undefined,
     sort = "popularity",
+    type,
   } = query;
 
   const browseQuery: UseBrowseOptions = {
@@ -22,6 +23,7 @@ const BrowsePage = ({ query }) => {
     season: season as string,
     seasonYear: seasonYear as string,
     sort: sort as keyof Anime,
+    type: type as "manga" | "anime",
   };
 
   return (

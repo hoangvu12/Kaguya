@@ -34,7 +34,7 @@ const variants: Variants = {
   },
 };
 
-const defaultItem = { placeholder: "Tất cả", value: "" };
+const defaultOptionItem = { placeholder: "Tất cả", value: "" };
 
 const Select: React.FC<SelectProps> = (props) => {
   const {
@@ -43,6 +43,7 @@ const Select: React.FC<SelectProps> = (props) => {
     containerClassName,
     inputClassName,
     data,
+    defaultItem = defaultOptionItem,
     defaultValue,
     onChange,
   } = props;
@@ -89,6 +90,8 @@ const Select: React.FC<SelectProps> = (props) => {
   const filteredItems = useMemo<SelectItem[]>(
     () =>
       [defaultItem, ...data].filter(({ value, placeholder }) => {
+        if (!value || !placeholder) return false;
+
         if (isMobile) return true;
 
         const keyword = query.toLowerCase();
@@ -97,7 +100,7 @@ const Select: React.FC<SelectProps> = (props) => {
           value.includes(keyword) || placeholder.toLowerCase().includes(keyword)
         );
       }),
-    [data, query, isMobile]
+    [data, query, isMobile, defaultItem]
   );
 
   return (

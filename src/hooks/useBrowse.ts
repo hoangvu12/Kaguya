@@ -13,6 +13,7 @@ export interface UseBrowseOptions {
   select?: string;
   limit?: number;
   tag?: string;
+  type?: "anime" | "manga";
 }
 
 const useBrowse = (options: UseBrowseOptions) => {
@@ -27,16 +28,21 @@ const useBrowse = (options: UseBrowseOptions) => {
       sort,
       limit,
       tag,
+      type,
     } = options;
 
     let db: PostgrestFilterBuilder<Anime>;
 
+    const table = type === "anime" ? "anime" : "manga";
+
     if (keyword) {
       db = supabase
-        .rpc("anime_search", { string: keyword })
+        .rpc(type === "anime" ? "anime_search" : "manga_search", {
+          string: keyword,
+        })
         .select(select || "*");
     } else {
-      db = supabase.from("anime").select(select || "*", { count: "exact" });
+      db = supabase.from(table).select(select || "*", { count: "exact" });
     }
 
     if (genre) {
