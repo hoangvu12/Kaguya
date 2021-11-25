@@ -8,10 +8,10 @@ import Head from "@/components/shared/Head";
 import TopAnimeList from "@/components/shared/TopAnimeList";
 import supabase from "@/lib/supabase";
 import { Anime } from "@/types";
-import { getSeason } from "@/utils";
 import { GetStaticProps, NextPage } from "next";
 import React from "react";
 import { REVALIDATE_TIME } from "../constants";
+import { getSeason } from "../utils";
 
 interface HomeProps {
   trendingAnime: Anime[];
@@ -91,7 +91,7 @@ export const getStaticProps: GetStaticProps = async () => {
       topAnime,
     },
 
-    revalidate: 1,
+    revalidate: REVALIDATE_TIME,
   };
 };
 
