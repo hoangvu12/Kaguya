@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "type": "module",
   "dependencies": {
     "@popperjs/core": "^2.10.2",
     "@supabase/supabase-js": "^1.25.1",
