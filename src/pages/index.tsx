@@ -55,8 +55,6 @@ const Home: NextPage<HomeProps> = ({
 export const getStaticProps: GetStaticProps = async () => {
   const currentSeason = getSeason();
 
-  console.log("GET STATIC PROPS");
-
   const { data: trendingAnime } = await supabase
     .from<Anime>("anime")
     .select("*")
