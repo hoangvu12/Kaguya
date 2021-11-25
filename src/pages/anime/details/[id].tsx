@@ -32,7 +32,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
     : null;
 
   const handleWatchClick = () => {
-    router.push(`/watch/${anime.ani_id}`);
+    router.push(`/anime/watch/${anime.ani_id}`);
   };
 
   return (

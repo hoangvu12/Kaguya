@@ -138,6 +138,7 @@ export interface Manga {
   updated_at?: Date;
   tags?: string[];
   slug?: string;
+  chapters: Chapter[];
 }
 
 export interface Section<T> {
