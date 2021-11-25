@@ -1,11 +1,12 @@
 import BaseLayout from "@/components/layouts/BaseLayout";
 import { AuthContextProvider } from "@/contexts/AuthContext";
-import "@/styles/index.css";
 import { AppProps } from "next/app";
 import Router from "next/router";
 import NProgress from "nprogress";
 import React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
+
+import "@/styles/index.css";
 
 Router.events.on("routeChangeStart", NProgress.start);
 Router.events.on("routeChangeComplete", NProgress.done);
