@@ -72,7 +72,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   );
 
   const handleNavigateEpisode = (index: number) => () => {
-    router.replace(`/watch/${id}?index=${index}`, null, { shallow: true });
+    router.replace(`/anime/watch/${id}?index=${index}`, null, { shallow: true });
   };
 
   const { data, isLoading } = useFetchSource(episode.episode_id);
