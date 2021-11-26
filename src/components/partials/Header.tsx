@@ -40,8 +40,8 @@ const Header = () => {
   }, []);
 
   const searchUrl = router.asPath.includes("manga")
-    ? "/search?type=manga"
-    : "/search?type=anime";
+    ? "/browse?type=manga"
+    : "/browse?type=anime";
 
   return (
     <header
