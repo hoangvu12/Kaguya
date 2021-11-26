@@ -10,9 +10,10 @@ import { Manga } from "@/types";
 import { motion } from "framer-motion";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { AiOutlineInfoCircle, AiOutlineLoading3Quarters } from "react-icons/ai";
 import Popup from "@/components/shared/Popup";
+import ChapterSelector from "@/components/seldom/ChapterSelector";
 
 interface ReadPageProps {
   manga: Manga;
@@ -30,17 +31,18 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
 
   const { data } = useFetchImages(manga.slug, currentChapter.chapter_id);
 
-  const handleChapterNavigate = (chapterIndex: number) => {
-    return () => {
+  const handleChapterNavigate = useCallback(
+    (chapterIndex: number) => {
       router.push(`/manga/read/${id}?index=${chapterIndex}`, null, {
         shallow: true,
       });
-    };
-  };
+    },
+    [id, router]
+  );
 
-  const handleOverlayClick = () => {
-    setShowControls(!showControls);
-  };
+  const handleOverlayClick = useCallback(() => {
+    setShowControls((prev) => !prev);
+  }, []);
 
   return (
     <div className="min-h-screen w-full flex justify-center items-center">
@@ -80,7 +82,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
         <motion.div
           variants={{ animate: { y: 0 }, exit: { y: "100%" } }}
           transition={{ ease: "linear", duration: 0.2 }}
-          className="flex px-8 items-center justify-evenly md:justify-center md:space-x-8 z-[1] absolute bottom-0 w-full h-24 bg-background-900"
+          className="flex px-4 items-center justify-evenly md:justify-center md:space-x-8 z-[1] absolute bottom-0 w-full h-24 bg-background-900"
         >
           <Button
             className="bg-transparent hover:bg-white/20"
@@ -88,7 +90,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
             onClick={() => {
               router.push(`/manga/details/${id}`);
             }}
-            iconClassName="w-8 h-8"
+            iconClassName="w-10 h-10 lg:w-8 lg:h-8"
           >
             <p className="hidden md:inline">Thông tin truyện</p>
           </Button>
@@ -97,42 +99,18 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
             <Button
               className="bg-transparent hover:bg-white/20"
               LeftIcon={NextIcon}
-              onClick={handleChapterNavigate(Number(chapterIndex) + 1)}
-              iconClassName="w-8 h-8"
+              onClick={() => handleChapterNavigate(Number(chapterIndex) + 1)}
+              iconClassName="w-10 h-10 lg:w-8 lg:h-8"
             >
               <p className="hidden md:inline">Chapter tiếp theo</p>
             </Button>
           )}
 
-          <Popup
-            type="click"
-            reference={
-              <Button
-                className="bg-transparent hover:bg-white/20"
-                LeftIcon={EpisodesIcon}
-                iconClassName="w-8 h-8"
-              >
-                <p className="hidden md:inline">Tất cả chapter</p>
-              </Button>
-            }
-            placement="top"
-          >
-            <div className="bg-background-900 w-[75vw] h-[75vh] md:h-[50vh] md:w-[40vw] overflow-y-scroll scroll-bar">
-              {manga.chapters.map((chapter, index) => (
-                <button
-                  className="w-full cursor-pointer flex p-2 items-center justify-between hover:bg-white/20"
-                  key={chapter.chapter_id}
-                  onClick={handleChapterNavigate(index)}
-                >
-                  <p className="text-xl">{chapter.name}</p>
-
-                  {chapter.chapter_id === currentChapter.chapter_id && (
-                    <p className="text-lg text-gray-300">Đang đọc</p>
-                  )}
-                </button>
-              ))}
-            </div>
-          </Popup>
+          <ChapterSelector
+            chapters={manga.chapters}
+            onChapterChange={handleChapterNavigate}
+            currentChapter={currentChapter}
+          />
         </motion.div>
 
         <motion.div
