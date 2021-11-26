@@ -39,9 +39,9 @@ const Header = () => {
     document.addEventListener("scroll", handleScroll);
   }, []);
 
-  const searchUrl = router.asPath.includes("anime")
-    ? "/search?type=anime"
-    : "/search?type=manga";
+  const searchUrl = router.asPath.includes("manga")
+    ? "/search?type=manga"
+    : "/search?type=anime";
 
   return (
     <header
