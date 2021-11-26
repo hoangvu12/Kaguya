@@ -7,13 +7,14 @@ import { REVALIDATE_TIME } from "@/constants";
 import useFetchImages from "@/hooks/useFetchImages";
 import supabase from "@/lib/supabase";
 import { Manga } from "@/types";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useCallback, useMemo, useState } from "react";
 import { AiOutlineInfoCircle, AiOutlineLoading3Quarters } from "react-icons/ai";
 import Popup from "@/components/shared/Popup";
 import ChapterSelector from "@/components/seldom/ChapterSelector";
+import useEventListener from "@/hooks/useEventListener";
 
 interface ReadPageProps {
   manga: Manga;
@@ -22,10 +23,16 @@ interface ReadPageProps {
 const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
   const router = useRouter();
   const [showControls, setShowControls] = useState(false);
+  const [showNextEpisodeBox, setShowNextEpisodeBox] = useState(false);
   const { index: chapterIndex = 0, id } = router.query;
 
   const currentChapter = useMemo(
     () => manga.chapters[Number(chapterIndex)],
+    [manga.chapters, chapterIndex]
+  );
+
+  const nextChapter = useMemo(
+    () => manga.chapters[Number(chapterIndex) + 1],
     [manga.chapters, chapterIndex]
   );
 
@@ -41,8 +48,22 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
   );
 
   const handleOverlayClick = useCallback(() => {
-    setShowControls((prev) => !prev);
-  }, []);
+    setShowControls(!showControls);
+
+    // If the controls are shown, hide next episode box;
+    if (!showControls) {
+      setShowNextEpisodeBox(false);
+    }
+  }, [showControls]);
+
+  useEventListener("scroll", () => {
+    if (window.scrollY + window.innerHeight >= document.body.scrollHeight) {
+      setShowNextEpisodeBox(true);
+      setShowControls(false);
+    } else {
+      setShowNextEpisodeBox(false);
+    }
+  });
 
   return (
     <div className="min-h-screen w-full flex justify-center items-center">
@@ -70,7 +91,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
         <motion.div
           variants={{ animate: { y: 0 }, exit: { y: "-100%" } }}
           transition={{ ease: "linear", duration: 0.2 }}
-          className="z-[1] absolute top-0 flex items-center justify-center w-full h-24 bg-background-900"
+          className="z-[1] fixed top-0 flex items-center justify-center w-full h-24 bg-background-900"
         >
           <div>
             <p className="text-2xl font-semibold">{manga.title}</p>
@@ -125,6 +146,48 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
           transition={{ ease: "linear", duration: 0.2 }}
         />
       </motion.div>
+
+      {/* Next episode box */}
+      <AnimatePresence>
+        {showNextEpisodeBox && (
+          <motion.div
+            className="w-full flex flex-col justify-between h-40 bg-background-900 fixed bottom-0 p-4"
+            variants={{
+              animate: {
+                y: 0,
+              },
+              exit: {
+                y: "100%",
+              },
+            }}
+            animate="animate"
+            initial="exit"
+            exit="exit"
+            transition={{ ease: "linear", duration: 0.2 }}
+          >
+            <div>
+              <p className="text-gray-300 text-base">Chapter tiếp theo:</p>
+              <p className="text-3xl">{nextChapter.name}</p>
+            </div>
+
+            <div className="flex items-center space-x-4">
+              <ChapterSelector
+                chapters={manga.chapters}
+                onChapterChange={handleChapterNavigate}
+                currentChapter={currentChapter}
+              />
+
+              <Button
+                primary
+                onClick={() => handleChapterNavigate(Number(chapterIndex) + 1)}
+                LeftIcon={NextIcon}
+              >
+                <p>Chapter kế tiếp</p>
+              </Button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
