@@ -53,7 +53,7 @@ const Select: React.FC<SelectProps> = (props) => {
     defaultItem = defaultOptionItem,
     defaultValue,
     onChange,
-    value = data[0].value,
+    value
   } = props;
   const customDefaultItem = data.find((item) => item.value === defaultValue);
 
@@ -95,6 +95,8 @@ const Select: React.FC<SelectProps> = (props) => {
   useClickOutside(ref, () => setIsOpen(false));
 
   useEffect(() => {
+    if (!value) return;
+
     setActiveItem(data.find((item) => item.value === value));
   }, [value, data]);
 
