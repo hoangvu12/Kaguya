@@ -10,6 +10,7 @@ import { Manga } from "@/types";
 import { GetStaticProps, NextPage } from "next";
 import React from "react";
 import ShouldWatch from "@/components/seldom/ShouldWatch";
+import GenresSelector from "@/components/seldom/GenresSelector";
 
 interface HomeProps {
   trendingManga: Manga[];
@@ -37,6 +38,10 @@ const Home: NextPage<HomeProps> = ({
             </Section>
 
             <ShouldWatch type="manga" data={randomManga} />
+
+            <Section title="Thể loại">
+              <GenresSelector type="manga" />
+            </Section>
 
             <Section title="Top manga">
               <TopList type="manga" data={topManga} />

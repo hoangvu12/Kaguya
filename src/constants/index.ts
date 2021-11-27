@@ -28,25 +28,101 @@ export const STATUSES = [
   "HIATUS",
 ] as const;
 export const GENRES = [
-  "Action",
-  "Adventure",
-  "Comedy",
-  "Drama",
-  "Ecchi",
-  "Fantasy",
-  "Hentai",
-  "Horror",
-  "Mahou Shoujo",
-  "Mecha",
-  "Music",
-  "Mystery",
-  "Psychological",
-  "Romance",
-  "Sci-Fi",
-  "Slice of Life",
-  "Sports",
-  "Supernatural",
-  "Thriller",
+  {
+    value: "Action",
+    thumbnail:
+      "https://s4.anilist.co/file/anilistcdn/media/anime/banner/5114-q0V5URebphSG.jpg",
+  },
+  {
+    value: "Adventure",
+    thumbnail:
+      "https://s4.anilist.co/file/anilistcdn/media/anime/banner/101922-YfZhKBUDDS6L.jpg",
+  },
+  {
+    value: "Comedy",
+    thumbnail:
+      "https://s4.anilist.co/file/anilistcdn/media/anime/banner/20464-HbmkPacki4sl.jpg",
+  },
+  {
+    value: "Drama",
+    thumbnail:
+      "https://s4.anilist.co/file/anilistcdn/media/anime/banner/n9253-JIhmKgBKsWUN.jpg",
+  },
+  {
+    value: "Ecchi",
+    thumbnail:
+      "https://s4.anilist.co/file/anilistcdn/media/anime/banner/108465-RgsRpTMhP9Sv.jpg",
+  },
+  {
+    value: "Fantasy",
+    thumbnail:
+      "https://s4.anilist.co/file/anilistcdn/media/anime/banner/101759-MhlCoeqnODso.jpg",
+  },
+  {
+    value: "Hentai",
+    thumbnail:
+      "https://s4.anilist.co/file/anilistcdn/media/anime/banner/99894-MWIuMGnDIg1x.jpg",
+  },
+  {
+    value: "Horror",
+    thumbnail:
+      "https://s4.anilist.co/file/anilistcdn/media/anime/banner/101759-MhlCoeqnODso.jpg",
+  },
+  {
+    value: "Mahou Shoujo",
+    thumbnail:
+      "https://s4.anilist.co/file/anilistcdn/media/anime/banner/9756-d5M8NffgJJHB.jpg",
+  },
+  {
+    value: "Mecha",
+    thumbnail:
+      "https://s4.anilist.co/file/anilistcdn/media/anime/banner/30-gEMoHHIqxDgN.jpg",
+  },
+  {
+    value: "Music",
+    thumbnail:
+      "https://s4.anilist.co/file/anilistcdn/media/anime/banner/20665-j4kSsfhfkM24.jpg",
+  },
+  {
+    value: "Mystery",
+    thumbnail:
+      "https://s4.anilist.co/file/anilistcdn/media/anime/banner/n101291-fqIUvQ6apEtD.jpg",
+  },
+  {
+    value: "Psychological",
+    thumbnail:
+      "https://s4.anilist.co/file/anilistcdn/media/anime/banner/21355-f9SjOfEJMk5P.jpg",
+  },
+  {
+    value: "Romance",
+    thumbnail:
+      "https://s4.anilist.co/file/anilistcdn/media/anime/banner/101921-GgvvFhlNhzlF.jpg",
+  },
+  {
+    value: "Sci-Fi",
+    thumbnail:
+      "https://s4.anilist.co/file/anilistcdn/media/anime/banner/1-T3PJUjFJyRwg.jpg",
+  },
+  {
+    value: "Slice of Life",
+    thumbnail:
+      "https://s4.anilist.co/file/anilistcdn/media/anime/banner/124080-ARyLAHHgikRq.jpg",
+  },
+  {
+    value: "Sports",
+    thumbnail:
+      "https://s4.anilist.co/file/anilistcdn/media/anime/banner/20992-sYHxFXg98JEj.jpg",
+  },
+  {
+    value: "Supernatural",
+    thumbnail:
+      "https://s4.anilist.co/file/anilistcdn/media/anime/banner/21507-Qx8bGsLXUgLo.jpg",
+  },
+  {
+    value: "Thriller",
+    thumbnail:
+      "https://s4.anilist.co/file/anilistcdn/media/anime/banner/100388-CR4PUEz1Nzsl.jpg",
+  },
 ] as const;
 
 export const SORTS = [

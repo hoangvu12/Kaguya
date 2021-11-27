@@ -76,7 +76,7 @@ export interface MangaRelation {
 export type Season = typeof SEASONS[number];
 export type Format = typeof FORMATS[number];
 export type Status = typeof STATUSES[number];
-export type Genre = typeof GENRES[number];
+export type Genre = typeof GENRES[number]["value"];
 
 export interface Anime {
   title: Title;

@@ -12,13 +12,13 @@ import { GetStaticProps, NextPage } from "next";
 import React from "react";
 import { REVALIDATE_TIME } from "@/constants";
 import { getSeason } from "@/utils";
+import GenresSelector from "@/components/seldom/GenresSelector";
 
 interface HomeProps {
   trendingAnime: Anime[];
   topAnime: Anime[];
   randomAnime: Anime;
   recentlyUpdatedAnime: Anime[];
-  topManga: Manga[];
   recentlyUpdatedManga: Manga[];
 }
 
@@ -28,7 +28,6 @@ const Home: NextPage<HomeProps> = ({
   randomAnime,
   recentlyUpdatedAnime,
   recentlyUpdatedManga,
-  topManga,
 }) => {
   return (
     <React.Fragment>
@@ -47,16 +46,16 @@ const Home: NextPage<HomeProps> = ({
 
             <ShouldWatch data={randomAnime} />
 
-            <Section title="Top anime">
-              <TopList data={topAnime} />
-            </Section>
-
             <Section title="Manga mới cập nhật">
               <CardSwiper type="manga" data={recentlyUpdatedManga} />
             </Section>
 
-            <Section title="Top manga">
-              <TopList type="manga" data={topManga} />
+            <Section title="Thể loại">
+              <GenresSelector />
+            </Section>
+
+            <Section title="Top anime">
+              <TopList data={topAnime} />
             </Section>
           </div>
         </div>
@@ -100,12 +99,6 @@ export const getStaticProps: GetStaticProps = async () => {
     .order("updated_at", { ascending: false })
     .limit(15);
 
-  const { data: topManga } = await supabase
-    .from<Manga>("manga")
-    .select("*")
-    .order("average_score", { ascending: false })
-    .limit(10);
-
   return {
     props: {
       trendingAnime,
@@ -113,7 +106,6 @@ export const getStaticProps: GetStaticProps = async () => {
       randomAnime,
       topAnime,
       recentlyUpdatedManga,
-      topManga,
     },
 
     revalidate: REVALIDATE_TIME,

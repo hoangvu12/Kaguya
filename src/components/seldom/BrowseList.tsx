@@ -27,8 +27,8 @@ const initialValues: UseBrowseOptions = {
 };
 
 const genres = GENRES.map((genre) => ({
-  value: genre as string,
-  placeholder: convert(genre, "genre"),
+  value: genre.value as string,
+  placeholder: convert(genre.value, "genre"),
 }));
 
 const seasonYears = SEASON_YEARS.map((year) => ({
