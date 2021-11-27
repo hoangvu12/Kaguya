@@ -29,8 +29,8 @@ const constants = {
   },
 
   genre: {
-    from: GENRES,
-    to: GENRES,
+    from: GENRES.map((genre) => genre.value),
+    to: GENRES.map((genre) => genre.value),
   },
 
   characterRole: {

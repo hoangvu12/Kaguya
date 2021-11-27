@@ -12,6 +12,7 @@ import { GetStaticProps, NextPage } from "next";
 import React from "react";
 import { REVALIDATE_TIME } from "@/constants";
 import { getSeason } from "@/utils";
+import GenresSelector from "@/components/seldom/GenresSelector";
 
 interface HomeProps {
   trendingAnime: Anime[];
@@ -42,6 +43,10 @@ const Home: NextPage<HomeProps> = ({
             </Section>
 
             <ShouldWatch data={randomAnime} />
+
+            <Section title="Thể loại">
+              <GenresSelector />
+            </Section>
 
             <Section title="Top anime">
               <TopList data={topAnime} />
