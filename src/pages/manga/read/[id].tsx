@@ -187,7 +187,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
                 onClick={() => handleChapterNavigate(Number(chapterIndex) + 1)}
                 LeftIcon={NextIcon}
               >
-                <p>Chapter kế tiếp</p>
+                <p>Đọc tiếp</p>
               </Button>
             </div>
           </motion.div>
