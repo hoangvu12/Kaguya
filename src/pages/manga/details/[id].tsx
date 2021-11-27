@@ -28,10 +28,13 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
     router.push(`/manga/read/${manga.ani_id}`);
   };
 
+  const title =
+    typeof manga.title === "string" ? manga.title : manga.title.user_preferred;
+
   return (
     <>
       <Head
-        title={`${manga.title} - Kaguya`}
+        title={`${title} - Kaguya`}
         description={manga.description}
         image={manga.banner_image}
       />
@@ -55,7 +58,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
                 <p>Đọc ngay</p>
               </Button>
 
-              <p className="text-3xl font-semibold mb-2">{manga.title}</p>
+              <p className="text-3xl font-semibold mb-2">{title}</p>
 
               <DotList>
                 {manga.genres.map((genre) => (

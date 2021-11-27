@@ -15,6 +15,7 @@ import { AiOutlineInfoCircle, AiOutlineLoading3Quarters } from "react-icons/ai";
 import Popup from "@/components/shared/Popup";
 import ChapterSelector from "@/components/seldom/ChapterSelector";
 import useEventListener from "@/hooks/useEventListener";
+import InView from "@/components/shared/InView";
 
 interface ReadPageProps {
   manga: Manga;
@@ -25,6 +26,9 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
   const [showControls, setShowControls] = useState(false);
   const [showNextEpisodeBox, setShowNextEpisodeBox] = useState(false);
   const { index: chapterIndex = 0, id } = router.query;
+
+  const title =
+    typeof manga.title === "string" ? manga.title : manga.title.user_preferred;
 
   const chapters = useMemo(
     () => manga.chapters.sort((a, b) => a.chapter_id - b.chapter_id),
@@ -61,26 +65,26 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
     }
   }, [showControls]);
 
-  useEventListener("scroll", () => {
-    if (window.scrollY + window.innerHeight >= document.body.scrollHeight) {
-      setShowNextEpisodeBox(true);
-      setShowControls(false);
-    } else {
-      setShowNextEpisodeBox(false);
-    }
-  });
+  const handleBottomScroll = useCallback(() => {
+    setShowNextEpisodeBox(true);
+    setShowControls(false);
+  }, []);
 
   return (
     <div className="min-h-screen w-full flex justify-center items-center">
       <Head
-        title={`${manga.title} - Kaguya`}
-        description={`Đọc truyện ${manga.title} tại Kaguya. Hoàn toàn miễn phí, không quảng cáo`}
+        title={`${title} - Kaguya`}
+        description={`Đọc truyện ${title} tại Kaguya. Hoàn toàn miễn phí, không quảng cáo`}
         image={manga.banner_image || manga.cover_image.large}
       />
 
       <div className="w-full md:w-[800px]">
         {data?.images.length ? (
-          <ReadImage images={data.images} />
+          <React.Fragment>
+            <ReadImage images={data.images} />
+
+            <InView onInView={handleBottomScroll} />
+          </React.Fragment>
         ) : (
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
             <AiOutlineLoading3Quarters className="animate-spin text-primary-500 w-16 h-16" />
@@ -99,7 +103,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
           className="z-[1] fixed top-0 flex items-center justify-center w-full h-24 bg-background-900"
         >
           <div>
-            <p className="text-2xl font-semibold">{manga.title}</p>
+            <p className="text-2xl font-semibold">{title}</p>
 
             <p className="text-lg text-gray-300">{currentChapter.name}</p>
           </div>
