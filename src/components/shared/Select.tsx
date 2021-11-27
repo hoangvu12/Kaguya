@@ -3,7 +3,13 @@ import useDevice from "@/hooks/useDevice";
 import useDidMount from "@/hooks/useDidMount";
 import classNames from "classnames";
 import { AnimatePresence, motion, Variants } from "framer-motion";
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { BsChevronExpand } from "react-icons/bs";
 import ClientOnly from "./ClientOnly";
 import Input from "./Input";
@@ -23,6 +29,7 @@ interface SelectProps {
   defaultValue?: string;
   data: SelectItem[];
   onChange?: (item: SelectItem["value"]) => void;
+  value?: string;
 }
 
 const variants: Variants = {
@@ -46,6 +53,7 @@ const Select: React.FC<SelectProps> = (props) => {
     defaultItem = defaultOptionItem,
     defaultValue,
     onChange,
+    value = data[0].value,
   } = props;
   const customDefaultItem = data.find((item) => item.value === defaultValue);
 
@@ -85,6 +93,10 @@ const Select: React.FC<SelectProps> = (props) => {
   );
 
   useClickOutside(ref, () => setIsOpen(false));
+
+  useEffect(() => {
+    setActiveItem(data.find((item) => item.value === value));
+  }, [value, data]);
 
   // If mobile, don't filter the data
   const filteredItems = useMemo<SelectItem[]>(
@@ -135,7 +147,7 @@ const Select: React.FC<SelectProps> = (props) => {
               onClick={handleToggle}
             ></button>
 
-            <p className="absolute left-5 top-1/2 -translate-y-1/2">
+            <p className="absolute left-0 top-1/2 -translate-y-1/2 line-clamp-1 px-3">
               {activeItem.placeholder}
             </p>
           </ClientOnly>

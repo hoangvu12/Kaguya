@@ -63,6 +63,7 @@ const ChapterSelector: React.FC<ChapterSelectorProps> = ({
           }))}
           defaultValue={currentChapterIndex.toString()}
           onChange={(index) => onChapterChange(Number(index))}
+          value={currentChapterIndex.toString()}
         />
       </MobileView>
     </React.Fragment>
