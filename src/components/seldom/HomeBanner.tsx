@@ -38,9 +38,9 @@ const HomeBanner: React.FC<HomeBannerProps> = ({ data, type = "anime" }) => {
   };
 
   const title =
-    type === "anime"
-      ? (activeSlide.title as Title).user_preferred
-      : activeSlide.title;
+    typeof activeSlide.title === "string"
+      ? activeSlide.title
+      : activeSlide.title.user_preferred;
 
   return (
     <React.Fragment>

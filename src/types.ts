@@ -112,7 +112,7 @@ export interface Anime {
 }
 
 export interface Manga {
-  title: string;
+  title: string | Title;
   cover_image: CoverImage;
   start_date?: number;
   trending?: number;
