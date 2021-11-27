@@ -57,13 +57,14 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
   );
 
   const handleOverlayClick = useCallback(() => {
-    setShowControls(!showControls);
-
-    // If the controls are shown, hide next episode box;
-    if (!showControls) {
+    if (showNextEpisodeBox) {
       setShowNextEpisodeBox(false);
+
+      return;
     }
-  }, [showControls]);
+
+    setShowControls(!showControls);
+  }, [showControls, showNextEpisodeBox]);
 
   const handleBottomScroll = useCallback(() => {
     setShowNextEpisodeBox(true);
