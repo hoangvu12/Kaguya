@@ -26,14 +26,19 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
   const [showNextEpisodeBox, setShowNextEpisodeBox] = useState(false);
   const { index: chapterIndex = 0, id } = router.query;
 
+  const chapters = useMemo(
+    () => manga.chapters.sort((a, b) => a.chapter_id - b.chapter_id),
+    [manga]
+  );
+
   const currentChapter = useMemo(
-    () => manga.chapters[Number(chapterIndex)],
-    [manga.chapters, chapterIndex]
+    () => chapters[Number(chapterIndex)],
+    [chapters, chapterIndex]
   );
 
   const nextChapter = useMemo(
-    () => manga.chapters[Number(chapterIndex) + 1],
-    [manga.chapters, chapterIndex]
+    () => chapters[Number(chapterIndex) + 1],
+    [chapters, chapterIndex]
   );
 
   const { data } = useFetchImages(manga.slug, currentChapter.chapter_id);
@@ -116,7 +121,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
             <p className="hidden md:inline">Thông tin truyện</p>
           </Button>
 
-          {chapterIndex < manga.chapters.length - 1 && (
+          {chapterIndex < chapters.length - 1 && (
             <Button
               className="!bg-transparent hover:bg-white/20"
               LeftIcon={NextIcon}
@@ -128,7 +133,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
           )}
 
           <ChapterSelector
-            chapters={manga.chapters}
+            chapters={chapters}
             onChapterChange={handleChapterNavigate}
             currentChapter={currentChapter}
           />
@@ -172,7 +177,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
 
             <div className="flex items-center space-x-4">
               <ChapterSelector
-                chapters={manga.chapters}
+                chapters={chapters}
                 onChapterChange={handleChapterNavigate}
                 currentChapter={currentChapter}
               />
