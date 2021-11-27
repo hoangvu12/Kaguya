@@ -106,7 +106,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
           className="flex px-4 items-center justify-evenly md:justify-center md:space-x-8 z-[1] absolute bottom-0 w-full h-24 bg-background-900"
         >
           <Button
-            className="bg-transparent hover:bg-white/20"
+            className="!bg-transparent hover:bg-white/20"
             LeftIcon={AiOutlineInfoCircle}
             onClick={() => {
               router.push(`/manga/details/${id}`);
@@ -118,7 +118,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
 
           {chapterIndex < manga.chapters.length - 1 && (
             <Button
-              className="bg-transparent hover:bg-white/20"
+              className="!bg-transparent hover:bg-white/20"
               LeftIcon={NextIcon}
               onClick={() => handleChapterNavigate(Number(chapterIndex) + 1)}
               iconClassName="w-10 h-10 lg:w-8 lg:h-8"

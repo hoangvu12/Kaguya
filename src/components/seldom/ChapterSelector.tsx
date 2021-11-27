@@ -20,7 +20,7 @@ const ChapterSelector: React.FC<ChapterSelectorProps> = ({
       type="click"
       reference={
         <Button
-          className="bg-transparent hover:bg-white/20"
+          className="!bg-transparent hover:bg-white/20"
           LeftIcon={EpisodesIcon}
           iconClassName="w-10 h-10 lg:w-8 lg:h-8"
         >
