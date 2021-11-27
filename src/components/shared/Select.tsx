@@ -180,7 +180,7 @@ const Select: React.FC<SelectProps> = (props) => {
                 ></motion.div>
 
                 <SelectItems
-                  className="block fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-y-scroll w-[80vw] h-[60vh] bg-background-800 z-[9999] text-center"
+                  className="block fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-y-scroll w-[80vw] h-[60vh] bg-background-900 z-[9999] text-center"
                   items={filteredItems}
                   onChange={handleItemChange}
                 />
