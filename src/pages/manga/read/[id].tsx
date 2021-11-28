@@ -25,6 +25,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
   const router = useRouter();
   const [showControls, setShowControls] = useState(false);
   const [showNextEpisodeBox, setShowNextEpisodeBox] = useState(false);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
   const { index: chapterIndex = 0, id } = router.query;
 
   const title =
@@ -72,7 +73,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
   }, []);
 
   return (
-    <div className="min-h-screen w-full flex justify-center items-center">
+    <div className="flex items-center justify-center w-full min-h-screen">
       <Head
         title={`${title} - Kaguya`}
         description={`Đọc truyện ${title} tại Kaguya. Hoàn toàn miễn phí, không quảng cáo`}
@@ -82,13 +83,18 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
       <div className="w-full md:w-[800px]">
         {data?.images.length ? (
           <React.Fragment>
-            <ReadImage images={data.images} />
+            <ReadImage
+              images={data.images}
+              onImagesLoaded={() => {
+                setImagesLoaded(true);
+              }}
+            />
 
-            <InView onInView={handleBottomScroll} />
+            {imagesLoaded && <InView onInView={handleBottomScroll} />}
           </React.Fragment>
         ) : (
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <AiOutlineLoading3Quarters className="animate-spin text-primary-500 w-16 h-16" />
+          <div className="absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
+            <AiOutlineLoading3Quarters className="w-16 h-16 animate-spin text-primary-500" />
           </div>
         )}
       </div>
@@ -146,7 +152,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
 
         <motion.div
           onClick={handleOverlayClick}
-          className="z-0 absolute inset-0 bg-black/60"
+          className="absolute inset-0 z-0 bg-black/60"
           variants={{
             animate: {
               opacity: 1,
@@ -161,7 +167,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
       <AnimatePresence>
         {showNextEpisodeBox && (
           <motion.div
-            className="w-full flex flex-col justify-between h-40 bg-background-900 fixed bottom-0 p-4"
+            className="fixed bottom-0 flex flex-col justify-between w-full h-40 p-4 bg-background-900"
             variants={{
               animate: {
                 y: 0,
@@ -176,7 +182,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
             transition={{ ease: "linear", duration: 0.2 }}
           >
             <div>
-              <p className="text-gray-300 text-base">Chapter tiếp theo:</p>
+              <p className="text-base text-gray-300">Chapter tiếp theo:</p>
               <p className="text-3xl">{nextChapter.name}</p>
             </div>
 

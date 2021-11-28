@@ -53,7 +53,7 @@ const Select: React.FC<SelectProps> = (props) => {
     defaultItem = defaultOptionItem,
     defaultValue,
     onChange,
-    value
+    value,
   } = props;
   const customDefaultItem = data.find((item) => item.value === defaultValue);
 
@@ -149,7 +149,7 @@ const Select: React.FC<SelectProps> = (props) => {
               onClick={handleToggle}
             ></button>
 
-            <p className="absolute left-0 top-1/2 -translate-y-1/2 line-clamp-1 px-3">
+            <p className="absolute left-0 px-3 -translate-y-1/2 top-1/2 line-clamp-1">
               {activeItem.placeholder}
             </p>
           </ClientOnly>
@@ -157,7 +157,7 @@ const Select: React.FC<SelectProps> = (props) => {
 
         <button
           onClick={handleToggle}
-          className="absolute top-1/2 -translate-y-1/2 right-3"
+          className="absolute -translate-y-1/2 top-1/2 right-3"
           type="button"
         >
           <BsChevronExpand className="w-5 h-5" />
@@ -178,7 +178,7 @@ const Select: React.FC<SelectProps> = (props) => {
                   animate="enter"
                   exit="exit"
                   initial="exit"
-                  className="fixed z-50 inset-0 bg-black/60"
+                  className="fixed inset-0 z-50 bg-black/60"
                 ></motion.div>
 
                 <SelectItems
@@ -220,14 +220,14 @@ const SelectItems: React.FC<SelectItemsProps> = ({
         items.map((item, index) => (
           <li
             key={index}
-            className="cursor-pointer rounded-sm hover:bg-background-900 hover:text-primary-300 text-semibold p-2 transition duration-300"
+            className="p-2 transition duration-300 rounded-sm cursor-pointer hover:bg-background-900 hover:text-primary-300 text-semibold"
             onClick={handleItemClick(item)}
           >
             {item.placeholder}
           </li>
         ))
       ) : (
-        <p className="text-center text-sm">Không tìm thấy kết quả</p>
+        <p className="text-sm text-center">Không tìm thấy kết quả</p>
       )}
     </motion.ul>
   );
