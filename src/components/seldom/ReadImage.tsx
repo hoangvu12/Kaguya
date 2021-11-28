@@ -1,32 +1,23 @@
-import React, { useEffect } from "react";
+import { ImageProps } from "next/image";
+import React, { useState } from "react";
+import Image from "../shared/Image";
 
-// @ts-ignore
-import imagesLoaded from "imagesloaded";
-
-interface ReadImageProps {
-  images: string[];
-  onImagesLoaded?: () => void;
-}
-
-const ReadImage: React.FC<ReadImageProps> = ({ images, onImagesLoaded }) => {
-  useEffect(() => {
-    imagesLoaded(".read-images", onImagesLoaded);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+const ReadImage: React.FC<ImageProps> = (props) => {
+  const [aspectRatio, setAspectRatio] = useState(0);
 
   return (
-    <div className="w-full read-images">
-      {images.map((image) => (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={`/api/proxy?url=${image}`}
-          alt="Đọc truyện tại Kaguya"
-          key={image}
-          className="w-full h-auto"
-        />
-      ))}
+    <div
+      style={{ paddingBottom: aspectRatio * 100 + "%", position: "relative" }}
+    >
+      {/* eslint-disable-next-line jsx-a11y/alt-text */}
+      <Image
+        {...props}
+        onLoadingComplete={({ naturalHeight, naturalWidth }) => {
+          setAspectRatio(naturalHeight / naturalWidth);
+        }}
+      />
     </div>
   );
 };
 
-export default React.memo(ReadImage);
+export default ReadImage;
