@@ -1,8 +1,9 @@
-import ReadImage from "@/components/seldom/ReadImage";
+import NextIcon from "@/components/icons/NextIcon";
+import ChapterSelector from "@/components/seldom/ChapterSelector";
+import ReadImages from "@/components/seldom/ReadImages";
 import Button from "@/components/shared/Button";
 import Head from "@/components/shared/Head";
-import NextIcon from "@/components/icons/NextIcon";
-import EpisodesIcon from "@/components/icons/EpisodesIcon";
+import InView from "@/components/shared/InView";
 import { REVALIDATE_TIME } from "@/constants";
 import useFetchImages from "@/hooks/useFetchImages";
 import supabase from "@/lib/supabase";
@@ -12,10 +13,6 @@ import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useCallback, useMemo, useState } from "react";
 import { AiOutlineInfoCircle, AiOutlineLoading3Quarters } from "react-icons/ai";
-import Popup from "@/components/shared/Popup";
-import ChapterSelector from "@/components/seldom/ChapterSelector";
-import useEventListener from "@/hooks/useEventListener";
-import InView from "@/components/shared/InView";
 
 interface ReadPageProps {
   manga: Manga;
@@ -83,7 +80,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
       <div className="w-full md:w-[800px]">
         {data?.images.length ? (
           <React.Fragment>
-            <ReadImage
+            <ReadImages
               images={data.images}
               onImagesLoaded={() => {
                 setImagesLoaded(true);

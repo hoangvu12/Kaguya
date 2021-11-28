@@ -16,13 +16,17 @@ interface ImageProps extends NextImageProps {
   containerClassName?: string;
 }
 
-const Image: React.FC<ImageProps> = (props) => {
+const Image: React.FC<ImageProps> = ({ onLoadingComplete, ...props }) => {
   const { containerClassName } = props;
 
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const handleLoadingComplete = () => {
+  const handleLoadingComplete: NextImageProps["onLoadingComplete"] = (
+    result
+  ) => {
     setIsLoaded(true);
+
+    onLoadingComplete(result);
   };
 
   return (
