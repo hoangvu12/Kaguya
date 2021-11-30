@@ -9,7 +9,6 @@ import EpisodesButton from "@/components/shared/Video/EpisodesButton";
 import MobileEpisodesButton from "@/components/shared/Video/MobileEpisodesButton";
 import NextEpisodeButton from "@/components/shared/Video/NextEpisodeButton";
 import { REVALIDATE_TIME } from "@/constants";
-import useBeforeLeave from "@/hooks/useBeforeLeave";
 import useDevice from "@/hooks/useDevice";
 import useEventListener from "@/hooks/useEventListener";
 import { useFetchSource } from "@/hooks/useFetchSource";
@@ -20,7 +19,7 @@ import { chunk } from "@/utils";
 import classNames from "classnames";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { BsArrowLeft } from "react-icons/bs";
@@ -72,24 +71,21 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   );
 
   const handleNavigateEpisode = (index: number) => () => {
-    router.replace(`/anime/watch/${id}?index=${index}`, null, { shallow: true });
+    router.replace(`/anime/watch/${id}?index=${index}`, null, {
+      shallow: true,
+    });
   };
 
   const { data, isLoading } = useFetchSource(episode.episode_id);
 
-  useBeforeLeave(
-    () => {
-      saveWatchedMutation.mutate({
-        anime_id: Number(id),
-        episode_id: episode.episode_id,
-      });
-    },
-    (currentUrl, navigateUrl) => {
-      if (currentUrl.split("?")[0] === navigateUrl.split("?")[0]) return false;
+  useEffect(() => {
+    saveWatchedMutation.mutate({
+      anime_id: Number(id),
+      episode_id: episode.episode_id,
+    });
 
-      return true;
-    }
-  );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [episode.episode_id]);
 
   return (
     <div className="relative w-full h-screen">
@@ -100,8 +96,8 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
       />
 
       {isLoading && (
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-          <AiOutlineLoading3Quarters className="animate-spin text-primary-500 w-16 h-16" />
+        <div className="absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
+          <AiOutlineLoading3Quarters className="w-16 h-16 animate-spin text-primary-500" />
         </div>
       )}
 
@@ -111,7 +107,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
         autoPlay
         overlaySlot={
           <BsArrowLeft
-            className="absolute top-10 left-10 w-10 h-10 hover:text-gray-200 transition duration-300 cursor-pointer"
+            className="absolute w-10 h-10 transition duration-300 cursor-pointer top-10 left-10 hover:text-gray-200"
             onClick={router.back}
           />
         }
@@ -130,7 +126,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
                 onClick={handleNavigateEpisode(Number(episodeIndex) + 1)}
               >
                 <div className="w-96">
-                  <p className="text-xl mb-4">Tập tiếp theo</p>
+                  <p className="mb-4 text-xl">Tập tiếp theo</p>
 
                   <EpisodeCard episode={nextEpisode} />
                 </div>
@@ -181,11 +177,11 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
                   )}
                 >
                   <BsArrowLeft
-                    className="absolute left-5 top-5 w-10 h-10 hover:text-gray-200 transition duration-300 cursor-pointer"
+                    className="absolute w-10 h-10 transition duration-300 cursor-pointer left-5 top-5 hover:text-gray-200"
                     onClick={() => setIsOpen(false)}
                   />
 
-                  <div className="flex space-x-8 snap-x overflow-x-auto">
+                  <div className="flex space-x-8 overflow-x-auto snap-x">
                     {sortedEpisodes.map((episode) => (
                       <div className="w-80" key={episode.episode_id}>
                         <EpisodeCard
@@ -200,7 +196,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
                     ))}
                   </div>
 
-                  <p className="font-semibold absolute left-1/2 -translate-x-1/2 bottom-5 text-center text-xl mt-8">
+                  <p className="absolute mt-8 text-xl font-semibold text-center -translate-x-1/2 left-1/2 bottom-5">
                     {anime.title.user_preferred} - Tập {episode.name}
                   </p>
                 </div>
@@ -222,9 +218,9 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
             className="fixed inset-0 z-[9999] flex items-center bg-black/70"
             onMouseMove={() => setShowInfoOverlay(false)}
           >
-            <div className="px-40 w-11/12">
-              <p className="text-xl text-gray-200 mb-2">Bạn đang xem</p>
-              <p className="text-5xl font-semibold mb-8">
+            <div className="w-11/12 px-40">
+              <p className="mb-2 text-xl text-gray-200">Bạn đang xem</p>
+              <p className="mb-8 text-5xl font-semibold">
                 {anime.title.user_preferred} - Tập {episode.name}
               </p>
               <p className="text-lg text-gray-300">{anime.description}</p>
