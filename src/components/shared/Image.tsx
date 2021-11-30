@@ -26,7 +26,7 @@ const Image: React.FC<ImageProps> = ({ onLoadingComplete, ...props }) => {
   ) => {
     setIsLoaded(true);
 
-    onLoadingComplete(result);
+    onLoadingComplete?.(result);
   };
 
   return (
