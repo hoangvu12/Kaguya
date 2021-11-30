@@ -6,12 +6,13 @@ import Head from "@/components/shared/Head";
 import InView from "@/components/shared/InView";
 import { REVALIDATE_TIME } from "@/constants";
 import useFetchImages from "@/hooks/useFetchImages";
+import useSaveRead from "@/hooks/useSaveRead";
 import supabase from "@/lib/supabase";
 import { Manga } from "@/types";
 import { AnimatePresence, motion } from "framer-motion";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { AiOutlineInfoCircle, AiOutlineLoading3Quarters } from "react-icons/ai";
 
 interface ReadPageProps {
@@ -24,6 +25,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
   const [showNextEpisodeBox, setShowNextEpisodeBox] = useState(false);
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const { index: chapterIndex = 0, id } = router.query;
+  const saveReadMutation = useSaveRead();
 
   const title =
     typeof manga.title === "string" ? manga.title : manga.title.user_preferred;
@@ -68,6 +70,15 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
     setShowNextEpisodeBox(true);
     setShowControls(false);
   }, []);
+
+  useEffect(() => {
+    saveReadMutation.mutate({
+      manga_id: Number(id),
+      chapter_id: currentChapter.chapter_id,
+    });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentChapter.chapter_id]);
 
   return (
     <div className="flex items-center justify-center w-full min-h-screen">
@@ -212,7 +223,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       `
         title,
         slug,
-        chapters(*),
+        chapters!manga_id(*),
         banner_image,
         cover_image
       `
