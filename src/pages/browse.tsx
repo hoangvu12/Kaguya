@@ -1,8 +1,6 @@
-import BrowseList from "@/components/seldom/BrowseList";
-import ClientOnly from "@/components/shared/ClientOnly";
-import { UseBrowseOptions } from "@/hooks/useBrowse";
-import { Anime } from "@/types";
-import { useRouter } from "next/router";
+import AnimeBrowseList from "@/components/seldom/AnimeBrowseList";
+import MangaBrowseList from "@/components/seldom/MangaBrowseList";
+import { Anime, Format, Genre, Manga } from "@/types";
 import React from "react";
 
 const BrowsePage = ({ query }) => {
@@ -16,19 +14,32 @@ const BrowsePage = ({ query }) => {
     type,
   } = query;
 
-  const browseQuery: UseBrowseOptions = {
-    format: format as string,
+  const baseQuery = {
+    format: format as Format,
     keyword: keyword as string,
-    genre: genre as string,
+    genre: genre as Genre,
+    type: type as "manga" | "anime",
+  };
+
+  const animeBrowseQuery = {
+    ...baseQuery,
     season: season as string,
     seasonYear: seasonYear as string,
     sort: sort as keyof Anime,
-    type: type as "manga" | "anime",
+  };
+
+  const mangaBrowseQuery = {
+    ...baseQuery,
+    sort: sort as keyof Manga,
   };
 
   return (
     <div className="py-20">
-      <BrowseList title="Tìm kiếm" defaultQuery={browseQuery} />
+      {type === "anime" ? (
+        <AnimeBrowseList title="Tìm kiếm" defaultQuery={animeBrowseQuery} />
+      ) : (
+        <MangaBrowseList title="Tìm kiếm" defaultQuery={mangaBrowseQuery} />
+      )}
     </div>
   );
 };
