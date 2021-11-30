@@ -33,23 +33,23 @@ const Home: NextPage<HomeProps> = ({
 
       <ClientOnly>
         <div className="pb-8">
-          <HomeBanner data={trendingAnime} />
+          <HomeBanner type="anime" data={trendingAnime} />
 
           <div className="space-y-8">
             <WatchedSection />
 
             <Section title="Mới cập nhật">
-              <CardSwiper data={recentlyUpdatedAnime} />
+              <CardSwiper type="anime" data={recentlyUpdatedAnime} />
             </Section>
 
-            <ShouldWatch data={randomAnime} />
+            <ShouldWatch type="anime" data={randomAnime} />
 
             <Section title="Thể loại">
               <GenresSelector />
             </Section>
 
             <Section title="Top anime">
-              <TopList data={topAnime} />
+              <TopList type="anime" data={topAnime} />
             </Section>
           </div>
         </div>

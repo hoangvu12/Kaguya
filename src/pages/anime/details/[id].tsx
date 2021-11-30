@@ -46,13 +46,13 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
       <div className="pb-8">
         <DetailsBanner image={anime.banner_image} />
 
-        <div className="relative px-4 sm:px-12 z-10 bg-background-900 pb-4">
+        <div className="relative z-10 px-4 pb-4 sm:px-12 bg-background-900">
           <div className="flex flex-col md:flex-row md:space-x-6">
             <div className="flex-shrink-0 relative left-1/2 -translate-x-1/2 md:static md:left-0 md:-translate-x-0 w-[186px] -mt-20">
               <PlainCard data={anime} />
             </div>
 
-            <div className="text-center md:text-left flex flex-col items-center md:items-start py-4 mt-4 md:-mt-16">
+            <div className="flex flex-col items-center py-4 mt-4 text-center md:text-left md:items-start md:-mt-16">
               <Button
                 primary
                 LeftIcon={BsFillPlayFill}
@@ -62,7 +62,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                 <p>Xem ngay</p>
               </Button>
 
-              <p className="text-3xl font-semibold mb-2">
+              <p className="mb-2 text-3xl font-semibold">
                 {anime.title.user_preferred}
               </p>
 
@@ -72,9 +72,9 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                 ))}
               </DotList>
 
-              <p className="mt-4 text-gray-300 mb-8">{anime.description}</p>
+              <p className="mt-4 mb-8 text-gray-300">{anime.description}</p>
 
-              <div className="flex overflow-x-auto md:scroll-bar snap-x space-x-8 md:space-x-16">
+              <div className="flex space-x-8 overflow-x-auto md:scroll-bar snap-x md:space-x-16">
                 <InfoItem title="Số tập" value={anime.total_episodes} />
                 <InfoItem title="Thời lượng" value={`${anime.duration} phút`} />
 
@@ -101,7 +101,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
           </div>
         </div>
 
-        <div className="space-y-8 md:space-y-0 px-4 md:grid md:grid-cols-10 w-full min-h-screen mt-8 sm:px-12 gap-8">
+        <div className="w-full min-h-screen gap-8 px-4 mt-8 space-y-8 md:space-y-0 md:grid md:grid-cols-10 sm:px-12">
           <div className="md:col-span-2 bg-background-900 rounded-md p-4 space-y-4 h-[max-content]">
             <InfoItem
               title="Định dạng"
@@ -131,11 +131,11 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
               value={`${convert(anime.season, "season")} ${anime.season_year}`}
             />
           </div>
-          <div className="md:col-span-8 space-y-12">
+          <div className="space-y-12 md:col-span-8">
             {!!anime?.characters?.length && (
               <DetailsSection
                 title="Nhân vật"
-                className="w-full grid md:grid-cols-2 grid-cols-1 gap-4"
+                className="grid w-full grid-cols-1 gap-4 md:grid-cols-2"
               >
                 {anime.characters.map((character, index) => (
                   <CharacterCard character={character} key={index} />
@@ -146,6 +146,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
             {!!anime?.relations?.length && (
               <DetailsSection title="Anime liên quan">
                 <List
+                  type="anime"
                   data={anime.relations.map((relation) => relation.anime)}
                 />
               </DetailsSection>
@@ -154,6 +155,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
             {!!anime?.recommendations?.length && (
               <DetailsSection title="Anime hay khác">
                 <List
+                  type="anime"
                   data={anime.recommendations.map(
                     (recommendation) => recommendation.anime
                   )}
