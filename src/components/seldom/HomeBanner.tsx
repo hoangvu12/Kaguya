@@ -4,7 +4,7 @@ import DotList from "@/components/shared/DotList";
 import Image from "@/components/shared/Image";
 import { SwiperProps } from "@/components/shared/Swiper";
 import TextIcon from "@/components/shared/TextIcon";
-import { Anime, Manga, Title } from "@/types";
+import { Anime, DynamicData, Manga, Title } from "@/types";
 import { numberWithCommas } from "@/utils";
 import { convert } from "@/utils/data";
 import { useRouter } from "next/router";
@@ -13,12 +13,10 @@ import { AiFillHeart, AiFillPlayCircle } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
 import Button from "../shared/Button";
 
-interface HomeBannerProps {
-  data: Anime[] | Manga[];
-  type?: "anime" | "manga";
-}
-
-const HomeBanner: React.FC<HomeBannerProps> = ({ data, type = "anime" }) => {
+const HomeBanner: React.FC<DynamicData<Anime[], Manga[]>> = ({
+  data,
+  type = "anime",
+}) => {
   const router = useRouter();
 
   const [index, setIndex] = useState<number>(0);

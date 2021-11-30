@@ -1,4 +1,4 @@
-import { Anime, Manga } from "@/types";
+import { Anime, DynamicData, Manga } from "@/types";
 import { numberWithCommas } from "@/utils";
 import { convert } from "@/utils/data";
 import router from "next/router";
@@ -11,12 +11,10 @@ import TextIcon from "@/components/shared/TextIcon";
 import Section from "./Section";
 import Image from "@/components/shared/Image";
 
-interface ShouldWatchProps {
-  data: Anime | Manga;
-  type?: "anime" | "manga";
-}
-
-const ShouldWatch: React.FC<ShouldWatchProps> = ({ data, type = "anime" }) => {
+const ShouldWatch: React.FC<DynamicData<Anime, Manga>> = ({
+  data,
+  type = "anime",
+}) => {
   const title =
     typeof data.title === "string" ? data.title : data.title.user_preferred;
 
@@ -42,23 +40,23 @@ const ShouldWatch: React.FC<ShouldWatchProps> = ({ data, type = "anime" }) => {
           className="rounded-md"
         />
 
-        <div className="absolute z-10 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+        <div className="absolute z-10 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
           <CircleButton
             LeftIcon={AiFillPlayCircle}
             outline
-            className="hidden md:block absolute left-2/3 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100"
+            className="absolute hidden -translate-x-1/2 -translate-y-1/2 opacity-0 md:block left-2/3 top-1/2 group-hover:opacity-100"
             iconClassName="w-16 h-16"
           />
         </div>
 
-        <div className="absolute z-0 inset-0 opacity-0 group-hover:opacity-100 transition duration-300 bg-black/60"></div>
+        <div className="absolute inset-0 z-0 transition duration-300 opacity-0 group-hover:opacity-100 bg-black/60"></div>
       </div>
 
       <div className="!mt-8 flex flex-col md:flex-row items-center space-between space-y-4 md:space-x-8">
         <div className="flex-shrink-0">
-          <h1 className="uppercase text-2xl">{title}</h1>
+          <h1 className="text-2xl uppercase">{title}</h1>
 
-          <div className="text-lg mt-4 flex flex-wrap items-center gap-x-8">
+          <div className="flex flex-wrap items-center mt-4 text-lg gap-x-8">
             {data.average_score && (
               <TextIcon LeftIcon={MdTagFaces} iconClassName="text-green-300">
                 <p>{data.average_score}%</p>
@@ -76,7 +74,7 @@ const ShouldWatch: React.FC<ShouldWatchProps> = ({ data, type = "anime" }) => {
             </DotList>
           </div>
         </div>
-        <p className="line-clamp-3 text-base text-gray-300">
+        <p className="text-base text-gray-300 line-clamp-3">
           {data.description}
         </p>
       </div>
