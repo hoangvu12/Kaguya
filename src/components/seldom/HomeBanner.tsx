@@ -32,7 +32,7 @@ const HomeBanner: React.FC<HomeBannerProps> = ({ data, type = "anime" }) => {
   const handleClick = () => {
     router.push(
       type === "anime"
-        ? `/details/${activeSlide.ani_id}`
+        ? `/anime/details/${activeSlide.ani_id}`
         : `/manga/details/${activeSlide.ani_id}`
     );
   };
@@ -55,13 +55,13 @@ const HomeBanner: React.FC<HomeBannerProps> = ({ data, type = "anime" }) => {
           />
         )}
 
-        <div className="banner__overlay absolute inset-0 flex flex-col justify-center px-4 md:px-12">
+        <div className="absolute inset-0 flex flex-col justify-center px-4 banner__overlay md:px-12">
           <div className="w-full md:w-[45%]">
-            <h1 className="text-2xl md:text-4xl uppercase font-bold line-clamp-2 sm:line-clamp-3 md:line-clamp-4">
+            <h1 className="text-2xl font-bold uppercase md:text-4xl line-clamp-2 sm:line-clamp-3 md:line-clamp-4">
               {title}
             </h1>
 
-            <div className="text-lg mt-4 flex flex-wrap items-center gap-x-8">
+            <div className="flex flex-wrap items-center mt-4 text-lg gap-x-8">
               {activeSlide.average_score && (
                 <TextIcon LeftIcon={MdTagFaces} iconClassName="text-green-300">
                   <p>{activeSlide.average_score}%</p>
@@ -79,7 +79,7 @@ const HomeBanner: React.FC<HomeBannerProps> = ({ data, type = "anime" }) => {
               </DotList>
             </div>
 
-            <p className="hidden md:block mt-2 text-base text-typography-secondary md:line-clamp-5">
+            <p className="hidden mt-2 text-base md:block text-typography-secondary md:line-clamp-5">
               {activeSlide.description}
             </p>
 
@@ -87,7 +87,7 @@ const HomeBanner: React.FC<HomeBannerProps> = ({ data, type = "anime" }) => {
               primary
               LeftIcon={AiFillPlayCircle}
               onClick={handleClick}
-              className="md:hidden mt-4"
+              className="mt-4 md:hidden"
             >
               <p>Xem ngay</p>
             </Button>
@@ -98,13 +98,13 @@ const HomeBanner: React.FC<HomeBannerProps> = ({ data, type = "anime" }) => {
           LeftIcon={AiFillPlayCircle}
           onClick={handleClick}
           outline
-          className="hidden md:block absolute left-2/3 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100"
+          className="absolute hidden -translate-x-1/2 -translate-y-1/2 opacity-0 md:block left-2/3 top-1/2 group-hover:opacity-100"
           iconClassName="w-16 h-16"
         />
 
-        <div className="banner__overlay--down absolute bottom-0 h-16 w-full"></div>
+        <div className="absolute bottom-0 w-full h-16 banner__overlay--down"></div>
       </div>
-      <div className="px-4 md:px-12 pb-12 w-full">
+      <div className="w-full px-4 pb-12 md:px-12">
         <BannerSwiper onSlideChange={handleSlideChange} data={data} />
       </div>
     </React.Fragment>
