@@ -13,14 +13,10 @@ export const AuthContextProvider: React.FC<{}> = ({ children }) => {
     const currentDate = new Date();
     const session = supabase.auth.session();
 
-    if (!session) {
+    if (!session || currentDate.getMilliseconds() >= session.expires_at) {
       setUser(null);
 
-      return;
-    }
-
-    if (currentDate.getMilliseconds() >= session.expires_at) {
-      setUser(null);
+      nookies.destroy(null, "sb:token");
     }
   }, []);
 
