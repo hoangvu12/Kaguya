@@ -2,7 +2,7 @@ import DotList from "@/components/shared/DotList";
 import Image from "@/components/shared/Image";
 import TextIcon from "@/components/shared/TextIcon";
 import useDevice from "@/hooks/useDevice";
-import { Anime, Manga } from "@/types";
+import { Anime, DynamicData, Manga } from "@/types";
 import { isColorVisible, numberWithCommas } from "@/utils";
 import { convert } from "@/utils/data";
 import classNames from "classnames";
@@ -13,9 +13,8 @@ import { AiFillHeart } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
 
 interface AnimeCardProps {
-  data: Anime | Manga;
   className?: string;
-  type?: string;
+  containerEndSlot?: React.ReactNode;
 }
 
 const imageVariants: Variants = {
@@ -39,10 +38,18 @@ const containerVariants: Variants = {
   exit: {},
 };
 
-const Card: React.FC<AnimeCardProps> = ({
+const slotVariants: Variants = {
+  animate: {
+    opacity: 1,
+  },
+  exit: { opacity: 0 },
+};
+
+const Card: React.FC<AnimeCardProps & DynamicData<Anime, Manga>> = ({
   data,
   className,
   type = "anime",
+  containerEndSlot,
 }) => {
   const { isDesktop } = useDevice();
 
@@ -84,7 +91,7 @@ const Card: React.FC<AnimeCardProps> = ({
               />
             </motion.div>
 
-            <motion.div className="px-2 py-4 flex flex-col justify-end items-center text-center absolute bottom-0">
+            <motion.div className="absolute bottom-0 flex flex-col items-center justify-end px-2 py-4 text-center">
               <motion.p
                 variants={infoVariants}
                 className="text-base font-semibold line-clamp-2"
@@ -127,6 +134,8 @@ const Card: React.FC<AnimeCardProps> = ({
                 </TextIcon>
               </motion.div>
             </motion.div>
+
+            <motion.div variants={slotVariants}>{containerEndSlot}</motion.div>
           </div>
 
           {!isDesktop && (

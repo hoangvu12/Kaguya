@@ -1,14 +1,9 @@
-import { Anime, Manga } from "@/types";
+import { Anime, DynamicData, Manga } from "@/types";
 import classNames from "classnames";
 import React from "react";
 import Card from "./Card";
 
-interface ListProps {
-  data: Anime[] | Manga[];
-  type?: "anime" | "manga";
-}
-
-const List: React.FC<ListProps> = ({ data, type }) => {
+const List: React.FC<DynamicData<Anime[], Manga[]>> = ({ data, type }) => {
   return (
     <div
       className={classNames(
@@ -18,7 +13,7 @@ const List: React.FC<ListProps> = ({ data, type }) => {
       {data.length ? (
         data.map((item) => (
           <div
-            className="w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6 px-2 snap-mandatory my-8"
+            className="w-1/2 px-2 my-8 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6 snap-mandatory"
             key={item.ani_id}
           >
             <Card data={item} type={type} />

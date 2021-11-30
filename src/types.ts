@@ -172,3 +172,13 @@ export interface Read {
 export type CallbackSetter<T> = (handler: T) => void;
 
 export type Noop = () => void;
+
+export type DynamicData<T, U> =
+  | {
+      type: "anime";
+      data: T;
+    }
+  | {
+      type: "manga";
+      data: U;
+    };

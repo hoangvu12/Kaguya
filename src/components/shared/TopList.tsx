@@ -1,13 +1,11 @@
-import { Anime, Manga } from "@/types";
+import { Anime, DynamicData, Manga } from "@/types";
 import React from "react";
 import TopCard from "./TopCard";
 
-interface TopListProps {
-  data: Anime[] | Manga[];
-  type?: "anime" | "manga";
-}
-
-const TopList: React.FC<TopListProps> = ({ data, type = "anime" }) => {
+const TopList: React.FC<DynamicData<Anime[], Manga[]>> = ({
+  data,
+  type = "anime",
+}) => {
   return (
     <div className="space-y-10">
       {data.map((item, index) => (
