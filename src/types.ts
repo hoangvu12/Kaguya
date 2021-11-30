@@ -161,6 +161,14 @@ export interface Watched {
   created_at?: Date;
 }
 
+export interface Read {
+  manga: Manga;
+  chapter: Chapter;
+  user_id: string;
+  updated_at?: Date;
+  created_at?: Date;
+}
+
 export type CallbackSetter<T> = (handler: T) => void;
 
 export type Noop = () => void;
