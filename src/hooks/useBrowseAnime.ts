@@ -1,5 +1,5 @@
 import supabase from "@/lib/supabase";
-import { Anime } from "@/types";
+import { Anime, Format } from "@/types";
 import { useSupaInfiniteQuery } from "@/utils/supabase";
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
 
@@ -8,11 +8,11 @@ export interface UseBrowseOptions {
   genre?: string;
   seasonYear?: string;
   season?: string;
-  format?: string;
-  sort?: keyof Anime;
+  format?: Format;
   select?: string;
   limit?: number;
   tag?: string;
+  sort?: keyof Anime;
   type?: "anime" | "manga";
 }
 
@@ -28,21 +28,18 @@ const useBrowse = (options: UseBrowseOptions) => {
       sort,
       limit,
       tag,
-      type,
     } = options;
 
     let db: PostgrestFilterBuilder<Anime>;
 
-    const table = type === "anime" ? "anime" : "manga";
-
     if (keyword) {
       db = supabase
-        .rpc(type === "anime" ? "anime_search" : "manga_search", {
+        .rpc("anime_search", {
           string: keyword,
         })
         .select(select || "*");
     } else {
-      db = supabase.from(table).select(select || "*", { count: "exact" });
+      db = supabase.from("anime").select(select || "*", { count: "exact" });
     }
 
     if (genre) {

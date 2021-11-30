@@ -1,5 +1,5 @@
 import { FORMATS, GENRES, SEASONS, SEASON_YEARS } from "@/constants";
-import useBrowse, { UseBrowseOptions } from "@/hooks/useBrowse";
+import useBrowse, { UseBrowseOptions } from "@/hooks/useBrowseAnime";
 import TAGS from "@/tags.json";
 import { convert } from "@/utils/data";
 import { debounce } from "debounce";
@@ -123,13 +123,13 @@ const BrowseList: React.FC<BrowseListProps> = ({
       <Head title={`${title} - Kaguya` || "Kaguya"} />
 
       {title && (
-        <p className="text-4xl text-center md:text-left font-semibold mb-8">
+        <p className="mb-8 text-4xl font-semibold text-center md:text-left">
           {title}
         </p>
       )}
 
       <form className="space-y-4">
-        <div className="flex lg:flex-wrap lg:justify-between space-x-2 -my-2 lg:space-x-0 items-center overflow-x-auto lg:overflow-x-visible snap-x lg:snap-none">
+        <div className="flex items-center -my-2 space-x-2 overflow-x-auto lg:flex-wrap lg:justify-between lg:space-x-0 lg:overflow-x-visible snap-x lg:snap-none">
           <Input
             {...register("keyword")}
             containerClassName="my-2"
@@ -253,7 +253,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
           </div>
         </div>
 
-        <div className="lg:hidden flex items-end justify-end">
+        <div className="flex items-end justify-end lg:hidden">
           <Controller
             name="sort"
             control={control}
@@ -268,7 +268,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
       <div className="mt-8">
         {!isLoading && query ? (
           <React.Fragment>
-            <List type={query.type} data={totalData} />
+            <List type="anime" data={totalData} />
 
             {isFetchingNextPage && !isError && (
               <div className="mt-4">
@@ -281,7 +281,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
             )}
 
             {!hasNextPage && !!totalData.length && (
-              <p className="text-2xl text-center mt-8">Hết rồi...</p>
+              <p className="mt-8 text-2xl text-center">Hết rồi...</p>
             )}
           </React.Fragment>
         ) : (
