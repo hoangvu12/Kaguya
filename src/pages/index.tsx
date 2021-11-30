@@ -35,16 +35,16 @@ const Home: NextPage<HomeProps> = ({
 
       <ClientOnly>
         <div className="pb-8">
-          <HomeBanner data={trendingAnime} />
+          <HomeBanner type="anime" data={trendingAnime} />
 
           <div className="space-y-8">
             <WatchedSection />
 
             <Section title="Anime mới cập nhật">
-              <CardSwiper data={recentlyUpdatedAnime} />
+              <CardSwiper type="anime" data={recentlyUpdatedAnime} />
             </Section>
 
-            <ShouldWatch data={randomAnime} />
+            <ShouldWatch type="anime" data={randomAnime} />
 
             <Section title="Manga mới cập nhật">
               <CardSwiper type="manga" data={recentlyUpdatedManga} />
@@ -55,7 +55,7 @@ const Home: NextPage<HomeProps> = ({
             </Section>
 
             <Section title="Top anime">
-              <TopList data={topAnime} />
+              <TopList type="anime" data={topAnime} />
             </Section>
           </div>
         </div>
