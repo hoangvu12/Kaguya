@@ -54,7 +54,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   const sortedEpisodes = useMemo(
     () =>
       anime.episodes
-        .sort((a, b) => a.episode_id - b.episode_id)
+        .sort((a, b) => a.id - b.id)
         .map((episode, index) => ({ ...episode, episodeIndex: index })),
     [anime.episodes]
   );
