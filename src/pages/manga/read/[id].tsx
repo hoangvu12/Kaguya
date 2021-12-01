@@ -49,7 +49,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
 
   const handleChapterNavigate = useCallback(
     (chapterIndex: number) => {
-      router.push(`/manga/read/${id}?index=${chapterIndex}`, null, {
+      router.replace(`/manga/read/${id}?index=${chapterIndex}`, null, {
         shallow: true,
       });
     },
