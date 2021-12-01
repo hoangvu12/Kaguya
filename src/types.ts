@@ -51,18 +51,20 @@ export interface AiringSchedule {
 }
 
 export interface Episode {
-  name: string;
-  episode_id: number;
-  source_id: number;
+  name?: string;
+  episode_id?: number;
+  source_id?: number;
   thumbnail_image?: string;
-  anime_id: number;
+  anime_id?: number;
+  id?: number;
 }
 
 export interface Chapter {
-  name: string;
-  chapter_id: number;
-  source_id: number;
-  manga_id: number;
+  name?: string;
+  chapter_id?: number;
+  source_id?: number;
+  manga_id?: number;
+  id?: number;
 }
 
 export interface AnimeRelation {
