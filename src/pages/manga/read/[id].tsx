@@ -9,6 +9,7 @@ import useFetchImages from "@/hooks/useFetchImages";
 import useSaveRead from "@/hooks/useSaveRead";
 import supabase from "@/lib/supabase";
 import { Manga } from "@/types";
+import { parseNumbersFromString } from "@/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
@@ -31,7 +32,11 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
     typeof manga.title === "string" ? manga.title : manga.title.user_preferred;
 
   const chapters = useMemo(
-    () => manga.chapters.sort((a, b) => a.chapter_id - b.chapter_id),
+    () =>
+      manga.chapters.sort(
+        (a, b) =>
+          parseNumbersFromString(a.name)[0] - parseNumbersFromString(b.name)[0]
+      ),
     [manga]
   );
 
