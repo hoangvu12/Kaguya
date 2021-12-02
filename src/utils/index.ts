@@ -133,3 +133,8 @@ export const getSeason = () => {
     year,
   };
 };
+
+// https://stackoverflow.com/questions/5457416/how-to-validate-numeric-values-which-may-contain-dots-or-commas
+export const parseNumbersFromString = (text: string) => {
+  return text.match(/\d{1,2}([\.,][\d{1,2}])?/g).map(Number);
+};
