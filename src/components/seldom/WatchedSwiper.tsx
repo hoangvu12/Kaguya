@@ -20,7 +20,7 @@ const WatchedSwiper: React.FC<WatchedSwiperProps> = ({ data, ...props }) => {
               const episodeIndex =
                 episode.name === "Full" ? 0 : Number(episode.name) - 1;
 
-              router.push(`/watch/${anime.ani_id}?index=${episodeIndex}`);
+              router.push(`/anime/watch/${anime.ani_id}?index=${episodeIndex}`);
             }}
             episode={episode}
             title={anime.title.user_preferred}
