@@ -39,7 +39,7 @@ export const emojiSearch = (text: string) => {
 
   const matchedEmojis = emojiIndex.search(text.replace(/:/g, ""));
 
-  return [...matchedCustomEmojis, ...matchedEmojis];
+  return [...matchedCustomEmojis, ...(matchedEmojis || [])];
 };
 
 export const emojiToHTMLImage = (

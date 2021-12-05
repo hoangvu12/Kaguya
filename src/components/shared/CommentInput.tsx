@@ -3,8 +3,8 @@ import EmojiPicker from "@/components/shared/EmojiPicker";
 import { useUser } from "@/contexts/AuthContext";
 import { customEmojis } from "@/utils/emoji";
 import { EmojiData } from "emoji-mart";
-import React, { useCallback, useEffect, useState } from "react";
-import { ContentEditableEvent } from "react-contenteditable";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 import EmojiSuggestion from "../seldom/EmojiSuggestion";
 import ClientOnly from "./ClientOnly";
 import EmojiText from "./EmojiText";
@@ -13,6 +13,7 @@ const CommentInput = () => {
   const user = useUser();
   const [html, setHTML] = useState("");
   const [latestText, setLatestText] = useState("");
+  const inputRef = useRef<ContentEditable & HTMLDivElement>();
 
   const handleChange = useCallback((event: ContentEditableEvent) => {
     setHTML(event.target.value);
@@ -34,12 +35,12 @@ const CommentInput = () => {
         html.substr(index + latestText.length);
 
       setHTML(replacedHTML);
-      setLatestText("");
+
+      const element = inputRef.current.getEl() as HTMLDivElement;
+      element.focus();
     },
     [latestText, html]
   );
-
-  const isShowEmojiSuggestion = latestText[0] === ":" && latestText.length > 2;
 
   useEffect(() => {
     const tempEl = document.createElement("div");
@@ -48,7 +49,11 @@ const CommentInput = () => {
 
     const latestNode = tempEl.childNodes[tempEl.childNodes.length - 1];
 
-    if (!latestNode) return;
+    if (!latestNode) {
+      setLatestText("");
+
+      return;
+    }
 
     if (latestNode.nodeName === "IMG") {
       setLatestText("");
@@ -73,13 +78,11 @@ const CommentInput = () => {
 
           <div className="relative flex-1">
             <div className="relative bg-background-900">
-              {isShowEmojiSuggestion && (
-                <EmojiSuggestion
-                  text={latestText}
-                  className="absolute z-50 w-full bottom-full bg-background-900"
-                  onClick={handleEmojiSuggestionSelect}
-                />
-              )}
+              <EmojiSuggestion
+                text={latestText}
+                className="absolute z-50 w-full bottom-full bg-background-900"
+                onClick={handleEmojiSuggestionSelect}
+              />
 
               {!html && (
                 <p className="absolute z-0 px-3 text-gray-400 -translate-y-1/2 top-1/2">
@@ -88,6 +91,7 @@ const CommentInput = () => {
               )}
 
               <EmojiText
+                ref={inputRef}
                 text={html}
                 onChange={handleChange}
                 className="relative z-10 px-3 py-2 focus:border-none focus:outline-none"
