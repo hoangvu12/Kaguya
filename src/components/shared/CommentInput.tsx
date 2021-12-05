@@ -13,11 +13,9 @@ const CommentInput = () => {
   const text = useRef("");
   const inputRef = useRef<ContentEditable & HTMLDivElement>();
 
-  console.log(text);
-
-  const handleChange = (event: ContentEditableEvent) => {
+  const handleChange = useCallback((event: ContentEditableEvent) => {
     setHTML(event.target.value);
-  };
+  }, []);
 
   const handleEmojiSelect = useCallback(
     (emojiData: EmojiData) => {
@@ -70,7 +68,7 @@ const CommentInput = () => {
               <ContentEditable
                 html={html}
                 onChange={handleChange}
-                className="relative z-10 flex items-center px-3 py-2 focus:border-none focus:outline-none"
+                className="relative z-10 px-3 py-2 focus:border-none focus:outline-none"
                 ref={inputRef}
               />
             </div>
