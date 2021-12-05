@@ -33,13 +33,8 @@ export const emojiToHTMLImage = (emojiObject: CustomEmoji | EmojiData) => {
     (emoji) => emoji.colons === emojiObject.colons
   );
 
-  if (customEmoji && "imageUrl" in emojiObject) {
-    return `
-    <img
-        style='width: ${emojiSize}px; height: ${emojiSize}px; display: inline-block; background-image: url("${emojiObject.imageUrl}"); background-size: cover;'
-        data-emoji-colons="${emojiObject.colons}" src="${TRANSPARENT_GIF}"
-    />
-    `;
+  if (customEmoji) {
+    emojiProps.emoji = customEmoji;
   }
 
   const originalHTMLEmoji = emoji(emojiProps);
