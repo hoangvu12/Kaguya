@@ -56,6 +56,7 @@ const EmojiPicker: React.FC<EmojiPickerProps> = ({ ...props }) => {
           >
             <Picker
               {...props}
+              showSkinTones={false}
               i18n={{
                 search: "Tìm kiếm",
                 notfound: "Không tìm thấy biểu cảm.",
