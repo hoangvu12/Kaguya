@@ -65,7 +65,7 @@ export const emojiToHTMLImage = (
 
   if (!styles) return null;
 
-  const htmlEmoji = `<img style='${styles[1]}' data-emoji-text="${emojiText}" src="${TRANSPARENT_GIF}" />`;
+  const htmlEmoji = `<img style='${styles[1]}' src="${TRANSPARENT_GIF}" />`;
 
   return htmlEmoji;
 };
