@@ -1,4 +1,10 @@
-import { Emoji, EmojiProps, EmojiData, CustomEmoji } from "emoji-mart";
+import {
+  Emoji,
+  EmojiProps,
+  EmojiData,
+  CustomEmoji,
+  emojiIndex,
+} from "emoji-mart";
 import { PropsWithChildren } from "react";
 
 const TRANSPARENT_GIF =
@@ -31,11 +37,11 @@ export const emojiToHTMLImage = (
 ) => {
   const emojiSize = 20;
 
-  const colons =
+  const emojiText =
     typeof emojiObject === "string" ? emojiObject : emojiObject.colons;
 
   const emojiProps: PropsWithChildren<EmojiProps> = {
-    emoji: colons,
+    emoji: emojiText,
     size: emojiSize,
     html: true,
     set: "facebook",
@@ -47,7 +53,9 @@ export const emojiToHTMLImage = (
 
   const styles = regex.exec(originalHTMLEmoji);
 
-  const htmlEmoji = `<img style='${styles[1]}' data-emoji-colons="${colons}" src="${TRANSPARENT_GIF}" />`;
+  if (!styles) return null;
+
+  const htmlEmoji = `<img style='${styles[1]}' data-emoji-text="${emojiText}" src="${TRANSPARENT_GIF}" />`;
 
   return htmlEmoji;
 };
