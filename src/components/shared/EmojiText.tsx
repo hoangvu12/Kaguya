@@ -24,14 +24,20 @@ const textToEmojiHTML = (text: string) => {
   });
 };
 
-const EmojiText: React.FC<EmojiTextProps> = ({ text, ...props }) => {
+const EmojiText = React.forwardRef<
+  ContentEditable & HTMLDivElement,
+  EmojiTextProps
+>(({ text, ...props }, ref) => {
   return (
     <ContentEditable
       onChange={emptyFn}
       html={textToEmojiHTML(text)}
+      ref={ref}
       {...props}
     />
   );
-};
+});
 
-export default React.memo(EmojiText);
+EmojiText.displayName = "EmojiText";
+
+export default EmojiText;

@@ -16,14 +16,18 @@ const EmojiSuggestion: React.FC<EmojiSuggestionProps> = ({
   onClick,
   ...props
 }) => {
-  const [emojis, setEmojis] = React.useState<EmojiData[]>(
-    emojiSearch(text).slice(0, 10)
-  );
+  const [emojis, setEmojis] = React.useState<EmojiData[]>([]);
 
-  const [show, setShow] = React.useState(true);
+  const [show, setShow] = React.useState(false);
 
   useEffect(() => {
+    if (!text) return;
+
     setEmojis(emojiSearch(text).slice(0, 10).reverse());
+  }, [text]);
+
+  useEffect(() => {
+    setShow(text[0] === ":" && text.length > 2);
   }, [text]);
 
   return !!emojis?.length && show ? (
@@ -31,7 +35,9 @@ const EmojiSuggestion: React.FC<EmojiSuggestionProps> = ({
       <div className={classNames("p-4", className)} {...props}>
         {emojis.map((emoji) => (
           <button
-            onClick={() => onClick(emoji)}
+            onClick={() => {
+              onClick(emoji);
+            }}
             key={emoji.colons}
             className="flex items-center w-full p-2 space-x-2 transition duration-300 rounded-md hover:bg-white/20"
           >
