@@ -15,13 +15,13 @@ const emptyFn = () => {};
 
 const textToEmojiHTML = (text: string) => {
   const regex = /:([^\s-]\w{2,}?):/g;
-  const cleanText = text.replace(/&nbsp;/g, " ");
 
-  return cleanText.replace(regex, (match) => {
+  return text.replace(regex, (match) => {
     const emoji = emojiToHTMLImage(match);
 
     return emoji || match;
   });
+  return text;
 };
 
 const EmojiText = React.forwardRef<
