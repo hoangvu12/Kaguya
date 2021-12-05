@@ -1,11 +1,12 @@
 import { useUser } from "@/contexts/AuthContext";
 import React from "react";
-import Image from "../shared/Image";
-import Popup from "../shared/Popup";
-import TextIcon from "../shared/TextIcon";
+import Image from "@/components/shared/Image";
+import Popup from "@/components/shared/Popup";
+import TextIcon from "@/components/shared/TextIcon";
 import { HiOutlineLogout } from "react-icons/hi";
-import Button from "../shared/Button";
+import Button from "@/components/shared/Button";
 import supabase from "@/lib/supabase";
+import Avatar from "@/components/shared/Avatar";
 
 const HeaderProfile = () => {
   const user = useUser();
@@ -18,26 +19,10 @@ const HeaderProfile = () => {
       placement="bottom-start"
       offset={[3.5, 10]}
       showArrow
-      reference={
-        <div className="w-10 h-10 rounded-full relative">
-          <Image
-            src={user.user_metadata.avatar_url}
-            alt="header profile"
-            layout="fill"
-            className="rounded-full"
-          />
-        </div>
-      }
+      reference={<Avatar src={user.user_metadata.avatar_url} />}
     >
-      <div className="flex items-center space-x-2 mb-8">
-        <div className="relative w-14 h-14 rounded-full">
-          <Image
-            src={user.user_metadata.avatar_url}
-            alt="header profile"
-            layout="fill"
-            className="rounded-full"
-          />
-        </div>
+      <div className="flex items-center mb-8 space-x-2">
+        <Avatar src={user.user_metadata.avatar_url} className="!w-14 !h-14" />
 
         <div>
           <p className="font-semibold">{user.user_metadata.name}</p>

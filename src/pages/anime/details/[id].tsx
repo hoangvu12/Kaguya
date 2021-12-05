@@ -17,6 +17,7 @@ import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
 import { BsFillPlayFill } from "react-icons/bs";
+import CommentsSection from "@/components/seldom/CommentsSection";
 
 interface DetailsPageProps {
   anime: Anime;
@@ -162,6 +163,10 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                 />
               </DetailsSection>
             )}
+
+            <DetailsSection title="Bình luận">
+              <CommentsSection />
+            </DetailsSection>
           </div>
         </div>
       </div>
