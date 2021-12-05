@@ -7,6 +7,7 @@ interface Icon {
 
 interface InputProps extends React.HTMLProps<HTMLInputElement> {
   containerClassName?: string;
+  containerInputClassName?: string;
   labelClassName?: string;
   LeftIcon?: React.ComponentType<Icon>;
   RightIcon?: React.ComponentType<Icon>;
@@ -17,6 +18,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   const {
     label,
     containerClassName,
+    containerInputClassName,
     labelClassName,
     LeftIcon,
     RightIcon,
@@ -35,7 +37,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
       <div
         className={classNames(
           "shadow flex items-center space-x-2 bg-background-800 focus:ring focus:ring-primary-500 focus:shadow-outline rounded",
-          LeftIcon || RightIcon ? "px-3 py-2" : "py-1"
+          LeftIcon || RightIcon ? "px-3 py-2" : "py-1",
+          containerInputClassName
         )}
       >
         {LeftIcon && <LeftIcon className="w-6 h-6" />}
