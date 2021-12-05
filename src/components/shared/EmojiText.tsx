@@ -14,17 +14,14 @@ interface EmojiTextProps extends Omit<Props, "onChange" | "html" | "ref"> {
 const emptyFn = () => {};
 
 const textToEmojiHTML = (text: string) => {
-  return text
-    .replace(/&nbsp;/g, " ")
-    .split(" ")
-    .map((word) => {
-      if (word[0] !== ":" || word[word.length - 1] !== ":") return word;
+  const regex = /:([^\s-]\w{2,}?):/g;
+  const cleanText = text.replace(/&nbsp;/g, " ");
 
-      const html = emojiToHTMLImage(word);
+  return cleanText.replace(regex, (match) => {
+    const emoji = emojiToHTMLImage(match);
 
-      return html || word;
-    })
-    .join(" ");
+    return emoji || match;
+  });
 };
 
 const EmojiText: React.FC<EmojiTextProps> = ({ text, ...props }) => {
