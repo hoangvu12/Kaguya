@@ -32,6 +32,16 @@ export const emoji = (props: PropsWithChildren<EmojiProps>) => {
   return Emoji(props) as string;
 };
 
+export const emojiSearch = (text: string) => {
+  const matchedCustomEmojis = customEmojis.filter((emoji) =>
+    emoji.colons.includes(text)
+  );
+
+  const matchedEmojis = emojiIndex.search(text.replace(/:/g, ""));
+
+  return [...matchedCustomEmojis, ...matchedEmojis];
+};
+
 export const emojiToHTMLImage = (
   emojiObject: CustomEmoji | EmojiData | string
 ) => {
