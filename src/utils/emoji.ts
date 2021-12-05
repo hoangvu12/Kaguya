@@ -13,29 +13,33 @@ export const customEmojis: CustomEmoji[] = [
   },
 ];
 
-// Type workaround
 export const emoji = (props: PropsWithChildren<EmojiProps>) => {
+  const customEmoji = customEmojis.find(
+    (emoji) => emoji.colons === props.emoji
+  );
+
+  if (customEmoji) {
+    props.emoji = customEmoji;
+  }
+
   // @ts-ignore
   return Emoji(props) as string;
 };
 
-export const emojiToHTMLImage = (emojiObject: CustomEmoji | EmojiData) => {
+export const emojiToHTMLImage = (
+  emojiObject: CustomEmoji | EmojiData | string
+) => {
   const emojiSize = 20;
 
+  const colons =
+    typeof emojiObject === "string" ? emojiObject : emojiObject.colons;
+
   const emojiProps: PropsWithChildren<EmojiProps> = {
-    emoji: emojiObject.colons,
+    emoji: colons,
     size: emojiSize,
     html: true,
     set: "facebook",
   };
-
-  const customEmoji = customEmojis.find(
-    (emoji) => emoji.colons === emojiObject.colons
-  );
-
-  if (customEmoji) {
-    emojiProps.emoji = customEmoji;
-  }
 
   const originalHTMLEmoji = emoji(emojiProps);
 
@@ -43,7 +47,7 @@ export const emojiToHTMLImage = (emojiObject: CustomEmoji | EmojiData) => {
 
   const styles = regex.exec(originalHTMLEmoji);
 
-  const htmlEmoji = `<img style='${styles[1]}' data-emoji-colons="${emojiObject.colons}" src="${TRANSPARENT_GIF}" />`;
+  const htmlEmoji = `<img style='${styles[1]}' data-emoji-colons="${colons}" src="${TRANSPARENT_GIF}" />`;
 
   return htmlEmoji;
 };
