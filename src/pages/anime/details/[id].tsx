@@ -10,7 +10,7 @@ import PlainCard from "@/components/shared/PlainCard";
 import { REVALIDATE_TIME } from "@/constants";
 import dayjs from "@/lib/dayjs";
 import supabase from "@/lib/supabase";
-import { Anime } from "@/types";
+import { Anime, Comment } from "@/types";
 import { numberWithCommas } from "@/utils";
 import { convert } from "@/utils/data";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
@@ -165,7 +165,21 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
             )}
 
             <DetailsSection title="Bình luận">
-              <CommentsSection />
+              <CommentsSection
+                query={{
+                  queryFn: (from, to) =>
+                    supabase
+                      .from<Comment>("comments")
+                      .select(
+                        `*, user:user_id(*), reply_comments!original_id(comment:reply_id(*, user:user_id(*))), reactions:comment_reactions(*)`
+                      )
+                      .eq("anime_id", anime.ani_id)
+                      .is("is_reply", false)
+                      .order("created_at", { ascending: false })
+                      .range(from, to),
+                  queryKey: ["comments", anime.ani_id],
+                }}
+              />
             </DetailsSection>
           </div>
         </div>

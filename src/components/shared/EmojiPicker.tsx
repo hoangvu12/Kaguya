@@ -1,13 +1,23 @@
+import { customEmojis } from "@/utils/emoji";
+import { Placement } from "@popperjs/core";
 import { Picker, PickerProps } from "emoji-mart";
 import "emoji-mart/css/emoji-mart.css";
 import React, { useState } from "react";
-import { BsEmojiSmile } from "react-icons/bs";
 import { usePopper } from "react-popper";
 import Portal from "./Portal";
 
-interface EmojiPickerProps extends PickerProps {}
+interface EmojiPickerProps extends PickerProps {
+  reference: React.ReactNode;
+  buttonClassName?: string;
+  placement?: Placement;
+}
 
-const EmojiPicker: React.FC<EmojiPickerProps> = ({ ...props }) => {
+const EmojiPicker: React.FC<EmojiPickerProps> = ({
+  reference,
+  buttonClassName,
+  placement = "top",
+  ...props
+}) => {
   const [showPicker, setShowPicker] = useState(false);
   const [referenceElement, setReferenceElement] = useState(null);
   const [popperElement, setPopperElement] = useState(null);
@@ -27,7 +37,7 @@ const EmojiPicker: React.FC<EmojiPickerProps> = ({ ...props }) => {
         },
       },
     ],
-    placement: "top",
+    placement,
   });
 
   const handleToggle = () => {
@@ -39,9 +49,9 @@ const EmojiPicker: React.FC<EmojiPickerProps> = ({ ...props }) => {
       <button
         ref={setReferenceElement}
         onClick={handleToggle}
-        className="p-2 transition duration-300 rounded-full hover:bg-white/20"
+        className={buttonClassName}
       >
-        <BsEmojiSmile className="w-6 h-6" />
+        {reference}
       </button>
 
       {showPicker && (
@@ -57,6 +67,11 @@ const EmojiPicker: React.FC<EmojiPickerProps> = ({ ...props }) => {
             <Picker
               {...props}
               showSkinTones={false}
+              set="facebook"
+              custom={customEmojis}
+              emoji="grinning"
+              color="#EF4444"
+              title="Kaguya"
               i18n={{
                 search: "Tìm kiếm",
                 notfound: "Không tìm thấy biểu cảm.",
