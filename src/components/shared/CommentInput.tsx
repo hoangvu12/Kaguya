@@ -1,15 +1,21 @@
 import Avatar from "@/components/shared/Avatar";
 import EmojiPicker from "@/components/shared/EmojiPicker";
 import { useUser } from "@/contexts/AuthContext";
-import { customEmojis } from "@/utils/emoji";
 import { EmojiData } from "emoji-mart";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
+import { BsEmojiSmile } from "react-icons/bs";
 import EmojiSuggestion from "../seldom/EmojiSuggestion";
 import ClientOnly from "./ClientOnly";
 import EmojiText from "./EmojiText";
 
-const CommentInput = () => {
+interface CommentInputProps {
+  placeholder?: string;
+}
+
+const CommentInput: React.FC<CommentInputProps> = ({
+  placeholder = "Bày tỏ suy nghĩ của bạn.",
+}) => {
   const user = useUser();
   const [html, setHTML] = useState("");
   const [latestText, setLatestText] = useState("");
@@ -86,7 +92,7 @@ const CommentInput = () => {
 
               {!html && (
                 <p className="absolute z-0 px-3 text-gray-400 -translate-y-1/2 top-1/2">
-                  Nêu suy nghĩ của bạn...
+                  {placeholder}
                 </p>
               )}
 
@@ -100,12 +106,9 @@ const CommentInput = () => {
 
             <div className="absolute right-0 z-10 flex items-center px-3 space-x-2 -translate-y-1/2 top-1/2">
               <EmojiPicker
-                title="Kaguya"
+                buttonClassName="p-2 transition duration-300 rounded-full hover:bg-white/20"
                 onSelect={handleEmojiSelect}
-                set="facebook"
-                custom={customEmojis}
-                emoji="grinning"
-                color="#EF4444"
+                reference={<BsEmojiSmile className="w-6 h-6" />}
               />
             </div>
           </div>

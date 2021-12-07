@@ -1,3 +1,4 @@
+import { User } from "@supabase/gotrue-js";
 import { QueryKey } from "react-query";
 import { SkeletonProps } from "./components/shared/Skeleton";
 import {
@@ -7,10 +8,7 @@ import {
   SEASONS,
   STATUSES,
 } from "./constants";
-import {
-  SupabaseQueryFunction,
-  UseSupabaseQueryOptions,
-} from "./utils/supabase";
+import { SupabaseQueryFunction, SupabaseQueryOptions } from "./utils/supabase";
 
 export interface Title {
   romaji: string;
@@ -148,7 +146,7 @@ export interface Section<T> {
   query?: {
     key: QueryKey;
     queryFn: SupabaseQueryFunction<T>;
-    options?: UseSupabaseQueryOptions<T>;
+    options?: SupabaseQueryOptions<T>;
   };
   skeleton: React.ComponentType<SkeletonProps>;
   render: (data: T[]) => React.ReactNode;
@@ -169,6 +167,35 @@ export interface Read {
   user_id: string;
   updated_at?: Date;
   created_at?: Date;
+}
+
+export interface Reaction {
+  updated_at?: Date;
+  created_at?: Date;
+  id: number;
+  emoji: string;
+  user_id?: string;
+  user?: User;
+  comment_id?: number;
+  comment?: Comment;
+}
+export interface ReplyComment {
+  comment: Comment;
+}
+export interface Comment {
+  updated_at?: Date;
+  created_at?: Date;
+  user_id?: string;
+  user?: User;
+  anime?: Anime;
+  manga?: Manga;
+  anime_id?: number;
+  manga_id?: number;
+  body: string;
+  id: number;
+  reply_comments?: ReplyComment[];
+  is_reply?: boolean;
+  reactions?: Reaction[];
 }
 
 export type CallbackSetter<T> = (handler: T) => void;
