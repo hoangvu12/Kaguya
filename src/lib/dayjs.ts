@@ -9,7 +9,7 @@ dayjs.updateLocale("en", {
   relativeTime: {
     future: "%s nữa",
     past: "%s trước",
-    s: "vài giây trước",
+    s: "vài giây",
     m: "một phút",
     mm: "%d phút",
     h: "một tiếng",

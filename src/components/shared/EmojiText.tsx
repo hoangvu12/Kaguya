@@ -39,4 +39,4 @@ const EmojiText = React.forwardRef<
 
 EmojiText.displayName = "EmojiText";
 
-export default EmojiText;
+export default React.memo(EmojiText);

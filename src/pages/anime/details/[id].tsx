@@ -171,7 +171,18 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                     supabase
                       .from<Comment>("comments")
                       .select(
-                        `*, user:user_id(*), reply_comments!original_id(comment:reply_id(*, user:user_id(*))), reactions:comment_reactions(*)`
+                        `
+                        *,
+                        user:user_id(*),
+                        reply_comments!original_id(
+                          comment:reply_id(
+                            *,
+                            user:user_id(*),
+                            reactions:comment_reactions(*)
+                          )
+                        ),
+                        reactions:comment_reactions(*)
+                        `
                       )
                       .eq("anime_id", anime.ani_id)
                       .is("is_reply", false)

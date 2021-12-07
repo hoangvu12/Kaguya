@@ -14,7 +14,20 @@ const useComment = (
     () =>
       supabase
         .from<Comment>("comments")
-        .select("*")
+        .select(
+          `
+          *,
+          user:user_id(*),
+          reply_comments!original_id(
+            comment:reply_id(
+              *,
+              user:user_id(*),
+              reactions:comment_reactions(*)
+            )
+          ),
+          reactions:comment_reactions(*)
+          `
+        )
         .eq("id", commentId)
         .limit(1)
         .single(),
