@@ -1,16 +1,20 @@
 import { useUser } from "@/contexts/AuthContext";
 import useComment from "@/hooks/useComment";
+import useDeleteComment from "@/hooks/useDeleteComment";
 import useReactComment from "@/hooks/useReactComment";
 import dayjs from "@/lib/dayjs";
 import { Comment as CommentType } from "@/types";
 import { getMostOccuringEmojis } from "@/utils/emoji";
 import { EmojiData } from "emoji-mart";
 import React, { useEffect, useMemo, useState } from "react";
+import { BiDotsHorizontalRounded } from "react-icons/bi";
+import CommentAction, { CommentActionType } from "../seldom/CommentAction";
 import Avatar from "./Avatar";
 import CommentInput from "./CommentInput";
 import DotList from "./DotList";
 import EmojiPicker from "./EmojiPicker";
 import EmojiText from "./EmojiText";
+import Popup from "./Popup";
 
 interface CommentProps {
   comment: CommentType;
@@ -29,6 +33,7 @@ const Comment: React.FC<CommentProps> = ({
   });
 
   const reactMutation = useReactComment(comment.id);
+  const deleteMutation = useDeleteComment(comment);
 
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [hasReacted, setHasReacted] = useState(() => {
@@ -51,37 +56,49 @@ const Comment: React.FC<CommentProps> = ({
     reactMutation.mutate({ emoji: "", type: "UNREACT" });
   };
 
-  const mostUsedEmojis = useMemo(
-    () =>
-      getMostOccuringEmojis(
-        comment?.reactions.map((reaction) => reaction.emoji)
-      ),
-    [comment.reactions]
+  const handleActionSelect = (type: CommentActionType) => {
+    if (type === "DELETE") {
+      deleteMutation.mutate();
+    }
+  };
+
+  const mostUsedEmojis = getMostOccuringEmojis(
+    comment?.reactions?.length
+      ? comment?.reactions.map((reaction) => reaction.emoji)
+      : []
   );
 
   return comment.user ? (
-    <div className="flex space-x-2">
+    <div className="flex space-x-2 group">
       <Avatar src={comment.user.user_metadata.avatar_url} />
 
       <div className="w-full">
-        <div className="relative inline-block p-3 mb-2 space-y-2 rounded-md bg-background-900">
-          <DotList>
-            <p className="text-lg">{comment.user.user_metadata.name}</p>
-            <p className="text-sm text-gray-300">
-              {dayjs(comment.created_at).fromNow()}
-            </p>
-          </DotList>
+        <div className="flex items-center space-x-2">
+          <div className="relative inline-block p-3 mb-2 space-y-2 rounded-md bg-background-900">
+            <DotList>
+              <p className="text-lg">{comment.user.user_metadata.name}</p>
+              <p className="text-sm text-gray-300">
+                {dayjs(comment.created_at).fromNow()}
+              </p>
+            </DotList>
 
-          <EmojiText text={comment.body} disabled className="break-words" />
+            <EmojiText text={comment.body} disabled className="break-words" />
 
-          {!!comment.reactions?.length && (
-            <EmojiText
-              disabled
-              text={`<p class="-space-x-2 inline">${mostUsedEmojis
-                .slice(0, 2)
-                .join("")}</p> ${comment.reactions.length}`}
-              className="absolute bottom-0 px-2 rounded-lg reactions -right-3 bg-background-900"
-            />
+            {!!comment.reactions?.length && (
+              <EmojiText
+                disabled
+                text={`<p class="-space-x-2 inline">${mostUsedEmojis
+                  .slice(0, 2)
+                  .join("")}</p> ${comment.reactions.length}`}
+                className="absolute bottom-0 px-2 rounded-lg reactions -right-3 bg-background-900"
+              />
+            )}
+          </div>
+
+          {comment.user_id === user?.id && (
+            <div className="hidden group-hover:block">
+              <CommentAction onActionSelect={handleActionSelect} />
+            </div>
           )}
         </div>
 
@@ -113,7 +130,7 @@ const Comment: React.FC<CommentProps> = ({
           )}
         </div>
 
-        {comment.reply_comments?.length && (
+        {!!comment.reply_comments?.length && (
           <div className="mt-3 space-y-4">
             {comment.reply_comments.map(({ comment }) => (
               <Comment key={comment.id} comment={comment} level={level + 1} />
