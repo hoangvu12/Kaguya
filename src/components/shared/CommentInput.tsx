@@ -1,6 +1,7 @@
 import Avatar from "@/components/shared/Avatar";
 import EmojiPicker from "@/components/shared/EmojiPicker";
 import { useUser } from "@/contexts/AuthContext";
+import useEventListener from "@/hooks/useEventListener";
 import { EmojiData } from "emoji-mart";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
@@ -11,15 +12,20 @@ import EmojiText from "./EmojiText";
 
 interface CommentInputProps {
   placeholder?: string;
+  defaultHTML?: string;
+  onEnter?: (text: string) => void;
 }
 
 const CommentInput: React.FC<CommentInputProps> = ({
   placeholder = "Bày tỏ suy nghĩ của bạn.",
+  defaultHTML = "",
+  onEnter,
 }) => {
   const user = useUser();
-  const [html, setHTML] = useState("");
+  const [html, setHTML] = useState(defaultHTML);
   const [latestText, setLatestText] = useState("");
   const inputRef = useRef<ContentEditable & HTMLDivElement>();
+  const text = useRef("");
 
   const handleChange = useCallback((event: ContentEditableEvent) => {
     setHTML(event.target.value);
@@ -53,6 +59,30 @@ const CommentInput: React.FC<CommentInputProps> = ({
 
     tempEl.innerHTML = html;
 
+    let rawText = "";
+
+    tempEl.childNodes.forEach((node) => {
+      if (node.nodeType === 3) {
+        rawText += node.textContent;
+
+        return;
+      }
+
+      if (node.nodeName === "IMG") {
+        const imageNode = node as HTMLImageElement;
+
+        rawText += `:${imageNode.dataset.emojiText}:`;
+      }
+    });
+
+    text.current = rawText;
+  }, [html]);
+
+  useEffect(() => {
+    const tempEl = document.createElement("div");
+
+    tempEl.innerHTML = html;
+
     const latestNode = tempEl.childNodes[tempEl.childNodes.length - 1];
 
     if (!latestNode) {
@@ -75,6 +105,18 @@ const CommentInput: React.FC<CommentInputProps> = ({
         .trim()
     );
   }, [html]);
+
+  useEventListener("keydown", (event: KeyboardEvent) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+
+      if (onEnter) {
+        onEnter?.(text.current);
+      }
+
+      setHTML("");
+    }
+  });
 
   return (
     <ClientOnly>
@@ -100,7 +142,7 @@ const CommentInput: React.FC<CommentInputProps> = ({
                 ref={inputRef}
                 text={html}
                 onChange={handleChange}
-                className="relative z-10 px-3 py-2 focus:border-none focus:outline-none"
+                className="relative z-10 px-3 py-2 comment-input focus:border-none focus:outline-none"
               />
             </div>
 
@@ -122,4 +164,4 @@ const CommentInput: React.FC<CommentInputProps> = ({
   );
 };
 
-export default CommentInput;
+export default React.memo(CommentInput);

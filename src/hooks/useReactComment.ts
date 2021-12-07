@@ -60,7 +60,7 @@ const useReactComment = (commentId: number) => {
         queryClient.setQueryData(["comment", commentId], comment);
       },
       onSettled: () => {
-        // queryClient.refetchQueries(["comment", commentId]);
+        queryClient.refetchQueries(["comment", commentId]);
       },
     }
   );
