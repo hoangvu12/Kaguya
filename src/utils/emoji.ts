@@ -65,7 +65,10 @@ export const emojiToHTMLImage = (
 
   if (!styles) return null;
 
-  const htmlEmoji = `<img style='${styles[1]}' src="${TRANSPARENT_GIF}" />`;
+  // Remove `:` because CommentInput use `:` to figure out which emoji.
+  const htmlEmojiText = `data-emoji-text="${emojiText.replace(/:/g, "")}"`;
+
+  const htmlEmoji = `<img style='${styles[1]}' ${htmlEmojiText} src="${TRANSPARENT_GIF}" />`;
 
   return htmlEmoji;
 };

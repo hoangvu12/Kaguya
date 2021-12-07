@@ -14,9 +14,12 @@ interface EmojiTextProps extends Omit<Props, "onChange" | "html" | "ref"> {
 const emptyFn = () => {};
 
 const textToEmojiHTML = (text: string) => {
-  const regex = /:([^\s-]\w{2,}.*?):/g;
+  const regex = /:((?!image\/gif)[^\s-]\w{2,}.*?):/g;
 
   return text.replace(regex, (match) => {
+    // Transparent image source, check @/utils/emoji.ts
+    if (match.includes(":image/gif;base64")) return match;
+
     const emoji = emojiToHTMLImage(match);
 
     return emoji || match;
