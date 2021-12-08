@@ -151,7 +151,12 @@ const Comment: React.FC<CommentProps> = ({
 
           {showReplyInput && (
             <div className="mt-4">
-              <CommentInput placeholder="Trả lời bình luận." />
+              <CommentInput
+                placeholder="Trả lời bình luận."
+                onEnter={(text) => {
+                  console.dir(`text: ${text}`);
+                }}
+              />
             </div>
           )}
         </div>
