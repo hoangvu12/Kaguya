@@ -87,7 +87,10 @@ const Comment: React.FC<CommentProps> = ({
   return comment.user ? (
     !isEditing ? (
       <div className="flex space-x-2 group">
-        <Avatar src={comment.user.user_metadata.avatar_url} />
+        <Avatar
+          className="flex-shrink-0"
+          src={comment.user.user_metadata.avatar_url}
+        />
 
         <div className="w-full">
           <div className="flex items-center space-x-2">
