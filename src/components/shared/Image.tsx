@@ -41,4 +41,4 @@ const Image: React.FC<ImageProps> = ({ onLoadingComplete, ...props }) => {
   );
 };
 
-export default Image;
+export default React.memo(Image);
