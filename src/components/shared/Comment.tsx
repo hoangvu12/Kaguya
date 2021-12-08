@@ -104,10 +104,10 @@ const Comment: React.FC<CommentProps> = ({
               {!!comment.reactions?.length && (
                 <EmojiText
                   disabled
-                  text={`<p class="-space-x-2 inline">${mostUsedEmojis
+                  text={`<p class="-space-x-1.5 inline">${mostUsedEmojis
                     .slice(0, 2)
                     .join("")}</p> ${comment.reactions.length}`}
-                  className="absolute bottom-0 px-2 rounded-lg reactions -right-3 bg-background-900"
+                  className="absolute -bottom-3 px-2 rounded-full reactions -right-3 bg-background-800"
                 />
               )}
             </div>
