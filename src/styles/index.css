@@ -30,7 +30,7 @@ main {
 }
 
 .reactions img {
-  @apply border-2 rounded-full border-background-900;
+  @apply border rounded-full border-background-800 bg-background-800;
 }
 
 @layer utilities {
