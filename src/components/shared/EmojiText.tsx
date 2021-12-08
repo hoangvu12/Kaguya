@@ -16,14 +16,16 @@ const emptyFn = () => {};
 const textToEmojiHTML = (text: string) => {
   const regex = /:((?!image\/gif)[^\s-]\w{2,}.*?):/g;
 
-  return text.replace(regex, (match) => {
-    // Transparent image source, check @/utils/emoji.ts
-    if (match.includes(":image/gif;base64")) return match;
+  return text
+    .replace(regex, (match) => {
+      // Transparent image source, check @/utils/emoji.ts
+      if (match.includes(":image/gif;base64")) return match;
 
-    const emoji = emojiToHTMLImage(match);
+      const emoji = emojiToHTMLImage(match);
 
-    return emoji || match;
-  });
+      return emoji || match;
+    })
+    .replace(/\n/g, "<br />");
 };
 
 const EmojiText = React.forwardRef<

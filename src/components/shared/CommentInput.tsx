@@ -1,7 +1,6 @@
 import Avatar from "@/components/shared/Avatar";
 import EmojiPicker from "@/components/shared/EmojiPicker";
 import { useUser } from "@/contexts/AuthContext";
-import useEventListener from "@/hooks/useEventListener";
 import { EmojiData } from "emoji-mart";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
@@ -73,6 +72,10 @@ const CommentInput: React.FC<CommentInputProps> = ({
 
         rawText += `:${imageNode.dataset.emojiText}:`;
       }
+
+      if (node.nodeName === "BR") {
+        rawText += "\n";
+      }
     });
 
     text.current = rawText;
@@ -106,22 +109,43 @@ const CommentInput: React.FC<CommentInputProps> = ({
     );
   }, [html]);
 
-  useEventListener("keydown", (event: KeyboardEvent) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
+  useEffect(() => {
+    if (!inputRef.current) return;
 
-      if (onEnter) {
-        onEnter?.(text.current);
+    const element = inputRef.current.getEl() as HTMLDivElement;
+
+    if (!element) return;
+
+    const handleKeydown = (event: KeyboardEvent) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+
+        if (event.shiftKey) {
+          setHTML((html) => html + "<br /><br />");
+        } else {
+          if (onEnter) {
+            if (!text.current) return;
+
+            onEnter?.(text.current);
+          }
+
+          setHTML("");
+        }
       }
+    };
 
-      setHTML("");
-    }
-  });
+    element.addEventListener("keydown", handleKeydown);
+
+    return () => {
+      element.removeEventListener("keydown", handleKeydown);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [onEnter, inputRef.current]);
 
   return (
     <ClientOnly>
       {user ? (
-        <div className="flex items-center w-full space-x-2">
+        <div className="flex w-full space-x-2">
           <Avatar src={user.user_metadata.avatar_url} />
 
           <div className="relative flex-1">
@@ -142,7 +166,7 @@ const CommentInput: React.FC<CommentInputProps> = ({
                 ref={inputRef}
                 text={html}
                 onChange={handleChange}
-                className="relative z-10 px-3 py-2 comment-input focus:border-none focus:outline-none"
+                className="whitespace-pre-wrap relative z-10 px-3 py-2 comment-input focus:border-none focus:outline-none"
               />
             </div>
 

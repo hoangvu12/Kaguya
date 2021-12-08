@@ -50,7 +50,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = (props) => {
         )}
       </div>
 
-      <CommentInput />
+      {/* <CommentInput /> */}
     </div>
   );
 };
