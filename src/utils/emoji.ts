@@ -6,18 +6,12 @@ import {
   emojiIndex,
 } from "emoji-mart";
 import { PropsWithChildren } from "react";
+import emojis from "@/emojis.json";
 
 const TRANSPARENT_GIF =
   "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
-export const customEmojis: CustomEmoji[] = [
-  {
-    name: "Kaguya",
-    short_names: ["kaguya"],
-    colons: ":kaguya:",
-    imageUrl: "https://i.postimg.cc/kMfZwQHm/logo-3-2-1.png",
-  },
-];
+export const customEmojis: CustomEmoji[] = emojis;
 
 export const emoji = (props: PropsWithChildren<EmojiProps>) => {
   const customEmoji = customEmojis.find(
