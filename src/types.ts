@@ -192,7 +192,7 @@ export interface Comment {
   anime_id?: number;
   manga_id?: number;
   body: string;
-  id: number;
+  id?: number;
   reply_comments?: ReplyComment[];
   is_reply?: boolean;
   reactions?: Reaction[];

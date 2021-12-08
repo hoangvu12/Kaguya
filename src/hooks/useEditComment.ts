@@ -1,6 +1,6 @@
 import supabase from "@/lib/supabase";
 import { Comment } from "@/types";
-import { PostgrestResponse } from "@supabase/postgrest-js";
+import { PostgrestError, PostgrestResponse } from "@supabase/postgrest-js";
 import { InfiniteData, useMutation, useQueryClient } from "react-query";
 
 type QueryData = InfiniteData<{
@@ -11,7 +11,7 @@ const useEditComment = (comment: Comment) => {
   const queryClient = useQueryClient();
   const queryKey = ["comments", comment.anime_id || comment.manga_id];
 
-  return useMutation<any, any, string, any>(
+  return useMutation<PostgrestResponse<Comment>, PostgrestError, string, any>(
     async (body) => {
       return supabase
         .from<Comment>("comments")

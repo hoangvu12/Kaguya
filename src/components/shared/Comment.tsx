@@ -1,5 +1,6 @@
 import { useUser } from "@/contexts/AuthContext";
 import useComment from "@/hooks/useComment";
+import { useCreateComment } from "@/hooks/useCreateComment";
 import useDeleteComment from "@/hooks/useDeleteComment";
 import useEditComment from "@/hooks/useEditComment";
 import useReactComment from "@/hooks/useReactComment";
@@ -35,6 +36,7 @@ const Comment: React.FC<CommentProps> = ({
   const reactMutation = useReactComment(comment.id);
   const deleteMutation = useDeleteComment(comment);
   const editMutation = useEditComment(comment);
+  const createMutation = useCreateComment({ type: "reply", comment });
 
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [hasReacted, setHasReacted] = useState(() => {
@@ -70,6 +72,10 @@ const Comment: React.FC<CommentProps> = ({
     setIsEditing(false);
 
     editMutation.mutate(text);
+  };
+
+  const handleReply = (text: string) => {
+    createMutation.mutate(text);
   };
 
   const mostUsedEmojis = getMostOccuringEmojis(
@@ -153,9 +159,7 @@ const Comment: React.FC<CommentProps> = ({
             <div className="mt-4">
               <CommentInput
                 placeholder="Trả lời bình luận."
-                onEnter={(text) => {
-                  console.dir(`text: ${text}`);
-                }}
+                onEnter={handleReply}
               />
             </div>
           )}
