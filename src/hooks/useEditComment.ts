@@ -11,9 +11,14 @@ const useEditComment = (comment: Comment) => {
     async (body) => {
       return supabase
         .from<Comment>("comments")
-        .update({
-          body,
-        })
+        .update(
+          {
+            body,
+          },
+          {
+            returning: "minimal",
+          }
+        )
         .match({ id: comment.id });
     },
 
