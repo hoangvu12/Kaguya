@@ -1,11 +1,7 @@
 import { useUser } from "@/contexts/AuthContext";
 import supabase from "@/lib/supabase";
 import { Comment } from "@/types";
-import {
-  PostgrestError,
-  PostgrestFilterBuilder,
-  PostgrestResponse,
-} from "@supabase/postgrest-js";
+import { PostgrestError } from "@supabase/postgrest-js";
 import { InfiniteData, useMutation, useQueryClient } from "react-query";
 
 type UseCreateCommentOptions =
@@ -26,12 +22,10 @@ type QueryData = InfiniteData<{
 export const useCreateComment = (options: UseCreateCommentOptions) => {
   const user = useUser();
   const queryClient = useQueryClient();
-  const queryKey = [
-    "comments",
+  const queryKey =
     options.type === "new"
-      ? options.anime_id || options.manga_id
-      : options.comment.anime_id || options.comment.manga_id,
-  ];
+      ? ["comments", options.anime_id || options.manga_id]
+      : ["comment", options.comment.id];
 
   return useMutation<Comment, PostgrestError, string, any>(
     async (body) => {
@@ -80,9 +74,9 @@ export const useCreateComment = (options: UseCreateCommentOptions) => {
     },
     {
       onMutate: (body) => {
-        const data = queryClient.getQueryData<QueryData>(queryKey);
-
         if (options.type === "new") {
+          const data = queryClient.getQueryData<QueryData>(queryKey);
+
           data.pages[0].data.push({
             body,
             user_id: user.id,
@@ -97,40 +91,31 @@ export const useCreateComment = (options: UseCreateCommentOptions) => {
           return queryClient.setQueryData<QueryData>(queryKey, data);
         }
 
-        const newPages = data.pages.map((page) => {
-          // If page does not contains the comment, return it as is
-          if (!page.data.some((c) => c.id === options.comment.id)) {
-            return page;
-          }
+        const comment = queryClient.getQueryData<Comment>(queryKey);
 
-          const newComments = page.data.map((c) => {
-            // If comment contains reply comment, remove it from replies array
-            if (c.id === options.comment.id) {
-              (c.reply_comments || []).push({
-                comment: {
-                  body,
-                  user_id: user.id,
-                  is_reply: true,
-                  id: Math.floor(Math.random() * 1000000),
-                  user,
-                  created_at: new Date(),
-                },
-              });
-            }
+        if (!comment) throw new Error("Comment not found");
 
-            return c;
-          });
+        if (!comment?.reply_comments?.length) {
+          comment.reply_comments = [];
+        }
 
-          return { ...page, data: newComments };
+        comment.reply_comments.push({
+          comment: {
+            body,
+            user_id: user.id,
+            is_reply: true,
+            id: Math.floor(Math.random() * 1000000),
+            user,
+            created_at: new Date(),
+          },
         });
 
-        queryClient.setQueryData<QueryData>(queryKey, {
-          ...data,
-          pages: newPages,
-        });
+        return queryClient.setQueryData<Comment>(queryKey, comment);
       },
       onSettled: () => {
-        queryClient.invalidateQueries(queryKey);
+        queryClient.invalidateQueries(queryKey, {
+          refetchInactive: true,
+        });
       },
     }
   );
