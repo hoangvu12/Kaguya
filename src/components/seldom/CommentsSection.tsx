@@ -5,10 +5,11 @@ import {
   SupabaseInfiniteQueriesFunction,
   useSupaInfiniteQuery,
 } from "@/utils/supabase";
-import React from "react";
+import React, { useMemo } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { QueryKey, useQueryClient } from "react-query";
 import CommentComponent from "../shared/Comment";
+import InView from "../shared/InView";
 
 interface CommentsSectionProps {
   query: {
@@ -27,10 +28,8 @@ const CommentsSection: React.FC<CommentsSectionProps> = (props) => {
     anime_id: props.anime_id,
     manga_id: props.manga_id,
   });
-  const { data, isLoading } = useSupaInfiniteQuery<Comment>(
-    props.query.queryKey,
-    props.query.queryFn,
-    {
+  const { data, isLoading, hasNextPage, fetchNextPage } =
+    useSupaInfiniteQuery<Comment>(props.query.queryKey, props.query.queryFn, {
       onSuccess: (data) => {
         const comments = data.pages.map((page) => page.data).flat();
 
@@ -38,12 +37,16 @@ const CommentsSection: React.FC<CommentsSectionProps> = (props) => {
           queryClient.setQueryData(["comment", comment.id], comment);
         });
       },
-    }
-  );
+    });
 
   const handleInputSubmit = (text: string) => {
     createCommentMutation.mutate(text);
   };
+
+  const comments = useMemo(
+    () => data?.pages?.map(({ data }) => data).flat(),
+    [data]
+  );
 
   return (
     <div className="space-y-8">
@@ -53,12 +56,19 @@ const CommentsSection: React.FC<CommentsSectionProps> = (props) => {
             <AiOutlineLoading3Quarters className="w-6 h-6 animate-spin text-primary-500" />
           </div>
         ) : (
-          data.pages
-            .map(({ data }) => data)
-            .flat()
-            .map((comment) => (
-              <CommentComponent comment={comment} key={comment.id} />
-            ))
+          <React.Fragment>
+            {!!comments.length ? (
+              comments.map((comment) => (
+                <CommentComponent comment={comment} key={comment.id} />
+              ))
+            ) : (
+              <p className="text-center text-gray-300 text-sm">
+                Hãy là người đầu tiên bày tỏ suy nghĩ về bộ này!
+              </p>
+            )}
+
+            {hasNextPage && <InView onInView={fetchNextPage} />}
+          </React.Fragment>
         )}
       </div>
 
@@ -67,4 +77,4 @@ const CommentsSection: React.FC<CommentsSectionProps> = (props) => {
   );
 };
 
-export default CommentsSection;
+export default React.memo(CommentsSection);
