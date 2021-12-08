@@ -148,6 +148,10 @@ const Comment: React.FC<CommentProps> = ({
                 Trả lời
               </button>
             )}
+
+            {comment.is_edited && (
+              <p className="text-gray-400 text-sm">Đã chỉnh sữa</p>
+            )}
           </div>
 
           {!!comment.reply_comments?.length && (

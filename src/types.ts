@@ -195,6 +195,7 @@ export interface Comment {
   id?: number;
   reply_comments?: ReplyComment[];
   is_reply?: boolean;
+  is_edited?: boolean;
   reactions?: Reaction[];
 }
 

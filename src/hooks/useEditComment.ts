@@ -14,6 +14,7 @@ const useEditComment = (comment: Comment) => {
         .update(
           {
             body,
+            is_edited: true,
           },
           {
             returning: "minimal",
