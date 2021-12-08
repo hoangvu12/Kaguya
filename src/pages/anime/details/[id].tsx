@@ -189,6 +189,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                       .range(from, to),
                   queryKey: ["comments", anime.ani_id],
                 }}
+                anime_id={anime.ani_id}
               />
             </DetailsSection>
           </div>
