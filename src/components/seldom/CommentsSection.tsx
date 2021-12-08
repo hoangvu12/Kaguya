@@ -1,4 +1,5 @@
 import CommentInput from "@/components/shared/CommentInput";
+import { useCreateComment } from "@/hooks/useCreateComment";
 import { Comment } from "@/types";
 import {
   SupabaseInfiniteQueriesFunction,
@@ -14,11 +15,18 @@ interface CommentsSectionProps {
     queryKey: QueryKey;
     queryFn: SupabaseInfiniteQueriesFunction<Comment>;
   };
+  anime_id?: number;
+  manga_id?: number;
 }
 
 const CommentsSection: React.FC<CommentsSectionProps> = (props) => {
   const queryClient = useQueryClient();
 
+  const createCommentMutation = useCreateComment({
+    type: "new",
+    anime_id: props.anime_id,
+    manga_id: props.manga_id,
+  });
   const { data, isLoading } = useSupaInfiniteQuery<Comment>(
     props.query.queryKey,
     props.query.queryFn,
@@ -32,6 +40,10 @@ const CommentsSection: React.FC<CommentsSectionProps> = (props) => {
       },
     }
   );
+
+  const handleInputSubmit = (text: string) => {
+    createCommentMutation.mutate(text);
+  };
 
   return (
     <div className="space-y-8">
@@ -50,7 +62,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = (props) => {
         )}
       </div>
 
-      {/* <CommentInput /> */}
+      <CommentInput onEnter={handleInputSubmit} />
     </div>
   );
 };
