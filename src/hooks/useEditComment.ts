@@ -1,15 +1,11 @@
 import supabase from "@/lib/supabase";
 import { Comment } from "@/types";
 import { PostgrestError, PostgrestResponse } from "@supabase/postgrest-js";
-import { InfiniteData, useMutation, useQueryClient } from "react-query";
-
-type QueryData = InfiniteData<{
-  data: Comment[];
-}>;
+import { useMutation, useQueryClient } from "react-query";
 
 const useEditComment = (comment: Comment) => {
   const queryClient = useQueryClient();
-  const queryKey = ["comments", comment.anime_id || comment.manga_id];
+  const queryKey = ["comment", comment.id];
 
   return useMutation<PostgrestResponse<Comment>, PostgrestError, string, any>(
     async (body) => {
@@ -23,56 +19,21 @@ const useEditComment = (comment: Comment) => {
 
     {
       onMutate: (body) => {
-        const data = queryClient.getQueryData<QueryData>(queryKey);
+        const comment = queryClient.getQueryData<Comment>(queryKey);
 
-        const newPages = data.pages.map((page) => {
-          // If page does not contains the comment, return it as is
-          if (
-            !page.data.some(
-              (c) =>
-                c.id === comment.id ||
-                c.reply_comments?.some((rc) => rc.comment.id === comment.id)
-            )
-          ) {
-            return page;
-          }
+        if (!comment) {
+          throw new Error("Comment not found");
+        }
 
-          let newComments: Comment[];
+        comment.body = body;
 
-          if (comment.is_reply) {
-            newComments = page.data.map((c) => {
-              // If comment contains reply comment, remove it from replies array
-              c.reply_comments?.map((rc) => {
-                if (rc.comment.id === comment.id) {
-                  rc.comment.body = body;
-                }
-
-                return rc;
-              });
-
-              return c;
-            });
-          } else {
-            newComments = page.data.map((c) => {
-              if (c.id === comment.id) {
-                c.body = body;
-              }
-
-              return c;
-            });
-          }
-
-          return { ...page, data: newComments };
-        });
-
-        queryClient.setQueryData<QueryData>(queryKey, {
-          ...data,
-          pages: newPages,
-        });
+        queryClient.setQueryData(queryKey, comment);
       },
 
       onSettled: () => {
-        queryClient.invalidateQueries(queryKey);
+        queryClient.invalidateQueries(queryKey, {
+          refetchInactive: true,
+        });
       },
     }
   );
