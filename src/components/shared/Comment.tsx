@@ -148,7 +148,7 @@ const Comment: React.FC<CommentProps> = ({
             )}
 
             {comment.is_edited && (
-              <p className="text-gray-400 text-sm">Đã chỉnh sữa</p>
+              <p className="text-gray-400 text-sm">Đã chỉnh sửa</p>
             )}
           </div>
 
