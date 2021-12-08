@@ -186,7 +186,6 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                       )
                       .eq("anime_id", anime.ani_id)
                       .is("is_reply", false)
-                      .order("created_at", { ascending: false })
                       .range(from, to),
                   queryKey: ["comments", anime.ani_id],
                 }}
