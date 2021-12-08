@@ -26,6 +26,8 @@ const useEditComment = (comment: Comment) => {
       onMutate: (body) => {
         const comment = queryClient.getQueryData<Comment>(queryKey);
 
+        if (comment.body === body) return;
+
         if (!comment) {
           throw new Error("Comment not found");
         }
