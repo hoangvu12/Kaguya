@@ -128,7 +128,7 @@ const Comment: React.FC<CommentProps> = ({
                 reference={
                   <p className="text-sm text-gray-300 hover:underline">Thích</p>
                 }
-                placement="right"
+                placement="top"
                 onSelect={handleReactEmojiSelect}
               />
             ) : (
