@@ -116,9 +116,7 @@ const Comment: React.FC<CommentProps> = ({
             </div>
 
             {comment.user_id === user?.id && (
-              <div className="hidden group-hover:block">
-                <CommentAction onActionSelect={handleActionSelect} />
-              </div>
+              <CommentAction onActionSelect={handleActionSelect} />
             )}
           </div>
 
