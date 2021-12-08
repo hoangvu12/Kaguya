@@ -155,6 +155,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
                       )
                       .eq("manga_id", manga.ani_id)
                       .is("is_reply", false)
+                      .order("created_at", { ascending: true })
                       .range(from, to),
                   queryKey: ["comments", manga.ani_id],
                 }}
