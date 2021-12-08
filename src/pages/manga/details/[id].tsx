@@ -9,13 +9,14 @@ import Head from "@/components/shared/Head";
 import PlainCard from "@/components/shared/PlainCard";
 import { REVALIDATE_TIME } from "@/constants";
 import supabase from "@/lib/supabase";
-import { Manga } from "@/types";
+import { Comment, Manga } from "@/types";
 import { numberWithCommas } from "@/utils";
 import { convert } from "@/utils/data";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
 import { BsFillPlayFill } from "react-icons/bs";
+import CommentsSection from "@/components/seldom/CommentsSection";
 
 interface DetailsPageProps {
   manga: Manga;
@@ -131,6 +132,35 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
                 />
               </DetailsSection>
             )}
+
+            <DetailsSection title="Bình luận">
+              <CommentsSection
+                query={{
+                  queryFn: (from, to) =>
+                    supabase
+                      .from<Comment>("comments")
+                      .select(
+                        `
+                        *,
+                        user:user_id(*),
+                        reply_comments!original_id(
+                          comment:reply_id(
+                            *,
+                            user:user_id(*),
+                            reactions:comment_reactions(*)
+                          )
+                        ),
+                        reactions:comment_reactions(*)
+                        `
+                      )
+                      .eq("manga_id", manga.ani_id)
+                      .is("is_reply", false)
+                      .range(from, to),
+                  queryKey: ["comments", manga.ani_id],
+                }}
+                manga_id={manga.ani_id}
+              />
+            </DetailsSection>
           </div>
         </div>
       </div>
