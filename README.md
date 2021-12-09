@@ -1,48 +1,50 @@
-# Next.js TailwindCSS Typescript Starter
-This is a [Next.js](https://nextjs.org/) 11.x, [TailwindCSS](https://tailwindcss.com/) 2.x, and [TypeScript](https://www.typescriptlang.org/docs/home.html) 4.x starter template
+<div style="text-align: center;">
+<h1>Kaguya</h1>
 
-For more details, see my blog post. [Nextjs TailwindCSS Typescript Starter](https://dev.to/vuongddang/nextjs-tailwindcss-typescript-starter-1c2m)
+![Kaguya Discord server](https://discordapp.com/api/guilds/906042713688928257/widget.png?style=banner2)
 
-## How to use this template
-Here're a few ways to create your new project using this template.
-### Using `create-next-app`
-Create a new next.js app from the template using [create-next-app](https://github.com/vercel/next.js/tree/canary/packages/create-next-app)
-```
-npx create-next-app --example "https://github.com/vuongddang/nextjs-tailwindcss-typescript-starter/tree/main"
-# or
-yarn create next-app --example "https://github.com/vuongddang/nextjs-tailwindcss-typescript-starter/tree/main"
-```
+### Kaguya is a vietnamese website that provide you anime, manga and related stuff.
 
-### Create new repository from github [template](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template)
+Since it is an open-source project, there will be no ads in this website.
 
-You can generate a new repository with the same directory structure and files by click `Use this template` button in the upper right or [click here](https://github.com/vuongddang/nextjs-tailwindcss-typescript-starter/generate).
+The official website is [kaguya.live](https://kaguya.live)
 
-## Getting Started
-Install dependencies:
-```bash
-npm install
-# or
-yarn install
-```
-Run the development server:
+</div>
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+## Table of contents
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- [Technologies](#technologies)
+- [Screenshots](#screenshots)
+- [To do](#todo)
+- [Sources](#sources)
 
-You can start editing the page by modifying `src/pages/index.js`. The page auto-updates as you edit the file.
+## Technologies
 
+- NextJS
+- TailwindCSS
+- Supabase
+- Libraries such as SwiperJS, Framer Motion, React Query...
 
-## Deploy on Vercel
+## Screenshots
 
-Once you have the project running locally you can [import](https://vercel.com/import/git) your project to Vercel and get it up and running in a few clicks.
+![Home page](https://i.ibb.co/DR7nn9Q/www-kaguya-live-1.png)
 
-Other option is to click on the button below to create a new repository that look exactly like this one, and sets it up and running on Vercel. 
+![Details page](https://i.ibb.co/c2HJtcd/www-kaguya-live-2.png)
 
-[![Deploy to Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/vuongddang/nextjs-tailwindcss-typescript-starter/tree/main)
+![Watch page](https://i.ibb.co/XYKvxLz/www-kaguya-live-3.png)
 
-Check out [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+![Read page](https://i.ibb.co/gt6YpqH/www-kaguya-live-manga-read-86707-index-40.png)
+
+![Login page](https://i.ibb.co/WKsTQpc/www-kaguya-live-manga-read-86707-index-40-1.png)
+
+## Todo
+
+- <s>Comments</s> ✔
+- Notifications
+- User profile
+- Chat (maybe?)
+
+## Sources
+
+- Video player design is heavily inspired by Netflix
+- Info from [Anilist](anilist.co)
