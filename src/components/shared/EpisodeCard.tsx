@@ -34,8 +34,10 @@ const EpisodeCard: React.FC<EpisodeCardProps> = ({
         </div>
       )}
 
-      <div className="w-full absolute bottom-0 bg-black/60 p-2 space-y-1">
-        <p className="text-lg font-semibold">Tập {episode.name}</p>
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60"></div>
+
+      <div className="w-full absolute bottom-0 p-2 space-y-1">
+        <p className="text-lg font-semibold">{episode.name}</p>
         {title && (
           <p className="text-base font-semibold text-gray-300">{title}</p>
         )}
@@ -44,4 +46,4 @@ const EpisodeCard: React.FC<EpisodeCardProps> = ({
   );
 };
 
-export default EpisodeCard;
+export default React.memo(EpisodeCard);
