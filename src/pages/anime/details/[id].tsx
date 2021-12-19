@@ -15,9 +15,10 @@ import { numberWithCommas } from "@/utils";
 import { convert } from "@/utils/data";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useMemo } from "react";
 import { BsFillPlayFill } from "react-icons/bs";
 import CommentsSection from "@/components/seldom/CommentsSection";
+import EpisodesSelector from "@/components/seldom/EpisodesSelector";
 
 interface DetailsPageProps {
   anime: Anime;
@@ -25,6 +26,18 @@ interface DetailsPageProps {
 
 const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
   const router = useRouter();
+
+  const sortedEpisodes = useMemo(
+    () =>
+      anime.episodes
+        .sort((a, b) => a.id - b.id)
+        .map((episode, index) => ({
+          ...episode,
+          episodeIndex: index,
+          thumbnail_image: anime.banner_image || anime.cover_image.extra_large,
+        })),
+    [anime]
+  );
 
   const nextAiringSchedule = anime.airing_schedule.length
     ? anime.airing_schedule.find((schedule) =>
@@ -133,6 +146,10 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
             />
           </div>
           <div className="space-y-12 md:col-span-8">
+            <DetailsSection title="Tập phim" className="overflow-hidden">
+              <EpisodesSelector episodes={sortedEpisodes} />
+            </DetailsSection>
+
             {!!anime?.characters?.length && (
               <DetailsSection
                 title="Nhân vật"
@@ -209,7 +226,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         airing_schedule(*),
         characters(*),
         recommendations!original_id(anime:recommend_id(*)),
-        relations!original_id(anime:relation_id(*))
+        relations!original_id(anime:relation_id(*)),
+        episodes(*)
       `
     )
     .eq("ani_id", Number(params.id))
