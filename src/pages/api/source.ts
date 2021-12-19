@@ -1,8 +1,22 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import axios from "axios";
-import supabase from "@/lib/supabase";
-import { serialize } from "@/utils";
 import config from "@/config";
+import { parseBetween } from "@/utils";
+import axios from "axios";
+import { JSDOM } from "jsdom";
+import type { NextApiRequest, NextApiResponse } from "next";
+
+type Sources = {
+  source: {
+    file: string;
+    label: string;
+    mimeType: string;
+    preload: string;
+    type: string;
+  }[];
+
+  source_fbo: {
+    file: string;
+  }[];
+};
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const {
@@ -29,38 +43,58 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
 
-  const {
-    data: { source_id },
-    error,
-  } = await supabase
-    .from("episodes")
-    .select("source_id")
-    .eq("episode_id", episode_id)
-    .limit(1)
-    .single();
+  const url = `${config.getSourceUrl}/xem-phim/s-${episode_id}.html`;
 
-  if (error) {
-    res
-      .status(400)
-      .json({ success: false, error, errorMessage: "Something went wrong" });
+  const { data } = await axios.get<string>(
+    `${config.proxyUrl}?url=${encodeURIComponent(url)}`
+  );
+
+  const dom = new JSDOM(data);
+
+  const html = dom.window.document
+    .querySelector(".watching-movie script")
+    .innerHTML.replace(/\n/g, "")
+    .replace(/\s+/g, "");
+
+  const json = parseBetween(
+    html.replace(/\\\//g, "/").replace(/\\"/g, '"'),
+    "var$info_play_video=",
+    "var$list_sv"
+  )
+    .replace('JSON.parse("', "")
+    .replace('")', "")
+    .replace("source", '"source"')
+    .replace("source_fbo", '"source_fbo"')
+    .replace("vast", '"vast"');
+
+  const sources: Sources = JSON.parse(json);
+
+  if (!sources) {
+    res.status(400).json({
+      success: false,
+      error: "No sources",
+      errorMessage: "Something went wrong",
+    });
 
     return;
   }
 
-  const { data } = await axios.post<any>(
-    config.getSourceUrl,
-    serialize({
-      ep: episode_id,
-      id: source_id,
-    })
-  );
+  let sourceUrl: string;
 
-  const regex =
-    /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
+  if (sources.source_fbo?.length) {
+    sourceUrl = sources.source_fbo[0].file;
+  } else {
+    const sortedSources = sources.source.sort(
+      (a, b) =>
+        Number(b.label.replace("p", "")) - Number(a.label.replace("p", ""))
+    );
 
-  const url = data.match(regex)[0].replace("306084399", "167335343");
+    sourceUrl = `${config.proxyUrl}?url=${encodeURIComponent(
+      sortedSources[0].file
+    )}&headers[referer]=${config.getSourceUrl}`;
+  }
 
-  res.status(200).json({ success: true, url });
+  res.status(200).json({ success: true, url: sourceUrl });
 };
 
 export default handler;

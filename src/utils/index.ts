@@ -138,3 +138,10 @@ export const getSeason = () => {
 export const parseNumbersFromString = (text: string) => {
   return text.match(/\d+([\.,][\d{1,2}])?/g).map(Number);
 };
+
+export const parseBetween = (str, start, end) => {
+  const startIndex = str.indexOf(start) + start.length;
+  const endIndex = str.indexOf(end);
+
+  return str.substring(startIndex, endIndex);
+};
