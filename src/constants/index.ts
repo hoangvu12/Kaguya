@@ -7,7 +7,7 @@ export const WEBSITE_URL = "https://www.kaguya.live";
 export const DISCORD_URL = "https://discord.gg/382BEFfER6";
 export const FACEBOOK_URL = "https://www.facebook.com/nguyenvuzxc1/";
 
-export const REVALIDATE_TIME = 7200; // 2 hours
+export const REVALIDATE_TIME = 18000; // 5 hours
 
 export const SEASONS = ["WINTER", "SPRING", "SUMMER", "FALL"] as const;
 export const FORMATS = [
