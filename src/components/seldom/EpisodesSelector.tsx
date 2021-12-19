@@ -1,0 +1,87 @@
+import React, { useMemo } from "react";
+import EpisodeCard from "../shared/EpisodeCard";
+import { Tabs, TabList, TabPanel, Tab } from "react-tabs";
+import { Episode } from "@/types";
+import { chunk } from "@/utils";
+import ArrowSwiper, { SwiperSlide } from "../shared/ArrowSwiper";
+import classNames from "classnames";
+import Swiper from "@/components/shared/Swiper";
+import ClientOnly from "../shared/ClientOnly";
+
+interface EpisodesProps {
+  episodes: Episode[];
+  onClick?: (index: number) => void;
+  activeIndex?: number;
+}
+
+const Episodes: React.FC<EpisodesProps> = ({
+  episodes,
+  onClick,
+  activeIndex,
+}) => {
+  const chunks = useMemo(() => chunk(episodes, 12), [episodes]);
+  const [activeTabIndex, setActiveTabIndex] = React.useState(
+    chunks.findIndex((chunk) =>
+      chunk.some((episode) => episode.episodeIndex === activeIndex)
+    )
+  );
+
+  const handleNavigateEpisode = (index: number) => () => onClick(index);
+
+  return (
+    <ClientOnly>
+      <ArrowSwiper className="w-11/12 mx-auto">
+        {chunks.map((chunk, i) => {
+          const firstEpisode = chunk[0];
+          const lastEpisode = chunk[chunk.length - 1];
+
+          const title =
+            chunk.length === 1
+              ? `${firstEpisode.name.replace("Tập", "")}`
+              : `${firstEpisode.name.replace(
+                  "Tập",
+                  ""
+                )} - ${lastEpisode.name.replace("Tập", "")}`;
+
+          return (
+            <SwiperSlide
+              onClick={() => setActiveTabIndex(i)}
+              key={i}
+              className=""
+            >
+              <Tab
+                className={classNames(
+                  "text-gray-300 cursor-pointer mx-auto rounded-[18px] px-2 py-1 w-[max-content] duration-300 transition",
+                  activeTabIndex === i
+                    ? "bg-white text-black"
+                    : "hover:text-white"
+                )}
+              >
+                {title}
+              </Tab>
+            </SwiperSlide>
+          );
+        })}
+      </ArrowSwiper>
+
+      <Swiper
+        className="mt-20"
+        slidesPerView={3}
+        slidesPerGroup={3}
+        breakpoints={{}}
+      >
+        {chunks[activeTabIndex].map((episode) => (
+          <SwiperSlide key={episode.id}>
+            <EpisodeCard
+              episode={episode}
+              isActive={episode.episodeIndex === activeIndex}
+              onClick={handleNavigateEpisode(episode.episodeIndex)}
+            />
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </ClientOnly>
+  );
+};
+
+export default React.memo(Episodes);

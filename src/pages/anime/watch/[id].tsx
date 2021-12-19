@@ -1,4 +1,4 @@
-import Accordion from "@/components/shared/Accordion";
+import EpisodesSelector from "@/components/seldom/EpisodesSelector";
 import ClientOnly from "@/components/shared/ClientOnly";
 import EpisodeCard from "@/components/shared/EpisodeCard";
 import Head from "@/components/shared/Head";
@@ -15,7 +15,6 @@ import { useFetchSource } from "@/hooks/useFetchSource";
 import useSaveWatched from "@/hooks/useSaveWatched";
 import supabase from "@/lib/supabase";
 import { Anime } from "@/types";
-import { chunk } from "@/utils";
 import classNames from "classnames";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
@@ -55,8 +54,12 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
     () =>
       anime.episodes
         .sort((a, b) => a.id - b.id)
-        .map((episode, index) => ({ ...episode, episodeIndex: index })),
-    [anime.episodes]
+        .map((episode, index) => ({
+          ...episode,
+          episodeIndex: index,
+          thumbnail_image: anime.banner_image || anime.cover_image.extra_large,
+        })),
+    [anime.banner_image, anime.cover_image, anime.episodes]
   );
 
   const { index: episodeIndex = 0, id } = router.query;
@@ -134,32 +137,12 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
             )}
 
             <EpisodesButton>
-              <div className="w-96 max-h-[40vh] overflow-y-scroll scroll-bar space-y-8">
-                {chunk(sortedEpisodes, 12).map((chunk, index) => {
-                  const firstEpisode = chunk[0];
-                  const lastEpisode = chunk[chunk.length - 1];
-
-                  const title =
-                    chunk.length === 1
-                      ? `Tập ${firstEpisode.name}`
-                      : `Tập ${firstEpisode.name} - Tập ${lastEpisode.name}`;
-
-                  return (
-                    <Accordion title={title} key={index} className="space-y-4">
-                      {chunk.map((episode) => (
-                        <EpisodeCard
-                          episode={episode}
-                          key={episode.episode_id}
-                          onClick={handleNavigateEpisode(episode.episodeIndex)}
-                          isActive={
-                            episode.episodeIndex === Number(episodeIndex) ||
-                            false
-                          }
-                        />
-                      ))}
-                    </Accordion>
-                  );
-                })}
+              <div className="w-[60vw] min-h-[40vh] overflow-hidden">
+                <EpisodesSelector
+                  episodes={sortedEpisodes}
+                  activeIndex={Number(episodeIndex)}
+                  onClick={(index) => handleNavigateEpisode(index)()}
+                />
               </div>
             </EpisodesButton>
           </Portal>
@@ -169,38 +152,32 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
         <MobileView>
           <Portal selector=".mobile-controls">
             <MobileEpisodesButton>
-              {(isOpen, setIsOpen) => (
-                <div
-                  className={classNames(
-                    "fixed inset-0 z-[9999] flex items-center bg-background",
-                    !isOpen && "hidden"
-                  )}
-                >
-                  <BsArrowLeft
-                    className="absolute w-10 h-10 transition duration-300 cursor-pointer left-5 top-5 hover:text-gray-200"
-                    onClick={() => setIsOpen(false)}
-                  />
+              {(isOpen, setIsOpen) =>
+                isOpen && (
+                  <div
+                    className={classNames(
+                      "w-full px-2 fixed inset-0 z-[9999] flex flex-col justify-center bg-background"
+                    )}
+                  >
+                    <BsArrowLeft
+                      className="absolute w-8 h-8 transition duration-300 cursor-pointer left-3 top-3 hover:text-gray-200"
+                      onClick={() => setIsOpen(false)}
+                    />
 
-                  <div className="flex space-x-8 overflow-x-auto snap-x">
-                    {sortedEpisodes.map((episode) => (
-                      <div className="w-80" key={episode.episode_id}>
-                        <EpisodeCard
-                          episode={episode}
-                          onClick={handleNavigateEpisode(episode.episodeIndex)}
-                          isActive={
-                            episode.episodeIndex === Number(episodeIndex) ||
-                            false
-                          }
-                        />
-                      </div>
-                    ))}
+                    <div>
+                      <EpisodesSelector
+                        episodes={sortedEpisodes}
+                        activeIndex={Number(episodeIndex)}
+                        onClick={(index) => {
+                          handleNavigateEpisode(index)();
+
+                          setIsOpen(false);
+                        }}
+                      />
+                    </div>
                   </div>
-
-                  <p className="absolute mt-8 text-xl font-semibold text-center -translate-x-1/2 left-1/2 bottom-5">
-                    {anime.title.user_preferred} - Tập {episode.name}
-                  </p>
-                </div>
-              )}
+                )
+              }
             </MobileEpisodesButton>
 
             {episodeIndex < sortedEpisodes.length - 1 && (
@@ -221,7 +198,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
             <div className="w-11/12 px-40">
               <p className="mb-2 text-xl text-gray-200">Bạn đang xem</p>
               <p className="mb-8 text-5xl font-semibold">
-                {anime.title.user_preferred} - Tập {episode.name}
+                {anime.title.user_preferred} - {episode.name}
               </p>
               <p className="text-lg text-gray-300">{anime.description}</p>
             </div>
@@ -240,6 +217,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         title,
         description,
         banner_image,
+        cover_image,
         episodes!anime_id(*)
       `
     )

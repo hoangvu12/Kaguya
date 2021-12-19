@@ -35,6 +35,7 @@
     "react-popper": "^2.2.5",
     "react-query": "^3.27.0",
     "react-range": "^1.8.11",
+    "react-tabs": "^3.2.3",
     "screenfull": "^5.1.0",
     "swiper": "6"
   },
@@ -44,6 +45,7 @@
     "@types/jsdom": "^16.2.13",
     "@types/node": "^16.10.1",
     "@types/react": "^17.0.24",
+    "@types/react-tabs": "^2.3.3",
     "autoprefixer": "^10.3.6",
     "eslint": "<8.0.0",
     "eslint-config-next": "12.0.1",

@@ -55,6 +55,7 @@ export interface Episode {
   thumbnail_image?: string;
   anime_id?: number;
   id?: number;
+  episodeIndex?: number;
 }
 
 export interface Chapter {
