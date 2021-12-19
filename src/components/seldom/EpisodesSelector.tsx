@@ -1,12 +1,12 @@
-import React, { useMemo } from "react";
-import EpisodeCard from "../shared/EpisodeCard";
-import { Tabs, TabList, TabPanel, Tab } from "react-tabs";
+import Swiper from "@/components/shared/Swiper";
 import { Episode } from "@/types";
 import { chunk } from "@/utils";
-import ArrowSwiper, { SwiperSlide } from "../shared/ArrowSwiper";
 import classNames from "classnames";
-import Swiper from "@/components/shared/Swiper";
+import React, { useMemo } from "react";
+import { Tab } from "react-tabs";
+import ArrowSwiper, { SwiperSlide } from "../shared/ArrowSwiper";
 import ClientOnly from "../shared/ClientOnly";
+import EpisodeCard from "../shared/EpisodeCard";
 
 interface EpisodesProps {
   episodes: Episode[];
@@ -20,11 +20,13 @@ const Episodes: React.FC<EpisodesProps> = ({
   activeIndex,
 }) => {
   const chunks = useMemo(() => chunk(episodes, 12), [episodes]);
-  const [activeTabIndex, setActiveTabIndex] = React.useState(
-    chunks.findIndex((chunk) =>
+  const [activeTabIndex, setActiveTabIndex] = React.useState(() => {
+    const index = chunks.findIndex((chunk) =>
       chunk.some((episode) => episode.episodeIndex === activeIndex)
-    )
-  );
+    );
+
+    return index === -1 ? 0 : index;
+  });
 
   const handleNavigateEpisode = (index: number) => () => onClick(index);
 
