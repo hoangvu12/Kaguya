@@ -45,8 +45,8 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
       )
     : null;
 
-  const handleWatchClick = () => {
-    router.push(`/anime/watch/${anime.ani_id}`);
+  const handleNavigateEpisode = (index) => {
+    router.push(`/anime/watch/${anime.ani_id}?index=${index}`);
   };
 
   return (
@@ -71,7 +71,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                 primary
                 LeftIcon={BsFillPlayFill}
                 className="mb-8"
-                onClick={handleWatchClick}
+                onClick={() => handleNavigateEpisode(0)}
               >
                 <p>Xem ngay</p>
               </Button>
@@ -147,7 +147,10 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
           </div>
           <div className="space-y-12 md:col-span-8">
             <DetailsSection title="Tập phim" className="overflow-hidden">
-              <EpisodesSelector episodes={sortedEpisodes} />
+              <EpisodesSelector
+                episodes={sortedEpisodes}
+                onClick={handleNavigateEpisode}
+              />
             </DetailsSection>
 
             {!!anime?.characters?.length && (
@@ -227,13 +230,15 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         characters(*),
         recommendations!original_id(anime:recommend_id(*)),
         relations!original_id(anime:relation_id(*)),
-        episodes(*)
+        episodes!episodes_anime_id_fkey(*)
       `
     )
     .eq("ani_id", Number(params.id))
     .single();
 
   if (error) {
+    console.log(error);
+
     return { notFound: true };
   }
 

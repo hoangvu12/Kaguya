@@ -28,7 +28,7 @@ const Episodes: React.FC<EpisodesProps> = ({
     return index === -1 ? 0 : index;
   });
 
-  const handleNavigateEpisode = (index: number) => () => onClick(index);
+  const handleNavigateEpisode = (index: number) => () => onClick?.(index);
 
   return (
     <ClientOnly>

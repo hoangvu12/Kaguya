@@ -38,7 +38,7 @@ const Home: NextPage<HomeProps> = ({
           <HomeBanner type="anime" data={trendingAnime} />
 
           <div className="space-y-8">
-            {/* <WatchedSection /> */}
+            <WatchedSection />
 
             <Section title="Anime mới cập nhật">
               <CardSwiper type="anime" data={recentlyUpdatedAnime} />

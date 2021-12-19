@@ -17,12 +17,17 @@ const WatchedSwiper: React.FC<WatchedSwiperProps> = ({ data, ...props }) => {
         <SwiperSlide key={index}>
           <EpisodeCard
             onClick={() => {
-              const episodeIndex =
-                episode.name === "Full" ? 0 : Number(episode.name) - 1;
+              const episodeIndex = anime.episodes.findIndex(
+                (e) => e.id === episode.id
+              );
 
               router.push(`/anime/watch/${anime.ani_id}?index=${episodeIndex}`);
             }}
-            episode={episode}
+            episode={{
+              ...episode,
+              thumbnail_image:
+                anime.banner_image || anime.cover_image.extra_large,
+            }}
             title={anime.title.user_preferred}
           />
         </SwiperSlide>
