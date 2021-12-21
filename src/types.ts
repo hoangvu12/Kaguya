@@ -166,6 +166,8 @@ export interface Watched {
 
 export interface Read {
   manga: Manga;
+  manga_id?: number;
+  chapter_id?: number;
   chapter: Chapter;
   user_id: string;
   updated_at?: Date;
