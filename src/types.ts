@@ -157,6 +157,8 @@ export interface Section<T> {
 export interface Watched {
   anime: Anime;
   episode: Episode;
+  anime_id?: number;
+  episode_id?: number;
   user_id: string;
   updated_at?: Date;
   created_at?: Date;

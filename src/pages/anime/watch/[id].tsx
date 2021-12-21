@@ -1,4 +1,5 @@
 import EpisodesSelector from "@/components/seldom/EpisodesSelector";
+import Button from "@/components/shared/Button";
 import ClientOnly from "@/components/shared/ClientOnly";
 import EpisodeCard from "@/components/shared/EpisodeCard";
 import Head from "@/components/shared/Head";
@@ -12,13 +13,20 @@ import { REVALIDATE_TIME } from "@/constants";
 import useDevice from "@/hooks/useDevice";
 import useEventListener from "@/hooks/useEventListener";
 import { useFetchSource } from "@/hooks/useFetchSource";
+import useSavedWatched from "@/hooks/useSavedWatched";
 import useSaveWatched from "@/hooks/useSaveWatched";
 import supabase from "@/lib/supabase";
 import { Anime } from "@/types";
 import classNames from "classnames";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { BsArrowLeft } from "react-icons/bs";
@@ -33,8 +41,20 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   const router = useRouter();
   const { isMobile } = useDevice();
   const [showInfoOverlay, setShowInfoOverlay] = useState(false);
+  const [showWatchedOverlay, setShowWatchedOverlay] = useState(false);
+  const [declinedRewatch, setDeclinedRewatch] = useState(false);
+
   const showInfoTimeout = useRef<NodeJS.Timeout>(null);
+  const saveWatchedTimeout = useRef<NodeJS.Timeout>(null);
   const saveWatchedMutation = useSaveWatched();
+
+  const { index: episodeIndex = 0, id } = router.query;
+
+  const {
+    data: watchedEpisodeData,
+    isLoading: isSavedDataLoading,
+    isError: isSavedDataError,
+  } = useSavedWatched(id);
 
   useEventListener("visibilitychange", () => {
     if (isMobile) return;
@@ -62,9 +82,17 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
     [anime.banner_image, anime.cover_image, anime.episodes]
   );
 
-  const { index: episodeIndex = 0, id } = router.query;
+  const watchedEpisode = useMemo(
+    () =>
+      isSavedDataError
+        ? null
+        : sortedEpisodes.find(
+            (episode) => episode.episode_id === watchedEpisodeData?.episode_id
+          ),
+    [isSavedDataError, sortedEpisodes, watchedEpisodeData?.episode_id]
+  );
 
-  const episode = useMemo(
+  const currentEpisode = useMemo(
     () => sortedEpisodes[Number(episodeIndex)],
     [sortedEpisodes, episodeIndex]
   );
@@ -73,29 +101,63 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
     [episodeIndex, sortedEpisodes]
   );
 
-  const handleNavigateEpisode = (index: number) => () => {
-    router.replace(`/anime/watch/${id}?index=${index}`, null, {
-      shallow: true,
-    });
-  };
+  const handleNavigateEpisode = useCallback(
+    (index: number) => () => {
+      router.replace(`/anime/watch/${id}?index=${index}`, null, {
+        shallow: true,
+      });
+    },
+    [id, router]
+  );
 
-  const { data, isLoading } = useFetchSource(episode.episode_id);
+  const { data, isLoading } = useFetchSource(currentEpisode.episode_id);
+
+  // Show watched overlay
+  useEffect(() => {
+    if (
+      !watchedEpisode ||
+      isSavedDataLoading ||
+      isSavedDataError ||
+      declinedRewatch
+    )
+      return;
+
+    if (currentEpisode.episode_id === watchedEpisode?.episode_id) {
+      setDeclinedRewatch(true);
+
+      return;
+    }
+
+    setShowWatchedOverlay(true);
+  }, [
+    currentEpisode.episode_id,
+    declinedRewatch,
+    isSavedDataError,
+    isSavedDataLoading,
+    watchedEpisode,
+  ]);
 
   useEffect(() => {
-    saveWatchedMutation.mutate({
-      anime_id: Number(id),
-      episode_id: episode.episode_id,
-    });
+    if (saveWatchedTimeout.current) {
+      clearTimeout(saveWatchedTimeout.current);
+    }
+
+    saveWatchedTimeout.current = setTimeout(() => {
+      saveWatchedMutation.mutate({
+        anime_id: Number(id),
+        episode_id: currentEpisode.episode_id,
+      });
+    }, 10000);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [episode.episode_id]);
+  }, [currentEpisode.episode_id]);
 
   return (
     <div className="relative w-full h-screen">
       <Head
         title={`${anime.title.user_preferred} - Kaguya`}
         description={`Xem phim ${anime.title.user_preferred} tại Kaguya. Hoàn toàn miễn phí, không quảng cáo`}
-        image={episode.thumbnail_image || anime.banner_image}
+        image={currentEpisode.thumbnail_image || anime.banner_image}
       />
 
       {isLoading && (
@@ -198,9 +260,58 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
             <div className="w-11/12 px-40">
               <p className="mb-2 text-xl text-gray-200">Bạn đang xem</p>
               <p className="mb-8 text-5xl font-semibold">
-                {anime.title.user_preferred} - {episode.name}
+                {anime.title.user_preferred} - {currentEpisode.name}
               </p>
               <p className="text-lg text-gray-300">{anime.description}</p>
+            </div>
+          </div>
+        </Portal>
+      )}
+
+      {showWatchedOverlay && !declinedRewatch && (
+        <Portal>
+          <div
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70"
+            onClick={() => {
+              setShowWatchedOverlay(false);
+              setDeclinedRewatch(true);
+            }}
+          >
+            <div className="w-2/3 p-8 rounded-md bg-background-900">
+              <h1 className="text-4xl font-bold mb-4">
+                Xem {watchedEpisode.name}
+              </h1>
+              <p className="">
+                Hệ thống ghi nhận bạn đã xem {watchedEpisode.name}.
+              </p>
+              <p className="mb-4">
+                Bạn có muốn xem {watchedEpisode.name} không?
+              </p>
+              <div className="flex items-center justify-end space-x-4">
+                <Button
+                  onClick={() => {
+                    setShowWatchedOverlay(false), setDeclinedRewatch(true);
+                  }}
+                  className="!bg-transparent hover:!bg-white/20 transition duration-300"
+                >
+                  <p>Không</p>
+                </Button>
+                <Button
+                  onClick={() => {
+                    if (!watchedEpisode || isSavedDataLoading) return;
+
+                    const episodeIndex = sortedEpisodes.findIndex(
+                      (episode) =>
+                        episode.episode_id === watchedEpisodeData.episode_id
+                    );
+
+                    handleNavigateEpisode(episodeIndex)();
+                  }}
+                  primary
+                >
+                  <p>Xem</p>
+                </Button>
+              </div>
             </div>
           </div>
         </Portal>
