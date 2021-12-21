@@ -8,20 +8,18 @@ const images = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     const { data } = await axios.get(
-      `http://www.nettruyenpro.com/truyen-tranh/${slug}/chap-0/${chapter_id}`
+      `http://www.nettruyengo.com/truyen-tranh/${slug}/chap-0/${chapter_id}`
     );
 
     const images = composeImages(data);
 
     res.status(200).json({ success: true, images });
   } catch (err) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        error: err.message,
-        errorMessage: "Something went wrong",
-      });
+    res.status(500).json({
+      success: false,
+      error: err.message,
+      errorMessage: "Something went wrong",
+    });
   }
 };
 

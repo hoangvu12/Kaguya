@@ -4,8 +4,10 @@ import ReadImages from "@/components/seldom/ReadImages";
 import Button from "@/components/shared/Button";
 import Head from "@/components/shared/Head";
 import InView from "@/components/shared/InView";
+import Portal from "@/components/shared/Portal";
 import { REVALIDATE_TIME } from "@/constants";
 import useFetchImages from "@/hooks/useFetchImages";
+import useSavedRead from "@/hooks/useSavedRead";
 import useSaveRead from "@/hooks/useSaveRead";
 import supabase from "@/lib/supabase";
 import { Manga } from "@/types";
@@ -13,7 +15,13 @@ import { parseNumbersFromString } from "@/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { AiOutlineInfoCircle, AiOutlineLoading3Quarters } from "react-icons/ai";
 
 interface ReadPageProps {
@@ -24,8 +32,19 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
   const router = useRouter();
   const [showControls, setShowControls] = useState(false);
   const [showNextEpisodeBox, setShowNextEpisodeBox] = useState(false);
+  const [showReadOverlay, setShowReadOverlay] = useState(false);
   const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [declinedReread, setDeclinedReread] = useState(false);
+  const saveReadTimeout = useRef<NodeJS.Timeout>();
+
   const { index: chapterIndex = 0, id } = router.query;
+
+  const {
+    data: savedReadData,
+    isLoading: isSavedDataLoading,
+    isError: isSavedDataError,
+  } = useSavedRead(Number(id));
+
   const saveReadMutation = useSaveRead();
 
   const title =
@@ -48,6 +67,16 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
   const nextChapter = useMemo(
     () => chapters[Number(chapterIndex) + 1],
     [chapters, chapterIndex]
+  );
+
+  const readChapter = useMemo(
+    () =>
+      isSavedDataError
+        ? null
+        : chapters.find(
+            (chapter) => chapter.chapter_id === savedReadData?.chapter_id
+          ),
+    [chapters, savedReadData, isSavedDataError]
   );
 
   const { data } = useFetchImages(manga.slug, currentChapter.chapter_id);
@@ -77,10 +106,42 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
   }, []);
 
   useEffect(() => {
-    saveReadMutation.mutate({
-      manga_id: Number(id),
-      chapter_id: currentChapter.chapter_id,
-    });
+    if (
+      !readChapter ||
+      isSavedDataLoading ||
+      isSavedDataError ||
+      declinedReread
+    )
+      return;
+
+    if (currentChapter.chapter_id === readChapter?.chapter_id) {
+      setDeclinedReread(true);
+
+      return;
+    }
+
+    setShowReadOverlay(true);
+  }, [
+    currentChapter.chapter_id,
+    declinedReread,
+    isSavedDataError,
+    isSavedDataLoading,
+    readChapter,
+  ]);
+
+  useEffect(() => {
+    if (saveReadTimeout.current) {
+      clearTimeout(saveReadTimeout.current);
+    }
+
+    saveReadTimeout.current = setTimeout(
+      () =>
+        saveReadMutation.mutate({
+          manga_id: Number(id),
+          chapter_id: currentChapter.chapter_id,
+        }),
+      10000
+    );
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentChapter.chapter_id]);
@@ -122,8 +183,8 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
           transition={{ ease: "linear", duration: 0.2 }}
           className="z-[1] fixed top-0 flex items-center justify-center w-full h-24 bg-background-900"
         >
-          <div>
-            <p className="text-2xl font-semibold">{title}</p>
+          <div className="text-center">
+            <p className="text-2xl font-semibold line-clamp-1">{title}</p>
 
             <p className="text-lg text-gray-300">{currentChapter.name}</p>
           </div>
@@ -217,6 +278,52 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {showReadOverlay && !declinedReread && (
+        <Portal>
+          <div
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70"
+            onClick={() => {
+              setShowReadOverlay(false);
+              setDeclinedReread(true);
+            }}
+          >
+            <div className="w-2/3 p-8 rounded-md bg-background-900">
+              <h1 className="text-4xl font-bold mb-4">
+                Đọc {readChapter.name}
+              </h1>
+              <p className="">
+                Hệ thống ghi nhận bạn đã đọc {readChapter.name}.
+              </p>
+              <p className="mb-4">Bạn có muốn đọc {readChapter.name} không?</p>
+              <div className="flex items-center justify-end space-x-4">
+                <Button
+                  onClick={() => {
+                    setShowReadOverlay(false), setDeclinedReread(true);
+                  }}
+                  className="!bg-transparent hover:!bg-white/20 transition duration-300"
+                >
+                  <p>Không</p>
+                </Button>
+                <Button
+                  onClick={() => {
+                    if (!readChapter || isSavedDataLoading) return;
+
+                    const chapterIndex = chapters.findIndex(
+                      (chapter) => chapter.chapter_id === readChapter.chapter_id
+                    );
+
+                    handleChapterNavigate(chapterIndex);
+                  }}
+                  primary
+                >
+                  <p>Đọc</p>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </Portal>
+      )}
     </div>
   );
 };
