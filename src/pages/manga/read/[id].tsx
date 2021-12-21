@@ -33,7 +33,6 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
   const [showControls, setShowControls] = useState(false);
   const [showNextEpisodeBox, setShowNextEpisodeBox] = useState(false);
   const [showReadOverlay, setShowReadOverlay] = useState(false);
-  const [imagesLoaded, setImagesLoaded] = useState(false);
   const [declinedReread, setDeclinedReread] = useState(false);
   const saveReadTimeout = useRef<NodeJS.Timeout>();
 
@@ -157,14 +156,9 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
       <div className="w-full md:w-[800px]">
         {data?.images.length ? (
           <React.Fragment>
-            <ReadImages
-              images={data.images}
-              onImagesLoaded={() => {
-                setImagesLoaded(true);
-              }}
-            />
+            <ReadImages images={data.images} />
 
-            {imagesLoaded && <InView onInView={handleBottomScroll} />}
+            <InView onInView={handleBottomScroll} />
           </React.Fragment>
         ) : (
           <div className="absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">

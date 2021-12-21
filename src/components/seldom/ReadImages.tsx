@@ -1,21 +1,11 @@
-import React, { useEffect } from "react";
-
-// @ts-ignore
-import imagesLoaded from "imagesloaded";
-import Image from "../shared/Image";
+import React from "react";
 import ReadImage from "./ReadImage";
 
 interface ReadImagesProps {
   images: string[];
-  onImagesLoaded?: () => void;
 }
 
-const ReadImages: React.FC<ReadImagesProps> = ({ images, onImagesLoaded }) => {
-  useEffect(() => {
-    imagesLoaded(".read-images", onImagesLoaded);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
+const ReadImages: React.FC<ReadImagesProps> = ({ images }) => {
   return (
     <div className="w-full read-images">
       {images.map((image) => (
