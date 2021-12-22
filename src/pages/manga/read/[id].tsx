@@ -34,6 +34,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
   const [showNextEpisodeBox, setShowNextEpisodeBox] = useState(false);
   const [showReadOverlay, setShowReadOverlay] = useState(false);
   const [declinedReread, setDeclinedReread] = useState(false);
+  const [hasScrolled, setHasScrolled] = useState(false);
   const saveReadTimeout = useRef<NodeJS.Timeout>();
 
   const { index: chapterIndex = 0, id } = router.query;
@@ -145,6 +146,24 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentChapter.chapter_id]);
 
+  useEffect(() => {
+    if (hasScrolled) return;
+
+    const handleScroll = () => {
+      if (hasScrolled) return;
+
+      if (window.scrollY > 200) {
+        setHasScrolled(true);
+      }
+    };
+
+    document.addEventListener("scroll", handleScroll);
+
+    return () => {
+      document.removeEventListener("scroll", handleScroll);
+    };
+  }, [hasScrolled]);
+
   return (
     <div className="flex items-center justify-center w-full min-h-screen">
       <Head
@@ -158,7 +177,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
           <React.Fragment>
             <ReadImages images={data.images} />
 
-            <InView onInView={handleBottomScroll} />
+            {hasScrolled && <InView onInView={handleBottomScroll} />}
           </React.Fragment>
         ) : (
           <div className="absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
