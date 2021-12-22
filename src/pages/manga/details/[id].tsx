@@ -7,16 +7,19 @@ import Button from "@/components/shared/Button";
 import DotList from "@/components/shared/DotList";
 import Head from "@/components/shared/Head";
 import PlainCard from "@/components/shared/PlainCard";
+import CommentsSection from "@/components/seldom/CommentsSection";
+import Link from "next/link";
 import { REVALIDATE_TIME } from "@/constants";
 import supabase from "@/lib/supabase";
 import { Comment, Manga } from "@/types";
-import { numberWithCommas } from "@/utils";
+import { numberWithCommas, parseNumbersFromString } from "@/utils";
 import { convert } from "@/utils/data";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
-import React from "react";
-import { BsFillPlayFill } from "react-icons/bs";
-import CommentsSection from "@/components/seldom/CommentsSection";
+import React, { useMemo, useState } from "react";
+import { BsChevronDown, BsChevronUp, BsFillPlayFill } from "react-icons/bs";
+import { motion } from "framer-motion";
+import CircleButton from "@/components/shared/CircleButton";
 
 interface DetailsPageProps {
   manga: Manga;
@@ -24,10 +27,23 @@ interface DetailsPageProps {
 
 const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
   const router = useRouter();
+  const [isChapterExpanded, setIsChapterExpanded] = useState(false);
 
   const handleReadClick = () => {
     router.push(`/manga/read/${manga.ani_id}`);
   };
+
+  const chapters = useMemo(
+    () =>
+      manga.chapters
+        .sort(
+          (a, b) =>
+            parseNumbersFromString(a.name)[0] -
+            parseNumbersFromString(b.name)[0]
+        )
+        .reverse(),
+    [manga]
+  );
 
   const title =
     typeof manga.title === "string" ? manga.title : manga.title.user_preferred;
@@ -102,6 +118,43 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
             />
           </div>
           <div className="md:col-span-8 space-y-12">
+            <DetailsSection title="Chapter" className="relative">
+              <motion.div
+                className="space-y-2 overflow-hidden"
+                variants={{
+                  animate: {
+                    height: "100%",
+                  },
+
+                  initial: {
+                    height: 300,
+                  },
+                }}
+                transition={{ ease: "linear" }}
+                animate={isChapterExpanded ? "animate" : "initial"}
+              >
+                {chapters.map((chapter, index) => (
+                  <Link
+                    href={`/manga/read/${manga.ani_id}?index=${index}`}
+                    key={chapter.chapter_id}
+                  >
+                    <a className="block">
+                      <p className="line-clamp-1 bg-background-900 p-2 text-sm font-semibold hover:bg-white/20 duration-300 transition">
+                        {chapter.name}
+                      </p>
+                    </a>
+                  </Link>
+                ))}
+              </motion.div>
+
+              <CircleButton
+                onClick={() => setIsChapterExpanded(!isChapterExpanded)}
+                outline
+                className="absolute top-full mt-4 left-1/2 -translate-x-1/2"
+                LeftIcon={isChapterExpanded ? BsChevronUp : BsChevronDown}
+              />
+            </DetailsSection>
+
             {!!manga?.characters?.length && (
               <DetailsSection
                 title="Nhân vật"
@@ -177,13 +230,16 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         *,
         characters:manga_characters(*),
         recommendations:manga_recommendations!original_id(manga:recommend_id(*)),
-        relations:manga_relations!original_id(manga:relation_id(*))
+        relations:manga_relations!original_id(manga:relation_id(*)),
+        chapters!chapters_manga_id_fkey(*)
       `
     )
     .eq("ani_id", Number(params.id))
     .single();
 
   if (error) {
+    console.log(error);
+
     return { notFound: true };
   }
 
