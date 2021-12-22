@@ -11,7 +11,7 @@ import { REVALIDATE_TIME } from "@/constants";
 import dayjs from "@/lib/dayjs";
 import supabase from "@/lib/supabase";
 import { Anime, Comment } from "@/types";
-import { numberWithCommas } from "@/utils";
+import { numberWithCommas, parseNumbersFromString } from "@/utils";
 import { convert } from "@/utils/data";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
@@ -30,7 +30,11 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
   const sortedEpisodes = useMemo(
     () =>
       anime.episodes
-        .sort((a, b) => a.id - b.id)
+        .sort(
+          (a, b) =>
+            parseNumbersFromString(a.name)[0] -
+            parseNumbersFromString(b.name)[0]
+        )
         .map((episode, index) => ({
           ...episode,
           episodeIndex: index,
