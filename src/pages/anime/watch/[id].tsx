@@ -277,47 +277,45 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
       {showWatchedOverlay && !declinedRewatch && (
         <Portal>
           <div
-            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70"
+            className="fixed inset-0 z-40 bg-black/70"
             onClick={() => {
               setShowWatchedOverlay(false);
               setDeclinedRewatch(true);
             }}
-          >
-            <div className="w-2/3 p-8 rounded-md bg-background-900">
-              <h1 className="text-4xl font-bold mb-4">
-                Xem {watchedEpisode.name}
-              </h1>
-              <p className="">
-                Hệ thống ghi nhận bạn đã xem {watchedEpisode.name}.
-              </p>
-              <p className="mb-4">
-                Bạn có muốn xem {watchedEpisode.name} không?
-              </p>
-              <div className="flex items-center justify-end space-x-4">
-                <Button
-                  onClick={() => {
-                    setShowWatchedOverlay(false), setDeclinedRewatch(true);
-                  }}
-                  className="!bg-transparent hover:!bg-white/20 transition duration-300"
-                >
-                  <p>Không</p>
-                </Button>
-                <Button
-                  onClick={() => {
-                    if (!watchedEpisode || isSavedDataLoading) return;
+          />
 
-                    const episodeIndex = sortedEpisodes.findIndex(
-                      (episode) =>
-                        episode.episode_id === watchedEpisodeData.episode_id
-                    );
+          <div className="fixed left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 z-50 w-2/3 p-8 rounded-md bg-background-900">
+            <h1 className="text-4xl font-bold mb-4">
+              Xem {watchedEpisode.name}
+            </h1>
+            <p className="">
+              Hệ thống ghi nhận bạn đã xem {watchedEpisode.name}.
+            </p>
+            <p className="mb-4">Bạn có muốn xem {watchedEpisode.name} không?</p>
+            <div className="flex items-center justify-end space-x-4">
+              <Button
+                onClick={() => {
+                  setShowWatchedOverlay(false), setDeclinedRewatch(true);
+                }}
+                className="!bg-transparent hover:!bg-white/20 transition duration-300"
+              >
+                <p>Không</p>
+              </Button>
+              <Button
+                onClick={() => {
+                  if (!watchedEpisode || isSavedDataLoading) return;
 
-                    handleNavigateEpisode(episodeIndex)();
-                  }}
-                  primary
-                >
-                  <p>Xem</p>
-                </Button>
-              </div>
+                  const episodeIndex = sortedEpisodes.findIndex(
+                    (episode) =>
+                      episode.episode_id === watchedEpisodeData.episode_id
+                  );
+
+                  handleNavigateEpisode(episodeIndex)();
+                }}
+                primary
+              >
+                <p>Xem</p>
+              </Button>
             </div>
           </div>
         </Portal>

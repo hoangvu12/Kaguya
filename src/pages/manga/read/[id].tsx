@@ -276,44 +276,40 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
       {showReadOverlay && !declinedReread && (
         <Portal>
           <div
-            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70"
+            className="fixed inset-0 z-40 bg-black/70"
             onClick={() => {
               setShowReadOverlay(false);
               setDeclinedReread(true);
             }}
-          >
-            <div className="w-2/3 p-8 rounded-md bg-background-900">
-              <h1 className="text-4xl font-bold mb-4">
-                Đọc {readChapter.name}
-              </h1>
-              <p className="">
-                Hệ thống ghi nhận bạn đã đọc {readChapter.name}.
-              </p>
-              <p className="mb-4">Bạn có muốn đọc {readChapter.name} không?</p>
-              <div className="flex items-center justify-end space-x-4">
-                <Button
-                  onClick={() => {
-                    setShowReadOverlay(false), setDeclinedReread(true);
-                  }}
-                  className="!bg-transparent hover:!bg-white/20 transition duration-300"
-                >
-                  <p>Không</p>
-                </Button>
-                <Button
-                  onClick={() => {
-                    if (!readChapter || isSavedDataLoading) return;
+          />
 
-                    const chapterIndex = chapters.findIndex(
-                      (chapter) => chapter.chapter_id === readChapter.chapter_id
-                    );
+          <div className="fixed left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 z-50 w-11/12 lg:w-2/3 p-8 rounded-md bg-background-900">
+            <h1 className="text-4xl font-bold mb-4">Đọc {readChapter.name}</h1>
+            <p className="">Hệ thống ghi nhận bạn đã đọc {readChapter.name}.</p>
+            <p className="mb-4">Bạn có muốn đọc {readChapter.name} không?</p>
+            <div className="flex items-center justify-end space-x-4">
+              <Button
+                onClick={() => {
+                  setShowReadOverlay(false), setDeclinedReread(true);
+                }}
+                className="!bg-transparent hover:!bg-white/20 transition duration-300"
+              >
+                <p>Không</p>
+              </Button>
+              <Button
+                onClick={() => {
+                  if (!readChapter || isSavedDataLoading) return;
 
-                    handleChapterNavigate(chapterIndex);
-                  }}
-                  primary
-                >
-                  <p>Đọc</p>
-                </Button>
-              </div>
+                  const chapterIndex = chapters.findIndex(
+                    (chapter) => chapter.chapter_id === readChapter.chapter_id
+                  );
+
+                  handleChapterNavigate(chapterIndex);
+                }}
+                primary
+              >
+                <p>Đọc</p>
+              </Button>
             </div>
           </div>
         </Portal>
