@@ -65,6 +65,7 @@ export const getStaticProps: GetStaticProps = async () => {
     .from<Anime>("anime")
     .select("*")
     .order("trending", { ascending: false })
+    .not("banner_image", "is", null)
     .limit(15);
 
   const { data: recentlyUpdatedAnime } = await supabase
