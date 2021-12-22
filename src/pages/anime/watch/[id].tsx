@@ -76,8 +76,9 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
       anime.episodes
         .sort(
           (a, b) =>
-            parseNumbersFromString(a.name)[0] -
-            parseNumbersFromString(b.name)[0]
+            parseNumbersFromString(a.name)?.[0] ||
+            9999 - parseNumbersFromString(b.name)?.[0] ||
+            9999
         )
         .map((episode, index) => ({
           ...episode,
