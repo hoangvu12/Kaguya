@@ -21,11 +21,12 @@ const imageVariants: Variants = {
   animate: {
     scale: 0.5,
     y: -60,
+    transition: { delay: 0.3 },
   },
   exit: { scale: 1 },
 };
 const infoVariants: Variants = {
-  animate: { y: 0, opacity: 1 },
+  animate: { y: 0, opacity: 1, transition: { delay: 0.3 } },
   exit: { y: 20, opacity: 0, transition: { duration: 0.2 } },
 };
 
