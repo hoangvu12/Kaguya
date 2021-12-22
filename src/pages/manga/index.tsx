@@ -61,6 +61,7 @@ export const getStaticProps: GetStaticProps = async () => {
     .from<Manga>("manga")
     .select("*")
     .order("trending", { ascending: false })
+    .not("banner_image", "is", null)
     .limit(15);
 
   const { data: recentlyUpdatedManga } = await supabase

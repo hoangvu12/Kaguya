@@ -12,11 +12,17 @@ import "swiper/swiper.min.css";
 import CircleButton from "./CircleButton";
 
 export type SwiperInstance = SwiperClass;
-export interface SwiperProps extends React.ComponentProps<typeof ReactSwiper> {}
+export interface SwiperProps extends React.ComponentProps<typeof ReactSwiper> {
+  hideNavigation?: boolean;
+}
 
 SwiperCore.use([Navigation]);
 
-const Swiper: React.FC<SwiperProps> = ({ children, ...props }) => {
+const Swiper: React.FC<SwiperProps> = ({
+  children,
+  hideNavigation,
+  ...props
+}) => {
   const prevButtonRef = useRef<HTMLButtonElement>(null);
   const nextButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -58,23 +64,25 @@ const Swiper: React.FC<SwiperProps> = ({ children, ...props }) => {
     >
       {children}
 
-      <div
-        slot="container-end"
-        className="swiper-navigation absolute right-0 bottom-full mb-4 flex space-x-4"
-      >
-        <CircleButton
-          ref={prevButtonRef}
-          outline
-          LeftIcon={FiChevronLeft}
-          className="swiper-button-prev flex items-center justify-center"
-        />
-        <CircleButton
-          ref={nextButtonRef}
-          outline
-          LeftIcon={FiChevronRight}
-          className="swiper-button-next flex items-center justify-center"
-        />
-      </div>
+      {!hideNavigation && (
+        <div
+          slot="container-end"
+          className="swiper-navigation absolute right-0 bottom-full mb-4 flex space-x-4"
+        >
+          <CircleButton
+            ref={prevButtonRef}
+            outline
+            LeftIcon={FiChevronLeft}
+            className="swiper-button-prev flex items-center justify-center"
+          />
+          <CircleButton
+            ref={nextButtonRef}
+            outline
+            LeftIcon={FiChevronRight}
+            className="swiper-button-next flex items-center justify-center"
+          />
+        </div>
+      )}
     </ReactSwiper>
   );
 };
