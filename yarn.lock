@@ -2844,11 +2844,6 @@ etag@1.8.1:
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
 
-ev-emitter@^1.0.0:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/ev-emitter/-/ev-emitter-1.1.1.tgz#8f18b0ce5c76a5d18017f71c0a795c65b9138f2a"
-  integrity sha512-ipiDYhdQSCZ4hSbX4rMW+XzNKMD1prg/sTvoVmSLkuQ1MVlwjJQQA+sW8tMYR3BLUr9KjodFV4pvzunvRhd33Q==
-
 events@3.3.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/events/-/events-3.3.0.tgz#31a95ad0a924e2d2c419a813aeb2c4e878ea7400"
@@ -3273,6 +3268,11 @@ hmac-drbg@^1.0.1:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.1"
 
+hotkeys-js@3.8.7:
+  version "3.8.7"
+  resolved "https://registry.yarnpkg.com/hotkeys-js/-/hotkeys-js-3.8.7.tgz#c16cab978b53d7242f860ca3932e976b92399981"
+  integrity sha512-ckAx3EkUr5XjDwjEHDorHxRO2Kb7z6Z2Sxul4MbBkN8Nho7XDslQsgMJT+CiJ5Z4TgRxxvKHEpuLE3imzqy4Lg==
+
 hsl-regex@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/hsl-regex/-/hsl-regex-1.0.0.tgz#d49330c789ed819e276a4c0d272dffa30b18fe6e"
@@ -3368,13 +3368,6 @@ image-size@1.0.0:
   integrity sha512-JLJ6OwBfO1KcA+TvJT+v8gbE6iWbj24LyDNFgFEN0lzegn6cC6a/p3NIDaepMsJjQjlUWqIC7wJv8lBFxPNjcw==
   dependencies:
     queue "6.0.2"
-
-imagesloaded@^4.1.4:
-  version "4.1.4"
-  resolved "https://registry.yarnpkg.com/imagesloaded/-/imagesloaded-4.1.4.tgz#1376efcd162bb768c34c3727ac89cc04051f3cc7"
-  integrity sha512-ltiBVcYpc/TYTF5nolkMNsnREHW+ICvfQ3Yla2Sgr71YFwQ86bDwV9hgpFhFtrGPuwEx5+LqOHIrdXBdoWwwsA==
-  dependencies:
-    ev-emitter "^1.0.0"
 
 import-cwd@^3.0.0:
   version "3.0.0"
@@ -4739,6 +4732,13 @@ react-hook-form@^7.18.0:
   resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.19.0.tgz#8549d33988be48157769d5d6788a05bef2d8ea07"
   integrity sha512-imJZIjqaDo12CrcMctK88PdNvl9CweS2QAsH/aZqxzJc/JIpvaBpaoYFdnBVs58imGm8drQ9+cM0vRK+HglN3w==
 
+react-hotkeys-hook@^3.4.4:
+  version "3.4.4"
+  resolved "https://registry.yarnpkg.com/react-hotkeys-hook/-/react-hotkeys-hook-3.4.4.tgz#52ba5d8ef5e47cc2e776c70a9036d518e0993d51"
+  integrity sha512-vaORq07rWgmuF3owWRhgFV/3VL8/l2q9lz0WyVEddJnWTtKW+AOgU5YgYKuwN6h6h7bCcLG3MFsJIjCrM/5DvQ==
+  dependencies:
+    hotkeys-js "3.8.7"
+
 react-icons@^4.3.1:
   version "4.3.1"
   resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.3.1.tgz#2fa92aebbbc71f43d2db2ed1aed07361124e91ca"
@@ -5729,6 +5729,11 @@ url-toolkit@^2.0.1:
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/url-toolkit/-/url-toolkit-2.2.3.tgz#78fa901215abbac34182066932220279b804522b"
   integrity sha512-Da75SQoxsZ+2wXS56CZBrj2nukQ4nlGUZUP/dqUBG5E1su5GKThgT94Q00x81eVII7AyS1Pn+CtTTZ4Z0pLUtQ==
+
+use-keyboard-shortcuts@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/use-keyboard-shortcuts/-/use-keyboard-shortcuts-2.2.2.tgz#93cb84e242d5b5f09ba575e7485822acb104cf1b"
+  integrity sha512-4HgEbrF1dxT5gVdx5KfjiBOuSCAdHedpS2J4u4+QCCk3gs1bdPey1aYqoyv45vHHSKvmzyA/llXofP72bzddMw==
 
 use-subscription@1.5.1:
   version "1.5.1"

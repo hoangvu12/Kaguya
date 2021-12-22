@@ -182,6 +182,16 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
             onClick={router.back}
           />
         }
+        onKeyNextEpisode={
+          episodeIndex < sortedEpisodes.length - 1
+            ? handleNavigateEpisode(Number(episodeIndex) + 1)
+            : () => {}
+        }
+        onKeyPreviousEpisode={
+          episodeIndex > 0
+            ? handleNavigateEpisode(Number(episodeIndex) - 1)
+            : () => {}
+        }
       />
 
       {/* Because Controls component cause too much rerender (rerender based on video playing) */}
