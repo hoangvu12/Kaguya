@@ -10,10 +10,13 @@ import DesktopControls from "./DesktopControls";
 import HlsPlayer from "./HlsPlayer";
 import MobileControls from "./MobileControls";
 import Overlay from "./Overlay";
+import VideoShortcut from "./VideoShortcut";
 
 interface VideoProps extends React.VideoHTMLAttributes<HTMLVideoElement> {
   src: string;
   overlaySlot?: React.ReactNode;
+  onKeyNextEpisode: () => void;
+  onKeyPreviousEpisode: () => void;
 }
 
 const Video: React.FC<VideoProps> = ({ overlaySlot, ...props }) => {
@@ -66,6 +69,13 @@ const Video: React.FC<VideoProps> = ({ overlaySlot, ...props }) => {
   return (
     <VideoContextProvider el={refHolder}>
       <VideoOptionsProvider>
+        {refHolder && (
+          <VideoShortcut
+            onKeyNextEpisode={props.onKeyNextEpisode}
+            onKeyPreviousEpisode={props.onKeyPreviousEpisode}
+          ></VideoShortcut>
+        )}
+
         <div
           className={classNames("video-wrapper relative overflow-hidden")}
           onMouseMove={handleKeepControls}
