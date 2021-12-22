@@ -20,4 +20,4 @@ const ReadImage: React.FC<ImageProps> = (props) => {
   );
 };
 
-export default ReadImage;
+export default React.memo(ReadImage);
