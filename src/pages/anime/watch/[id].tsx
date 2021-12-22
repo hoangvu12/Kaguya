@@ -17,6 +17,7 @@ import useSavedWatched from "@/hooks/useSavedWatched";
 import useSaveWatched from "@/hooks/useSaveWatched";
 import supabase from "@/lib/supabase";
 import { Anime } from "@/types";
+import { parseNumbersFromString } from "@/utils";
 import classNames from "classnames";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
@@ -73,7 +74,11 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   const sortedEpisodes = useMemo(
     () =>
       anime.episodes
-        .sort((a, b) => a.id - b.id)
+        .sort(
+          (a, b) =>
+            parseNumbersFromString(a.name)[0] -
+            parseNumbersFromString(b.name)[0]
+        )
         .map((episode, index) => ({
           ...episode,
           episodeIndex: index,
