@@ -4,7 +4,7 @@ import { chunk } from "@/utils";
 import classNames from "classnames";
 import React, { useMemo } from "react";
 import { Tab } from "react-tabs";
-import ArrowSwiper, { SwiperSlide } from "../shared/ArrowSwiper";
+import ArrowSwiper, { SwiperSlide, SwiperProps } from "../shared/ArrowSwiper";
 import ClientOnly from "../shared/ClientOnly";
 import EpisodeCard from "../shared/EpisodeCard";
 
@@ -12,12 +12,16 @@ interface EpisodesProps {
   episodes: Episode[];
   onClick?: (index: number) => void;
   activeIndex?: number;
+  chunkSwiperProps?: SwiperProps;
+  swiperProps?: SwiperProps;
 }
 
 const Episodes: React.FC<EpisodesProps> = ({
   episodes,
   onClick,
   activeIndex,
+  chunkSwiperProps,
+  swiperProps
 }) => {
   const chunks = useMemo(() => chunk(episodes, 12), [episodes]);
   const [activeTabIndex, setActiveTabIndex] = React.useState(() => {
@@ -32,7 +36,7 @@ const Episodes: React.FC<EpisodesProps> = ({
 
   return (
     <ClientOnly>
-      <ArrowSwiper className="w-11/12 mx-auto">
+      <ArrowSwiper className="w-11/12 mx-auto" {...chunkSwiperProps}>
         {chunks.map((chunk, i) => {
           const firstEpisode = chunk[0];
           const lastEpisode = chunk[chunk.length - 1];
@@ -71,6 +75,7 @@ const Episodes: React.FC<EpisodesProps> = ({
         slidesPerView={3}
         slidesPerGroup={3}
         breakpoints={{}}
+        {...swiperProps}
       >
         {chunks[activeTabIndex].map((episode) => (
           <SwiperSlide key={episode.id}>
