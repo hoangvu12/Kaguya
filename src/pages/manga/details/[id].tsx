@@ -41,6 +41,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
             parseNumbersFromString(a.name)[0] -
             parseNumbersFromString(b.name)[0]
         )
+        .map((chapter, index) => ({ ...chapter, chapterIndex: index }))
         .reverse(),
     [manga]
   );
@@ -133,9 +134,9 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
                 transition={{ ease: "linear" }}
                 animate={isChapterExpanded ? "animate" : "initial"}
               >
-                {chapters.map((chapter, index) => (
+                {chapters.map((chapter) => (
                   <Link
-                    href={`/manga/read/${manga.ani_id}?index=${index}`}
+                    href={`/manga/read/${manga.ani_id}?index=${chapter.chapterIndex}`}
                     key={chapter.chapter_id}
                   >
                     <a className="block">
