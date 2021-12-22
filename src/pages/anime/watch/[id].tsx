@@ -205,7 +205,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
             )}
 
             <EpisodesButton>
-              <div className="w-[60vw] min-h-[40vh] overflow-hidden">
+              <div className="w-[70vw] min-h-[40vh] overflow-hidden">
                 <EpisodesSelector
                   episodes={sortedEpisodes}
                   activeIndex={Number(episodeIndex)}
