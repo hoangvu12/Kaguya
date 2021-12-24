@@ -15,6 +15,7 @@ import { MdTagFaces } from "react-icons/md";
 interface AnimeCardProps {
   className?: string;
   containerEndSlot?: React.ReactNode;
+  imageEndSlot?: React.ReactNode;
 }
 
 const imageVariants: Variants = {
@@ -41,9 +42,9 @@ const containerVariants: Variants = {
 
 const slotVariants: Variants = {
   animate: {
-    opacity: 1,
+    opacity: 0,
   },
-  exit: { opacity: 0 },
+  exit: { opacity: 1 },
 };
 
 const Card: React.FC<AnimeCardProps & DynamicData<Anime, Manga>> = ({
@@ -51,6 +52,7 @@ const Card: React.FC<AnimeCardProps & DynamicData<Anime, Manga>> = ({
   className,
   type = "anime",
   containerEndSlot,
+  imageEndSlot,
 }) => {
   const { isDesktop } = useDevice();
 
@@ -90,6 +92,8 @@ const Card: React.FC<AnimeCardProps & DynamicData<Anime, Manga>> = ({
                 className="rounded-sm"
                 alt={`${title} card`}
               />
+
+              {imageEndSlot}
             </motion.div>
 
             <motion.div className="absolute bottom-0 flex flex-col items-center justify-end px-2 py-4 text-center">
@@ -135,9 +139,11 @@ const Card: React.FC<AnimeCardProps & DynamicData<Anime, Manga>> = ({
                 </TextIcon>
               </motion.div>
             </motion.div>
-
-            <motion.div variants={slotVariants}>{containerEndSlot}</motion.div>
           </div>
+
+          <motion.div transition={{ duration: 0.1 }} variants={slotVariants}>
+            {containerEndSlot}
+          </motion.div>
 
           {!isDesktop && (
             <p

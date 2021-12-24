@@ -7,18 +7,21 @@ import ClientOnly from "@/components/shared/ClientOnly";
 import Head from "@/components/shared/Head";
 import TopList from "@/components/shared/TopList";
 import supabase from "@/lib/supabase";
-import { Anime } from "@/types";
+import { AiringSchedule, Anime } from "@/types";
 import { GetStaticProps, NextPage } from "next";
 import React from "react";
 import { REVALIDATE_TIME } from "@/constants";
 import { getSeason } from "@/utils";
 import GenresSelector from "@/components/seldom/GenresSelector";
+import AnimeScheduling from "@/components/seldom/AnimeScheduling";
+import dayjs from "@/lib/dayjs";
 
 interface HomeProps {
   trendingAnime: Anime[];
   topAnime: Anime[];
   randomAnime: Anime;
   recentlyUpdatedAnime: Anime[];
+  schedulesAnime: AiringSchedule[];
 }
 
 const Home: NextPage<HomeProps> = ({
@@ -26,6 +29,7 @@ const Home: NextPage<HomeProps> = ({
   topAnime,
   randomAnime,
   recentlyUpdatedAnime,
+  schedulesAnime,
 }) => {
   return (
     <React.Fragment>
@@ -44,6 +48,10 @@ const Home: NextPage<HomeProps> = ({
 
             <ShouldWatch type="anime" data={randomAnime} />
 
+            <Section title="Lịch phát sóng">
+              <AnimeScheduling schedules={schedulesAnime} />
+            </Section>
+
             <Section title="Thể loại">
               <GenresSelector />
             </Section>
@@ -60,6 +68,8 @@ const Home: NextPage<HomeProps> = ({
 
 export const getStaticProps: GetStaticProps = async () => {
   const currentSeason = getSeason();
+  const firstDayOfWeek = dayjs().startOf("week");
+  const lastDayOfWeek = dayjs().endOf("week");
 
   const { data: trendingAnime } = await supabase
     .from<Anime>("anime")
@@ -67,6 +77,15 @@ export const getStaticProps: GetStaticProps = async () => {
     .order("trending", { ascending: false })
     .not("banner_image", "is", null)
     .limit(15);
+
+  const { data: schedulesAnime } = await supabase
+    .from<AiringSchedule>("airing_schedule")
+    .select("*, anime:anime_id(*)")
+    .lte("airing_at", lastDayOfWeek.unix())
+    .gte("airing_at", firstDayOfWeek.unix())
+    .limit(1, {
+      foreignTable: "anime",
+    });
 
   const { data: recentlyUpdatedAnime } = await supabase
     .from<Anime>("anime")
@@ -94,6 +113,7 @@ export const getStaticProps: GetStaticProps = async () => {
       recentlyUpdatedAnime,
       randomAnime,
       topAnime,
+      schedulesAnime,
     },
 
     revalidate: REVALIDATE_TIME,

@@ -46,6 +46,8 @@ export interface MangaRecommendation {
 export interface AiringSchedule {
   airing_at: number;
   episode: number;
+  anime_id: number;
+  anime?: Anime;
 }
 
 export interface Episode {

@@ -7,12 +7,14 @@ import ClientOnly from "@/components/shared/ClientOnly";
 import Head from "@/components/shared/Head";
 import TopList from "@/components/shared/TopList";
 import supabase from "@/lib/supabase";
-import { Anime, Manga } from "@/types";
+import { AiringSchedule, Anime, Manga } from "@/types";
 import { GetStaticProps, NextPage } from "next";
 import React from "react";
 import { REVALIDATE_TIME } from "@/constants";
 import { getSeason } from "@/utils";
 import GenresSelector from "@/components/seldom/GenresSelector";
+import dayjs from "@/lib/dayjs";
+import AnimeScheduling from "@/components/seldom/AnimeScheduling";
 
 interface HomeProps {
   trendingAnime: Anime[];
@@ -20,6 +22,7 @@ interface HomeProps {
   randomAnime: Anime;
   recentlyUpdatedAnime: Anime[];
   recentlyUpdatedManga: Manga[];
+  schedulesAnime: AiringSchedule[];
 }
 
 const Home: NextPage<HomeProps> = ({
@@ -28,6 +31,7 @@ const Home: NextPage<HomeProps> = ({
   randomAnime,
   recentlyUpdatedAnime,
   recentlyUpdatedManga,
+  schedulesAnime,
 }) => {
   return (
     <React.Fragment>
@@ -45,6 +49,10 @@ const Home: NextPage<HomeProps> = ({
             </Section>
 
             <ShouldWatch type="anime" data={randomAnime} />
+
+            <Section title="Lịch phát sóng">
+              <AnimeScheduling schedules={schedulesAnime} />
+            </Section>
 
             <Section title="Manga mới cập nhật">
               <CardSwiper type="manga" data={recentlyUpdatedManga} />
@@ -66,6 +74,17 @@ const Home: NextPage<HomeProps> = ({
 
 export const getStaticProps: GetStaticProps = async () => {
   const currentSeason = getSeason();
+  const firstDayOfWeek = dayjs().startOf("week");
+  const lastDayOfWeek = dayjs().endOf("week");
+
+  const { data: schedulesAnime } = await supabase
+    .from<AiringSchedule>("airing_schedule")
+    .select("*, anime:anime_id(*)")
+    .lte("airing_at", lastDayOfWeek.unix())
+    .gte("airing_at", firstDayOfWeek.unix())
+    .limit(1, {
+      foreignTable: "anime",
+    });
 
   const { data: trendingAnime } = await supabase
     .from<Anime>("anime")
@@ -107,6 +126,7 @@ export const getStaticProps: GetStaticProps = async () => {
       randomAnime,
       topAnime,
       recentlyUpdatedManga,
+      schedulesAnime,
     },
 
     revalidate: REVALIDATE_TIME,
