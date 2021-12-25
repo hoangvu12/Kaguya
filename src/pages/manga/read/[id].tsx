@@ -154,6 +154,8 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
 
       if (window.scrollY > 200) {
         setHasScrolled(true);
+      } else {
+        setHasScrolled(false);
       }
     };
 
