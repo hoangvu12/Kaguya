@@ -58,6 +58,7 @@ export interface Episode {
   anime_id?: number;
   id?: number;
   episodeIndex?: number;
+  count?: number;
 }
 
 export interface Chapter {
@@ -66,6 +67,7 @@ export interface Chapter {
   source_id?: number;
   manga_id?: number;
   id?: number;
+  count?: number;
 }
 
 export interface AnimeRelation {

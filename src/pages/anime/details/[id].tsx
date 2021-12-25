@@ -30,12 +30,12 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
   const sortedEpisodes = useMemo(
     () =>
       anime.episodes
-        .sort(
-          (a, b) =>
-            parseNumbersFromString(a.name)?.[0] ||
-            9999 - parseNumbersFromString(b.name)?.[0] ||
-            9999
-        )
+        .sort((a, b) => {
+          const aNumber = parseNumbersFromString(a.name, 9999)?.[0];
+          const bNumber = parseNumbersFromString(b.name, 9999)?.[0];
+
+          return aNumber - bNumber;
+        })
         .map((episode, index) => ({
           ...episode,
           episodeIndex: index,
