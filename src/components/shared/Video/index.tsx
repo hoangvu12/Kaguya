@@ -6,6 +6,7 @@ import classNames from "classnames";
 import { motion } from "framer-motion";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { BrowserView, MobileView } from "react-device-detect";
+import { useHotkeys } from "react-hotkeys-hook";
 import ClientOnly from "../ClientOnly";
 import DesktopControls from "./DesktopControls";
 import HlsPlayer from "./HlsPlayer";
@@ -22,15 +23,27 @@ const Video: React.FC<VideoProps> = ({ overlaySlot, ...props }) => {
   const ref = useRef<HTMLVideoElement>();
   const [refHolder, setRefHolder] = useState<HTMLVideoElement>(null);
   const [showControls, setShowControls] = useState(true);
+  const [isBuffering, setIsBuffering] = useState(false);
   const timeout = useRef<NodeJS.Timeout>(null);
   const { isMobile } = useDevice();
 
-  const handleKeepControls = (e) => {
-    if (e.target.classList.contains("video-overlay") && isMobile) {
+  const handleKeepControls = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent> | null
+  ) => {
+    if (!e) {
+      setShowControls(true);
+      startControlsCycle();
+
+      return;
+    }
+
+    const target = e.target as HTMLDivElement;
+
+    if (target.classList.contains("video-overlay") && isMobile) {
       setShowControls(false);
     } else {
-      startControlsCycle();
       setShowControls(true);
+      startControlsCycle();
     }
   };
 
@@ -65,9 +78,35 @@ const Video: React.FC<VideoProps> = ({ overlaySlot, ...props }) => {
     window.dispatchEvent(showControls ? controlsShown : controlsHidden);
   }, [showControls]);
 
+  useEffect(() => {
+    const element = ref.current;
+
+    const handleWaiting = () => {
+      setIsBuffering(true);
+    };
+
+    const handlePlaying = () => {
+      setIsBuffering(false);
+    };
+
+    element.addEventListener("waiting", handleWaiting);
+    element.addEventListener("playing", handlePlaying);
+    element.addEventListener("play", handlePlaying);
+
+    return () => {
+      element.removeEventListener("waiting", handleWaiting);
+      element.removeEventListener("playing", handlePlaying);
+      element.removeEventListener("play", handlePlaying);
+    };
+  }, []);
+
   useVideoShortcut(refHolder, {
     onNextEpisode: props.onKeyNextEpisode,
     onPreviousEpisode: props.onKeyPreviousEpisode,
+  });
+
+  useHotkeys("*", () => {
+    handleKeepControls(null);
   });
 
   return (
@@ -78,12 +117,13 @@ const Video: React.FC<VideoProps> = ({ overlaySlot, ...props }) => {
           onMouseMove={handleKeepControls}
           onClick={handleKeepControls}
         >
+          {/* Controls */}
           <motion.div
             variants={{
               show: { y: 0, opacity: 1 },
               hidden: { y: "100%", opacity: 0 },
             }}
-            animate={showControls ? "show" : "hidden"}
+            animate={showControls || isBuffering ? "show" : "hidden"}
             initial="hidden"
             exit="hidden"
             className="absolute bottom-0 z-50 w-full"
