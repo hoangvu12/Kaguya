@@ -26,7 +26,9 @@ const WatchedSwiper: React.FC<WatchedSwiperProps> = ({ data, ...props }) => {
             episode={{
               ...episode,
               thumbnail_image:
-                anime.banner_image || anime.cover_image.extra_large,
+                episode.thumbnail_image ||
+                anime.banner_image ||
+                anime.cover_image.extra_large,
             }}
             title={anime.title.user_preferred}
           />
