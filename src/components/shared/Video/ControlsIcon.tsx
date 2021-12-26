@@ -20,6 +20,7 @@ const ControlsIcon: React.FC<ControlsIconProps> = ({
       onClick={onClick}
       whileTap={{ scale: 0.95 }}
       whileHover={{ scale: 1.25 }}
+      tabIndex={-1}
       {...props}
     >
       <Icon
