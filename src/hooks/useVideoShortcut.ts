@@ -1,20 +1,15 @@
-import { useVideo } from "@/contexts/VideoContext";
-import React from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import screenfull from "screenfull";
 
-interface VideoShortcutProps {
-  onKeyNextEpisode: () => void;
-  onKeyPreviousEpisode: () => void;
+interface UseVideoShortcutProps {
+  onNextEpisode: () => void;
+  onPreviousEpisode: () => void;
 }
 
-const VideoShortcut: React.FC<VideoShortcutProps> = ({
-  onKeyNextEpisode,
-  onKeyPreviousEpisode,
-  children,
-}) => {
-  const { videoEl } = useVideo();
-
+const useVideoShortcut = (
+  videoEl: HTMLVideoElement,
+  { onNextEpisode, onPreviousEpisode }: UseVideoShortcutProps
+) => {
   const handleFullscreen = () => {
     if (!screenfull.isEnabled) return;
 
@@ -66,8 +61,8 @@ const VideoShortcut: React.FC<VideoShortcutProps> = ({
     videoEl,
   ]);
   useHotkeys("f", handleFullscreen, [videoEl]);
-  useHotkeys("shift+n", onKeyNextEpisode, [videoEl]);
-  useHotkeys("shift+p", onKeyPreviousEpisode, [videoEl]);
+  useHotkeys("shift+n", onNextEpisode, [videoEl, onNextEpisode]);
+  useHotkeys("shift+p", onPreviousEpisode, [videoEl, onPreviousEpisode]);
 
   useHotkeys("0", handleVideoTimePercent(0), [videoEl]);
   useHotkeys("1", handleVideoTimePercent(0.1), [videoEl]);
@@ -79,8 +74,6 @@ const VideoShortcut: React.FC<VideoShortcutProps> = ({
   useHotkeys("7", handleVideoTimePercent(0.7), [videoEl]);
   useHotkeys("8", handleVideoTimePercent(0.8), [videoEl]);
   useHotkeys("9", handleVideoTimePercent(0.9), [videoEl]);
-
-  return <>{children}</>;
 };
 
-export default VideoShortcut;
+export default useVideoShortcut;

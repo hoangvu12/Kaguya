@@ -1,6 +1,7 @@
 import { VideoContextProvider } from "@/contexts/VideoContext";
 import { VideoOptionsProvider } from "@/contexts/VideoOptionsContext";
 import useDevice from "@/hooks/useDevice";
+import useVideoShortcut from "@/hooks/useVideoShortcut";
 import classNames from "classnames";
 import { motion } from "framer-motion";
 import React, { useCallback, useEffect, useRef, useState } from "react";
@@ -10,8 +11,6 @@ import DesktopControls from "./DesktopControls";
 import HlsPlayer from "./HlsPlayer";
 import MobileControls from "./MobileControls";
 import Overlay from "./Overlay";
-import VideoShortcut from "./VideoShortcut";
-
 interface VideoProps extends React.VideoHTMLAttributes<HTMLVideoElement> {
   src: string;
   overlaySlot?: React.ReactNode;
@@ -66,16 +65,14 @@ const Video: React.FC<VideoProps> = ({ overlaySlot, ...props }) => {
     window.dispatchEvent(showControls ? controlsShown : controlsHidden);
   }, [showControls]);
 
+  useVideoShortcut(refHolder, {
+    onNextEpisode: props.onKeyNextEpisode,
+    onPreviousEpisode: props.onKeyPreviousEpisode,
+  });
+
   return (
     <VideoContextProvider el={refHolder}>
       <VideoOptionsProvider>
-        {refHolder && (
-          <VideoShortcut
-            onKeyNextEpisode={props.onKeyNextEpisode}
-            onKeyPreviousEpisode={props.onKeyPreviousEpisode}
-          ></VideoShortcut>
-        )}
-
         <div
           className={classNames("video-wrapper relative overflow-hidden")}
           onMouseMove={handleKeepControls}
