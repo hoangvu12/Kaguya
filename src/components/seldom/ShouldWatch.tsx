@@ -52,11 +52,13 @@ const ShouldWatch: React.FC<DynamicData<Anime, Manga>> = ({
         <div className="absolute inset-0 z-0 transition duration-300 opacity-0 group-hover:opacity-100 bg-black/60"></div>
       </div>
 
-      <div className="!mt-8 flex flex-col md:flex-row items-center space-between space-y-4 md:space-x-8">
-        <div className="flex-shrink-0">
-          <h1 className="text-2xl uppercase">{title}</h1>
+      <div className="!mt-8 flex flex-col md:flex-row space-between space-y-4 md:space-x-8">
+        <div className="flex-shrink-0 w-3/6">
+          <h1 className="text-2xl font-semibold line-clamp-2 uppercase">
+            {title}
+          </h1>
 
-          <div className="flex flex-wrap items-center mt-4 text-lg gap-x-8">
+          <div className="w-3/6 flex flex-wrap items-center mt-4 text-lg gap-x-8">
             {data.average_score && (
               <TextIcon LeftIcon={MdTagFaces} iconClassName="text-green-300">
                 <p>{data.average_score}%</p>

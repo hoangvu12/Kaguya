@@ -2,16 +2,16 @@ import Swiper from "@/components/shared/Swiper";
 import { Episode } from "@/types";
 import { chunk } from "@/utils";
 import classNames from "classnames";
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import { Tab } from "react-tabs";
-import ArrowSwiper, { SwiperSlide, SwiperProps } from "../shared/ArrowSwiper";
+import ArrowSwiper, { SwiperProps, SwiperSlide } from "../shared/ArrowSwiper";
 import ClientOnly from "../shared/ClientOnly";
 import EpisodeCard from "../shared/EpisodeCard";
 
 interface EpisodesProps {
   episodes: Episode[];
   onClick?: (index: number) => void;
-  activeIndex?: number;
+  activeIndex?: number | null;
   chunkSwiperProps?: SwiperProps;
   swiperProps?: SwiperProps;
 }
@@ -33,8 +33,6 @@ const Episodes: React.FC<EpisodesProps> = ({
   });
 
   const handleNavigateEpisode = (index: number) => () => onClick?.(index);
-
-  useEffect(() => {}, []);
 
   return (
     <ClientOnly>
