@@ -83,7 +83,10 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
         .map((episode, index) => ({
           ...episode,
           episodeIndex: index,
-          thumbnail_image: anime.banner_image || anime.cover_image.extra_large,
+          thumbnail_image:
+            episode.thumbnail_image ||
+            anime.banner_image ||
+            anime.cover_image.extra_large,
         })),
     [anime.banner_image, anime.cover_image, anime.episodes]
   );
