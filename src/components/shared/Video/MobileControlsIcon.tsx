@@ -18,7 +18,7 @@ const MobileControlsIcon: React.FC<MobileControlsIconProps> = ({
     >
       <ControlsIcon {...props} />
 
-      <p>{title}</p>
+      <p className="line-clamp-1">{title}</p>
     </div>
   );
 };

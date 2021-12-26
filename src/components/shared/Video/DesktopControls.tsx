@@ -10,6 +10,7 @@ import screenfull from "screenfull";
 import ControlsIcon from "./ControlsIcon";
 import ProgressControl from "./ProgressControl";
 import QualitiesSelector from "./QualitiesSelector";
+import SkipButton from "./SkipButton";
 import VolumeControl from "./VolumeControl";
 
 const Controls: React.FC = () => {
@@ -72,6 +73,7 @@ const Controls: React.FC = () => {
             onClick={seek(-10)}
             whileTap={{ rotate: -20 }}
           />
+
           <ControlsIcon
             Icon={ForwardIcon}
             onClick={seek(10)}
@@ -83,6 +85,8 @@ const Controls: React.FC = () => {
 
         <div className="right-controls flex items-center space-x-6">
           <QualitiesSelector />
+
+          <SkipButton />
 
           <div className="right-controls-slot flex items-center space-x-6"></div>
 
