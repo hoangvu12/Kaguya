@@ -169,12 +169,6 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
         image={currentEpisode.thumbnail_image || anime.banner_image}
       />
 
-      {isLoading && (
-        <div className="absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
-          <AiOutlineLoading3Quarters className="w-16 h-16 animate-spin text-primary-500" />
-        </div>
-      )}
-
       <Video
         src={isLoading ? blankVideo : data.url}
         className="object-contain w-full h-full"
@@ -204,6 +198,14 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
       <ClientOnly>
         {/* Browser Only */}
         <BrowserView>
+          {isLoading && (
+            <Portal selector=".video-wrapper">
+              <div className="absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
+                <AiOutlineLoading3Quarters className="w-16 h-16 animate-spin text-primary-500" />
+              </div>
+            </Portal>
+          )}
+
           <Portal selector=".right-controls-slot">
             {episodeIndex < sortedEpisodes.length - 1 && (
               <NextEpisodeButton
