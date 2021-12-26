@@ -21,6 +21,7 @@ SwiperCore.use([Navigation]);
 const Swiper: React.FC<SwiperProps> = ({
   children,
   hideNavigation,
+  onInit,
   ...props
 }) => {
   const prevButtonRef = useRef<HTMLButtonElement>(null);
@@ -59,6 +60,8 @@ const Swiper: React.FC<SwiperProps> = ({
         // eslint-disable-next-line no-param-reassign
         swiper.params.navigation.nextEl = nextButtonRef.current;
         swiper.navigation.update();
+
+        onInit?.(swiper);
       }}
       {...props}
     >
