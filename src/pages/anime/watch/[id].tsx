@@ -256,6 +256,26 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
 
                           setIsOpen(false);
                         }}
+                        swiperProps={{
+                          breakpoints: {
+                            1024: {
+                              slidesPerView: 4,
+                              slidesPerGroup: 4,
+                            },
+                            768: {
+                              slidesPerView: 3,
+                              slidesPerGroup: 3,
+                            },
+                            640: {
+                              slidesPerView: 2,
+                              slidesPerGroup: 2,
+                            },
+                            0: {
+                              slidesPerView: 1,
+                              slidesPerGroup: 1,
+                            },
+                          },
+                        }}
                       />
                     </div>
                   </div>
