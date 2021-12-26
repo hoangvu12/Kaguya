@@ -26,6 +26,7 @@ const SkipButton = () => {
 
       <BrowserView>
         <Popup
+          portalSelector=".video-wrapper"
           placement="top"
           reference={
             <ControlsIcon Icon={AiOutlineFastForward} onClick={handleClick} />
