@@ -5,8 +5,7 @@ import { AiOutlineFastForward } from "react-icons/ai";
 import { useVideo } from "@/contexts/VideoContext";
 import { BrowserView, MobileView } from "react-device-detect";
 import MobileControlsIcon from "./MobileControlsIcon";
-
-const SKIP_TIME = 90; // 1m30s
+import { SKIP_TIME } from "@/constants";
 
 const SkipButton = () => {
   const { videoEl } = useVideo();

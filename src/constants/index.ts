@@ -8,6 +8,7 @@ export const DISCORD_URL = "https://discord.gg/382BEFfER6";
 export const FACEBOOK_URL = "https://www.facebook.com/nguyenvuzxc1/";
 
 export const REVALIDATE_TIME = 18000; // 5 hours
+export const SKIP_TIME = 90; // 1m30s
 
 export const SEASONS = ["WINTER", "SPRING", "SUMMER", "FALL"] as const;
 export const FORMATS = [

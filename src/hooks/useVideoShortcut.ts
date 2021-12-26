@@ -1,3 +1,4 @@
+import { SKIP_TIME } from "@/constants";
 import { useHotkeys } from "react-hotkeys-hook";
 import screenfull from "screenfull";
 
@@ -63,6 +64,11 @@ const useVideoShortcut = (
   useHotkeys("f", handleFullscreen, [videoEl]);
   useHotkeys("shift+n", onNextEpisode, [videoEl, onNextEpisode]);
   useHotkeys("shift+p", onPreviousEpisode, [videoEl, onPreviousEpisode]);
+  useHotkeys(
+    "shift+right",
+    () => handleVideoTime(videoEl?.currentTime + SKIP_TIME),
+    [videoEl, onPreviousEpisode]
+  );
 
   useHotkeys("0", handleVideoTimePercent(0), [videoEl]);
   useHotkeys("1", handleVideoTimePercent(0.1), [videoEl]);
