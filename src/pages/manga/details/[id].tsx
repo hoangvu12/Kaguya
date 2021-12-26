@@ -128,7 +128,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
                   },
 
                   initial: {
-                    height: 300,
+                    height: chapters.length <= 7 ? "100%" : 300,
                   },
                 }}
                 transition={{ ease: "linear" }}
@@ -148,12 +148,14 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
                 ))}
               </motion.div>
 
-              <CircleButton
-                onClick={() => setIsChapterExpanded(!isChapterExpanded)}
-                outline
-                className="absolute top-full mt-4 left-1/2 -translate-x-1/2"
-                LeftIcon={isChapterExpanded ? BsChevronUp : BsChevronDown}
-              />
+              {chapters.length > 7 && (
+                <CircleButton
+                  onClick={() => setIsChapterExpanded(!isChapterExpanded)}
+                  outline
+                  className="absolute top-full mt-4 left-1/2 -translate-x-1/2"
+                  LeftIcon={isChapterExpanded ? BsChevronUp : BsChevronDown}
+                />
+              )}
             </DetailsSection>
 
             {!!manga?.characters?.length && (
