@@ -2,7 +2,7 @@ import Swiper from "@/components/shared/Swiper";
 import { Episode } from "@/types";
 import { chunk } from "@/utils";
 import classNames from "classnames";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Tab } from "react-tabs";
 import ArrowSwiper, { SwiperSlide, SwiperProps } from "../shared/ArrowSwiper";
 import ClientOnly from "../shared/ClientOnly";
@@ -21,7 +21,7 @@ const Episodes: React.FC<EpisodesProps> = ({
   onClick,
   activeIndex,
   chunkSwiperProps,
-  swiperProps
+  swiperProps,
 }) => {
   const chunks = useMemo(() => chunk(episodes, 12), [episodes]);
   const [activeTabIndex, setActiveTabIndex] = React.useState(() => {
@@ -33,6 +33,8 @@ const Episodes: React.FC<EpisodesProps> = ({
   });
 
   const handleNavigateEpisode = (index: number) => () => onClick?.(index);
+
+  useEffect(() => {}, []);
 
   return (
     <ClientOnly>
@@ -75,6 +77,13 @@ const Episodes: React.FC<EpisodesProps> = ({
         slidesPerView={3}
         slidesPerGroup={3}
         breakpoints={{}}
+        onInit={(swiper) => {
+          const index = chunks[activeTabIndex].findIndex(
+            (episode) => episode.episodeIndex === activeIndex
+          );
+
+          swiper.slideTo(index || 0);
+        }}
         {...swiperProps}
       >
         {chunks[activeTabIndex].map((episode) => (
