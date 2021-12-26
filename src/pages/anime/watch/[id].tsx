@@ -161,6 +161,20 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentEpisode.episode_id]);
 
+  useEffect(() => {
+    navigator.mediaSession.setActionHandler("previoustrack", function () {
+      if (episodeIndex === 0) return;
+
+      handleNavigateEpisode(Number(episodeIndex) - 1)();
+    });
+
+    navigator.mediaSession.setActionHandler("nexttrack", function () {
+      if (episodeIndex === sortedEpisodes.length - 1) return;
+
+      handleNavigateEpisode(Number(episodeIndex) + 1)();
+    });
+  }, [episodeIndex, handleNavigateEpisode, sortedEpisodes.length]);
+
   return (
     <div className="relative w-full h-screen">
       <Head
