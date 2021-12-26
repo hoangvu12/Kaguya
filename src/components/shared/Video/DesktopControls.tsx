@@ -10,6 +10,7 @@ import screenfull from "screenfull";
 import ControlsIcon from "./ControlsIcon";
 import ProgressControl from "./ProgressControl";
 import QualitiesSelector from "./QualitiesSelector";
+import ShortcutsPanel from "./ShortcutsPanel";
 import SkipButton from "./SkipButton";
 import VolumeControl from "./VolumeControl";
 
@@ -85,7 +86,7 @@ const Controls: React.FC = () => {
 
         <div className="right-controls flex items-center space-x-6">
           <QualitiesSelector />
-
+          <ShortcutsPanel />
           <SkipButton />
 
           <div className="right-controls-slot flex items-center space-x-6"></div>
