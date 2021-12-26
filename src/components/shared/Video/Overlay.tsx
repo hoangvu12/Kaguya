@@ -85,7 +85,7 @@ const Overlay: React.FC<HTMLMotionProps<"div">> = ({ className, ...props }) => {
               {state.buffering ? (
                 <ControlsIcon
                   Icon={AiOutlineLoading3Quarters}
-                  className="animate-spin"
+                  className="w-14 h-14 animate-spin"
                 />
               ) : state.paused ? (
                 <ControlsIcon
