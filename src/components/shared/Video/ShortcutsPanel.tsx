@@ -61,11 +61,11 @@ const ShortcutsPanel = () => {
       </Popup>
 
       {showPanel && (
-        <Portal>
+        <Portal selector=".video-wrapper">
           <div
             className="fixed inset-0 bg-black/60 z-50"
             onClick={() => setShowPanel(false)}
-          ></div>
+          />
 
           <div className="p-8 fixed z-[9999] flex top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-md w-4/6 h-5/6 bg-background-900">
             <table className="w-full">
