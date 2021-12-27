@@ -9,13 +9,12 @@ const getProxyUrl = (url: string) => {
 const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
   let url = decodeURIComponent(req.query.url as string);
 
-  const { host, ...headers } = req.headers;
+  const { range } = req.headers;
 
   const response = await axios.get<any, any, any>(url, {
     responseType: "stream",
-    // @ts-ignore
     headers: {
-      ...headers,
+      range,
       referer: url.includes(".mp4") ? config.getSourceUrl : "nettruyen",
     },
     maxRedirects: 0,
