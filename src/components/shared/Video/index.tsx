@@ -31,7 +31,6 @@ const Video: React.FC<VideoProps> = ({ overlaySlot, ...props }) => {
     e: React.MouseEvent<HTMLDivElement, MouseEvent> | null
   ) => {
     if (!e) {
-      setShowControls(true);
       startControlsCycle();
 
       return;
@@ -42,41 +41,29 @@ const Video: React.FC<VideoProps> = ({ overlaySlot, ...props }) => {
     if (target.classList.contains("video-overlay") && isMobile) {
       setShowControls(false);
     } else {
-      setShowControls(true);
       startControlsCycle();
     }
   };
 
   const startControlsCycle = useCallback(() => {
-    if (!showControls) return;
+    setShowControls(true);
 
     if (timeout.current) {
       clearTimeout(timeout.current);
     }
 
     timeout.current = setTimeout(() => {
+      console.log("timeout");
+
       setShowControls(false);
     }, 3000);
-  }, [showControls]);
+  }, []);
 
   useEffect(() => {
     if (!ref.current) return;
 
     setRefHolder(ref.current);
   }, [ref, props.src]);
-
-  useEffect(() => {
-    startControlsCycle();
-
-    return () => clearTimeout(timeout.current);
-  }, [startControlsCycle]);
-
-  useEffect(() => {
-    const controlsShown = new Event("controls-shown");
-    const controlsHidden = new Event("controls-hidden");
-
-    window.dispatchEvent(showControls ? controlsShown : controlsHidden);
-  }, [showControls]);
 
   useEffect(() => {
     const element = ref.current;
@@ -114,7 +101,7 @@ const Video: React.FC<VideoProps> = ({ overlaySlot, ...props }) => {
       <VideoOptionsProvider>
         <div
           className={classNames("video-wrapper relative overflow-hidden")}
-          onMouseMove={handleKeepControls}
+          onMouseMove={isMobile ? () => {} : handleKeepControls}
           onClick={handleKeepControls}
         >
           {/* Controls */}
@@ -140,7 +127,7 @@ const Video: React.FC<VideoProps> = ({ overlaySlot, ...props }) => {
             </ClientOnly>
           </motion.div>
 
-          <Overlay>{overlaySlot}</Overlay>
+          <Overlay showControls={showControls}>{overlaySlot}</Overlay>
 
           <div className="w-full h-screen">
             <HlsPlayer ref={ref} {...props} />
