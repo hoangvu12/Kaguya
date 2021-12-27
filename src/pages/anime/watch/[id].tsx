@@ -324,7 +324,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
       )}
 
       {showWatchedOverlay && !declinedRewatch && (
-        <Portal>
+        <Portal selector=".video-wrapper">
           <div
             className="fixed inset-0 z-40 bg-black/70"
             onClick={() => {
