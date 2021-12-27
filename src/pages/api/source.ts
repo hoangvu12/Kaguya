@@ -90,9 +90,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           Number(b.label.replace("p", "")) - Number(a.label.replace("p", ""))
       );
 
-      sourceUrl = `${config.proxyUrl}?url=${encodeURIComponent(
-        sortedSources[0].file
-      )}&headers[referer]=${config.getSourceUrl}`;
+      // sourceUrl = `${config.proxyUrl}?url=${encodeURIComponent(
+      //   sortedSources[0].file
+      // )}&headers[referer]=${config.getSourceUrl}`;
+      sourceUrl = `/api/proxy?url=${encodeURIComponent(sortedSources[0].file)}`;
     }
 
     res.status(200).json({ success: true, url: sourceUrl });
