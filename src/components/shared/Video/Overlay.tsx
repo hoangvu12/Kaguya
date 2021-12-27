@@ -4,19 +4,25 @@ import RewindIcon from "@/components/icons/RewindIcon";
 import { useVideo } from "@/contexts/VideoContext";
 import { useVideoOptions } from "@/contexts/VideoOptionsContext";
 import useDevice from "@/hooks/useDevice";
-import useEventListener from "@/hooks/useEventListener";
 import classNames from "classnames";
 import { AnimatePresence, HTMLMotionProps, motion } from "framer-motion";
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import { AiOutlineLoading3Quarters, AiOutlinePause } from "react-icons/ai";
 import ControlsIcon from "./ControlsIcon";
 
 const variants = { show: { opacity: 1 }, hide: { opacity: 0 } };
 
-const Overlay: React.FC<HTMLMotionProps<"div">> = ({ className, ...props }) => {
+interface OverlayProps {
+  showControls: boolean;
+}
+
+const Overlay: React.FC<OverlayProps & HTMLMotionProps<"div">> = ({
+  className,
+  showControls,
+  ...props
+}) => {
   const { state, videoEl } = useVideo();
   const { isMobile } = useDevice();
-  const [showOverlay, setShowOverlay] = useState(false);
   const { options } = useVideoOptions();
 
   const handleOverlayClick = () => {
@@ -42,17 +48,9 @@ const Overlay: React.FC<HTMLMotionProps<"div">> = ({ className, ...props }) => {
 
   const handlePause = () => videoEl.pause();
 
-  useEventListener("controls-shown", () => {
-    setShowOverlay(true);
-  });
-
-  useEventListener("controls-hidden", () => {
-    setShowOverlay(false);
-  });
-
   return !options.isLocked ? (
     <AnimatePresence exitBeforeEnter>
-      {showOverlay && (
+      {showControls && (
         <motion.div
           variants={variants}
           initial="hide"
