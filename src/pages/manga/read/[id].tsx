@@ -174,7 +174,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
         image={manga.banner_image || manga.cover_image.large}
       />
 
-      <div className="w-full md:w-[800px]">
+      <div className="w-full">
         {data?.images.length ? (
           <React.Fragment>
             <ReadImages images={data.images} />
