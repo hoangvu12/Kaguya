@@ -1,22 +1,12 @@
-import { ImageProps } from "next/image";
-import React, { useState } from "react";
-import Image from "../shared/Image";
+import React from "react";
 
-const ReadImage: React.FC<ImageProps> = (props) => {
-  const [aspectRatio, setAspectRatio] = useState(0);
-
+const ReadImage: React.FC<React.ImgHTMLAttributes<HTMLImageElement>> = (
+  props
+) => {
+  // I have to use img instead of Next/Image because I want to imagg calculate the height itself
   return (
-    <div
-      style={{ paddingBottom: aspectRatio * 100 + "%", position: "relative" }}
-    >
-      {/* eslint-disable-next-line jsx-a11y/alt-text */}
-      <Image
-        {...props}
-        onLoadingComplete={({ naturalHeight, naturalWidth }) => {
-          setAspectRatio(naturalHeight / naturalWidth);
-        }}
-      />
-    </div>
+    // eslint-disable-next-line
+    <img {...props} />
   );
 };
 

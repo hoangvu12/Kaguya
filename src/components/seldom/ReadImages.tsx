@@ -7,14 +7,13 @@ interface ReadImagesProps {
 
 const ReadImages: React.FC<ReadImagesProps> = ({ images }) => {
   return (
-    <div className="w-full read-images">
+    <div className="w-full">
       {images.map((image) => (
         <ReadImage
           src={`/api/proxy?url=${image}`}
           alt="Đọc truyện tại Kaguya"
           key={image}
           className="w-full h-auto"
-          layout="fill"
         />
       ))}
     </div>
