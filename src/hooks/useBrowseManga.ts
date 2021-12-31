@@ -12,11 +12,13 @@ export interface UseBrowseOptions {
   tag?: string;
   sort?: keyof Manga;
   type?: "manga" | "anime";
+  country?: string;
 }
 
 const useBrowse = (options: UseBrowseOptions) => {
   return useSupaInfiniteQuery(["browse", options], (from, to) => {
-    const { format, genre, keyword, select, sort, limit, tag } = options;
+    const { format, genre, keyword, select, sort, limit, tag, country } =
+      options;
 
     let db: PostgrestFilterBuilder<Manga>;
 
@@ -40,6 +42,10 @@ const useBrowse = (options: UseBrowseOptions) => {
 
     if (tag) {
       db = db.contains("tags", `{${tag}}`);
+    }
+
+    if (country) {
+      db = db.eq("country_of_origin", country);
     }
 
     if (sort) {
