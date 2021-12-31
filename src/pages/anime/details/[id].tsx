@@ -76,7 +76,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
               <PlainCard data={anime} />
             </div>
 
-            <div className="flex flex-col items-center py-4 mt-4 text-center md:text-left md:items-start md:-mt-16">
+            <div className="flex flex-col items-center justify-between py-4 mt-4 text-center md:text-left md:items-start md:-mt-16">
               <Button
                 primary
                 LeftIcon={BsFillPlayFill}
