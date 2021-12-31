@@ -39,7 +39,9 @@ const EpisodeCard: React.FC<EpisodeCardProps> = ({
       <div className="w-full absolute bottom-0 p-2 space-y-1">
         <p className="text-lg font-semibold">{episode.name}</p>
         {title && (
-          <p className="text-base font-semibold text-gray-300">{title}</p>
+          <p className="text-base line-clamp-1 font-semibold text-gray-300">
+            {title}
+          </p>
         )}
       </div>
     </div>
