@@ -4,18 +4,54 @@ import axios from "axios";
 import { JSDOM } from "jsdom";
 import type { NextApiRequest, NextApiResponse } from "next";
 
-type Sources = {
-  source: {
-    file: string;
-    label: string;
-    mimeType: string;
-    preload: string;
-    type: string;
-  }[];
+const getServers = async (episodeId: number) => {
+  const { data }: any = await axios.post(
+    `${config.proxyUrl}/?url=${encodeURIComponent(config.getSourceUrl)}`,
+    `episodeId=${episodeId}&backup=1`,
+    { validateStatus: () => true, maxRedirects: 0 }
+  );
 
-  source_fbo: {
-    file: string;
-  }[];
+  const dom = new JSDOM(data.html);
+
+  const servers: { id: number; hash: string; name: string }[] = [];
+
+  dom.window.document.querySelectorAll("a").forEach((el) => {
+    if (el.dataset.play !== "api") return;
+
+    const id = Number(el.dataset.id);
+    const hash = el.dataset.href;
+    const name = el.textContent.trim();
+
+    servers.push({ id, hash, name });
+  });
+
+  return servers;
+};
+
+const getVideoUrl = async (id: number, hash: string) => {
+  const { data }: any = await axios.post(
+    `${config.proxyUrl}/?url=${encodeURIComponent(config.getSourceUrl)}`,
+    `link=${hash}&id=${id}`,
+    { validateStatus: () => true, maxRedirects: 0 }
+  );
+
+  return data.link;
+};
+
+const getSource = async (episodeId) => {
+  const priorityServers = ["AKR", "FB", "DU"];
+
+  const servers = await getServers(episodeId);
+
+  const nameOfBestServer = priorityServers.find((server) => {
+    return servers.some((s) => s.name === server);
+  });
+
+  const bestServer = servers.find((server) => server.name === nameOfBestServer);
+
+  const sources = await getVideoUrl(bestServer.id, bestServer.hash);
+
+  return sources[0].file;
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -44,56 +80,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       return;
     }
 
-    const url = `${config.getSourceUrl}/xem-phim/s-${episode_id}.html`;
-
-    const { data } = await axios.get<string>(
-      `${config.proxyUrl}?url=${encodeURIComponent(url)}`
-    );
-
-    const dom = new JSDOM(data);
-
-    const html = dom.window.document
-      .querySelector(".watching-movie script")
-      .innerHTML.replace(/\n/g, "")
-      .replace(/\s+/g, "");
-
-    const json = parseBetween(
-      html.replace(/\\\//g, "/").replace(/\\"/g, '"'),
-      "var$info_play_video=",
-      "var$list_sv"
-    )
-      .replace('JSON.parse("', "")
-      .replace('")', "")
-      .replace("source", '"source"')
-      .replace("source_fbo", '"source_fbo"')
-      .replace("vast", '"vast"');
-
-    const sources: Sources = JSON.parse(json);
-
-    if (!sources) {
-      res.status(400).json({
-        success: false,
-        error: "No sources",
-        errorMessage: "Something went wrong",
-      });
-
-      return;
-    }
-
-    let sourceUrl: string;
-
-    if (sources.source_fbo?.length) {
-      sourceUrl = sources.source_fbo[0].file;
-    } else {
-      const sortedSources = sources.source.sort(
-        (a, b) =>
-          Number(b.label.replace("p", "")) - Number(a.label.replace("p", ""))
-      );
-
-      sourceUrl = `${config.proxyUrl}?url=${encodeURIComponent(
-        sortedSources[0].file
-      )}&headers[referer]=${config.getSourceUrl}`;
-    }
+    const sourceUrl = await getSource(episode_id);
 
     res.status(200).json({ success: true, url: sourceUrl });
   } catch (err) {
