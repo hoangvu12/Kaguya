@@ -60,7 +60,9 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
   return (
     <>
       <Head
-        title={`${anime.title.user_preferred} - Kaguya`}
+        title={`${
+          anime.vietnamese_title || anime.title.user_preferred
+        } - Kaguya`}
         description={anime.description}
         image={anime.banner_image}
       />
@@ -85,7 +87,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
               </Button>
 
               <p className="mb-2 text-3xl font-semibold">
-                {anime.title.user_preferred}
+                {anime.vietnamese_title || anime.title.user_preferred}
               </p>
 
               <DotList>

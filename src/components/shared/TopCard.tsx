@@ -51,7 +51,7 @@ const TopCard: React.FC<TopCardProps> = ({ data, rank, type = "anime" }) => {
             src={data.cover_image.extra_large}
             layout="fill"
             objectFit="cover"
-            alt={`${title}`}
+            alt={data.vietnamese_title || title}
           />
         </div>
         <div className="flex-1 md:grid grid-cols-12">
@@ -64,7 +64,7 @@ const TopCard: React.FC<TopCardProps> = ({ data, rank, type = "anime" }) => {
                 className="text-xl line-clamp-1 cursor-pointer"
                 onClick={handleNavigate}
               >
-                {title}
+                {data.vietnamese_title || title}
               </p>
               <p className="line-clamp-1 font-semibold">
                 {data.genres.join(", ")}

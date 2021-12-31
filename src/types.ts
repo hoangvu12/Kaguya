@@ -114,6 +114,7 @@ export interface Anime {
   updated_at?: Date;
   episodes_updated_at?: Date;
   tags?: string[];
+  vietnamese_title?: string;
 }
 
 export interface Manga {
@@ -144,6 +145,7 @@ export interface Manga {
   tags?: string[];
   slug?: string;
   chapters: Chapter[];
+  vietnamese_title?: string;
 }
 
 export interface Section<T> {

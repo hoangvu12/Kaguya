@@ -51,14 +51,14 @@ const HomeBanner: React.FC<DynamicData<Anime[], Manga[]>> = ({
               layout="fill"
               objectFit="cover"
               objectPosition="50% 35%"
-              alt={`${title} banner`}
+              alt={activeSlide.vietnamese_title || title}
             />
           )}
 
           <div className="absolute inset-0 flex flex-col justify-center px-4 banner__overlay md:px-12">
             <div className="w-full md:w-[45%]">
               <h1 className="text-2xl font-bold uppercase md:text-4xl line-clamp-2 sm:line-clamp-3 md:line-clamp-4">
-                {title}
+                {activeSlide.vietnamese_title || title}
               </h1>
 
               <div className="flex flex-wrap items-center mt-4 text-lg gap-x-8">
@@ -128,7 +128,7 @@ const HomeBanner: React.FC<DynamicData<Anime[], Manga[]>> = ({
                 <div className="absolute fixed-0 bg-gradient-to-b from-transparent via-black/60 to-black/80 flex items-end">
                   <div className="p-4">
                     <h1 className="text-xl font-bold uppercase line-clamp-1">
-                      {typeof slide.title === "string"
+                      {slide.vietnamese_title || typeof slide.title === "string"
                         ? slide.title
                         : slide.title.user_preferred}
                     </h1>
