@@ -14,6 +14,7 @@ export interface UseBrowseOptions {
   tag?: string;
   sort?: keyof Anime;
   type?: "anime" | "manga";
+  country?: string;
 }
 
 const useBrowse = (options: UseBrowseOptions) => {
@@ -28,6 +29,7 @@ const useBrowse = (options: UseBrowseOptions) => {
       sort,
       limit,
       tag,
+      country,
     } = options;
 
     let db: PostgrestFilterBuilder<Anime>;
@@ -60,6 +62,10 @@ const useBrowse = (options: UseBrowseOptions) => {
 
     if (tag) {
       db = db.contains("tags", `{${tag}}`);
+    }
+
+    if (country) {
+      db = db.eq("country_of_origin", country);
     }
 
     if (sort) {

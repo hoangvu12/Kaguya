@@ -24,6 +24,7 @@ const initialValues: UseBrowseOptions = {
   tag: undefined,
   sort: "average_score",
   type: "anime",
+  country: "JP",
 };
 
 const genres = GENRES.map((genre) => ({
@@ -232,6 +233,35 @@ const BrowseList: React.FC<BrowseListProps> = ({
                     {
                       value: "manga",
                       placeholder: "Manga",
+                    },
+                  ]}
+                  onChange={onChange}
+                  defaultItem={{ value: "", placeholder: "" }}
+                />
+              )}
+            />
+
+            <Controller
+              name="country"
+              control={control}
+              defaultValue={defaultValues.country}
+              render={({ field: { value, onChange } }) => (
+                <Select
+                  containerClassName="my-2"
+                  defaultValue={value}
+                  label="Quốc gia"
+                  data={[
+                    {
+                      value: "JP",
+                      placeholder: "Nhật Bản",
+                    },
+                    {
+                      value: "CN",
+                      placeholder: "Trung Quốc",
+                    },
+                    {
+                      value: "KR",
+                      placeholder: "Hàn Quốc",
                     },
                   ]}
                   onChange={onChange}
