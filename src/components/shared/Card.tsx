@@ -20,8 +20,8 @@ interface AnimeCardProps {
 
 const imageVariants: Variants = {
   animate: {
-    scale: 0.5,
-    y: -60,
+    scale: 0.6,
+    y: -40,
     transition: { delay: 0.3 },
   },
   exit: { scale: 1 },
@@ -97,14 +97,6 @@ const Card: React.FC<AnimeCardProps & DynamicData<Anime, Manga>> = ({
             </motion.div>
 
             <motion.div className="absolute bottom-0 flex flex-col items-center justify-end px-2 py-4 text-center">
-              <motion.p
-                variants={infoVariants}
-                className="text-base font-semibold line-clamp-2"
-                style={{ color: primaryColor }}
-              >
-                {data.vietnamese_title || title}
-              </motion.p>
-
               <motion.div variants={infoVariants} className="mt-2 !mb-1">
                 <DotList>
                   {data.genres.slice(0, 2).map((genre) => (
@@ -145,14 +137,12 @@ const Card: React.FC<AnimeCardProps & DynamicData<Anime, Manga>> = ({
             {containerEndSlot}
           </motion.div>
 
-          {!isDesktop && (
-            <p
-              className="mt-2 text-lg font-semibold line-clamp-2"
-              style={{ color: primaryColor }}
-            >
-              {data.vietnamese_title || title}
-            </p>
-          )}
+          <p
+            className="mt-2 text-base font-semibold line-clamp-2"
+            style={{ color: primaryColor }}
+          >
+            {data.vietnamese_title || title}
+          </p>
         </motion.div>
       </a>
     </Link>
