@@ -99,8 +99,15 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
               <p className="mt-4 mb-8 text-gray-300">{anime.description}</p>
 
               <div className="flex space-x-8 overflow-x-auto md:scroll-bar snap-x md:space-x-16">
+                <InfoItem title="Quốc gia" value={anime.country_of_origin} />
                 <InfoItem title="Số tập" value={anime.total_episodes} />
-                <InfoItem title="Thời lượng" value={`${anime.duration} phút`} />
+
+                {anime.duration && (
+                  <InfoItem
+                    title="Thời lượng"
+                    value={`${anime.duration} phút`}
+                  />
+                )}
 
                 <InfoItem
                   title="Tình trạng"
