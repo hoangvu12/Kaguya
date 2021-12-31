@@ -30,7 +30,7 @@ const WatchedSwiper: React.FC<WatchedSwiperProps> = ({ data, ...props }) => {
                 anime.banner_image ||
                 anime.cover_image.extra_large,
             }}
-            title={anime.title.user_preferred}
+            title={anime.vietnamese_title || anime.title.user_preferred}
           />
         </SwiperSlide>
       ))}
