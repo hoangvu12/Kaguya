@@ -90,7 +90,7 @@ const Card: React.FC<AnimeCardProps & DynamicData<Anime, Manga>> = ({
                 layout="fill"
                 objectFit="cover"
                 className="rounded-sm"
-                alt={`${title} card`}
+                alt={data.vietnamese_title || title}
               />
 
               {imageEndSlot}
@@ -102,7 +102,7 @@ const Card: React.FC<AnimeCardProps & DynamicData<Anime, Manga>> = ({
                 className="text-base font-semibold line-clamp-2"
                 style={{ color: primaryColor }}
               >
-                {title}
+                {data.vietnamese_title || title}
               </motion.p>
 
               <motion.div variants={infoVariants} className="mt-2 !mb-1">
@@ -150,7 +150,7 @@ const Card: React.FC<AnimeCardProps & DynamicData<Anime, Manga>> = ({
               className="mt-2 text-lg font-semibold line-clamp-2"
               style={{ color: primaryColor }}
             >
-              {title}
+              {data.vietnamese_title || title}
             </p>
           )}
         </motion.div>

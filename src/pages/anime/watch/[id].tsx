@@ -178,8 +178,12 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   return (
     <div className="relative w-full h-screen">
       <Head
-        title={`${anime.title.user_preferred} - Kaguya`}
-        description={`Xem phim ${anime.title.user_preferred} tại Kaguya. Hoàn toàn miễn phí, không quảng cáo`}
+        title={`${
+          anime.vietnamese_title || anime.title.user_preferred
+        } - Kaguya`}
+        description={`Xem phim ${
+          anime.vietnamese_title || anime.title.user_preferred
+        } tại Kaguya. Hoàn toàn miễn phí, không quảng cáo`}
         image={currentEpisode.thumbnail_image || anime.banner_image}
       />
 
@@ -315,7 +319,8 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
             <div className="w-11/12 px-40">
               <p className="mb-2 text-xl text-gray-200">Bạn đang xem</p>
               <p className="mb-8 text-5xl font-semibold">
-                {anime.title.user_preferred} - {currentEpisode.name}
+                {anime.vietnamese_title || anime.title.user_preferred} -{" "}
+                {currentEpisode.name}
               </p>
               <p className="text-lg text-gray-300">{anime.description}</p>
             </div>
@@ -379,6 +384,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     .select(
       `
         title,
+        vietnamese_title,
         description,
         banner_image,
         cover_image,
