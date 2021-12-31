@@ -36,7 +36,7 @@ const shortcuts = [
     func: `Skip OP/ED (${SKIP_TIME} giây)`,
   },
   {
-    key: "P",
+    key: "F",
     func: "Toàn màn hình",
   },
 ];
