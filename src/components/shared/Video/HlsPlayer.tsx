@@ -9,21 +9,11 @@ export interface HlsPlayerProps
   autoPlay?: boolean;
 }
 
-let hostname;
-
 const config = {
   enableWorker: false,
-  // xhrSetup: (xhr, url) => {
-  //   let streamUrl = url;
-
-  //   if (!url.includes("playlist.m3u8")) {
-  //     streamUrl = `${hostname}/${url.replace(`${WEBSITE_URL}/api/`, "")}`;
-  //   } else {
-  //     hostname = url.replace("/playlist.m3u8", "");
-  //   }
-
-  //   xhr.open("GET", `${WEBSITE_URL}/api/proxy?url=${streamUrl}`, true);
-  // },
+  xhrSetup: (xhr: any, url: string) => {
+    xhr.open("GET", `/api/proxy?url=${url}`, true);
+  },
 };
 
 const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
@@ -53,7 +43,7 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
         }
 
         hls.current.on(Hls.Events.MEDIA_ATTACHED, () => {
-          hls.current.loadSource(src);
+          hls.current.loadSource(src[0].file);
 
           hls.current.on(Hls.Events.MANIFEST_PARSED, () => {
             if (autoPlay) {
