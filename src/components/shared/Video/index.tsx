@@ -108,7 +108,7 @@ const Video: React.FC<VideoProps> = ({
   });
 
   const defaultQualities = useMemo(
-    () => props.src.map((source) => Number(source.label.replace("p", ""))),
+    () => props.src.map((source) => source.label),
     [props.src]
   );
 
