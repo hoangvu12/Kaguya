@@ -15,7 +15,7 @@ const qualityTypes = [
     quality: 720,
   },
   {
-    type: "Full HD",
+    type: "FHD",
     quality: 1080,
   },
 ];
