@@ -1,9 +1,10 @@
+import { Source } from "@/types";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { useQuery } from "react-query";
 
 interface ReturnSuccessType {
   success: true;
-  url: string;
+  sources: Source[];
 }
 
 interface ReturnFailType {

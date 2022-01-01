@@ -36,7 +36,12 @@ interface WatchPageProps {
   anime: Anime;
 }
 
-const blankVideo = "https://cdn.plyr.io/static/blank.mp4";
+const blankVideo = [
+  {
+    file: "https://cdn.plyr.io/static/blank.mp4",
+    label: "720p",
+  },
+];
 
 const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   const router = useRouter();
@@ -175,20 +180,21 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
     });
   }, [episodeIndex, handleNavigateEpisode, sortedEpisodes.length]);
 
+  const title = useMemo(
+    () => anime.vietnamese_title || anime.title.user_preferred,
+    [anime.title.user_preferred, anime.vietnamese_title]
+  );
+
   return (
     <div className="relative w-full h-screen">
       <Head
-        title={`${
-          anime.vietnamese_title || anime.title.user_preferred
-        } - Kaguya`}
-        description={`Xem phim ${
-          anime.vietnamese_title || anime.title.user_preferred
-        } tại Kaguya. Hoàn toàn miễn phí, không quảng cáo`}
+        title={`${title} - Kaguya`}
+        description={`Xem phim ${title} tại Kaguya. Hoàn toàn miễn phí, không quảng cáo`}
         image={currentEpisode.thumbnail_image || anime.banner_image}
       />
 
       <Video
-        src={isLoading ? blankVideo : data.url}
+        src={isLoading ? blankVideo : data.sources}
         className="object-contain w-full h-full"
         autoPlay
         overlaySlot={
@@ -319,8 +325,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
             <div className="w-11/12 px-40">
               <p className="mb-2 text-xl text-gray-200">Bạn đang xem</p>
               <p className="mb-8 text-5xl font-semibold">
-                {anime.vietnamese_title || anime.title.user_preferred} -{" "}
-                {currentEpisode.name}
+                {title} - {currentEpisode.name}
               </p>
               <p className="text-lg text-gray-300">{anime.description}</p>
             </div>
