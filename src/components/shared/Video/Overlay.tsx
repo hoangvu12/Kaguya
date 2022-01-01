@@ -116,9 +116,11 @@ const Overlay: React.FC<OverlayProps & HTMLMotionProps<"div">> = ({
             )}
           </div>
 
-          <div className="absolute top-10 right-10">
-            <QualitiesSelector />
-          </div>
+          {isMobile && (
+            <div className="absolute top-10 right-10">
+              <QualitiesSelector />
+            </div>
+          )}
 
           {props.children}
         </motion.div>
