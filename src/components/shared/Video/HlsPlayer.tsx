@@ -67,9 +67,9 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
             }
 
             const levels = hls.current.levels
-              .map((level) => level.height)
               .filter((level) => level)
-              .sort((a, b) => b - a);
+              .sort((a, b) => b.height - a.height)
+              .map((level) => `${level.height}p`);
 
             setOptions((prev) => ({
               ...prev,
@@ -106,17 +106,17 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
       } else {
         const notDuplicatedQualities = [
           // @ts-ignore
-          ...new Set<number>(
-            src.map((src) => Number(src.label.replace("p", "")))
-          ),
+          ...new Set<string>(src.map((src) => src.label)),
         ];
 
         setOptions((prev) => ({
           ...prev,
           qualities: src.length ? notDuplicatedQualities : [],
-          currentQuality: Number(src[0].label.replace("p", "")),
+          currentQuality: src[0].label,
         }));
       }
+
+      myRef.current.autoplay = autoPlay;
 
       return () => {
         if (hls.current != null) {
@@ -126,13 +126,11 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
     }, [autoPlay, setOptions, src]);
 
     useEffect(() => {
-      if (!myRef.current) return;
+      if (!myRef.current || src[0].file.includes("m3u8")) return;
 
       const quality = options?.currentQuality;
 
-      const qualitySource = src.find(
-        (source) => Number(source.label.replace("p", "")) === quality
-      );
+      const qualitySource = src.find((source) => source.label === quality);
 
       myRef.current.src = qualitySource?.file;
     }, [options, src]);

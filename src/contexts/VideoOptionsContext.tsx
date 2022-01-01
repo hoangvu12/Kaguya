@@ -8,8 +8,8 @@ import {
 } from "react";
 
 export interface VideoOptions {
-  qualities?: number[];
-  currentQuality?: number;
+  qualities?: string[];
+  currentQuality?: string;
   isLocked?: boolean;
 }
 
@@ -19,12 +19,12 @@ interface ContextProps {
 }
 
 interface ProviderProps {
-  defaultQualities?: number[];
-  onQualityChange?: (quality: number) => void;
+  defaultQualities?: string[];
+  onQualityChange?: (quality: string) => void;
 }
 
 const defaultValue = {
-  options: { qualities: [], currentQuality: 0, isLocked: false },
+  options: { qualities: [], currentQuality: "NONE", isLocked: false },
   setOptions: () => {},
 } as ContextProps;
 

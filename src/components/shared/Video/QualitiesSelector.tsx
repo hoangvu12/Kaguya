@@ -8,22 +8,22 @@ import ControlsIcon from "./ControlsIcon";
 const qualityTypes = [
   {
     type: "SD",
-    quality: 480,
+    quality: "480p",
   },
   {
     type: "HD",
-    quality: 720,
+    quality: "720p",
   },
   {
     type: "FHD",
-    quality: 1080,
+    quality: "1080p",
   },
 ];
 
 const QualitiesSelector = () => {
   const { options, setOptions } = useVideoOptions();
 
-  const handleQualityChange = (qualitiy: number) => () => {
+  const handleQualityChange = (qualitiy: string) => () => {
     setOptions((prev) => ({ ...prev, currentQuality: qualitiy }));
   };
 
@@ -57,7 +57,7 @@ const QualitiesSelector = () => {
               )}
 
               <p className="relative w-min">
-                {quality}p
+                {quality}
                 {qualType && (
                   <p className="absolute text-primary-500 -top-2 -right-5 text-sm">
                     {qualType.type}
