@@ -143,7 +143,9 @@ const Video: React.FC<VideoProps> = ({
             </ClientOnly>
           </motion.div>
 
-          <Overlay showControls={showControls}>{overlaySlot}</Overlay>
+          <Overlay showControls={showControls || isBuffering}>
+            {overlaySlot}
+          </Overlay>
 
           <div className="w-full h-screen">
             <HlsPlayer ref={ref} {...props} />

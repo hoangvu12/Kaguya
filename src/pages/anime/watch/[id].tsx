@@ -215,21 +215,20 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
         }
       />
 
+      {isLoading && (
+        <Portal selector=".video-wrapper">
+          <div className="absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
+            <AiOutlineLoading3Quarters className="w-16 h-16 animate-spin text-primary-500" />
+          </div>
+        </Portal>
+      )}
+
       {/* Because Controls component cause too much rerender (rerender based on video playing) */}
       {/* It makes these two components perform really bad */}
       {/* This bring them to the right position, but not being rerender by the parent */}
-
       <ClientOnly>
         {/* Browser Only */}
         <BrowserView>
-          {isLoading && (
-            <Portal selector=".video-wrapper">
-              <div className="absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
-                <AiOutlineLoading3Quarters className="w-16 h-16 animate-spin text-primary-500" />
-              </div>
-            </Portal>
-          )}
-
           <Portal selector=".right-controls-slot">
             {episodeIndex < sortedEpisodes.length - 1 && (
               <NextEpisodeButton
