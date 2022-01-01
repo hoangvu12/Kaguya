@@ -31,7 +31,7 @@ interface ReadPageProps {
 const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
   const router = useRouter();
   const [showControls, setShowControls] = useState(false);
-  const [showNextEpisodeBox, setShowNextEpisodeBox] = useState(false);
+  const [showNextChapterBox, setShowNextChapterBox] = useState(false);
   const [showReadOverlay, setShowReadOverlay] = useState(false);
   const [declinedReread, setDeclinedReread] = useState(false);
   const [hasScrolled, setHasScrolled] = useState(false);
@@ -91,19 +91,21 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
   );
 
   const handleOverlayClick = useCallback(() => {
-    if (showNextEpisodeBox) {
-      setShowNextEpisodeBox(false);
+    if (showNextChapterBox) {
+      setShowNextChapterBox(false);
 
       return;
     }
 
     setShowControls(!showControls);
-  }, [showControls, showNextEpisodeBox]);
+  }, [showControls, showNextChapterBox]);
 
   const handleBottomScroll = useCallback(() => {
-    setShowNextEpisodeBox(true);
+    if (!nextChapter) return;
+
+    setShowNextChapterBox(true);
     setShowControls(false);
-  }, []);
+  }, [nextChapter]);
 
   useEffect(() => {
     if (
@@ -254,7 +256,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
 
       {/* Next episode box */}
       <AnimatePresence>
-        {showNextEpisodeBox && (
+        {showNextChapterBox && (
           <motion.div
             className="fixed bottom-0 flex flex-col justify-between w-full h-40 p-4 bg-background-900"
             variants={{
