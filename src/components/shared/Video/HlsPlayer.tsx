@@ -57,7 +57,7 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
             }
 
             const levels = hls.current.levels
-              .filter((level) => level)
+              .filter((level) => level.height)
               .sort((a, b) => b.height - a.height)
               .map((level) => `${level.height}p`);
 
