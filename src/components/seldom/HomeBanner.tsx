@@ -28,11 +28,9 @@ const HomeBanner: React.FC<DynamicData<Anime[], Manga[]>> = ({
     setIndex(swiper.realIndex);
   };
 
-  const handleClick = () => {
+  const handleClick = (ani_id: number) => () => {
     router.push(
-      type === "anime"
-        ? `/anime/details/${activeSlide.ani_id}`
-        : `/manga/details/${activeSlide.ani_id}`
+      type === "anime" ? `/anime/details/${ani_id}` : `/manga/details/${ani_id}`
     );
   };
 
@@ -89,7 +87,7 @@ const HomeBanner: React.FC<DynamicData<Anime[], Manga[]>> = ({
               <Button
                 primary
                 LeftIcon={AiFillPlayCircle}
-                onClick={handleClick}
+                onClick={handleClick(activeSlide.ani_id)}
                 className="mt-4 md:hidden"
               >
                 <p>Xem ngay</p>
@@ -99,7 +97,7 @@ const HomeBanner: React.FC<DynamicData<Anime[], Manga[]>> = ({
 
           <CircleButton
             LeftIcon={AiFillPlayCircle}
-            onClick={handleClick}
+            onClick={handleClick(activeSlide.ani_id)}
             outline
             className="absolute hidden -translate-x-1/2 -translate-y-1/2 opacity-0 md:block left-2/3 top-1/2 group-hover:opacity-100"
             iconClassName="w-16 h-16"
@@ -121,7 +119,11 @@ const HomeBanner: React.FC<DynamicData<Anime[], Manga[]>> = ({
                 : slide.title.user_preferred;
 
             return (
-              <SwiperSlide key={index} className="p-4">
+              <SwiperSlide
+                key={index}
+                className="p-4"
+                onClick={handleClick(slide.ani_id)}
+              >
                 <div className="relative aspect-w-16 aspect-h-9 rounded-md">
                   <Image
                     src={slide.banner_image}
