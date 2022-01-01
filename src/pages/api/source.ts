@@ -4,9 +4,14 @@ import axios from "axios";
 import { JSDOM } from "jsdom";
 import type { NextApiRequest, NextApiResponse } from "next";
 
+const sourceUrl =
+  process.env.NODE_ENV === "development"
+    ? config.getSourceUrl
+    : `${config.proxyUrl}/?url=${encodeURIComponent(config.getSourceUrl)}`;
+
 const getServers = async (episodeId: number) => {
   const { data }: any = await axios.post(
-    `${config.proxyUrl}/?url=${encodeURIComponent(config.getSourceUrl)}`,
+    sourceUrl,
     `episodeId=${episodeId}&backup=1`,
     { validateStatus: () => true, maxRedirects: 0 }
   );
@@ -29,11 +34,10 @@ const getServers = async (episodeId: number) => {
 };
 
 const getVideoUrl = async (id: number, hash: string) => {
-  const { data }: any = await axios.post(
-    `${config.proxyUrl}/?url=${encodeURIComponent(config.getSourceUrl)}`,
-    `link=${hash}&id=${id}`,
-    { validateStatus: () => true, maxRedirects: 0 }
-  );
+  const { data }: any = await axios.post(sourceUrl, `link=${hash}&id=${id}`, {
+    validateStatus: () => true,
+    maxRedirects: 0,
+  });
 
   return data.link;
 };
@@ -51,7 +55,7 @@ const getSource = async (episodeId) => {
 
   const sources = await getVideoUrl(bestServer.id, bestServer.hash);
 
-  return sources[0].file;
+  return sources;
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -80,9 +84,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       return;
     }
 
-    const sourceUrl = await getSource(episode_id);
+    const sources = await getSource(episode_id);
 
-    res.status(200).json({ success: true, url: sourceUrl });
+    res.status(200).json({ success: true, sources });
   } catch (err) {
     res.status(500).json({
       success: false,

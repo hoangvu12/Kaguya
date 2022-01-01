@@ -2,9 +2,16 @@ import { VideoContextProvider } from "@/contexts/VideoContext";
 import { VideoOptionsProvider } from "@/contexts/VideoOptionsContext";
 import useDevice from "@/hooks/useDevice";
 import useVideoShortcut from "@/hooks/useVideoShortcut";
+import { Source } from "@/types";
 import classNames from "classnames";
 import { motion } from "framer-motion";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import { useHotkeys } from "react-hotkeys-hook";
 import ClientOnly from "../ClientOnly";
@@ -12,14 +19,20 @@ import DesktopControls from "./DesktopControls";
 import HlsPlayer from "./HlsPlayer";
 import MobileControls from "./MobileControls";
 import Overlay from "./Overlay";
-interface VideoProps extends React.VideoHTMLAttributes<HTMLVideoElement> {
-  src: string;
+interface VideoProps
+  extends Omit<React.VideoHTMLAttributes<HTMLVideoElement>, "src"> {
+  src: Source[];
   overlaySlot?: React.ReactNode;
   onKeyNextEpisode: () => void;
   onKeyPreviousEpisode: () => void;
 }
 
-const Video: React.FC<VideoProps> = ({ overlaySlot, ...props }) => {
+const Video: React.FC<VideoProps> = ({
+  overlaySlot,
+  onKeyNextEpisode,
+  onKeyPreviousEpisode,
+  ...props
+}) => {
   const ref = useRef<HTMLVideoElement>();
   const [refHolder, setRefHolder] = useState<HTMLVideoElement>(null);
   const [showControls, setShowControls] = useState(true);
@@ -53,8 +66,6 @@ const Video: React.FC<VideoProps> = ({ overlaySlot, ...props }) => {
     }
 
     timeout.current = setTimeout(() => {
-      console.log("timeout");
-
       setShowControls(false);
     }, 3000);
   }, []);
@@ -88,17 +99,22 @@ const Video: React.FC<VideoProps> = ({ overlaySlot, ...props }) => {
   }, []);
 
   useVideoShortcut(refHolder, {
-    onNextEpisode: props.onKeyNextEpisode,
-    onPreviousEpisode: props.onKeyPreviousEpisode,
+    onNextEpisode: onKeyNextEpisode,
+    onPreviousEpisode: onKeyPreviousEpisode,
   });
 
   useHotkeys("*", () => {
     handleKeepControls(null);
   });
 
+  const defaultQualities = useMemo(
+    () => props.src.map((source) => Number(source.label.replace("p", ""))),
+    [props.src]
+  );
+
   return (
     <VideoContextProvider el={refHolder}>
-      <VideoOptionsProvider>
+      <VideoOptionsProvider defaultQualities={defaultQualities}>
         <div
           className={classNames("video-wrapper relative overflow-hidden")}
           onMouseMove={isMobile ? () => {} : handleKeepControls}

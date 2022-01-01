@@ -1,11 +1,11 @@
-import { WEBSITE_URL } from "@/constants";
 import { useVideoOptions } from "@/contexts/VideoOptionsContext";
+import { Source } from "@/types";
 import Hls from "hls.js";
 import React, { MutableRefObject, useEffect, useRef } from "react";
 
 export interface HlsPlayerProps
-  extends React.VideoHTMLAttributes<HTMLVideoElement> {
-  src: string;
+  extends Omit<React.VideoHTMLAttributes<HTMLVideoElement>, "src"> {
+  src: Source[];
   autoPlay?: boolean;
 }
 
@@ -101,11 +101,21 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
         });
       }
 
-      if (Hls.isSupported() && src.includes("m3u8")) {
+      if (Hls.isSupported() && src[0].file.includes("m3u8")) {
         _initPlayer();
       } else {
-        myRef.current.src = src;
-        myRef.current.autoplay = autoPlay;
+        const notDuplicatedQualities = [
+          // @ts-ignore
+          ...new Set<number>(
+            src.map((src) => Number(src.label.replace("p", "")))
+          ),
+        ];
+
+        setOptions((prev) => ({
+          ...prev,
+          qualities: src.length ? notDuplicatedQualities : [],
+          currentQuality: Number(src[0].label.replace("p", "")),
+        }));
       }
 
       return () => {
@@ -114,6 +124,18 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
         }
       };
     }, [autoPlay, setOptions, src]);
+
+    useEffect(() => {
+      if (!myRef.current) return;
+
+      const quality = options?.currentQuality;
+
+      const qualitySource = src.find(
+        (source) => Number(source.label.replace("p", "")) === quality
+      );
+
+      myRef.current.src = qualitySource?.file;
+    }, [options, src]);
 
     return (
       <video

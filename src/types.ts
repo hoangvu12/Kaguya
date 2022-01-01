@@ -210,6 +210,11 @@ export interface Comment {
   reactions?: Reaction[];
 }
 
+export type Source = {
+  file: string;
+  label: string;
+};
+
 export type CallbackSetter<T> = (handler: T) => void;
 
 export type Noop = () => void;
