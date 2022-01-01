@@ -114,51 +114,56 @@ const HomeBanner: React.FC<DynamicData<Anime[], Manga[]>> = ({
 
       <MobileView className="pt-16 pb-8 overflow-hidden">
         <Swiper hideNavigation breakpoints={{}} slidesPerView={1} loop>
-          {data.map((slide, index) => (
-            <SwiperSlide key={index} className="p-4">
-              <div className="relative aspect-w-16 aspect-h-9 rounded-md">
-                <Image
-                  src={slide.banner_image}
-                  alt={slide.title}
-                  layout="fill"
-                  objectFit="cover"
-                  className="rounded-md"
-                />
+          {data.map((slide, index) => {
+            const title =
+              typeof slide.title === "string"
+                ? slide.title
+                : slide.title.user_preferred;
 
-                <div className="absolute fixed-0 bg-gradient-to-b from-transparent via-black/60 to-black/80 flex items-end">
-                  <div className="p-4">
-                    <h1 className="text-xl font-bold uppercase line-clamp-1">
-                      {slide.vietnamese_title || typeof slide.title === "string"
-                        ? slide.title
-                        : slide.title.user_preferred}
-                    </h1>
+            return (
+              <SwiperSlide key={index} className="p-4">
+                <div className="relative aspect-w-16 aspect-h-9 rounded-md">
+                  <Image
+                    src={slide.banner_image}
+                    alt={slide.title}
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-md"
+                  />
 
-                    <div className="flex flex-wrap items-center mt-4 text-lg gap-x-8">
-                      {slide.average_score && (
+                  <div className="absolute fixed-0 bg-gradient-to-b from-transparent via-black/60 to-black/80 flex items-end">
+                    <div className="p-4">
+                      <h1 className="text-xl font-bold uppercase line-clamp-1">
+                        {slide.vietnamese_title || title}
+                      </h1>
+
+                      <div className="flex flex-wrap items-center mt-4 text-lg gap-x-8">
+                        {slide.average_score && (
+                          <TextIcon
+                            LeftIcon={MdTagFaces}
+                            iconClassName="text-green-300"
+                          >
+                            <p>{slide.average_score}%</p>
+                          </TextIcon>
+                        )}
                         <TextIcon
-                          LeftIcon={MdTagFaces}
-                          iconClassName="text-green-300"
+                          LeftIcon={AiFillHeart}
+                          iconClassName="text-red-400"
                         >
-                          <p>{slide.average_score}%</p>
+                          <p>{numberWithCommas(slide.favourites)}</p>
                         </TextIcon>
-                      )}
-                      <TextIcon
-                        LeftIcon={AiFillHeart}
-                        iconClassName="text-red-400"
-                      >
-                        <p>{numberWithCommas(slide.favourites)}</p>
-                      </TextIcon>
-                      <DotList>
-                        {slide.genres.slice(0, 3).map((genre) => (
-                          <p key={genre}>{convert(genre, "genre")}</p>
-                        ))}
-                      </DotList>
+                        <DotList>
+                          {slide.genres.slice(0, 3).map((genre) => (
+                            <p key={genre}>{convert(genre, "genre")}</p>
+                          ))}
+                        </DotList>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </SwiperSlide>
-          ))}
+              </SwiperSlide>
+            );
+          })}
         </Swiper>
       </MobileView>
     </React.Fragment>
