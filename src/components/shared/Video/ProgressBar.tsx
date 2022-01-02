@@ -1,106 +1,99 @@
-import { motion } from "framer-motion";
-import React, { useEffect, useState } from "react";
-import { getTrackBackground, Range } from "react-range";
-import { IThumbProps, ITrackProps } from "react-range/lib/types";
+import classNames from "classnames";
+import React, { Children, useEffect, useState } from "react";
+import { Slider, Direction } from "react-player-controls";
 
-interface VideoTrackProps extends ITrackProps {
-  value: number;
-  children: React.ReactNode;
-  isDragged: boolean;
-  disabled: boolean;
-  min?: number;
-  max?: number;
-}
-
+type ChildrenBars = {
+  backgroundBar: React.ReactNode;
+  playedBar: React.ReactNode;
+  handle: React.ReactNode;
+};
 interface ProgressBarProps {
-  onChange?: (value: number) => void;
-  onSeek?: (value: number) => void;
-  value: number;
-  min?: number;
-  max?: number;
+  onChange?: (percent: number) => void;
+  onChangeStart?: (percent: number) => void;
+  onChangeEnd?: (percent: number) => void;
+  onIntent?: (percent: number) => void;
+  onIntentStart?: (percent: number) => void;
+  onIntentEnd?: (percent: number) => void;
+  className?: string;
+  value?: number;
+  children: ({
+    backgroundBar,
+    playedBar,
+    handle,
+  }: ChildrenBars) => React.ReactNode;
 }
 
 const ProgressBar: React.FC<ProgressBarProps> = ({
   onChange,
-  onSeek,
-  value = 0,
-  min = 0,
-  max = 100,
+  className,
+  value,
+  children,
+  ...props
 }) => {
-  const [progressValue, setProgressValue] = useState(value);
+  const [progress, setProgress] = useState(value);
 
   useEffect(() => {
-    setProgressValue(value);
+    setProgress(value);
   }, [value]);
 
-  return (
-    <Range
-      step={0.1}
-      min={min}
-      max={max}
-      values={[progressValue]}
-      onFinalChange={(values) => {
-        onChange?.(values[0]);
-      }}
-      onChange={(values) => {
-        setProgressValue(values[0]);
+  const handleProgress = (percent: number) => {
+    setProgress(percent);
+    onChange(percent);
+  };
 
-        onSeek?.(values[0]);
-      }}
-      renderTrack={({ props, children, ...rest }) => (
-        <VideoProgressTrack
-          min={min}
-          max={max}
-          value={progressValue}
-          {...props}
-          {...rest}
-        >
-          {children}
-        </VideoProgressTrack>
-      )}
-      renderThumb={({ props }) => <VideoProgressThumb {...props} />}
-    />
+  return (
+    <Slider
+      isEnabled
+      direction={Direction.HORIZONTAL}
+      onChange={handleProgress}
+      className={classNames("relative group cursor-pointer", className)}
+      {...props}
+    >
+      {children({
+        backgroundBar: <Bar className="bg-white/20 rounded-sm" />,
+        playedBar: (
+          <Bar
+            className="bg-primary-500 rounded-sm"
+            style={{ width: `${progress * 100}%` }}
+          />
+        ),
+        handle: (
+          <BarHandle
+            className="scale-0 group-hover:scale-100 transition duration-100 bg-primary-500"
+            style={{
+              left: `calc(${progress * 100}% - 0.5rem)`,
+            }}
+          />
+        ),
+      })}
+    </Slider>
   );
 };
 
-const VideoProgressTrack = React.forwardRef<HTMLDivElement, VideoTrackProps>(
-  ({ isDragged, children, value, min, max, ...props }, ref) => {
-    return (
-      <motion.div
-        {...props}
-        ref={ref}
-        className="cursor-pointer bg-primary-500 w-full"
-        style={{
-          // @ts-ignore
-          backgroundImage: getTrackBackground({
-            values: [value],
-            colors: ["#EF4444", "#D3D3D3"],
-            min,
-            max,
-          }),
-        }}
-        animate={{ height: isDragged ? "0.35rem" : "0.25rem" }}
-        transition={{ ease: "linear", duration: 0.15 }}
-      >
-        {children}
-      </motion.div>
-    );
-  }
+export const Bar: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
+  className,
+  ...props
+}) => (
+  <div
+    className={classNames(
+      "absolute top-0 left-0 bottom-0 w-full h-full",
+      className
+    )}
+    {...props}
+  />
 );
 
-const VideoProgressThumb = React.forwardRef<HTMLDivElement, IThumbProps>(
-  (props, ref) => {
-    return (
-      <div
-        {...props}
-        ref={ref}
-        className="w-4 h-4 rounded-full bg-primary-500 focus:border-none focus:outline-none"
-      />
-    );
-  }
+export const BarHandle: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
+  className,
+  ...props
+}) => (
+  <div
+    className={classNames(
+      "absolute top-1/2 -translate-y-1/2 h-4 w-4 rounded-full",
+      className
+    )}
+    {...props}
+  />
 );
-
-VideoProgressThumb.displayName = "VideoProgressThumb";
-VideoProgressTrack.displayName = "VideoProgressTrack";
 
 export default React.memo(ProgressBar);
