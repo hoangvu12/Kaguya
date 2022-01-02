@@ -1620,6 +1620,11 @@ at-least-node@^1.0.0:
   resolved "https://registry.yarnpkg.com/at-least-node/-/at-least-node-1.0.0.tgz#602cd4b46e844ad4effc92a8011a3c46e0238dc2"
   integrity sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==
 
+autobind-decorator@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/autobind-decorator/-/autobind-decorator-2.4.0.tgz#ea9e1c98708cf3b5b356f7cf9f10f265ff18239c"
+  integrity sha512-OGYhWUO72V6DafbF8PM8rm3EPbfuyMZcJhtm5/n26IDwO18pohE4eNazLoCGhPiXOCD0gEGmrbU3849QvM8bbw==
+
 autoprefixer@^10.3.6:
   version "10.4.0"
   resolved "https://registry.yarnpkg.com/autoprefixer/-/autoprefixer-10.4.0.tgz#c3577eb32a1079a440ec253e404eaf1eb21388c8"
@@ -4619,6 +4624,15 @@ prop-types@^15.5.0, prop-types@^15.6.0, prop-types@^15.7.1, prop-types@^15.7.2:
     object-assign "^4.1.1"
     react-is "^16.8.1"
 
+prop-types@^15.6.2:
+  version "15.8.0"
+  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.0.tgz#d237e624c45a9846e469f5f31117f970017ff588"
+  integrity sha512-fDGekdaHh65eI3lMi5OnErU6a8Ighg2KjcjQxO7m8VHyWjcPyj5kiOgV1LQDOOOgVy3+5FgjXvdSSX7B8/5/4g==
+  dependencies:
+    loose-envify "^1.4.0"
+    object-assign "^4.1.1"
+    react-is "^16.13.1"
+
 psl@^1.1.33:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/psl/-/psl-1.8.0.tgz#9326f8bcfb013adcc005fdff056acce020e51c24"
@@ -4749,10 +4763,18 @@ react-is@17.0.2:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
-react-is@^16.8.1:
+react-is@^16.13.1, react-is@^16.8.1:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
+
+react-player-controls@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-player-controls/-/react-player-controls-1.1.0.tgz#7e2eb3319db2567994a56c0e4b6d51fccfb4b5f4"
+  integrity sha512-qEsKtljmaQD7satvlG6maTOMVw/ekP4F+Obe8ahTkwJEfO+NdollbFlFFsIFro+btMawfydpgneXW0aKEXFy9A==
+  dependencies:
+    autobind-decorator "^2.4.0"
+    prop-types "^15.6.2"
 
 react-popper@^2.2.5:
   version "2.2.5"
@@ -5729,11 +5751,6 @@ url-toolkit@^2.0.1:
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/url-toolkit/-/url-toolkit-2.2.3.tgz#78fa901215abbac34182066932220279b804522b"
   integrity sha512-Da75SQoxsZ+2wXS56CZBrj2nukQ4nlGUZUP/dqUBG5E1su5GKThgT94Q00x81eVII7AyS1Pn+CtTTZ4Z0pLUtQ==
-
-use-keyboard-shortcuts@^2.2.2:
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/use-keyboard-shortcuts/-/use-keyboard-shortcuts-2.2.2.tgz#93cb84e242d5b5f09ba575e7485822acb104cf1b"
-  integrity sha512-4HgEbrF1dxT5gVdx5KfjiBOuSCAdHedpS2J4u4+QCCk3gs1bdPey1aYqoyv45vHHSKvmzyA/llXofP72bzddMw==
 
 use-subscription@1.5.1:
   version "1.5.1"

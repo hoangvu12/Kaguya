@@ -43,9 +43,16 @@ const VolumeControl: React.FC = () => {
           onChange={(volume) => {
             videoEl.volume = volume;
           }}
-          min={0}
-          max={1}
-        />
+          className="w-full h-2"
+        >
+          {({ backgroundBar, playedBar, handle }) => (
+            <React.Fragment>
+              {backgroundBar}
+              {playedBar}
+              {handle}
+            </React.Fragment>
+          )}
+        </ProgressBar>
       </motion.div>
     </div>
   );
