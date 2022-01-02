@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 
 interface ReturnSuccessType {
   success: true;
@@ -12,13 +12,32 @@ interface ReturnFailType {
   errorMessage: string;
 }
 
-const useFetchImages = (slug: string, chapterId) => {
+const useFetchImages = (
+  slug: string,
+  currentChapterId: number,
+  nextChapterId: number | null
+) => {
+  const queryClient = useQueryClient();
+
+  const fetchImages = (chapterId: number) =>
+    axios
+      .get<ReturnSuccessType>(
+        `/api/images?slug=${slug}&chapter_id=${chapterId}`
+      )
+      .then(({ data }) => data);
+
   return useQuery<ReturnSuccessType, AxiosError<ReturnFailType>>(
-    `images-${chapterId}`,
-    () =>
-      axios
-        .get(`/api/images?slug=${slug}&chapter_id=${chapterId}`)
-        .then(({ data }: AxiosResponse<ReturnSuccessType>) => data)
+    `images-${currentChapterId}`,
+    () => fetchImages(currentChapterId),
+    {
+      onSuccess: () => {
+        if (!nextChapterId) return;
+
+        queryClient.prefetchQuery(`images-${nextChapterId}`, () =>
+          fetchImages(nextChapterId)
+        );
+      },
+    }
   );
 };
 

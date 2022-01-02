@@ -79,7 +79,11 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
     [chapters, savedReadData, isSavedDataError]
   );
 
-  const { data } = useFetchImages(manga.slug, currentChapter.chapter_id);
+  const { data } = useFetchImages(
+    manga.slug,
+    currentChapter.chapter_id,
+    nextChapter?.chapter_id
+  );
 
   const handleChapterNavigate = useCallback(
     (chapterIndex: number) => {
