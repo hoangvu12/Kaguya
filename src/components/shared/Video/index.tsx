@@ -126,8 +126,7 @@ const Video: React.FC<VideoProps> = ({
               show: { y: 0, opacity: 1 },
               hidden: { y: "100%", opacity: 0 },
             }}
-            // animate={showControls || isBuffering ? "show" : "hidden"}
-            animate="show"
+            animate={showControls || isBuffering ? "show" : "hidden"}
             initial="hidden"
             exit="hidden"
             className="absolute bottom-0 z-50 w-full"
