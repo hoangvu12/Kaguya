@@ -1,6 +1,7 @@
+import useDevice from "@/hooks/useDevice";
 import classNames from "classnames";
-import React, { Children, useEffect, useState } from "react";
-import { Slider, Direction } from "react-player-controls";
+import React, { useEffect, useState } from "react";
+import { Direction, Slider } from "react-player-controls";
 
 type ChildrenBars = {
   backgroundBar: React.ReactNode;
@@ -31,6 +32,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   ...props
 }) => {
   const [progress, setProgress] = useState(value);
+  const { isMobile } = useDevice();
 
   useEffect(() => {
     setProgress(value);
@@ -38,7 +40,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
 
   const handleProgress = (percent: number) => {
     setProgress(percent);
-    onChange(percent);
+    onChange?.(percent);
   };
 
   return (
@@ -50,7 +52,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
       {...props}
     >
       {children({
-        backgroundBar: <Bar className="bg-white/20 rounded-sm" />,
+        backgroundBar: <Bar className="bg-white/20 rounded-sm w-full" />,
         playedBar: (
           <Bar
             className="bg-primary-500 rounded-sm"
@@ -58,10 +60,13 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
           />
         ),
         handle: (
-          <BarHandle
-            className="scale-0 group-hover:scale-100 transition duration-100 bg-primary-500"
+          <Handle
+            className={classNames(
+              "transition duration-100 bg-primary-500",
+              !isMobile && "scale-0 group-hover:scale-100"
+            )}
             style={{
-              left: `calc(${progress * 100}% - 0.5rem)`,
+              marginLeft: `calc(${progress * 100}% - 0.5rem)`,
             }}
           />
         ),
@@ -73,17 +78,9 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
 export const Bar: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   className,
   ...props
-}) => (
-  <div
-    className={classNames(
-      "absolute top-0 left-0 bottom-0 w-full h-full",
-      className
-    )}
-    {...props}
-  />
-);
+}) => <div className={classNames("absolute h-full", className)} {...props} />;
 
-export const BarHandle: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
+export const Handle: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   className,
   ...props
 }) => (
