@@ -5,6 +5,7 @@ import Router from "next/router";
 import NProgress from "nprogress";
 import React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 
 import "@/styles/index.css";
 
@@ -33,6 +34,8 @@ function App({ Component, pageProps }: AppProps) {
       <AuthContextProvider>
         {getLayout(<Component {...pageProps} />)}
       </AuthContextProvider>
+
+      {process.env.NODE_ENV === "development" && <ReactQueryDevtools />}
     </QueryClientProvider>
   );
 }
