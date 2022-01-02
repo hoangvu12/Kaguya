@@ -1,6 +1,6 @@
 import { Source } from "@/types";
-import axios, { AxiosError, AxiosResponse } from "axios";
-import { useQuery } from "react-query";
+import axios, { AxiosError } from "axios";
+import { useQuery, useQueryClient } from "react-query";
 
 interface ReturnSuccessType {
   success: true;
@@ -13,12 +13,28 @@ interface ReturnFailType {
   errorMessage: string;
 }
 
-export const useFetchSource = (episodeId: number) => {
+export const useFetchSource = (
+  currentEpisodeId: number,
+  nextEpisodeId: number
+) => {
+  const queryClient = useQueryClient();
+
+  const fetchSource = (episodeId: number) =>
+    axios
+      .get<ReturnSuccessType>(`/api/source?id=${episodeId}`)
+      .then(({ data }) => data);
+
   return useQuery<ReturnSuccessType, AxiosError<ReturnFailType>>(
-    `source-${episodeId}`,
-    () =>
-      axios
-        .get(`/api/source?id=${episodeId}`)
-        .then(({ data }: AxiosResponse<ReturnSuccessType>) => data)
+    `source-${currentEpisodeId}`,
+    () => fetchSource(currentEpisodeId),
+    {
+      onSuccess: () => {
+        if (!nextEpisodeId) return;
+
+        queryClient.prefetchQuery(`source-${nextEpisodeId}`, () =>
+          fetchSource(nextEpisodeId)
+        );
+      },
+    }
   );
 };

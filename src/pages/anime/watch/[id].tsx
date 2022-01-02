@@ -124,7 +124,10 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
     [id, router]
   );
 
-  const { data, isLoading } = useFetchSource(currentEpisode.episode_id);
+  const { data, isLoading } = useFetchSource(
+    currentEpisode.episode_id,
+    nextEpisode?.episode_id
+  );
 
   // Show watched overlay
   useEffect(() => {
