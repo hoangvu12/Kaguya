@@ -1,12 +1,10 @@
 import { useVideo } from "@/contexts/VideoContext";
 import { parseTime } from "@/utils";
 import React, { useCallback, useEffect, useState } from "react";
-import { Slider, Direction } from "react-player-controls";
 import ProgressBar, { Bar } from "./ProgressBar";
 
 const ProgressControl = () => {
   const { state, videoEl } = useVideo();
-  const [progress, setProgress] = useState(0);
   const [intent, setIntent] = useState(0);
   const [buffer, setBuffer] = useState(0);
 
@@ -19,10 +17,10 @@ const ProgressControl = () => {
     [videoEl]
   );
 
-  const handleProgress = useCallback((percent) => {
-    setProgress(percent);
+  const handleProgress = useCallback(() => {
     setIntent(0);
-  }, []);
+    videoEl.pause();
+  }, [videoEl]);
 
   const handleIntent = useCallback((percent) => {
     setIntent(percent);
@@ -43,7 +41,7 @@ const ProgressControl = () => {
   }, [videoEl]);
 
   return (
-    <div className="flex items-center space-x-4">
+    <div className="progress-control flex items-center space-x-4">
       <ProgressBar
         value={videoEl.currentTime / videoEl.duration}
         onChangeEnd={handleProgressSeek}

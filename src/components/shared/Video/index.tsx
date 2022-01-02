@@ -40,6 +40,14 @@ const Video: React.FC<VideoProps> = ({
   const timeout = useRef<NodeJS.Timeout>(null);
   const { isMobile } = useDevice();
 
+  const handleTouchMove: React.TouchEventHandler<HTMLDivElement> = (e) => {
+    const target = e.target as HTMLDivElement;
+
+    if (!target.closest(".progress-control")) return;
+
+    handleKeepControls(null);
+  };
+
   const handleKeepControls = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent> | null
   ) => {
@@ -119,6 +127,7 @@ const Video: React.FC<VideoProps> = ({
           className={classNames("video-wrapper relative overflow-hidden")}
           onMouseMove={isMobile ? () => {} : handleKeepControls}
           onClick={handleKeepControls}
+          onTouchMove={handleTouchMove}
         >
           {/* Controls */}
           <motion.div
