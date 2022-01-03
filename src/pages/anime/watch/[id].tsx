@@ -18,6 +18,7 @@ import useSaveWatched from "@/hooks/useSaveWatched";
 import supabase from "@/lib/supabase";
 import { Anime } from "@/types";
 import { parseNumbersFromString } from "@/utils";
+import Storage from "@/utils/storage";
 import classNames from "classnames";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
@@ -44,6 +45,7 @@ const blankVideo = [
 ];
 
 const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
   const router = useRouter();
   const { isMobile } = useDevice();
   const [showInfoOverlay, setShowInfoOverlay] = useState(false);
@@ -51,7 +53,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   const [declinedRewatch, setDeclinedRewatch] = useState(false);
 
   const showInfoTimeout = useRef<NodeJS.Timeout>(null);
-  const saveWatchedTimeout = useRef<NodeJS.Timeout>(null);
+  const saveWatchedInterval = useRef<NodeJS.Timer>(null);
   const saveWatchedMutation = useSaveWatched();
 
   const { index: episodeIndex = 0, id } = router.query;
@@ -60,7 +62,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
     data: watchedEpisodeData,
     isLoading: isSavedDataLoading,
     isError: isSavedDataError,
-  } = useSavedWatched(id);
+  } = useSavedWatched(Number(id));
 
   useEventListener("visibilitychange", () => {
     if (isMobile) return;
@@ -155,19 +157,22 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   ]);
 
   useEffect(() => {
-    if (saveWatchedTimeout.current) {
-      clearTimeout(saveWatchedTimeout.current);
+    if (saveWatchedInterval.current) {
+      clearInterval(saveWatchedInterval.current);
     }
 
-    saveWatchedTimeout.current = setTimeout(() => {
+    saveWatchedInterval.current = setInterval(() => {
       saveWatchedMutation.mutate({
         anime_id: Number(id),
         episode_id: currentEpisode.episode_id,
+        watched_time: videoRef.current?.currentTime,
       });
-    }, 10000);
+    }, 30000);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentEpisode.episode_id]);
+    return () => {
+      clearInterval(saveWatchedInterval.current);
+    };
+  }, [currentEpisode.episode_id, id, saveWatchedMutation]);
 
   useEffect(() => {
     navigator.mediaSession.setActionHandler("previoustrack", function () {
@@ -188,6 +193,52 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
     [anime.title.user_preferred, anime.vietnamese_title]
   );
 
+  useEffect(() => {
+    const videoEl = videoRef.current;
+
+    if (!videoEl) return;
+    if (isSavedDataLoading) return;
+    if (!watchedEpisodeData.watched_time) return;
+
+    const handleVideoPlay = () => {
+      videoEl.currentTime = watchedEpisodeData.watched_time;
+    };
+
+    // Only set the video time if the video is ready
+    videoEl.addEventListener("canplay", handleVideoPlay, { once: true });
+
+    return () => {
+      videoEl.removeEventListener("canplay", handleVideoPlay);
+    };
+  }, [isSavedDataLoading, watchedEpisodeData.watched_time]);
+
+  useEffect(() => {
+    const videoEl = videoRef.current;
+
+    if (!videoEl) return;
+
+    const storage = new Storage("watched");
+
+    const handleTimeUpdate = () => {
+      storage.update(
+        { anime_id: Number(id) },
+        {
+          anime_id: Number(id),
+          anime,
+          episode_id: currentEpisode.episode_id,
+          episode: currentEpisode,
+          watched_time: videoEl.currentTime,
+        }
+      );
+    };
+
+    videoEl.addEventListener("timeupdate", handleTimeUpdate);
+
+    return () => {
+      videoEl.removeEventListener("timeupdate", handleTimeUpdate);
+    };
+  }, [anime, currentEpisode, id, videoRef]);
+
   return (
     <div className="relative w-full h-screen">
       <Head
@@ -197,6 +248,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
       />
 
       <Video
+        ref={videoRef}
         src={isLoading ? blankVideo : data.sources}
         className="object-contain w-full h-full"
         autoPlay

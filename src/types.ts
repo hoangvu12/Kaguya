@@ -168,6 +168,7 @@ export interface Watched {
   user_id: string;
   updated_at?: Date;
   created_at?: Date;
+  watched_time?: number;
 }
 
 export interface Read {
