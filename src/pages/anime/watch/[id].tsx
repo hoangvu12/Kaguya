@@ -198,7 +198,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
 
     if (!videoEl) return;
     if (isSavedDataLoading) return;
-    if (!watchedEpisodeData.watched_time) return;
+    if (!watchedEpisodeData?.watched_time) return;
 
     const handleVideoPlay = () => {
       videoEl.currentTime = watchedEpisodeData.watched_time;
@@ -210,7 +210,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
     return () => {
       videoEl.removeEventListener("canplay", handleVideoPlay);
     };
-  }, [isSavedDataLoading, watchedEpisodeData.watched_time]);
+  }, [isSavedDataLoading, watchedEpisodeData?.watched_time]);
 
   useEffect(() => {
     const videoEl = videoRef.current;

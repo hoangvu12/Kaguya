@@ -19,7 +19,7 @@ const useSavedWatched = (animeId: number) => {
         .from<Watched>("watched")
         .select("episode_id, watched_time")
         .eq("anime_id", animeId)
-        .eq("user_id", user.id)
+        .eq("user_id", user?.id)
         .limit(1)
         .single(),
     {
