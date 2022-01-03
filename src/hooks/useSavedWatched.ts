@@ -23,7 +23,7 @@ const useSavedWatched = (animeId: number) => {
         .limit(1)
         .single(),
     {
-      enabled: !localStorageData || !!user,
+      enabled: !!user,
       retry: 0,
       initialData: localStorageData,
     }
