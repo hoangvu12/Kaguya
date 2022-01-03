@@ -9,7 +9,7 @@ const handler: NextApiHandler = async (req, res) => {
   }
 
   try {
-    const { anime_id, episode_id } = req.body;
+    const { anime_id, episode_id, watched_time = 0 } = req.body;
 
     if (!anime_id || !episode_id) {
       res.json({ success: false });
@@ -45,6 +45,7 @@ const handler: NextApiHandler = async (req, res) => {
         .update({
           anime_id,
           episode_id,
+          watched_time,
         })
         .match({ user_id: user.id, anime_id });
 
@@ -57,7 +58,7 @@ const handler: NextApiHandler = async (req, res) => {
       const { error } = await supabase
         .from("watched")
         .upsert(
-          { user_id: user.id, anime_id, episode_id },
+          { user_id: user.id, anime_id, episode_id, watched_time },
           { ignoreDuplicates: false }
         );
 

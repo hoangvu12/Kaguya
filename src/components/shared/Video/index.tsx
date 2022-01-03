@@ -6,6 +6,7 @@ import { Source } from "@/types";
 import classNames from "classnames";
 import { motion } from "framer-motion";
 import React, {
+  MutableRefObject,
   useCallback,
   useEffect,
   useMemo,
@@ -27,143 +28,150 @@ interface VideoProps
   onKeyPreviousEpisode: () => void;
 }
 
-const Video: React.FC<VideoProps> = ({
-  overlaySlot,
-  onKeyNextEpisode,
-  onKeyPreviousEpisode,
-  ...props
-}) => {
-  const ref = useRef<HTMLVideoElement>();
-  const [refHolder, setRefHolder] = useState<HTMLVideoElement>(null);
-  const [showControls, setShowControls] = useState(true);
-  const [isBuffering, setIsBuffering] = useState(false);
-  const timeout = useRef<NodeJS.Timeout>(null);
-  const { isMobile } = useDevice();
+const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
+  ({ overlaySlot, onKeyNextEpisode, onKeyPreviousEpisode, ...props }, ref) => {
+    const myRef = useRef<HTMLVideoElement>();
+    const [refHolder, setRefHolder] = useState<HTMLVideoElement>(null);
+    const [showControls, setShowControls] = useState(true);
+    const [isBuffering, setIsBuffering] = useState(false);
+    const timeout = useRef<NodeJS.Timeout>(null);
+    const { isMobile } = useDevice();
 
-  const handleTouchMove: React.TouchEventHandler<HTMLDivElement> = (e) => {
-    const target = e.target as HTMLDivElement;
+    const handleTouchMove: React.TouchEventHandler<HTMLDivElement> = (e) => {
+      const target = e.target as HTMLDivElement;
 
-    if (!target.closest(".progress-control")) return;
+      if (!target.closest(".progress-control")) return;
 
-    handleKeepControls(null);
-  };
-
-  const handleKeepControls = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent> | null
-  ) => {
-    if (!e) {
-      startControlsCycle();
-
-      return;
-    }
-
-    const target = e.target as HTMLDivElement;
-
-    if (target.classList.contains("video-overlay") && isMobile) {
-      setShowControls(false);
-    } else {
-      startControlsCycle();
-    }
-  };
-
-  const startControlsCycle = useCallback(() => {
-    setShowControls(true);
-
-    if (timeout.current) {
-      clearTimeout(timeout.current);
-    }
-
-    timeout.current = setTimeout(() => {
-      setShowControls(false);
-    }, 3000);
-  }, []);
-
-  useEffect(() => {
-    if (!ref.current) return;
-
-    setRefHolder(ref.current);
-  }, [ref, props.src]);
-
-  useEffect(() => {
-    const element = ref.current;
-
-    const handleWaiting = () => {
-      setIsBuffering(true);
+      handleKeepControls(null);
     };
 
-    const handlePlaying = () => {
-      setIsBuffering(false);
+    const handleKeepControls = (
+      e: React.MouseEvent<HTMLDivElement, MouseEvent> | null
+    ) => {
+      if (!e) {
+        startControlsCycle();
+
+        return;
+      }
+
+      const target = e.target as HTMLDivElement;
+
+      if (target.classList.contains("video-overlay") && isMobile) {
+        setShowControls(false);
+      } else {
+        startControlsCycle();
+      }
     };
 
-    element.addEventListener("waiting", handleWaiting);
-    element.addEventListener("playing", handlePlaying);
-    element.addEventListener("play", handlePlaying);
+    const startControlsCycle = useCallback(() => {
+      setShowControls(true);
 
-    return () => {
-      element.removeEventListener("waiting", handleWaiting);
-      element.removeEventListener("playing", handlePlaying);
-      element.removeEventListener("play", handlePlaying);
-    };
-  }, []);
+      if (timeout.current) {
+        clearTimeout(timeout.current);
+      }
 
-  useVideoShortcut(refHolder, {
-    onNextEpisode: onKeyNextEpisode,
-    onPreviousEpisode: onKeyPreviousEpisode,
-  });
+      timeout.current = setTimeout(() => {
+        setShowControls(false);
+      }, 3000);
+    }, []);
 
-  useHotkeys("*", () => {
-    handleKeepControls(null);
-  });
+    useEffect(() => {
+      if (!myRef.current) return;
 
-  const defaultQualities = useMemo(
-    () => props.src.map((source) => source.label),
-    [props.src]
-  );
+      setRefHolder(myRef.current);
+    }, [ref, props.src]);
 
-  return (
-    <VideoContextProvider el={refHolder}>
-      <VideoOptionsProvider defaultQualities={defaultQualities}>
-        <div
-          className={classNames("video-wrapper relative overflow-hidden")}
-          onMouseMove={isMobile ? () => {} : handleKeepControls}
-          onClick={handleKeepControls}
-          onTouchMove={handleTouchMove}
-        >
-          {/* Controls */}
-          <motion.div
-            variants={{
-              show: { y: 0, opacity: 1 },
-              hidden: { y: "100%", opacity: 0 },
-            }}
-            animate={showControls || isBuffering ? "show" : "hidden"}
-            initial="hidden"
-            exit="hidden"
-            className="absolute bottom-0 z-50 w-full"
-            transition={{ ease: "linear", duration: 0.2 }}
+    useEffect(() => {
+      const element = myRef.current;
+
+      const handleWaiting = () => {
+        setIsBuffering(true);
+      };
+
+      const handlePlaying = () => {
+        setIsBuffering(false);
+      };
+
+      element.addEventListener("waiting", handleWaiting);
+      element.addEventListener("playing", handlePlaying);
+      element.addEventListener("play", handlePlaying);
+
+      return () => {
+        element.removeEventListener("waiting", handleWaiting);
+        element.removeEventListener("playing", handlePlaying);
+        element.removeEventListener("play", handlePlaying);
+      };
+    }, []);
+
+    useVideoShortcut(refHolder, {
+      onNextEpisode: onKeyNextEpisode,
+      onPreviousEpisode: onKeyPreviousEpisode,
+    });
+
+    useHotkeys("*", () => {
+      handleKeepControls(null);
+    });
+
+    const defaultQualities = useMemo(
+      () => props.src.map((source) => source.label),
+      [props.src]
+    );
+
+    return (
+      <VideoContextProvider el={refHolder}>
+        <VideoOptionsProvider defaultQualities={defaultQualities}>
+          <div
+            className={classNames("video-wrapper relative overflow-hidden")}
+            onMouseMove={isMobile ? () => {} : handleKeepControls}
+            onClick={handleKeepControls}
+            onTouchMove={handleTouchMove}
           >
-            <ClientOnly>
-              <BrowserView>
-                <DesktopControls />
-              </BrowserView>
+            {/* Controls */}
+            <motion.div
+              variants={{
+                show: { y: 0, opacity: 1 },
+                hidden: { y: "100%", opacity: 0 },
+              }}
+              animate={showControls || isBuffering ? "show" : "hidden"}
+              initial="hidden"
+              exit="hidden"
+              className="absolute bottom-0 z-50 w-full"
+              transition={{ ease: "linear", duration: 0.2 }}
+            >
+              <ClientOnly>
+                <BrowserView>
+                  <DesktopControls />
+                </BrowserView>
 
-              <MobileView>
-                <MobileControls />
-              </MobileView>
-            </ClientOnly>
-          </motion.div>
+                <MobileView>
+                  <MobileControls />
+                </MobileView>
+              </ClientOnly>
+            </motion.div>
 
-          <Overlay showControls={showControls || isBuffering}>
-            {overlaySlot}
-          </Overlay>
+            <Overlay showControls={showControls || isBuffering}>
+              {overlaySlot}
+            </Overlay>
 
-          <div className="w-full h-screen">
-            <HlsPlayer ref={ref} {...props} />
+            <div className="w-full h-screen">
+              <HlsPlayer
+                ref={(node) => {
+                  myRef.current = node;
+                  if (typeof ref === "function") {
+                    ref(node);
+                  } else if (ref) {
+                    (ref as MutableRefObject<HTMLVideoElement>).current = node;
+                  }
+                }}
+                {...props}
+              />
+            </div>
           </div>
-        </div>
-      </VideoOptionsProvider>
-    </VideoContextProvider>
-  );
-};
+        </VideoOptionsProvider>
+      </VideoContextProvider>
+    );
+  }
+);
 
 Video.displayName = "Video";
 

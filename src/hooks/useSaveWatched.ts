@@ -4,6 +4,7 @@ import { useMutation } from "react-query";
 interface MutationInput {
   anime_id: number;
   episode_id: number;
+  watched_time?: number;
 }
 
 const useSaveWatched = () => {
