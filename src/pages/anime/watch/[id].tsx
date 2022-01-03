@@ -472,7 +472,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     .from<Anime>("anime")
     .select("ani_id")
     .order("updated_at", { ascending: false })
-    .limit(200);
+    .limit(20);
 
   const paths = data.map((anime: Anime) => ({
     params: { id: anime.ani_id.toString() },
