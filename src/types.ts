@@ -146,6 +146,7 @@ export interface Manga {
   slug?: string;
   chapters: Chapter[];
   vietnamese_title?: string;
+  chapters_updated_at?: Date;
 }
 
 export interface Section<T> {
