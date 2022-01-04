@@ -116,7 +116,7 @@ export const getStaticProps: GetStaticProps = async () => {
   const { data: recentlyUpdatedManga } = await supabase
     .from<Manga>("manga")
     .select("*")
-    .order("updated_at", { ascending: false })
+    .order("chapters_updated_at", { ascending: false })
     .limit(15);
 
   return {
