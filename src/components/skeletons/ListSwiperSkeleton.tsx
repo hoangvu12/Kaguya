@@ -1,9 +1,9 @@
 import useBreakpoint from "@/hooks/useBreakpoint";
 import React from "react";
 import Skeleton, { SkeletonItem } from "../shared/Skeleton";
-import AnimeCardSkeleton from "./AnimeCardSkeleton";
+import AnimeCardSkeleton from "./CardSkeleton";
 
-const AnimeSwiperSkeleton = () => {
+const ListSwiperSkeleton = () => {
   const breakpoint = useBreakpoint();
 
   return (
@@ -25,4 +25,4 @@ const AnimeSwiperSkeleton = () => {
   );
 };
 
-export default AnimeSwiperSkeleton;
+export default ListSwiperSkeleton;

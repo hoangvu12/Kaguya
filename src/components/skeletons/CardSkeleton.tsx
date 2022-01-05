@@ -1,7 +1,7 @@
 import React from "react";
 import Skeleton, { SkeletonItem } from "../shared/Skeleton";
 
-const AnimeCard = () => {
+const CardSkeleton = () => {
   return (
     <Skeleton>
       <SkeletonItem className="aspect-w-9 aspect-h-16"></SkeletonItem>
@@ -9,4 +9,4 @@ const AnimeCard = () => {
   );
 };
 
-export default AnimeCard;
+export default CardSkeleton;

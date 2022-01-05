@@ -15,6 +15,7 @@ import { getSeason } from "@/utils";
 import GenresSelector from "@/components/seldom/GenresSelector";
 import dayjs from "@/lib/dayjs";
 import AnimeScheduling from "@/components/seldom/AnimeScheduling";
+import RecommendedAnimeSection from "@/components/seldom/RecommendedAnimeSection";
 
 interface HomeProps {
   trendingAnime: Anime[];
@@ -43,6 +44,7 @@ const Home: NextPage<HomeProps> = ({
 
           <div className="space-y-8">
             <WatchedSection />
+            <RecommendedAnimeSection />
 
             <Section title="Anime mới cập nhật">
               <CardSwiper type="anime" data={recentlyUpdatedAnime} />
