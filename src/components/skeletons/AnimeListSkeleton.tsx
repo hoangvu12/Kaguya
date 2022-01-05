@@ -1,6 +1,6 @@
 import React from "react";
 import Skeleton, { SkeletonItem } from "../shared/Skeleton";
-import AnimeCardSkeleton from "./AnimeCardSkeleton";
+import CardSkeleton from "./CardSkeleton";
 
 const AnimeListSkeleton = () => {
   return (
@@ -11,7 +11,7 @@ const AnimeListSkeleton = () => {
           className="w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6 px-2 snap-mandatory my-8"
           key={index}
         >
-          <AnimeCardSkeleton />
+          <CardSkeleton />
         </SkeletonItem>
       ))}
     </Skeleton>

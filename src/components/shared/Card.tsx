@@ -57,7 +57,7 @@ const Card: React.FC<AnimeCardProps & DynamicData<Anime, Manga>> = ({
   const { isDesktop } = useDevice();
 
   const primaryColor =
-    data.cover_image.color && isColorVisible(data.cover_image.color, "#3a3939")
+    data.cover_image?.color && isColorVisible(data.cover_image.color, "#3a3939")
       ? data.cover_image.color
       : "white";
 
