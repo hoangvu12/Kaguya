@@ -7,7 +7,7 @@ const ListSwiperSkeleton = () => {
   const breakpoint = useBreakpoint();
 
   return (
-    <Skeleton>
+    <Skeleton className="px-4 md:px-16">
       <SkeletonItem className="ml-6 mb-4 h-8 w-52" />
 
       <SkeletonItem className="mx-4 flex flex-wrap" container>
