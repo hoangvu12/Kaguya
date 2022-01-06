@@ -8,6 +8,7 @@ import supabase from "@/lib/supabase";
 import Avatar from "@/components/shared/Avatar";
 import useSyncUser from "@/hooks/useSyncUser";
 import { MdOutlineManageAccounts } from "react-icons/md";
+import { useRouter } from "next/router";
 
 const roles = {
   user: "Người dùng",
@@ -15,6 +16,7 @@ const roles = {
 };
 
 const HeaderProfile = () => {
+  const router = useRouter();
   const user = useUser();
   const { data: syncUser } = useSyncUser();
 
@@ -43,7 +45,7 @@ const HeaderProfile = () => {
         {syncUser?.auth_role === "admin" && (
           <Button
             className="w-full !bg-transparent hover:!bg-white/20"
-            onClick={() => supabase.auth.signOut()}
+            onClick={() => router.push("/admin")}
           >
             <TextIcon LeftIcon={MdOutlineManageAccounts}>
               <p>Admin dashboard</p>
