@@ -1,15 +1,22 @@
 import { useUser } from "@/contexts/AuthContext";
 import React from "react";
-import Image from "@/components/shared/Image";
 import Popup from "@/components/shared/Popup";
 import TextIcon from "@/components/shared/TextIcon";
 import { HiOutlineLogout } from "react-icons/hi";
 import Button from "@/components/shared/Button";
 import supabase from "@/lib/supabase";
 import Avatar from "@/components/shared/Avatar";
+import useSyncUser from "@/hooks/useSyncUser";
+import { MdOutlineManageAccounts } from "react-icons/md";
+
+const roles = {
+  user: "Người dùng",
+  admin: "Admin",
+};
 
 const HeaderProfile = () => {
   const user = useUser();
+  const { data: syncUser } = useSyncUser();
 
   if (!user) return null;
 
@@ -26,20 +33,35 @@ const HeaderProfile = () => {
 
         <div>
           <p className="font-semibold">{user.user_metadata.name}</p>
-          <p className="text-gray-300">Quản lí (sắp có)</p>
+          <p className="text-gray-300">
+            {roles[syncUser?.auth_role || "user"]}
+          </p>
         </div>
       </div>
 
-      <Button
-        className="w-full !bg-transparent hover:!bg-white/20"
-        onClick={() => supabase.auth.signOut()}
-      >
-        <TextIcon LeftIcon={HiOutlineLogout}>
-          <p>Đăng xuất</p>
-        </TextIcon>
-      </Button>
+      <div className="space-y-2">
+        {syncUser?.auth_role === "admin" && (
+          <Button
+            className="w-full !bg-transparent hover:!bg-white/20"
+            onClick={() => supabase.auth.signOut()}
+          >
+            <TextIcon LeftIcon={MdOutlineManageAccounts}>
+              <p>Admin dashboard</p>
+            </TextIcon>
+          </Button>
+        )}
+
+        <Button
+          className="w-full !bg-transparent hover:!bg-white/20"
+          onClick={() => supabase.auth.signOut()}
+        >
+          <TextIcon LeftIcon={HiOutlineLogout}>
+            <p>Đăng xuất</p>
+          </TextIcon>
+        </Button>
+      </div>
     </Popup>
   );
 };
 
-export default HeaderProfile;
+export default React.memo(HeaderProfile);

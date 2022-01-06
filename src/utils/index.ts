@@ -149,3 +149,7 @@ export const parseBetween = (str, start, end) => {
 
   return str.substring(startIndex, endIndex);
 };
+
+// https://stackoverflow.com/questions/28360978/css-how-to-get-browser-scrollbar-width-for-hover-overflow-auto-nice-margi
+export const getScrollbarSize = () =>
+  window.innerWidth - document.documentElement.offsetWidth;

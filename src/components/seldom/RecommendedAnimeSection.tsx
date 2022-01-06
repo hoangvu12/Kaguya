@@ -3,11 +3,9 @@ import { Watched } from "@/types";
 import React from "react";
 import ListSwiperSkeleton from "@/components/skeletons/ListSwiperSkeleton";
 import CardSwiper from "@/components/shared/CardSwiper";
-import AnimeSection from "./Section";
+import Section from "./Section";
 
 const composeData = (data: Watched) => {
-  console.log(data);
-
   const title =
     typeof data.anime?.title === "string"
       ? data.anime?.title
@@ -33,9 +31,9 @@ const RecommendedAnimeSection = () => {
   const composedData = composeData(data);
 
   return (
-    <AnimeSection title={`Vì bạn đã xem ${composedData.title}`}>
+    <Section title={`Vì bạn đã xem ${composedData.title}`}>
       <CardSwiper data={composedData.list} type="anime" />
-    </AnimeSection>
+    </Section>
   );
 };
 

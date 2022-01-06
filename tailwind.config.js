@@ -10,6 +10,7 @@ module.exports = {
     extend: {
       colors: {
         primary: colors.red,
+
         background: {
           DEFAULT: "#000000",
           200: "#777676",
@@ -18,7 +19,7 @@ module.exports = {
           500: "#555454",
           600: "#4d4c4c",
           700: "#464545",
-          800: "#403f3f",
+          800: "#1a1a1a",
           900: "#0d0d0d",
         },
         typography: {

@@ -1,6 +1,5 @@
 import useClickOutside from "@/hooks/useClickOutside";
 import useDevice from "@/hooks/useDevice";
-import useDidMount from "@/hooks/useDidMount";
 import classNames from "classnames";
 import { AnimatePresence, motion, Variants } from "framer-motion";
 import React, {
