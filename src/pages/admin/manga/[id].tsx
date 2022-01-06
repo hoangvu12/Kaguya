@@ -38,7 +38,7 @@ const AdminMangaLayout = () => {
   return (
     <div className="w-full h-full">
       <Section title="Thông tin">
-        <div className="relative !mb-8 flex space-x-4 bg-background-900 p-8">
+        <div className="relative !mb-8 flex space-y-4 md:flex-row flex-col md:space-y-0 md:space-x-4 bg-background-900 p-4 md:p-8">
           <div className="w-40 flex-shrink-0">
             <PlainCard data={data} />
           </div>
