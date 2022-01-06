@@ -4,6 +4,7 @@ import ReadImages from "@/components/seldom/ReadImages";
 import Button from "@/components/shared/Button";
 import Head from "@/components/shared/Head";
 import InView from "@/components/shared/InView";
+import Loading from "@/components/shared/Loading";
 import Portal from "@/components/shared/Portal";
 import { REVALIDATE_TIME } from "@/constants";
 import useFetchImages from "@/hooks/useFetchImages";
@@ -22,7 +23,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { AiOutlineInfoCircle, AiOutlineLoading3Quarters } from "react-icons/ai";
+import { AiOutlineInfoCircle } from "react-icons/ai";
 
 interface ReadPageProps {
   manga: Manga;
@@ -188,9 +189,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
             {hasScrolled && <InView onInView={handleBottomScroll} />}
           </React.Fragment>
         ) : (
-          <div className="absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
-            <AiOutlineLoading3Quarters className="w-16 h-16 animate-spin text-primary-500" />
-          </div>
+          <Loading />
         )}
       </div>
 

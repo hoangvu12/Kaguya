@@ -5,10 +5,11 @@ import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { GiHamburgerMenu } from "react-icons/gi";
-import HeaderProfile from "../seldom/HeaderProfile";
-import NavItem from "../seldom/NavItem";
-import Button from "../shared/Button";
-import Drawer, { DrawerRef } from "../shared/Drawer";
+import HeaderProfile from "@/components/seldom/HeaderProfile";
+import NavItem from "@/components/seldom/NavItem";
+import Button from "@/components/shared/Button";
+import Drawer, { DrawerRef } from "@/components/shared/Drawer";
+import Logo from "@/components/shared/Logo";
 
 const routes = [
   {
@@ -56,9 +57,7 @@ const Header = () => {
         className="py-8 space-y-2"
         button={<GiHamburgerMenu className="w-6 h-6" />}
       >
-        <div className="relative mx-auto h-24 w-20 border-b-2 border-gray-500 !mb-8">
-          <Image src="/logo.png" layout="fill" objectFit="contain" alt="logo" />
-        </div>
+        <Logo className="border-b-2 border-gray-500" />
 
         {routes.map((route) => (
           <div onClick={drawerRef.current?.close} key={route.href}>

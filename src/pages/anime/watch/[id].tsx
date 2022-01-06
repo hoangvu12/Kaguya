@@ -3,6 +3,7 @@ import Button from "@/components/shared/Button";
 import ClientOnly from "@/components/shared/ClientOnly";
 import EpisodeCard from "@/components/shared/EpisodeCard";
 import Head from "@/components/shared/Head";
+import Loading from "@/components/shared/Loading";
 import MobileNextEpisode from "@/components/shared/MobileNextEpisode";
 import Portal from "@/components/shared/Portal";
 import Video from "@/components/shared/Video";
@@ -30,7 +31,6 @@ import React, {
   useState,
 } from "react";
 import { BrowserView, MobileView } from "react-device-detect";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { BsArrowLeft } from "react-icons/bs";
 
 interface WatchPageProps {
@@ -272,9 +272,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
 
       {isLoading && (
         <Portal selector=".video-wrapper">
-          <div className="absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
-            <AiOutlineLoading3Quarters className="w-16 h-16 animate-spin text-primary-500" />
-          </div>
+          <Loading />
         </Portal>
       )}
 
