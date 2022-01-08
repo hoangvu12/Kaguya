@@ -18,7 +18,7 @@ const useAnimeDetails = (mangaId: number) => {
         )
         .eq("ani_id", mangaId)
         .single(),
-    { refetchOnMount: true }
+    { refetchOnMount: true, enabled: typeof window !== "undefined" }
   );
 };
 
