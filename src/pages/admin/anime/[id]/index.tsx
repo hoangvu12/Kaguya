@@ -1,23 +1,21 @@
 import AdminLayout from "@/components/layouts/AdminLayout";
+import CharacterCard from "@/components/seldom/CharacterCard";
+import DetailsSection from "@/components/seldom/DetailsSection";
 import InfoItem from "@/components/seldom/InfoItem";
 import Section from "@/components/seldom/Section";
 import DotList from "@/components/shared/DotList";
+import List from "@/components/shared/List";
+import Loading from "@/components/shared/Loading";
 import PlainCard from "@/components/shared/PlainCard";
 import TextIcon from "@/components/shared/TextIcon";
-import { Anime } from "@/types";
+import useAnimeDetails from "@/hooks/useAnimeDetails";
 import { numberWithCommas } from "@/utils";
 import { convert } from "@/utils/data";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { AiFillHeart, AiOutlineEdit } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
-import dayjs from "@/lib/dayjs";
-import DetailsSection from "@/components/seldom/DetailsSection";
-import CharacterCard from "@/components/seldom/CharacterCard";
-import List from "@/components/shared/List";
-import useAnimeDetails from "@/hooks/useAnimeDetails";
-import Link from "next/link";
-import Loading from "@/components/shared/Loading";
 
 const AdminAnimeDetails = () => {
   const router = useRouter();
@@ -28,7 +26,7 @@ const AdminAnimeDetails = () => {
     return <Loading />;
   }
 
-  if (isError) {
+  if (isError || !data?.title) {
     return <p>Error...</p>;
   }
 
