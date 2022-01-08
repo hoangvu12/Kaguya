@@ -4,6 +4,11 @@ import { createClient } from "@supabase/supabase-js";
 import config from "@/config";
 
 export async function middleware(req: NextRequest) {
+
+  if (process.env.NODE_ENV === "development") {
+    return NextResponse.next();
+  }
+
   const supabase = createClient(
     config.supabaseUrl,
     config.supabaseKey,
