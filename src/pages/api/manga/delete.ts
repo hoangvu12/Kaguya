@@ -1,8 +1,8 @@
 import supabase from "@/lib/supabaseAdmin";
-import { Anime } from "@/types";
+import { Manga } from "@/types";
 import type { NextApiRequest, NextApiResponse } from "next";
 
-const DeleteAnimeAPI = async (req: NextApiRequest, res: NextApiResponse) => {
+const DeleteMangaAPI = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "DELETE") {
     res.status(400).json({ success: false });
 
@@ -39,7 +39,7 @@ const DeleteAnimeAPI = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const { error } = await supabase
-    .from<Anime>("anime")
+    .from<Manga>("manga")
     .delete({ returning: "minimal" })
     .match({ ani_id: Number(id) });
 
@@ -52,4 +52,4 @@ const DeleteAnimeAPI = async (req: NextApiRequest, res: NextApiResponse) => {
   res.json({ success: true });
 };
 
-export default DeleteAnimeAPI;
+export default DeleteMangaAPI;
