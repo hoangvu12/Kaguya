@@ -1,12 +1,15 @@
 import AdminLayout from "@/components/layouts/AdminLayout";
 import Section from "@/components/seldom/Section";
+import Button from "@/components/shared/Button";
+import Input from "@/components/shared/Input";
 import Loading from "@/components/shared/Loading";
 import PlainCard from "@/components/shared/PlainCard";
 import Table from "@/components/shared/Table";
-import useAnimeList from "@/hooks/useAnimeList";
+import useAdminBrowse from "@/hooks/useAdminBrowse";
 import { Anime } from "@/types";
 import Link from "next/link";
 import React from "react";
+import { AiOutlineSearch } from "react-icons/ai";
 import { Column } from "react-table";
 
 const columns: Column<Anime>[] = [
@@ -70,20 +73,53 @@ const columns: Column<Anime>[] = [
 ];
 
 const AdminAnimePage = () => {
-  const { data, isLoading, isError } = useAnimeList();
-
-  if (isLoading) {
-    return <Loading />;
-  }
-
-  if (isError) {
-    return <p>Error</p>;
-  }
+  const { data, isLoading, isError, onSubmit, register } =
+    useAdminBrowse("anime");
 
   return (
     <div className="w-full h-full">
-      <Section className="w-full" title="Anime">
-        <Table columns={columns} data={data}></Table>
+      <Section className="w-full h-full space-y-8" title="Anime">
+        <form
+          onSubmit={onSubmit}
+          className="flex items-end justify-center space-x-2 snap-x"
+        >
+          <Input
+            {...register("keyword")}
+            placeholder="Nhập từ khóa"
+            LeftIcon={AiOutlineSearch}
+            label="Từ khóa"
+          />
+
+          <Input
+            {...register("ani_id")}
+            className="px-3 py-2"
+            placeholder="Nhập ID"
+            label="Anilist ID"
+          />
+
+          <Input
+            {...register("source_id")}
+            className="px-3 py-2"
+            placeholder="Nhập ID"
+            label="Source ID"
+          />
+
+          <Button type="submit" primary>
+            <p>Tìm kiếm</p>
+          </Button>
+        </form>
+
+        <div className="relative w-full h-full">
+          {isLoading ? (
+            <Loading />
+          ) : isError ? (
+            <p className="text-center">Lỗi</p>
+          ) : !data?.length ? (
+            <p className="text-center">Không có dữ liệu</p>
+          ) : (
+            <Table columns={columns} data={data}></Table>
+          )}
+        </div>
       </Section>
     </div>
   );
