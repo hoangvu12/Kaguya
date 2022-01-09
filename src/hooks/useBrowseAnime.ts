@@ -41,7 +41,7 @@ const useBrowse = (options: UseBrowseOptions) => {
         })
         .select(select || "*");
     } else {
-      db = supabase.from("anime").select(select || "*", { count: "exact" });
+      db = supabase.from("anime").select(select || "*");
     }
 
     if (genre) {
