@@ -1,11 +1,13 @@
 import BaseLayout from "@/components/layouts/BaseLayout";
 import { AuthContextProvider } from "@/contexts/AuthContext";
 import { AppProps } from "next/app";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import NProgress from "nprogress";
-import React from "react";
+import React, { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import { GA_TRACKING_ID, pageview } from "@/lib/gtag";
+import Script from "next/script";
 
 import "@/styles/index.css";
 
@@ -24,19 +26,63 @@ const queryClient = new QueryClient({
   },
 });
 
+const isProduction = process.env.NODE_ENV === "production";
+
 function App({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isProduction) return;
+
+    const handleRouteChange = (url: string) => {
+      pageview(url);
+    };
+
+    router.events.on("routeChangeComplete", handleRouteChange);
+
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange);
+    };
+  }, [router.events]);
+
   const getLayout =
     // @ts-ignore
     Component.getLayout || ((page) => <BaseLayout>{page}</BaseLayout>);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthContextProvider>
-        {getLayout(<Component {...pageProps} />)}
-      </AuthContextProvider>
+    <React.Fragment>
+      {isProduction && (
+        <React.Fragment>
+          <Script
+            strategy="afterInteractive"
+            src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
+          />
 
-      {process.env.NODE_ENV === "development" && <ReactQueryDevtools />}
-    </QueryClientProvider>
+          <Script
+            id="gtag-init"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_TRACKING_ID}', {
+                  page_path: window.location.pathname,
+                });
+              `,
+            }}
+          />
+        </React.Fragment>
+      )}
+
+      <QueryClientProvider client={queryClient}>
+        <AuthContextProvider>
+          {getLayout(<Component {...pageProps} />)}
+        </AuthContextProvider>
+
+        {process.env.NODE_ENV === "development" && <ReactQueryDevtools />}
+      </QueryClientProvider>
+    </React.Fragment>
   );
 }
 

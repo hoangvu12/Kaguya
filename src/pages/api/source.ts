@@ -8,7 +8,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   } = req;
 
   try {
-    if (!config.getSourceUrl) {
+    if (!config.nodeServerUrl) {
       res.status(400).json({
         success: false,
         error: "No url",
@@ -29,7 +29,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     const { data }: any = await axios.get(
-      `${config.getSourceUrl}?id=${episode_id}`
+      `${config.nodeServerUrl}/source?id=${episode_id}`
     );
 
     res.status(200).json({ success: true, sources: data.sources });
