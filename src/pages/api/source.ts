@@ -1,4 +1,5 @@
 import config from "@/config";
+import { REVALIDATE_TIME } from "@/constants";
 import axios from "axios";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -30,6 +31,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const { data }: any = await axios.get(
       `${config.nodeServerUrl}/source?id=${episode_id}`
+    );
+
+    res.setHeader(
+      "Cache-Control",
+      `public, s-maxage=3600, stale-while-revalidate=${REVALIDATE_TIME}`
     );
 
     res.status(200).json({ success: true, sources: data.sources });
