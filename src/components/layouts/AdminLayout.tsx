@@ -74,6 +74,7 @@ const AdminLayout: React.FC = ({ children }) => {
                         "flex items-center space-x-2 transition duration-300 font-semibold px-3 py-2 cursor-pointer rounded-md",
                         isActive ? "bg-primary-600" : "hover:bg-white/20"
                       )}
+                      onClick={() => setIsMenuOpen(false)}
                     >
                       <route.icon className="w-6 h-6" />
 
