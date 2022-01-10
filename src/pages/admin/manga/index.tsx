@@ -79,34 +79,30 @@ const AdminMangaPage = () => {
   return (
     <div className="w-full h-full">
       <Section className="w-full h-full space-y-8" title="Manga">
-        <form
-          onSubmit={onSubmit}
-          className="flex items-end justify-center space-x-2 snap-x"
-        >
-          <Input
-            {...register("keyword")}
-            placeholder="Nhập từ khóa"
-            LeftIcon={AiOutlineSearch}
-            label="Từ khóa"
-          />
-
-          <Input
-            {...register("ani_id")}
-            className="px-3 py-2"
-            placeholder="Nhập ID"
-            label="Anilist ID"
-          />
-
-          <Input
-            {...register("source_id")}
-            className="px-3 py-2"
-            placeholder="Nhập ID"
-            label="Source ID"
-          />
-
-          <Button type="submit" primary>
-            <p>Tìm kiếm</p>
-          </Button>
+        <form onSubmit={onSubmit} className="w-full">
+          <div className="flex items-end md:justify-center space-x-2 snap-x overflow-x-auto">
+            <Input
+              {...register("keyword")}
+              placeholder="Nhập từ khóa"
+              LeftIcon={AiOutlineSearch}
+              label="Từ khóa"
+            />
+            <Input
+              {...register("ani_id")}
+              className="px-3 py-2"
+              placeholder="Nhập ID"
+              label="Anilist ID"
+            />
+            <Input
+              {...register("source_id")}
+              className="px-3 py-2"
+              placeholder="Nhập ID"
+              label="Source ID"
+            />
+            <Button type="submit" primary>
+              <p>Tìm kiếm</p>
+            </Button>
+          </div>
         </form>
 
         <div className="relative w-full h-full">
