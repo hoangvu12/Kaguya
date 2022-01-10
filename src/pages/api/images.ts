@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
 import { JSDOM } from "jsdom";
+import { REVALIDATE_TIME } from "@/constants";
 
 const images = async (req: NextApiRequest, res: NextApiResponse) => {
   const { slug, chapter_id } = req.query;
@@ -13,6 +14,10 @@ const images = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const images = composeImages(data);
 
+    res.setHeader(
+      "Cache-Control",
+      `public, s-maxage=3600, stale-while-revalidate=${REVALIDATE_TIME}`
+    );
     res.status(200).json({ success: true, images });
   } catch (err) {
     res.status(500).json({
