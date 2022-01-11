@@ -1,20 +1,19 @@
-import NextIcon from "@/components/icons/NextIcon";
-import ChapterSelector from "@/components/seldom/ChapterSelector";
 import ReadImages from "@/components/seldom/ReadImages";
 import Button from "@/components/shared/Button";
 import Head from "@/components/shared/Head";
-import InView from "@/components/shared/InView";
 import Loading from "@/components/shared/Loading";
 import Portal from "@/components/shared/Portal";
 import { REVALIDATE_TIME } from "@/constants";
+import { ReadContextProvider } from "@/contexts/ReadContext";
+import { ReadSettingsContextProvider } from "@/contexts/ReadSettingsContext";
 import useFetchImages from "@/hooks/useFetchImages";
 import useSavedRead from "@/hooks/useSavedRead";
 import useSaveRead from "@/hooks/useSaveRead";
 import supabase from "@/lib/supabase";
 import { Manga } from "@/types";
 import { parseNumbersFromString } from "@/utils";
-import { AnimatePresence, motion } from "framer-motion";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React, {
   useCallback,
@@ -23,7 +22,10 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { AiOutlineInfoCircle } from "react-icons/ai";
+
+const ReadPanel = dynamic(() => import("@/components/seldom/ReadPanel"), {
+  ssr: false,
+});
 
 interface ReadPageProps {
   manga: Manga;
@@ -31,11 +33,8 @@ interface ReadPageProps {
 
 const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
   const router = useRouter();
-  const [showControls, setShowControls] = useState(false);
-  const [showNextChapterBox, setShowNextChapterBox] = useState(false);
   const [showReadOverlay, setShowReadOverlay] = useState(false);
   const [declinedReread, setDeclinedReread] = useState(false);
-  const [hasScrolled, setHasScrolled] = useState(false);
   const saveReadTimeout = useRef<NodeJS.Timeout>();
 
   const { index: chapterIndex = 0, id } = router.query;
@@ -95,23 +94,6 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
     [id, router]
   );
 
-  const handleOverlayClick = useCallback(() => {
-    if (showNextChapterBox) {
-      setShowNextChapterBox(false);
-
-      return;
-    }
-
-    setShowControls(!showControls);
-  }, [showControls, showNextChapterBox]);
-
-  const handleBottomScroll = useCallback(() => {
-    if (!nextChapter) return;
-
-    setShowNextChapterBox(true);
-    setShowControls(false);
-  }, [nextChapter]);
-
   useEffect(() => {
     if (
       !readChapter ||
@@ -153,194 +135,88 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentChapter.chapter_id]);
 
-  useEffect(() => {
-    if (hasScrolled) return;
-
-    const handleScroll = () => {
-      if (hasScrolled) return;
-
-      if (window.scrollY > 200) {
-        setHasScrolled(true);
-      } else {
-        setHasScrolled(false);
-      }
-    };
-
-    document.addEventListener("scroll", handleScroll);
-
-    return () => {
-      document.removeEventListener("scroll", handleScroll);
-    };
-  }, [hasScrolled]);
-
   return (
-    <div className="flex items-center justify-center w-full min-h-screen">
-      <Head
-        title={`${title} - Kaguya`}
-        description={`Đọc truyện ${title} tại Kaguya. Hoàn toàn miễn phí, không quảng cáo`}
-        image={manga.banner_image || manga.cover_image.large}
-      />
-
-      <div className="w-full">
-        {data?.images.length ? (
-          <React.Fragment>
-            <ReadImages images={data.images} />
-
-            {hasScrolled && <InView onInView={handleBottomScroll} />}
-          </React.Fragment>
-        ) : (
-          <Loading />
-        )}
-      </div>
-
-      {/* Controls */}
-      <motion.div
-        className="fixed inset-0 w-full"
-        animate={showControls ? "animate" : "exit"}
-      >
-        <motion.div
-          variants={{ animate: { y: 0 }, exit: { y: "-100%" } }}
-          transition={{ ease: "linear", duration: 0.2 }}
-          className="z-[1] fixed top-0 flex items-center justify-center w-full h-24 bg-background-900"
-        >
-          <div className="text-center">
-            <p className="text-2xl font-semibold line-clamp-1">{title}</p>
-
-            <p className="text-lg text-gray-300">{currentChapter.name}</p>
-          </div>
-        </motion.div>
-
-        <motion.div
-          variants={{ animate: { y: 0 }, exit: { y: "100%" } }}
-          transition={{ ease: "linear", duration: 0.2 }}
-          className="flex px-4 items-center justify-evenly md:justify-center md:space-x-8 z-[1] absolute bottom-0 w-full h-24 bg-background-900"
-        >
-          <Button
-            className="!bg-transparent hover:bg-white/20"
-            LeftIcon={AiOutlineInfoCircle}
-            onClick={() => {
-              router.push(`/manga/details/${id}`);
-            }}
-            iconClassName="w-10 h-10 lg:w-8 lg:h-8"
-          >
-            <p className="hidden md:inline">Thông tin truyện</p>
-          </Button>
-
-          {chapterIndex < chapters.length - 1 && (
-            <Button
-              className="!bg-transparent hover:bg-white/20"
-              LeftIcon={NextIcon}
-              onClick={() => handleChapterNavigate(Number(chapterIndex) + 1)}
-              iconClassName="w-10 h-10 lg:w-8 lg:h-8"
-            >
-              <p className="hidden md:inline">Chapter tiếp theo</p>
-            </Button>
-          )}
-
-          <ChapterSelector
-            chapters={chapters}
-            onChapterChange={handleChapterNavigate}
-            currentChapter={currentChapter}
+    <ReadContextProvider
+      value={{
+        manga,
+        currentChapter,
+        chapters,
+        chapterIndex: Number(chapterIndex),
+        setChapterIndex: handleChapterNavigate,
+      }}
+    >
+      <ReadSettingsContextProvider>
+        <div className="flex items-center justify-center w-full min-h-screen">
+          <Head
+            title={`${title} - Kaguya`}
+            description={`Đọc truyện ${title} tại Kaguya. Hoàn toàn miễn phí, không quảng cáo`}
+            image={manga.banner_image || manga.cover_image.large}
           />
-        </motion.div>
 
-        <motion.div
-          onClick={handleOverlayClick}
-          className="absolute inset-0 z-0 bg-black/60"
-          variants={{
-            animate: {
-              opacity: 1,
-            },
-            exit: { opacity: 0 },
-          }}
-          transition={{ ease: "linear", duration: 0.2 }}
-        />
-      </motion.div>
+          <ReadPanel>
+            {({ isSidebarOpen }) =>
+              data?.images.length ? (
+                <ReadImages
+                  isSidebarOpen={isSidebarOpen}
+                  images={data.images}
+                />
+              ) : (
+                <Loading />
+              )
+            }
+          </ReadPanel>
 
-      {/* Next episode box */}
-      <AnimatePresence>
-        {showNextChapterBox && (
-          <motion.div
-            className="fixed bottom-0 flex flex-col justify-between w-full h-40 p-4 bg-background-900"
-            variants={{
-              animate: {
-                y: 0,
-              },
-              exit: {
-                y: "100%",
-              },
-            }}
-            animate="animate"
-            initial="exit"
-            exit="exit"
-            transition={{ ease: "linear", duration: 0.2 }}
-          >
-            <div>
-              <p className="text-base text-gray-300">Chapter tiếp theo:</p>
-              <p className="text-3xl">{nextChapter.name}</p>
-            </div>
-
-            <div className="flex items-center space-x-4">
-              <ChapterSelector
-                chapters={chapters}
-                onChapterChange={handleChapterNavigate}
-                currentChapter={currentChapter}
+          {showReadOverlay && !declinedReread && (
+            <Portal>
+              <div
+                className="fixed inset-0 z-40 bg-black/70"
+                onClick={() => {
+                  setShowReadOverlay(false);
+                  setDeclinedReread(true);
+                }}
               />
 
-              <Button
-                primary
-                onClick={() => handleChapterNavigate(Number(chapterIndex) + 1)}
-                LeftIcon={NextIcon}
-              >
-                <p>Đọc tiếp</p>
-              </Button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              <div className="fixed left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 z-50 w-11/12 lg:w-2/3 p-8 rounded-md bg-background-900">
+                <h1 className="text-4xl font-bold mb-4">
+                  Đọc {readChapter.name}
+                </h1>
+                <p className="">
+                  Hệ thống ghi nhận bạn đã đọc {readChapter.name}.
+                </p>
+                <p className="mb-4">
+                  Bạn có muốn đọc {readChapter.name} không?
+                </p>
+                <div className="flex items-center justify-end space-x-4">
+                  <Button
+                    onClick={() => {
+                      setShowReadOverlay(false), setDeclinedReread(true);
+                    }}
+                    className="!bg-transparent hover:!bg-white/20 transition duration-300"
+                  >
+                    <p>Không</p>
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      if (!readChapter || isSavedDataLoading) return;
 
-      {showReadOverlay && !declinedReread && (
-        <Portal>
-          <div
-            className="fixed inset-0 z-40 bg-black/70"
-            onClick={() => {
-              setShowReadOverlay(false);
-              setDeclinedReread(true);
-            }}
-          />
+                      const chapterIndex = chapters.findIndex(
+                        (chapter) =>
+                          chapter.chapter_id === readChapter.chapter_id
+                      );
 
-          <div className="fixed left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 z-50 w-11/12 lg:w-2/3 p-8 rounded-md bg-background-900">
-            <h1 className="text-4xl font-bold mb-4">Đọc {readChapter.name}</h1>
-            <p className="">Hệ thống ghi nhận bạn đã đọc {readChapter.name}.</p>
-            <p className="mb-4">Bạn có muốn đọc {readChapter.name} không?</p>
-            <div className="flex items-center justify-end space-x-4">
-              <Button
-                onClick={() => {
-                  setShowReadOverlay(false), setDeclinedReread(true);
-                }}
-                className="!bg-transparent hover:!bg-white/20 transition duration-300"
-              >
-                <p>Không</p>
-              </Button>
-              <Button
-                onClick={() => {
-                  if (!readChapter || isSavedDataLoading) return;
-
-                  const chapterIndex = chapters.findIndex(
-                    (chapter) => chapter.chapter_id === readChapter.chapter_id
-                  );
-
-                  handleChapterNavigate(chapterIndex);
-                }}
-                primary
-              >
-                <p>Đọc</p>
-              </Button>
-            </div>
-          </div>
-        </Portal>
-      )}
-    </div>
+                      handleChapterNavigate(chapterIndex);
+                    }}
+                    primary
+                  >
+                    <p>Đọc</p>
+                  </Button>
+                </div>
+              </div>
+            </Portal>
+          )}
+        </div>
+      </ReadSettingsContextProvider>
+    </ReadContextProvider>
   );
 };
 

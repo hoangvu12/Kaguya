@@ -2,9 +2,14 @@ import classNames from "classnames";
 import React from "react";
 import BaseButton, { BaseButtonProps } from "./BaseButton";
 
-const Button: React.FC<BaseButtonProps> = ({
+interface ButtonProps extends BaseButtonProps {
+  secondary?: boolean;
+}
+
+const Button: React.FC<ButtonProps> = ({
   className,
   children,
+  secondary,
   ...props
 }) => {
   return (
@@ -13,7 +18,8 @@ const Button: React.FC<BaseButtonProps> = ({
       className={classNames(
         "flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-opacity-80",
         className,
-        props.primary && "hover:bg-primary-500"
+        props.primary && "hover:bg-primary-500",
+        secondary && "bg-transparent hover:bg-white/20"
       )}
       {...props}
     >

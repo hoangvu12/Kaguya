@@ -1,13 +1,18 @@
 import classNames from "classnames";
 import React from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 
 export interface BaseButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onClick"> {
   LeftIcon?: React.ComponentType<{ className: string }>;
   RightIcon?: React.ComponentType<{ className: string }>;
   iconClassName?: string;
   primary?: boolean;
   outline?: boolean;
+  onClick?: (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null
+  ) => void;
+  shortcutKey?: string;
 }
 
 const BaseButton = React.forwardRef<HTMLButtonElement, BaseButtonProps>(
@@ -19,9 +24,14 @@ const BaseButton = React.forwardRef<HTMLButtonElement, BaseButtonProps>(
       RightIcon,
       primary = false,
       outline = false,
+      disabled = false,
       children,
+      onClick,
+      shortcutKey,
       ...rest
     } = props;
+
+    useHotkeys(shortcutKey, () => onClick?.(null), [onClick]);
 
     // If class name contains 'w-' or 'h-' then override default className
     const iconClass =
@@ -49,9 +59,15 @@ const BaseButton = React.forwardRef<HTMLButtonElement, BaseButtonProps>(
       <button
         className={classNames(
           "transition duration-300",
+          disabled && "text-gray-500 cursor-not-allowed",
           className,
           buttonClassName
         )}
+        onClick={(e) => {
+          if (disabled) return;
+
+          onClick?.(e);
+        }}
         ref={ref}
         {...rest}
       >
