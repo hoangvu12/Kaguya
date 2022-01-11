@@ -2,9 +2,13 @@ import classNames from "classnames";
 import React from "react";
 import BaseButton, { BaseButtonProps } from "./BaseButton";
 
-const CircleButton = React.forwardRef<HTMLButtonElement, BaseButtonProps>(
+export interface CircleButtonProps extends BaseButtonProps {
+  secondary?: boolean;
+}
+
+const CircleButton = React.forwardRef<HTMLButtonElement, CircleButtonProps>(
   (props, ref) => {
-    const { children, className, ...rest } = props;
+    const { children, className, secondary, ...rest } = props;
 
     return (
       <BaseButton
@@ -13,6 +17,8 @@ const CircleButton = React.forwardRef<HTMLButtonElement, BaseButtonProps>(
           className,
           props.primary
             ? "hover:bg-primary-500"
+            : props.secondary
+            ? "bg-transparent hover:bg-white/20"
             : "hover:bg-white hover:text-black"
         )}
         ref={ref}

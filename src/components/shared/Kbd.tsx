@@ -1,11 +1,19 @@
+import classNames from "classnames";
 import React from "react";
 
 const Kbd: React.FC<React.HTMLAttributes<HTMLElement>> = ({
   children,
+  className,
   ...props
 }) => {
   return (
-    <kbd className="p-2 rounded-lg bg-background-800" {...props}>
+    <kbd
+      className={classNames(
+        "px-2 py-1 rounded-sm border border-gray-300 bg-background-800",
+        className
+      )}
+      {...props}
+    >
       {children}
     </kbd>
   );

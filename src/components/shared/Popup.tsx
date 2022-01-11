@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import React, { useCallback, useMemo, useState } from "react";
 import { usePopper } from "react-popper";
 
-interface PopupProps {
+export interface PopupProps {
   reference?: React.ReactNode;
   options?: Options;
   type?: "hover" | "click";
@@ -81,6 +81,13 @@ const Popup: React.FC<PopupProps> = (props) => {
         name: "offset",
         options: {
           offset,
+        },
+      },
+      {
+        name: "preventOverflow",
+        options: {
+          altAxis: true,
+          padding: 10,
         },
       },
     ],
