@@ -1,5 +1,12 @@
+import classNames from "classnames";
 import React, { useEffect } from "react";
-import ReactSelect, { Props, components } from "react-select";
+import { AiFillCheckCircle } from "react-icons/ai";
+import ReactSelect, {
+  components,
+  GroupBase,
+  OptionProps,
+  Props,
+} from "react-select";
 
 const MoreSelectedBadge = ({ items }) => {
   const title = items.join(", ");
@@ -25,6 +32,30 @@ const MultiValue = ({ index, getValue, ...props }) => {
   ) : index === maxToShow ? (
     <MoreSelectedBadge items={overflow} />
   ) : null;
+};
+
+const Option: React.ComponentType<
+  OptionProps<unknown, boolean, GroupBase<unknown>>
+> = ({ innerRef, getValue, children, innerProps, ...props }) => {
+  const { className, ...divProps } = innerProps;
+
+  return (
+    <div
+      ref={innerRef}
+      className={classNames(
+        "cursor-pointer relative px-3 py-2 transition duration-300",
+        props.isFocused && "bg-white/20 text-primary-300",
+        className
+      )}
+      {...divProps}
+    >
+      {children}
+
+      {props.isSelected && (
+        <AiFillCheckCircle className="absolute right-5 top-1/2 -translate-y-1/2 w-5 h-5 text-primary-600 rounded-full bg-white" />
+      )}
+    </div>
+  );
 };
 
 const Select = React.forwardRef<any, Props>((props, ref) => {
@@ -62,14 +93,6 @@ const Select = React.forwardRef<any, Props>((props, ref) => {
         singleValue: (provided) => {
           return { ...provided, color: "#fff" };
         },
-        option: (provided, state) => {
-          return {
-            ...provided,
-            backgroundColor: state.isFocused
-              ? "rgba(255,255,255,0.2)"
-              : provided.backgroundColor,
-          };
-        },
         multiValue: (provided) => {
           return {
             ...provided,
@@ -98,7 +121,7 @@ const Select = React.forwardRef<any, Props>((props, ref) => {
       }}
       hideSelectedOptions={false}
       noOptionsMessage={() => "Không còn lựa chọn"}
-      components={{ MultiValue }}
+      components={{ MultiValue, Option }}
       isClearable
       menuPortalTarget={portalTarget}
       {...props}
