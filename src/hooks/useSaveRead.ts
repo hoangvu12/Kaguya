@@ -8,7 +8,7 @@ interface MutationInput {
 
 const useSaveRead = () => {
   return useMutation((data: MutationInput) => {
-    return axios.post(`/api/read`, data);
+    return axios.post(`/api/manga/read`, data);
   });
 };
 
