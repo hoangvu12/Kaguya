@@ -1,3 +1,8 @@
+import Button from "@/components/shared/Button";
+import ButtonTooltip from "@/components/shared/ButtonTooltip";
+import CircleButton from "@/components/shared/CircleButton";
+import Input from "@/components/shared/Input";
+import Kbd from "@/components/shared/Kbd";
 import { useReadInfo } from "@/contexts/ReadContext";
 import {
   directions,
@@ -25,11 +30,6 @@ import {
   CgArrowsShrinkV,
 } from "react-icons/cg";
 import { HiOutlineArrowsExpand } from "react-icons/hi";
-import Button from "../shared/Button";
-import ButtonTooltip from "../shared/ButtonTooltip";
-import CircleButton from "../shared/CircleButton";
-import Input from "../shared/Input";
-import Kbd from "../shared/Kbd";
 
 const noop = () => {};
 

@@ -1,6 +1,3 @@
-import HeadlessSwiper, {
-  SwiperSlide,
-} from "@/components/shared/HeadlessSwiper";
 import { useReadInfo } from "@/contexts/ReadContext";
 import { useReadSettings } from "@/contexts/ReadSettingsContext";
 import useDevice from "@/hooks/useDevice";
@@ -22,7 +19,11 @@ import {
 import { SwiperOptions } from "swiper";
 import "swiper/swiper.min.css";
 import type SwiperClass from "swiper/types/swiper-class";
-import Button from "../shared/Button";
+import Button from "@/components/shared/Button";
+import InView from "@/components/shared/InView";
+import HeadlessSwiper, {
+  SwiperSlide,
+} from "@/components/shared/HeadlessSwiper";
 import ReadImage from "./ReadImage";
 
 interface ReadImagesProps {
@@ -87,28 +88,89 @@ const ReadImages: React.FC<ReadImagesProps> = ({
   );
 
   const handleSwiperInit = useCallback((swiper: SwiperClass) => {
-    setActiveImageIndex(swiper.realIndex);
-
     swiper.on("slideChange", handleSlideChange);
   }, []);
 
-  useEffect(() => {
-    if (!swiperRef.current) return;
+  // useEffect(() => {
+  //   if (direction !== "vertical") return;
 
-    swiperRef.current.slideToLoop(activeImageIndex);
-  }, [activeImageIndex]);
+  //   const options: IntersectionObserverInit = {
+  //     root: document.querySelector(".content-container"),
+  //     rootMargin: "0px 0px 10px 0px",
+  //     threshold: 0.5,
+  //   };
+
+  //   const callback: IntersectionObserverCallback = (entries) => {
+  //     const [intersectingEntry] = entries;
+
+  //     console.log(entries);
+
+  //     if (!intersectingEntry?.isIntersecting) return;
+
+  //     const target = intersectingEntry.target;
+
+  //     if (target.nodeName !== "IMG") return;
+
+  //     const typedTarget = target as HTMLImageElement;
+
+  //     if (!typedTarget.complete) return;
+
+  //     const imageIndex = typedTarget.dataset.index;
+
+  //     if (!imageIndex) return;
+
+  //     setActiveImageIndex(Number(imageIndex));
+  //   };
+
+  //   const observer = new IntersectionObserver(callback, options);
+
+  //   const imageElements = document.querySelectorAll(".image-container img");
+
+  //   imageElements.forEach((el) => observer.observe(el));
+
+  //   return () => observer.disconnect();
+  // }, [direction]);
+
+  useEffect(() => {
+    if (direction !== "vertical") {
+      if (!swiperRef.current) return;
+
+      swiperRef.current.slideToLoop(activeImageIndex);
+
+      return;
+    }
+
+    const currentImageElement: HTMLImageElement = document.querySelector(
+      `[data-index="${activeImageIndex}"]`
+    );
+
+    if (!currentImageElement) return;
+
+    // https://stackoverflow.com/questions/63197942/scrollintoview-not-working-properly-with-lazy-image-load
+    currentImageElement.closest("div")?.scrollIntoView();
+
+    setTimeout(() => {
+      currentImageElement.closest("div")?.scrollIntoView();
+    }, 600);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [direction]);
 
   return (
     <div className="w-full h-full flex flex-col justify-center items-center">
       {direction === "vertical" ? (
         <div className="h-full">
           {images.map((image, index) => (
-            <ReadImage
-              className="mx-auto"
-              key={index}
-              data-index={index}
-              src={image}
-            />
+            <div className="image-container mx-auto" key={index}>
+              <ReadImage
+                onVisible={() => {
+                  setActiveImageIndex(index);
+                }}
+                className="mx-auto"
+                src={image}
+                data-index={index}
+              />
+            </div>
           ))}
 
           {chapterIndex < chapters.length - 1 && (
