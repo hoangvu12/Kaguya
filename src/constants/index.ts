@@ -134,6 +134,32 @@ export const SORTS = [
   "episodes_updated_at",
 ];
 
+export const TYPES = [
+  {
+    value: "anime",
+    label: "Anime",
+  },
+  {
+    value: "manga",
+    label: "Manga",
+  },
+];
+
+export const COUNTRIES = [
+  {
+    value: "JP",
+    label: "Nhật Bản",
+  },
+  {
+    value: "CN",
+    label: "Trung Quốc",
+  },
+  {
+    value: "KR",
+    label: "Hàn Quốc",
+  },
+];
+
 export const CHARACTERS_ROLES = ["MAIN", "SUPPORTING", "BACKGROUND"] as const;
 export const SEASON_YEARS = new Array(CURRENT_YEAR + 1 - START_YEAR)
   .fill(null)

@@ -1,35 +1,35 @@
 import supabase from "@/lib/supabase";
-import { Anime, Format } from "@/types";
+import { Anime, Format, Genre } from "@/types";
 import { useSupaInfiniteQuery } from "@/utils/supabase";
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
 
 export interface UseBrowseOptions {
   keyword?: string;
-  genre?: string;
+  genres?: Genre[];
   seasonYear?: string;
   season?: string;
   format?: Format;
   select?: string;
   limit?: number;
-  tag?: string;
+  tags?: string[];
   sort?: keyof Anime;
   type?: "anime" | "manga";
-  country?: string;
+  countries?: string[];
 }
 
 const useBrowse = (options: UseBrowseOptions) => {
   return useSupaInfiniteQuery(["browse", options], (from, to) => {
     const {
       format,
-      genre,
+      genres,
       keyword,
       season,
       seasonYear,
       select,
       sort,
       limit,
-      tag,
-      country,
+      tags,
+      countries,
     } = options;
 
     let db: PostgrestFilterBuilder<Anime>;
@@ -44,8 +44,8 @@ const useBrowse = (options: UseBrowseOptions) => {
       db = supabase.from("anime").select(select || "*");
     }
 
-    if (genre) {
-      db = db.contains("genres", `{${genre}}`);
+    if (genres?.length) {
+      db = db.contains("genres", genres);
     }
 
     if (seasonYear) {
@@ -60,12 +60,12 @@ const useBrowse = (options: UseBrowseOptions) => {
       db = db.eq("format", format);
     }
 
-    if (tag) {
-      db = db.contains("tags", `{${tag}}`);
+    if (tags?.length) {
+      db = db.contains("tags", tags);
     }
 
-    if (country) {
-      db = db.eq("country_of_origin", country);
+    if (countries?.length) {
+      db = db.contains("country_of_origin", countries);
     }
 
     if (sort) {

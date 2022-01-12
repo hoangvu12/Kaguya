@@ -93,6 +93,7 @@ const Select = React.forwardRef<any, Props>((props, ref) => {
       hideSelectedOptions={false}
       noOptionsMessage={() => "Không còn lựa chọn"}
       components={{ MultiValue }}
+      isClearable
       {...props}
     />
   );
