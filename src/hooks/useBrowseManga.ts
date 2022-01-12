@@ -5,19 +5,19 @@ import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
 
 export interface UseBrowseOptions {
   keyword?: string;
-  genre?: Genre;
+  genres?: Genre[];
   format?: Format;
   select?: string;
   limit?: number;
-  tag?: string;
+  tags?: string[];
   sort?: keyof Manga;
+  countries?: string[];
   type?: "manga" | "anime";
-  country?: string;
 }
 
 const useBrowse = (options: UseBrowseOptions) => {
   return useSupaInfiniteQuery(["browse", options], (from, to) => {
-    const { format, genre, keyword, select, sort, limit, tag, country } =
+    const { format, countries, genres, keyword, select, sort, limit, tags } =
       options;
 
     let db: PostgrestFilterBuilder<Manga>;
@@ -32,20 +32,21 @@ const useBrowse = (options: UseBrowseOptions) => {
       db = supabase.from("manga").select(select || "*", { count: "exact" });
     }
 
-    if (genre) {
-      db = db.contains("genres", `{${genre}}`);
+    if (genres?.length) {
+      db = db.contains("genres", genres);
     }
 
     if (format) {
       db = db.eq("format", format);
     }
 
-    if (tag) {
-      db = db.contains("tags", `{${tag}}`);
+    if (tags?.length) {
+      // db = db.in("tags", tags);
+      db = db.contains("tags", tags);
     }
 
-    if (country) {
-      db = db.eq("country_of_origin", country);
+    if (countries?.length) {
+      db = db.in("country_of_origin", countries);
     }
 
     if (sort) {
