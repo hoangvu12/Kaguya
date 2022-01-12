@@ -259,11 +259,17 @@ const ReadPanel: React.FC<ReadPanelProps> = ({ children }) => {
             <ul className="h-full space-y-2 bg-background-900 p-2 overflow-y-auto">
               {filteredChapters.map((chapter) => (
                 <li
-                  className="p-2 cursor-pointer hover:bg-white/20 transition duration-300"
+                  className="relative p-2 cursor-pointer hover:bg-white/20 transition duration-300"
                   key={chapter.chapter_id}
                   onClick={handleChapterChange(chapter.chapter_index)}
                 >
                   {chapter.name}
+
+                  {chapter.chapter_index === chapterIndex && (
+                    <p className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-primary-500 rounded-md">
+                      Đang đọc
+                    </p>
+                  )}
                 </li>
               ))}
             </ul>
