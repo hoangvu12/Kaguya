@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ReactSelect, { Props, components } from "react-select";
 
 const MoreSelectedBadge = ({ items }) => {
@@ -28,6 +28,12 @@ const MultiValue = ({ index, getValue, ...props }) => {
 };
 
 const Select = React.forwardRef<any, Props>((props, ref) => {
+  const [portalTarget, setPortalTarget] = React.useState<HTMLElement>();
+
+  useEffect(() => {
+    setPortalTarget(document.body);
+  }, []);
+
   return (
     <ReactSelect
       ref={ref}
@@ -94,6 +100,7 @@ const Select = React.forwardRef<any, Props>((props, ref) => {
       noOptionsMessage={() => "Không còn lựa chọn"}
       components={{ MultiValue }}
       isClearable
+      menuPortalTarget={portalTarget}
       {...props}
     />
   );
