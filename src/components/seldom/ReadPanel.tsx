@@ -141,7 +141,7 @@ const ReadPanel: React.FC<ReadPanelProps> = ({ children }) => {
           </div>
 
           {/* Mobile chapter selector */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-center md:justify-between space-x-2 md:space-x-0">
             <ButtonTooltip
               tooltip={
                 <p>
@@ -156,7 +156,7 @@ const ReadPanel: React.FC<ReadPanelProps> = ({ children }) => {
               shortcutKey="["
             />
 
-            <MobileView>
+            <MobileView className="flex-grow">
               <select
                 value={chapterIndex.toString()}
                 onChange={(e) => {
