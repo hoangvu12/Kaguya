@@ -1,27 +1,19 @@
-import {
-  COUNTRIES,
-  FORMATS,
-  GENRES,
-  SEASONS,
-  SEASON_YEARS,
-  TYPES,
-} from "@/constants";
+import Head from "@/components/shared/Head";
+import Input from "@/components/shared/Input";
+import InView from "@/components/shared/InView";
+import List from "@/components/shared/List";
+import AnimeListSkeleton from "@/components/skeletons/AnimeListSkeleton";
+import { COUNTRIES, FORMATS, GENRES, TYPES } from "@/constants";
 import useBrowse, { UseBrowseOptions } from "@/hooks/useBrowseManga";
 import TAGS from "@/tags.json";
 import { convert } from "@/utils/data";
 import { debounce } from "debounce";
 import { useRouter } from "next/router";
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { AiOutlineSearch } from "react-icons/ai";
-import List from "@/components/shared/List";
-import Head from "@/components/shared/Head";
-import Input from "@/components/shared/Input";
-import InView from "@/components/shared/InView";
-import Select from "@/components/shared/Select";
-import AnimeListSkeleton from "@/components/skeletons/AnimeListSkeleton";
-import SortSelector from "./SortSelector";
 import FormSelect from "./FormSelect";
+import SortSelector from "./SortSelector";
 
 const initialValues: UseBrowseOptions = {
   format: undefined,
