@@ -91,46 +91,6 @@ const ReadImages: React.FC<ReadImagesProps> = ({
     swiper.on("slideChange", handleSlideChange);
   }, []);
 
-  // useEffect(() => {
-  //   if (direction !== "vertical") return;
-
-  //   const options: IntersectionObserverInit = {
-  //     root: document.querySelector(".content-container"),
-  //     rootMargin: "0px 0px 10px 0px",
-  //     threshold: 0.5,
-  //   };
-
-  //   const callback: IntersectionObserverCallback = (entries) => {
-  //     const [intersectingEntry] = entries;
-
-  //     console.log(entries);
-
-  //     if (!intersectingEntry?.isIntersecting) return;
-
-  //     const target = intersectingEntry.target;
-
-  //     if (target.nodeName !== "IMG") return;
-
-  //     const typedTarget = target as HTMLImageElement;
-
-  //     if (!typedTarget.complete) return;
-
-  //     const imageIndex = typedTarget.dataset.index;
-
-  //     if (!imageIndex) return;
-
-  //     setActiveImageIndex(Number(imageIndex));
-  //   };
-
-  //   const observer = new IntersectionObserver(callback, options);
-
-  //   const imageElements = document.querySelectorAll(".image-container img");
-
-  //   imageElements.forEach((el) => observer.observe(el));
-
-  //   return () => observer.disconnect();
-  // }, [direction]);
-
   useEffect(() => {
     if (direction !== "vertical") {
       if (!swiperRef.current) return;

@@ -1,7 +1,7 @@
 import React from "react";
 import { Controller, ControllerProps } from "react-hook-form";
 import { Props } from "react-select";
-import Select from "../shared/Select";
+import Select from "@/components/shared/Select";
 
 interface FormSelectProps extends Omit<ControllerProps, "render"> {
   selectProps?: Props;
