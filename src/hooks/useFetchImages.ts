@@ -22,7 +22,7 @@ const useFetchImages = (
   const fetchImages = (chapterId: number) =>
     axios
       .get<ReturnSuccessType>(
-        `/api/images?slug=${slug}&chapter_id=${chapterId}`
+        `/api/manga/images?slug=${slug}&chapter_id=${chapterId}`
       )
       .then(({ data }) => data);
 

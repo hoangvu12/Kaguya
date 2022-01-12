@@ -1,5 +1,6 @@
 import supabase from "@/lib/supabaseAdmin";
 import { NextApiHandler } from "next";
+import { isFalsy } from "@/utils";
 
 const handler: NextApiHandler = async (req, res) => {
   if (req.method !== "POST") {
@@ -9,9 +10,9 @@ const handler: NextApiHandler = async (req, res) => {
   }
 
   try {
-    const { anime_id, episode_id, watched_time = 0 } = req.body;
+    const { manga_id, chapter_id } = req.body;
 
-    if (!anime_id || !episode_id) {
+    if (isFalsy(manga_id) || isFalsy(chapter_id)) {
       res.json({ success: false });
 
       return;
@@ -27,11 +28,11 @@ const handler: NextApiHandler = async (req, res) => {
       return;
     }
 
-    const { data: isWatched, error: watchedError } = await supabase
-      .from("watched")
+    const { data: isRead, error: watchedError } = await supabase
+      .from("read")
       .select("id")
       .eq("user_id", user.id)
-      .eq("anime_id", anime_id);
+      .eq("manga_id", manga_id);
 
     if (watchedError) {
       res.json({ success: false, error: watchedError.message });
@@ -39,15 +40,14 @@ const handler: NextApiHandler = async (req, res) => {
       return;
     }
 
-    if (isWatched?.length) {
+    if (isRead?.length) {
       const { error: updateError } = await supabase
-        .from("watched")
+        .from("read")
         .update({
-          anime_id,
-          episode_id,
-          watched_time,
+          manga_id,
+          chapter_id,
         })
-        .match({ user_id: user.id, anime_id });
+        .match({ user_id: user.id, manga_id });
 
       if (updateError) {
         res.json({ success: false, error: updateError.message });
@@ -56,9 +56,9 @@ const handler: NextApiHandler = async (req, res) => {
       }
     } else {
       const { error } = await supabase
-        .from("watched")
+        .from("read")
         .upsert(
-          { user_id: user.id, anime_id, episode_id, watched_time },
+          { user_id: user.id, manga_id, chapter_id },
           { ignoreDuplicates: false }
         );
 

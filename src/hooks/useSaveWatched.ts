@@ -9,7 +9,7 @@ interface MutationInput {
 
 const useSaveWatched = () => {
   return useMutation((data: MutationInput) => {
-    return axios.post(`/api/watched`, data);
+    return axios.post(`/api/anime/watched`, data);
   });
 };
 

@@ -21,7 +21,7 @@ export const useFetchSource = (
 
   const fetchSource = (episodeId: number) =>
     axios
-      .get<ReturnSuccessType>(`/api/source?id=${episodeId}`)
+      .get<ReturnSuccessType>(`/api/anime/source?id=${episodeId}`)
       .then(({ data }) => data);
 
   return useQuery<ReturnSuccessType, AxiosError<ReturnFailType>>(
