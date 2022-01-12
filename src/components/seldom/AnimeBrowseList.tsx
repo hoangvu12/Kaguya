@@ -1,4 +1,11 @@
-import { FORMATS, GENRES, SEASONS, SEASON_YEARS } from "@/constants";
+import {
+  COUNTRIES,
+  FORMATS,
+  GENRES,
+  SEASONS,
+  SEASON_YEARS,
+  TYPES,
+} from "@/constants";
 import useBrowse, { UseBrowseOptions } from "@/hooks/useBrowseAnime";
 import TAGS from "@/tags.json";
 import { convert } from "@/utils/data";
@@ -7,49 +14,49 @@ import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { AiOutlineSearch } from "react-icons/ai";
-import List from "../shared/List";
 import Head from "../shared/Head";
 import Input from "../shared/Input";
 import InView from "../shared/InView";
-import Select from "../shared/Select";
+import List from "../shared/List";
 import AnimeListSkeleton from "../skeletons/AnimeListSkeleton";
+import FormSelect from "./FormSelect";
 import SortSelector from "./SortSelector";
 
 const initialValues: UseBrowseOptions = {
   format: undefined,
   keyword: "",
-  genre: undefined,
+  genres: [],
   season: "FALL",
   seasonYear: undefined,
-  tag: undefined,
+  tags: [],
   sort: "average_score",
   type: "anime",
-  country: "JP",
+  countries: [],
 };
 
 const genres = GENRES.map((genre) => ({
   value: genre.value as string,
-  placeholder: convert(genre.value, "genre"),
+  label: convert(genre.value, "genre"),
 }));
 
 const seasonYears = SEASON_YEARS.map((year) => ({
   value: year.toString(),
-  placeholder: year.toString(),
+  label: year.toString(),
 }));
 
 const seasons = SEASONS.map((season) => ({
   value: season,
-  placeholder: convert(season, "season"),
+  label: convert(season, "season"),
 }));
 
 const formats = FORMATS.map((format) => ({
   value: format,
-  placeholder: convert(format, "format"),
+  label: convert(format, "format"),
 }));
 
 const tags = TAGS.map((tag) => ({
   value: tag,
-  placeholder: tag,
+  label: tag,
 }));
 
 interface BrowseListProps {
@@ -130,144 +137,96 @@ const BrowseList: React.FC<BrowseListProps> = ({
       )}
 
       <form className="space-y-4">
-        <div className="flex items-center -my-2 space-x-2 overflow-x-auto lg:flex-wrap lg:justify-between lg:space-x-0 lg:overflow-x-visible snap-x lg:snap-none">
+        <div className="flex items-center gap-4 overflow-x-auto lg:flex-wrap lg:justify-between lg:space-x-0 lg:overflow-x-visible snap-x lg:snap-none">
           <Input
             {...register("keyword")}
-            containerClassName="my-2"
+            containerInputClassName="border border-white/80"
             LeftIcon={AiOutlineSearch}
             onChange={handleInputChange}
             defaultValue={defaultValues.keyword}
             label="Tìm kiếm"
           />
 
-          <Controller
-            name="genre"
+          <FormSelect
             control={control}
-            defaultValue={defaultValues.genre}
-            render={({ field: { value, onChange } }) => (
-              <Select
-                containerClassName="my-2"
-                defaultValue={value}
-                label="Thể loại"
-                data={genres}
-                onChange={onChange}
-              />
-            )}
+            name="genres"
+            defaultValue={defaultValues.genres}
+            selectProps={{
+              placeholder: "Thể loại",
+              isMulti: true,
+              options: genres,
+            }}
+            label="Thể loại"
           />
 
-          <Controller
-            name="seasonYear"
+          <FormSelect
             control={control}
-            defaultValue={defaultValues.seasonYear}
-            render={({ field: { value, onChange } }) => (
-              <Select
-                containerClassName="my-2"
-                defaultValue={value}
-                label="Năm"
-                data={seasonYears}
-                onChange={onChange}
-              />
-            )}
-          />
-
-          <Controller
             name="season"
-            control={control}
             defaultValue={defaultValues.season}
-            render={({ field: { value, onChange } }) => (
-              <Select
-                containerClassName="my-2"
-                defaultValue={value}
-                label="Mùa"
-                data={seasons}
-                onChange={onChange}
-              />
-            )}
+            selectProps={{
+              placeholder: "Mùa",
+              options: seasons,
+            }}
+            label="Mùa"
           />
 
-          <Controller
-            name="format"
+          <FormSelect
             control={control}
-            defaultValue={defaultValues.format}
-            render={({ field: { value, onChange } }) => (
-              <Select
-                containerClassName="my-2"
-                defaultValue={value}
-                label="Định dạng"
-                data={formats}
-                onChange={onChange}
-              />
-            )}
+            name="seasonYear"
+            defaultValue={defaultValues.seasonYear}
+            selectProps={{
+              placeholder: "Năm",
+              options: seasonYears,
+            }}
+            label="Năm"
           />
 
-          <div className="flex items-center space-x-2 md:space-x-4">
-            <Controller
-              name="tag"
+          <FormSelect
+            control={control}
+            name="format"
+            defaultValue={defaultValues.format}
+            selectProps={{
+              placeholder: "Định dạng",
+              options: formats,
+            }}
+            label="Định dạng"
+          />
+
+          <div className="flex items-center space-x-2 md:space-x-8">
+            <FormSelect
               control={control}
-              defaultValue={defaultValues.tag}
-              render={({ field: { value, onChange } }) => (
-                <Select
-                  containerClassName="my-2"
-                  defaultValue={value}
-                  label="Tag"
-                  data={tags}
-                  onChange={onChange}
-                />
-              )}
+              name="tags"
+              defaultValue={defaultValues.tags}
+              selectProps={{
+                placeholder: "Tags",
+                isMulti: true,
+                options: tags,
+              }}
+              label="Tags"
             />
 
-            <Controller
+            <FormSelect
+              control={control}
               name="type"
-              control={control}
               defaultValue={defaultValues.type}
-              render={({ field: { value, onChange } }) => (
-                <Select
-                  containerClassName="my-2"
-                  defaultValue={value}
-                  label="Loại tìm kiếm"
-                  data={[
-                    {
-                      value: "anime",
-                      placeholder: "Anime",
-                    },
-                    {
-                      value: "manga",
-                      placeholder: "Manga",
-                    },
-                  ]}
-                  onChange={onChange}
-                  defaultItem={{ value: "", placeholder: "" }}
-                />
-              )}
+              selectProps={{
+                placeholder: "Loại tìm kiếm",
+                options: TYPES,
+                isClearable: false,
+              }}
+              label="Loại tìm kiếm"
             />
 
-            <Controller
-              name="country"
+            <FormSelect
               control={control}
-              defaultValue={defaultValues.country}
-              render={({ field: { value, onChange } }) => (
-                <Select
-                  containerClassName="my-2"
-                  defaultValue={value}
-                  label="Quốc gia"
-                  data={[
-                    {
-                      value: "JP",
-                      placeholder: "Nhật Bản",
-                    },
-                    {
-                      value: "CN",
-                      placeholder: "Trung Quốc",
-                    },
-                    {
-                      value: "KR",
-                      placeholder: "Hàn Quốc",
-                    },
-                  ]}
-                  onChange={onChange}
-                  defaultItem={{ value: "", placeholder: "" }}
-                />
-              )}
+              name="countries"
+              defaultValue={defaultValues.countries}
+              selectProps={{
+                placeholder: "Quốc gia",
+                options: COUNTRIES,
+                isMulti: true,
+              }}
+              label="Quốc gia"
             />
           </div>
 

@@ -31,8 +31,8 @@ const FormSelect: React.FC<FormSelectProps> = ({
               value={selectValue}
               onChange={(val: any) => {
                 const onChangeValue = isMulti
-                  ? val.map((c) => c.value)
-                  : val.value;
+                  ? val.map((c) => c?.value)
+                  : val?.value;
 
                 onChange(onChangeValue);
               }}

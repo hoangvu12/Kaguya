@@ -1,4 +1,11 @@
-import { FORMATS, GENRES, SEASONS, SEASON_YEARS } from "@/constants";
+import {
+  COUNTRIES,
+  FORMATS,
+  GENRES,
+  SEASONS,
+  SEASON_YEARS,
+  TYPES,
+} from "@/constants";
 import useBrowse, { UseBrowseOptions } from "@/hooks/useBrowseManga";
 import TAGS from "@/tags.json";
 import { convert } from "@/utils/data";
@@ -41,31 +48,6 @@ const tags = TAGS.map((tag) => ({
   label: tag,
 }));
 
-const types = [
-  {
-    value: "anime",
-    label: "Anime",
-  },
-  {
-    value: "manga",
-    label: "Manga",
-  },
-];
-
-const countries = [
-  {
-    value: "JP",
-    label: "Nhật Bản",
-  },
-  {
-    value: "CN",
-    label: "Trung Quốc",
-  },
-  {
-    value: "KR",
-    label: "Hàn Quốc",
-  },
-];
 interface BrowseListProps {
   defaultQuery?: UseBrowseOptions;
   title?: string;
@@ -198,7 +180,8 @@ const BrowseList: React.FC<BrowseListProps> = ({
             defaultValue={defaultValues.type}
             selectProps={{
               placeholder: "Loại tìm kiếm",
-              options: types,
+              options: TYPES,
+              isClearable: false,
             }}
             label="Loại tìm kiếm"
           />
@@ -209,7 +192,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
             defaultValue={defaultValues.countries}
             selectProps={{
               placeholder: "Quốc gia",
-              options: countries,
+              options: COUNTRIES,
               isMulti: true,
             }}
             label="Quốc gia"
