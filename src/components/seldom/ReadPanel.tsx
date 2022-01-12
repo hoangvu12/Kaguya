@@ -8,7 +8,7 @@ import useDevice from "@/hooks/useDevice";
 import classNames from "classnames";
 import { motion, Variants } from "framer-motion";
 import { useRouter } from "next/router";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import {
   AiOutlineSearch,
@@ -62,6 +62,7 @@ const ReadPanel: React.FC<ReadPanelProps> = ({ children }) => {
   const { zoom, fitMode, direction, setSetting } = useReadSettings();
   const { manga, setChapterIndex, chapters, chapterIndex, currentChapter } =
     useReadInfo();
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const filteredChapters = useMemo(() => {
     return chapters
@@ -95,6 +96,13 @@ const ReadPanel: React.FC<ReadPanelProps> = ({ children }) => {
 
   const title =
     typeof manga.title === "string" ? manga.title : manga.title.user_preferred;
+
+  // Scroll container to top when change chapter
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    containerRef.current.scrollTo({ top: 0 });
+  }, [chapterIndex]);
 
   return (
     <div className="flex w-full h-screen overflow-y-hidden">
@@ -265,6 +273,7 @@ const ReadPanel: React.FC<ReadPanelProps> = ({ children }) => {
 
       <motion.div
         onClick={isMobile ? handleMobileClick : noop}
+        ref={containerRef}
         className="content-container relative w-full flex flex-col items-center justify-center bg-background-900 overflow-y-auto"
       >
         <BrowserView>
