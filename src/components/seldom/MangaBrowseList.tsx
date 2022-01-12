@@ -4,42 +4,68 @@ import TAGS from "@/tags.json";
 import { convert } from "@/utils/data";
 import { debounce } from "debounce";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { AiOutlineSearch } from "react-icons/ai";
-import List from "../shared/List";
-import Head from "../shared/Head";
-import Input from "../shared/Input";
-import InView from "../shared/InView";
-import Select from "../shared/Select";
-import AnimeListSkeleton from "../skeletons/AnimeListSkeleton";
+import List from "@/components/shared/List";
+import Head from "@/components/shared/Head";
+import Input from "@/components/shared/Input";
+import InView from "@/components/shared/InView";
+import Select from "@/components/shared/Select";
+import AnimeListSkeleton from "@/components/skeletons/AnimeListSkeleton";
 import SortSelector from "./SortSelector";
+import FormSelect from "./FormSelect";
 
 const initialValues: UseBrowseOptions = {
   format: undefined,
   keyword: "",
-  genre: undefined,
-  tag: undefined,
+  genres: [],
+  tags: [],
   sort: "average_score",
   type: "manga",
-  country: "JP",
+  countries: [],
 };
 
 const genres = GENRES.map((genre) => ({
-  value: genre.value as string,
-  placeholder: convert(genre.value, "genre"),
+  value: genre.value,
+  label: convert(genre.value, "genre"),
 }));
 
 const formats = FORMATS.map((format) => ({
   value: format,
-  placeholder: convert(format, "format"),
+  label: convert(format, "format"),
 }));
 
 const tags = TAGS.map((tag) => ({
   value: tag,
-  placeholder: tag,
+  label: tag,
 }));
 
+const types = [
+  {
+    value: "anime",
+    label: "Anime",
+  },
+  {
+    value: "manga",
+    label: "Manga",
+  },
+];
+
+const countries = [
+  {
+    value: "JP",
+    label: "Nhật Bản",
+  },
+  {
+    value: "CN",
+    label: "Trung Quốc",
+  },
+  {
+    value: "KR",
+    label: "Hàn Quốc",
+  },
+];
 interface BrowseListProps {
   defaultQuery?: UseBrowseOptions;
   title?: string;
@@ -87,7 +113,10 @@ const BrowseList: React.FC<BrowseListProps> = ({
     500
   );
 
-  const totalData = data?.pages.map((el) => el.data).flat();
+  const totalData = useMemo(
+    () => data?.pages.map((el) => el.data).flat(),
+    [data?.pages]
+  );
 
   useEffect(() => {
     if (!isDirty) return;
@@ -118,113 +147,72 @@ const BrowseList: React.FC<BrowseListProps> = ({
       )}
 
       <form className="space-y-4">
-        <div className="flex items-center -my-2 space-x-2 overflow-x-auto lg:flex-wrap lg:justify-between lg:space-x-0 lg:overflow-x-visible snap-x lg:snap-none">
+        <div className="flex items-center gap-4 overflow-x-auto lg:flex-wrap lg:justify-between lg:space-x-0 lg:overflow-x-visible snap-x lg:snap-none">
           <Input
             {...register("keyword")}
-            containerClassName="my-2"
+            containerInputClassName="border border-white/80"
             LeftIcon={AiOutlineSearch}
             onChange={handleInputChange}
             defaultValue={defaultValues.keyword}
             label="Tìm kiếm"
           />
 
-          <Controller
-            name="genre"
+          <FormSelect
             control={control}
-            defaultValue={defaultValues.genre}
-            render={({ field: { value, onChange } }) => (
-              <Select
-                containerClassName="my-2"
-                defaultValue={value}
-                label="Thể loại"
-                data={genres}
-                onChange={onChange}
-              />
-            )}
+            name="genres"
+            defaultValue={defaultValues.genres}
+            selectProps={{
+              placeholder: "Thể loại",
+              isMulti: true,
+              options: genres,
+            }}
+            label="Thể loại"
           />
 
-          <Controller
+          <FormSelect
+            control={control}
             name="format"
-            control={control}
             defaultValue={defaultValues.format}
-            render={({ field: { value, onChange } }) => (
-              <Select
-                containerClassName="my-2"
-                defaultValue={value}
-                label="Định dạng"
-                data={formats}
-                onChange={onChange}
-              />
-            )}
+            selectProps={{
+              placeholder: "Định dạng",
+              options: formats,
+            }}
+            label="Định dạng"
           />
 
-          <Controller
-            name="tag"
+          <FormSelect
             control={control}
-            defaultValue={defaultValues.tag}
-            render={({ field: { value, onChange } }) => (
-              <Select
-                containerClassName="my-2"
-                defaultValue={value}
-                label="Tag"
-                data={tags}
-                onChange={onChange}
-              />
-            )}
+            name="tags"
+            defaultValue={defaultValues.tags}
+            selectProps={{
+              placeholder: "Tags",
+              isMulti: true,
+              options: tags,
+            }}
+            label="Tags"
           />
 
-          <Controller
+          <FormSelect
+            control={control}
             name="type"
-            control={control}
             defaultValue={defaultValues.type}
-            render={({ field: { value, onChange } }) => (
-              <Select
-                containerClassName="my-2"
-                defaultValue={value}
-                label="Loại tìm kiếm"
-                data={[
-                  {
-                    value: "anime",
-                    placeholder: "Anime",
-                  },
-                  {
-                    value: "manga",
-                    placeholder: "Manga",
-                  },
-                ]}
-                onChange={onChange}
-                defaultItem={{ value: "", placeholder: "" }}
-              />
-            )}
+            selectProps={{
+              placeholder: "Loại tìm kiếm",
+              options: types,
+            }}
+            label="Loại tìm kiếm"
           />
 
-          <Controller
-            name="country"
+          <FormSelect
             control={control}
-            defaultValue={defaultValues.country}
-            render={({ field: { value, onChange } }) => (
-              <Select
-                containerClassName="my-2"
-                defaultValue={value}
-                label="Quốc gia"
-                data={[
-                  {
-                    value: "JP",
-                    placeholder: "Nhật Bản",
-                  },
-                  {
-                    value: "CN",
-                    placeholder: "Trung Quốc",
-                  },
-                  {
-                    value: "KR",
-                    placeholder: "Hàn Quốc",
-                  },
-                ]}
-                onChange={onChange}
-                defaultItem={{ value: "", placeholder: "" }}
-              />
-            )}
+            name="countries"
+            defaultValue={defaultValues.countries}
+            selectProps={{
+              placeholder: "Quốc gia",
+              options: countries,
+              isMulti: true,
+            }}
+            label="Quốc gia"
           />
         </div>
 

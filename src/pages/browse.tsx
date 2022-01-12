@@ -7,18 +7,28 @@ const BrowsePage = ({ query }) => {
   const {
     format = undefined,
     keyword = "",
-    genre = undefined,
     season = undefined,
     seasonYear = undefined,
     sort = "popularity",
     type,
+    genres = [],
+    tags = [],
+    countries = [],
   } = query;
+
+  const convertQueryToArray = <T,>(query: T[]) => {
+    if (typeof query === "string") return [query];
+
+    return query;
+  };
 
   const baseQuery = {
     format: format as Format,
     keyword: keyword as string,
-    genre: genre as Genre,
     type: type as "manga" | "anime",
+    genres: convertQueryToArray<Genre>(genres),
+    tags: convertQueryToArray<string>(tags),
+    countries: convertQueryToArray<string>(countries),
   };
 
   const animeBrowseQuery = {
