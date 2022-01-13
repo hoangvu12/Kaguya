@@ -14,6 +14,8 @@ const JSONEditorComponent: React.FC<JSONEditorProps> = (props) => {
   useEffect(() => {
     if (!ref.current) return;
 
+    options?.onChangeText(JSON.stringify(data));
+
     if (editor) {
       editor.set(data);
 

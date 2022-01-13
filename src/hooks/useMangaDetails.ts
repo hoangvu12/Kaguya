@@ -2,7 +2,7 @@ import supabase from "@/lib/supabase";
 import { Manga } from "@/types";
 import { useSupabaseSingleQuery } from "@/utils/supabase";
 
-const useAnimeDetails = (mangaId: number) => {
+const useMangaDetails = (mangaId: number) => {
   return useSupabaseSingleQuery(
     ["manga", mangaId],
     () =>
@@ -18,8 +18,8 @@ const useAnimeDetails = (mangaId: number) => {
         )
         .eq("ani_id", mangaId)
         .single(),
-    { refetchOnMount: true, enabled: typeof window !== "undefined" }
+    { refetchOnMount: true }
   );
 };
 
-export default useAnimeDetails;
+export default useMangaDetails;
