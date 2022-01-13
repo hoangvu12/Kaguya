@@ -17,10 +17,6 @@ const routes = [
     href: "/",
   },
   {
-    title: "Anime",
-    href: "/anime",
-  },
-  {
     title: "Manga",
     href: "/manga",
   },
