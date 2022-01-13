@@ -6,7 +6,7 @@ import Loading from "@/components/shared/Loading";
 import useAnimeDetails from "@/hooks/useAnimeDetails";
 import useEditAnime from "@/hooks/useEditAnime";
 import { Anime } from "@/types";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { AiFillSave } from "react-icons/ai";
 import { RiDeleteBin7Fill } from "react-icons/ri";
 import Link from "next/link";

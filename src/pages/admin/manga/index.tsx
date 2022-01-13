@@ -9,7 +9,7 @@ import useAdminBrowse from "@/hooks/useAdminBrowse";
 import { Manga } from "@/types";
 import Link from "next/link";
 import React from "react";
-import { AiOutlineSearch } from "react-icons/ai";
+import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
 import { Column } from "react-table";
 
 const columns: Column<Manga>[] = [
@@ -78,7 +78,19 @@ const AdminMangaPage = () => {
 
   return (
     <div className="w-full h-full">
-      <Section className="w-full h-full space-y-8" title="Manga">
+      <Section className="relative w-full h-full space-y-8" title="Manga">
+        <Link href="/admin/manga/create">
+          <a>
+            <Button
+              className="absolute right-5 top-0 mx-4 md:mx-12"
+              secondary
+              LeftIcon={AiOutlinePlus}
+            >
+              <p>Thêm manga</p>
+            </Button>
+          </a>
+        </Link>
+
         <form onSubmit={onSubmit} className="w-full">
           <div className="flex items-end md:justify-center space-x-2 snap-x overflow-x-auto">
             <Input

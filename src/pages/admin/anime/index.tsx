@@ -9,7 +9,7 @@ import useAdminBrowse from "@/hooks/useAdminBrowse";
 import { Anime } from "@/types";
 import Link from "next/link";
 import React from "react";
-import { AiOutlineSearch } from "react-icons/ai";
+import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
 import { Column } from "react-table";
 
 const columns: Column<Anime>[] = [
@@ -78,8 +78,20 @@ const AdminAnimePage = () => {
 
   return (
     <div className="w-full h-full">
-      <Section className="w-full h-full space-y-8 " title="Anime">
-        <form onSubmit={onSubmit} className="w-full">
+      <Section className="relative w-full h-full" title="Anime">
+        <Link href="/admin/anime/create">
+          <a>
+            <Button
+              className="absolute right-5 top-0 mx-4 md:mx-12"
+              secondary
+              LeftIcon={AiOutlinePlus}
+            >
+              <p>Thêm anime</p>
+            </Button>
+          </a>
+        </Link>
+
+        <form onSubmit={onSubmit} className="w-full my-8">
           <div className="flex items-end md:justify-center space-x-2 snap-x overflow-x-auto">
             <Input
               {...register("keyword")}

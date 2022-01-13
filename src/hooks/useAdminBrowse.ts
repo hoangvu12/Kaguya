@@ -64,7 +64,6 @@ const useAdminBrowse = <T extends "anime" | "manga">(type: T) => {
     },
     {
       enabled: !isDisabled,
-
       retry: 0,
       onSuccess: (list) => {
         list.forEach((data) => {
