@@ -13,7 +13,7 @@ import Logo from "@/components/shared/Logo";
 
 const routes = [
   {
-    title: "Trang chủ",
+    title: "Anime",
     href: "/",
   },
   {
