@@ -1,6 +1,6 @@
 import AdminLayout from "@/components/layouts/AdminLayout";
-import Section from "@/components/seldom/Section";
-import StatisticBox from "@/components/seldom/StatisticBox";
+import Section from "@/components/shared/Section";
+import StatisticBox from "@/components/shared/StatisticBox";
 import supabase from "@/lib/supabase";
 import { NextPage } from "next";
 import React from "react";

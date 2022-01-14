@@ -1,4 +1,4 @@
-import NavItem from "@/components/seldom/NavItem";
+import NavItem from "@/components/shared/NavItem";
 import Logo from "@/components/shared/Logo";
 import Head from "@/components/shared/Head";
 import classNames from "classnames";

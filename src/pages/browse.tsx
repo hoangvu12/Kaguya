@@ -1,5 +1,5 @@
-import AnimeBrowseList from "@/components/seldom/AnimeBrowseList";
-import MangaBrowseList from "@/components/seldom/MangaBrowseList";
+import AnimeBrowseList from "@/components/features/anime/AnimeBrowseList";
+import MangaBrowseList from "@/components/features/manga/MangaBrowseList";
 import { Anime, Format, Genre, Manga } from "@/types";
 import React from "react";
 

@@ -1,5 +1,5 @@
 import React from "react";
-import Skeleton, { SkeletonItem } from "../shared/Skeleton";
+import Skeleton, { SkeletonItem } from "@/components/shared/Skeleton";
 
 const CardSkeleton = () => {
   return (

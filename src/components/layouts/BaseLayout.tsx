@@ -1,6 +1,6 @@
 import React from "react";
-import Footer from "../partials/Footer";
-import Header from "../partials/Header";
+import Footer from "@/components/partials/Footer";
+import Header from "@/components/partials/Header";
 
 const BaseLayout: React.FC = ({ children }) => {
   return (

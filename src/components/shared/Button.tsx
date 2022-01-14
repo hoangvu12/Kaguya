@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import React from "react";
-import BaseButton, { BaseButtonProps } from "./BaseButton";
+import BaseButton, { BaseButtonProps } from "@/components/shared/BaseButton";
 
 interface ButtonProps extends BaseButtonProps {
   secondary?: boolean;

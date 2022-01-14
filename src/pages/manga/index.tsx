@@ -1,18 +1,18 @@
-import HomeBanner from "@/components/seldom/HomeBanner";
+import HomeBanner from "@/components/shared/HomeBanner";
 import CardSwiper from "@/components/shared/CardSwiper";
 import ClientOnly from "@/components/shared/ClientOnly";
 import Head from "@/components/shared/Head";
 import TopList from "@/components/shared/TopList";
-import Section from "@/components/seldom/Section";
+import Section from "@/components/shared/Section";
 import { REVALIDATE_TIME } from "@/constants";
 import supabase from "@/lib/supabase";
 import { Manga } from "@/types";
 import { GetStaticProps, NextPage } from "next";
 import React from "react";
-import ShouldWatch from "@/components/seldom/ShouldWatch";
-import GenresSelector from "@/components/seldom/GenresSelector";
-import ReadSection from "@/components/seldom/ReadSection";
-import RecommendedMangaSection from "@/components/seldom/RecommendedMangaSection";
+import ShouldWatch from "@/components/shared/ShouldWatch";
+import GenresSelector from "@/components/shared/GenresSelector";
+import ReadSection from "@/components/features/manga/ReadSection";
+import RecommendedMangaSection from "@/components/features/manga/RecommendedMangaSection";
 
 interface HomeProps {
   trendingManga: Manga[];

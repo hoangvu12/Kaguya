@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import React from "react";
-import Image from "./Image";
+import Image from "@/components/shared/Image";
 
 const Logo: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   className,

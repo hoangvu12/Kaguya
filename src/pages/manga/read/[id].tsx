@@ -1,4 +1,4 @@
-import ReadImages from "@/components/seldom/ReadImages";
+import ReadImages from "@/components/features/manga/Reader/ReadImages";
 import Button from "@/components/shared/Button";
 import Head from "@/components/shared/Head";
 import Loading from "@/components/shared/Loading";
@@ -24,9 +24,12 @@ import React, {
   useState,
 } from "react";
 
-const ReadPanel = dynamic(() => import("@/components/seldom/ReadPanel"), {
-  ssr: false,
-});
+const ReadPanel = dynamic(
+  () => import("@/components/features/manga/Reader/ReadPanel"),
+  {
+    ssr: false,
+  }
+);
 
 interface ReadPageProps {
   manga: Manga;

@@ -1,5 +1,5 @@
 import AdminLayout from "@/components/layouts/AdminLayout";
-import Section from "@/components/seldom/Section";
+import Section from "@/components/shared/Section";
 import Button from "@/components/shared/Button";
 import Input from "@/components/shared/Input";
 import Loading from "@/components/shared/Loading";
