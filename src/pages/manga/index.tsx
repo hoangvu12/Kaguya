@@ -12,6 +12,7 @@ import React from "react";
 import ShouldWatch from "@/components/seldom/ShouldWatch";
 import GenresSelector from "@/components/seldom/GenresSelector";
 import ReadSection from "@/components/seldom/ReadSection";
+import RecommendedMangaSection from "@/components/seldom/RecommendedMangaSection";
 
 interface HomeProps {
   trendingManga: Manga[];
@@ -35,6 +36,7 @@ const Home: NextPage<HomeProps> = ({
           <HomeBanner type="manga" data={trendingManga} />
           <div className="space-y-8">
             <ReadSection />
+            <RecommendedMangaSection />
 
             <Section title="Mới cập nhật">
               <CardSwiper type="manga" data={recentlyUpdatedManga} />

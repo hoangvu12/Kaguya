@@ -1,4 +1,4 @@
-import useRecommendedList from "@/hooks/useRecommendedList";
+import useAnimeRecommendedList from "@/hooks/useAnimeRecommendedList";
 import { Watched } from "@/types";
 import React from "react";
 import ListSwiperSkeleton from "@/components/skeletons/ListSwiperSkeleton";
@@ -16,7 +16,7 @@ const composeData = (data: Watched) => {
 };
 
 const RecommendedAnimeSection = () => {
-  const { data, isError, isLoading } = useRecommendedList();
+  const { data, isError, isLoading } = useAnimeRecommendedList();
 
   if (isLoading) {
     return <ListSwiperSkeleton />;

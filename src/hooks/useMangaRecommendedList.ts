@@ -1,22 +1,22 @@
 import { useUser } from "@/contexts/AuthContext";
 import supabase from "@/lib/supabase";
-import { Watched } from "@/types";
+import { Read } from "@/types";
 import { useSupabaseSingleQuery } from "@/utils/supabase";
 
-const useRecommendedList = () => {
+const useMangaRecommendedList = () => {
   const user = useUser();
 
   return useSupabaseSingleQuery(
-    "recommended",
+    ["manga", "recommended"],
     () => {
       return supabase
-        .from<Watched>("watched")
+        .from<Read>("read")
         .select(
           `
-            anime:anime_id(
+            manga:manga_id(
                 title,
                 vietnamese_title,
-                recommendations!original_id(anime:recommend_id(*))
+                recommendations!original_id(manga:recommend_id(*))
             )
           `
         )
@@ -29,4 +29,4 @@ const useRecommendedList = () => {
   );
 };
 
-export default useRecommendedList;
+export default useMangaRecommendedList;
