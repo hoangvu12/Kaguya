@@ -1,28 +1,27 @@
-import Section from "@/components/seldom/Section";
+import AnimeScheduling from "@/components/seldom/AnimeScheduling";
+import GenresSelector from "@/components/seldom/GenresSelector";
 import HomeBanner from "@/components/seldom/HomeBanner";
+import RecommendedAnimeSection from "@/components/seldom/RecommendedAnimeSection";
+import Section from "@/components/seldom/Section";
 import ShouldWatch from "@/components/seldom/ShouldWatch";
 import WatchedSection from "@/components/seldom/WatchedSection";
 import CardSwiper from "@/components/shared/CardSwiper";
 import ClientOnly from "@/components/shared/ClientOnly";
 import Head from "@/components/shared/Head";
 import TopList from "@/components/shared/TopList";
+import { REVALIDATE_TIME } from "@/constants";
+import dayjs from "@/lib/dayjs";
 import supabase from "@/lib/supabase";
-import { AiringSchedule, Anime, Manga } from "@/types";
+import { AiringSchedule, Anime } from "@/types";
+import { getSeason } from "@/utils";
 import { GetStaticProps, NextPage } from "next";
 import React from "react";
-import { REVALIDATE_TIME } from "@/constants";
-import { getSeason } from "@/utils";
-import GenresSelector from "@/components/seldom/GenresSelector";
-import dayjs from "@/lib/dayjs";
-import AnimeScheduling from "@/components/seldom/AnimeScheduling";
-import RecommendedAnimeSection from "@/components/seldom/RecommendedAnimeSection";
 
 interface HomeProps {
   trendingAnime: Anime[];
   topAnime: Anime[];
   randomAnime: Anime;
   recentlyUpdatedAnime: Anime[];
-  recentlyUpdatedManga: Manga[];
   schedulesAnime: AiringSchedule[];
 }
 
@@ -31,7 +30,6 @@ const Home: NextPage<HomeProps> = ({
   topAnime,
   randomAnime,
   recentlyUpdatedAnime,
-  recentlyUpdatedManga,
   schedulesAnime,
 }) => {
   return (
@@ -54,10 +52,6 @@ const Home: NextPage<HomeProps> = ({
 
             <Section title="Lịch phát sóng">
               <AnimeScheduling schedules={schedulesAnime} />
-            </Section>
-
-            <Section title="Manga mới cập nhật">
-              <CardSwiper type="manga" data={recentlyUpdatedManga} />
             </Section>
 
             <Section title="Thể loại">
@@ -115,19 +109,12 @@ export const getStaticProps: GetStaticProps = async () => {
     .eq("season_year", currentSeason.year)
     .limit(10);
 
-  const { data: recentlyUpdatedManga } = await supabase
-    .from<Manga>("manga")
-    .select("*")
-    .order("chapters_updated_at", { ascending: false })
-    .limit(15);
-
   return {
     props: {
       trendingAnime,
       recentlyUpdatedAnime,
       randomAnime,
       topAnime,
-      recentlyUpdatedManga,
       schedulesAnime,
     },
 
