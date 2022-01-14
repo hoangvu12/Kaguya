@@ -1,6 +1,6 @@
 import { Anime, DynamicData, Manga } from "@/types";
 import React from "react";
-import TopCard from "./TopCard";
+import TopCard from "@/components/shared/TopCard";
 
 const TopList: React.FC<DynamicData<Anime[], Manga[]>> = ({
   data,

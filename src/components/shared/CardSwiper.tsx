@@ -1,7 +1,7 @@
 import { Anime, Manga } from "@/types";
 import React from "react";
-import Card from "./Card";
-import Swiper, { SwiperSlide } from "./Swiper";
+import Card from "@/components/shared/Card";
+import Swiper, { SwiperSlide } from "@/components/shared/Swiper";
 
 type CardSwiperProps =
   | {

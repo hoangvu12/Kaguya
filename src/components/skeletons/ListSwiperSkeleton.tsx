@@ -1,7 +1,7 @@
 import useBreakpoint from "@/hooks/useBreakpoint";
 import React from "react";
-import Skeleton, { SkeletonItem } from "../shared/Skeleton";
-import AnimeCardSkeleton from "./CardSkeleton";
+import Skeleton, { SkeletonItem } from "@/components/shared/Skeleton";
+import CardSkeleton from "@/components/skeletons/CardSkeleton";
 
 const ListSwiperSkeleton = () => {
   const breakpoint = useBreakpoint();
@@ -16,7 +16,7 @@ const ListSwiperSkeleton = () => {
       >
         {[...new Array(breakpoint.items)].map((_, index) => (
           <SkeletonItem key={index} className="col-span-1 w-full" container>
-            <AnimeCardSkeleton />
+            <CardSkeleton />
           </SkeletonItem>
         ))}
       </SkeletonItem>

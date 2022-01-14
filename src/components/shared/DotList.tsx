@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import React from "react";
-import Dot from "./Dot";
+import Dot from "@/components/shared/Dot";
 
 interface DotListProps {
   className?: string;

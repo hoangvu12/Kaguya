@@ -1,7 +1,7 @@
 import useBreakpoint from "@/hooks/useBreakpoint";
 import React from "react";
-import Skeleton, { SkeletonItem } from "../shared/Skeleton";
-import EpisodeCardSkeleton from "./EpisodeCardSkeleton";
+import Skeleton, { SkeletonItem } from "@/components/shared/Skeleton";
+import EpisodeCardSkeleton from "@/components/skeletons/EpisodeCardSkeleton";
 
 const WatchedSwiperSkeleton = () => {
   const breakpoint = useBreakpoint();

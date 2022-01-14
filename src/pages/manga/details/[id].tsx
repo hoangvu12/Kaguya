@@ -1,13 +1,14 @@
-import CharacterCard from "@/components/seldom/CharacterCard";
-import DetailsBanner from "@/components/seldom/DetailsBanner";
-import DetailsSection from "@/components/seldom/DetailsSection";
-import InfoItem from "@/components/seldom/InfoItem";
+import CharacterCard from "@/components/shared/CharacterCard";
+import DetailsBanner from "@/components/shared/DetailsBanner";
+import DetailsSection from "@/components/shared/DetailsSection";
+import InfoItem from "@/components/shared/InfoItem";
 import List from "@/components/shared/List";
 import Button from "@/components/shared/Button";
 import DotList from "@/components/shared/DotList";
 import Head from "@/components/shared/Head";
+import CircleButton from "@/components/shared/CircleButton";
 import PlainCard from "@/components/shared/PlainCard";
-import CommentsSection from "@/components/seldom/CommentsSection";
+import CommentsSection from "@/components/features/comment/CommentsSection";
 import Link from "next/link";
 import { REVALIDATE_TIME } from "@/constants";
 import supabase from "@/lib/supabase";
@@ -19,7 +20,6 @@ import { useRouter } from "next/router";
 import React, { useMemo, useState } from "react";
 import { BsChevronDown, BsChevronUp, BsFillPlayFill } from "react-icons/bs";
 import { motion } from "framer-motion";
-import CircleButton from "@/components/shared/CircleButton";
 
 interface DetailsPageProps {
   manga: Manga;

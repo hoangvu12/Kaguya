@@ -1,6 +1,6 @@
 import React from "react";
-import Skeleton, { SkeletonItem } from "../shared/Skeleton";
-import CardSkeleton from "./CardSkeleton";
+import Skeleton, { SkeletonItem } from "@/components/shared/Skeleton";
+import CardSkeleton from "@/components/skeletons/CardSkeleton";
 
 const AnimeListSkeleton = () => {
   return (

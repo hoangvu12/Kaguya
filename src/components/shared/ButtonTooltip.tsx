@@ -1,6 +1,8 @@
 import React from "react";
-import CircleButton, { CircleButtonProps } from "./CircleButton";
-import Popup, { PopupProps } from "./Popup";
+import CircleButton, {
+  CircleButtonProps,
+} from "@/components/shared/CircleButton";
+import Popup, { PopupProps } from "@/components/shared/Popup";
 
 interface ButtonTooltipProps extends CircleButtonProps {
   tooltip?: React.ReactNode;

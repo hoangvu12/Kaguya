@@ -1,7 +1,3 @@
-import CharacterCard from "@/components/seldom/CharacterCard";
-import DetailsBanner from "@/components/seldom/DetailsBanner";
-import DetailsSection from "@/components/seldom/DetailsSection";
-import InfoItem from "@/components/seldom/InfoItem";
 import List from "@/components/shared/List";
 import Button from "@/components/shared/Button";
 import DotList from "@/components/shared/DotList";
@@ -17,8 +13,12 @@ import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { BsFillPlayFill } from "react-icons/bs";
-import CommentsSection from "@/components/seldom/CommentsSection";
-import EpisodesSelector from "@/components/seldom/EpisodesSelector";
+import EpisodesSelector from "@/components/features/anime/EpisodesSelector";
+import InfoItem from "@/components/shared/InfoItem";
+import CommentsSection from "@/components/features/comment/CommentsSection";
+import CharacterCard from "@/components/shared/CharacterCard";
+import DetailsBanner from "@/components/shared/DetailsBanner";
+import DetailsSection from "@/components/shared/DetailsSection";
 
 interface DetailsPageProps {
   anime: Anime;

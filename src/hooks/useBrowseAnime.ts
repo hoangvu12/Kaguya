@@ -65,7 +65,7 @@ const useBrowse = (options: UseBrowseOptions) => {
     }
 
     if (countries?.length) {
-      db = db.contains("country_of_origin", countries);
+      db = db.in("country_of_origin", countries);
     }
 
     if (sort) {

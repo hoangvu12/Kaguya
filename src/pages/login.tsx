@@ -9,7 +9,7 @@ import { GetStaticProps, NextPage } from "next";
 import React, { useMemo } from "react";
 import { FaFacebookF } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { REVALIDATE_TIME } from "../constants";
+import { REVALIDATE_TIME } from "@/constants";
 
 interface Quote {
   anime: string;

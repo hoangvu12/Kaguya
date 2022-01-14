@@ -1,14 +1,14 @@
 import { User } from "@supabase/gotrue-js";
 import { QueryKey } from "react-query";
-import { SkeletonProps } from "./components/shared/Skeleton";
+import { SkeletonProps } from "@/components/shared/Skeleton";
 import {
   CHARACTERS_ROLES,
   FORMATS,
   GENRES,
   SEASONS,
   STATUSES,
-} from "./constants";
-import { SupabaseQueryFunction, SupabaseQueryOptions } from "./utils/supabase";
+} from "@/constants";
+import { SupabaseQueryFunction, SupabaseQueryOptions } from "@/utils/supabase";
 
 export interface Title {
   romaji: string;

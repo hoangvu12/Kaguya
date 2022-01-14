@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { AnimatePresence, motion, Transition, Variants } from "framer-motion";
 import React, { useImperativeHandle, useState } from "react";
 import { ImCross } from "react-icons/im";
-import Portal from "./Portal";
+import Portal from "@/components/shared/Portal";
 
 interface DrawerProps {
   button: React.ReactNode;

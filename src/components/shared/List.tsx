@@ -1,7 +1,7 @@
 import { Anime, DynamicData, Manga } from "@/types";
 import classNames from "classnames";
 import React from "react";
-import Card from "./Card";
+import Card from "@/components/shared/Card";
 
 const List: React.FC<DynamicData<Anime[], Manga[]>> = ({ data, type }) => {
   return (

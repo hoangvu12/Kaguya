@@ -4,7 +4,7 @@ import { Picker, PickerProps } from "emoji-mart";
 import "emoji-mart/css/emoji-mart.css";
 import React, { useState } from "react";
 import { usePopper } from "react-popper";
-import Portal from "./Portal";
+import Portal from "@/components/shared/Portal";
 
 interface EmojiPickerProps extends PickerProps {
   reference: React.ReactNode;

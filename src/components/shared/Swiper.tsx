@@ -9,7 +9,7 @@ import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
 import "swiper/swiper.min.css";
 
-import CircleButton from "./CircleButton";
+import CircleButton from "@/components/shared/CircleButton";
 
 export type SwiperInstance = SwiperClass;
 export interface SwiperProps extends React.ComponentProps<typeof ReactSwiper> {
