@@ -9,9 +9,13 @@ import { getTitle } from "@/utils/data";
 const composeData = (data: Watched) => {
   const title = getTitle(data.anime);
 
+  const recommendations = data.anime?.recommendations?.map(
+    ({ anime }) => anime
+  );
+
   return {
     title,
-    list: data.anime?.recommendations?.map(({ anime }) => anime),
+    list: recommendations,
   };
 };
 
@@ -28,8 +32,8 @@ const RecommendedAnimeSection = () => {
 
   const composedData = composeData(data);
 
-  return composedData ? (
-    <Section title={`Vì bạn đã xem ${composedData.title}`}>
+  return composedData?.list?.length ? (
+    <Section title={`Vì bạn đã xem "${composedData.title}"`}>
       <CardSwiper data={composedData.list} type="anime" />
     </Section>
   ) : null;

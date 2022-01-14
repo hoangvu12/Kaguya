@@ -9,9 +9,13 @@ import Section from "./Section";
 const composeData = (data: Read) => {
   const title = getTitle(data.manga);
 
+  const recommendations = data.manga?.recommendations?.map(
+    ({ manga }) => manga
+  );
+
   return {
     title,
-    list: data.manga?.recommendations?.map(({ manga }) => manga),
+    list: recommendations,
   };
 };
 
@@ -28,8 +32,8 @@ const RecommendedMangaSection = () => {
 
   const composedData = composeData(data);
 
-  return composedData ? (
-    <Section title={`Vì bạn đã xem ${composedData.title}`}>
+  return composedData?.list?.length ? (
+    <Section title={`Vì bạn đã đọc "${composedData.title}"`}>
       <CardSwiper data={composedData.list} type="manga" />
     </Section>
   ) : null;
