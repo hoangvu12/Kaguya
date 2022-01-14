@@ -7,9 +7,9 @@ import TextIcon from "@/components/shared/TextIcon";
 import Button from "@/components/shared/Button";
 import { Anime, DynamicData, Manga } from "@/types";
 import { numberWithCommas } from "@/utils";
-import { convert } from "@/utils/data";
+import { convert, getTitle } from "@/utils/data";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import { AiFillHeart, AiFillPlayCircle } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
@@ -34,10 +34,7 @@ const HomeBanner: React.FC<DynamicData<Anime[], Manga[]>> = ({
     );
   };
 
-  const title =
-    typeof activeSlide.title === "string"
-      ? activeSlide.title
-      : activeSlide.title.user_preferred;
+  const title = useMemo(() => getTitle(activeSlide), [activeSlide]);
 
   return (
     <React.Fragment>
@@ -49,14 +46,14 @@ const HomeBanner: React.FC<DynamicData<Anime[], Manga[]>> = ({
               layout="fill"
               objectFit="cover"
               objectPosition="50% 35%"
-              alt={activeSlide.vietnamese_title || title}
+              alt={title}
             />
           )}
 
           <div className="absolute inset-0 flex flex-col justify-center px-4 banner__overlay md:px-12">
             <div className="w-full md:w-[45%]">
               <h1 className="text-2xl font-bold uppercase md:text-4xl line-clamp-2 sm:line-clamp-3 md:line-clamp-4">
-                {activeSlide.vietnamese_title || title}
+                {title}
               </h1>
 
               <div className="flex flex-wrap items-center mt-4 text-lg gap-x-8">
@@ -113,10 +110,7 @@ const HomeBanner: React.FC<DynamicData<Anime[], Manga[]>> = ({
       <MobileView className="pt-16 pb-8 overflow-hidden">
         <Swiper hideNavigation breakpoints={{}} slidesPerView={1} loop>
           {data.map((slide, index) => {
-            const title =
-              typeof slide.title === "string"
-                ? slide.title
-                : slide.title.user_preferred;
+            const title = getTitle(slide);
 
             return (
               <SwiperSlide
@@ -136,7 +130,7 @@ const HomeBanner: React.FC<DynamicData<Anime[], Manga[]>> = ({
                   <div className="absolute fixed-0 bg-gradient-to-b from-transparent via-black/60 to-black/80 flex items-end">
                     <div className="p-4">
                       <h1 className="text-xl font-bold uppercase line-clamp-1">
-                        {slide.vietnamese_title || title}
+                        {title}
                       </h1>
 
                       <div className="flex flex-wrap items-center mt-4 text-lg gap-x-8">

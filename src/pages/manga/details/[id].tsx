@@ -13,7 +13,7 @@ import { REVALIDATE_TIME } from "@/constants";
 import supabase from "@/lib/supabase";
 import { Comment, Manga } from "@/types";
 import { numberWithCommas, parseNumbersFromString } from "@/utils";
-import { convert } from "@/utils/data";
+import { convert, getTitle } from "@/utils/data";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useMemo, useState } from "react";
@@ -46,8 +46,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
     [manga]
   );
 
-  const title =
-    typeof manga.title === "string" ? manga.title : manga.title.user_preferred;
+  const title = useMemo(() => getTitle(manga), [manga]);
 
   return (
     <>

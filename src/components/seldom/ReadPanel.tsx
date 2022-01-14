@@ -10,6 +10,7 @@ import {
   useReadSettings,
 } from "@/contexts/ReadSettingsContext";
 import useDevice from "@/hooks/useDevice";
+import { getTitle } from "@/utils/data";
 import classNames from "classnames";
 import { motion, Variants } from "framer-motion";
 import { useRouter } from "next/router";
@@ -94,8 +95,7 @@ const ReadPanel: React.FC<ReadPanelProps> = ({ children }) => {
 
   const handleChapterChange = (index: number) => () => setChapterIndex(index);
 
-  const title =
-    typeof manga.title === "string" ? manga.title : manga.title.user_preferred;
+  const title = useMemo(() => getTitle(manga), [manga]);
 
   // Scroll container to top when change chapter
   useEffect(() => {
@@ -127,7 +127,7 @@ const ReadPanel: React.FC<ReadPanelProps> = ({ children }) => {
             />
 
             <p className="text-center text-lg font-semibold line-clamp-1">
-              {manga.vietnamese_title || title}
+              {title}
             </p>
 
             <BrowserView>

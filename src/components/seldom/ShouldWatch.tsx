@@ -1,8 +1,8 @@
 import { Anime, DynamicData, Manga } from "@/types";
 import { numberWithCommas } from "@/utils";
-import { convert } from "@/utils/data";
+import { convert, getTitle } from "@/utils/data";
 import router from "next/router";
-import React from "react";
+import React, { useMemo } from "react";
 import { AiFillPlayCircle, AiFillHeart } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
 import CircleButton from "@/components/shared/CircleButton";
@@ -15,8 +15,7 @@ const ShouldWatch: React.FC<DynamicData<Anime, Manga>> = ({
   data,
   type = "anime",
 }) => {
-  const title =
-    typeof data.title === "string" ? data.title : data.title.user_preferred;
+  const title = useMemo(() => getTitle(data), [data]);
 
   const redirectUrl =
     type === "anime"
@@ -55,7 +54,7 @@ const ShouldWatch: React.FC<DynamicData<Anime, Manga>> = ({
       <div className="!mt-8 flex flex-col md:flex-row space-between space-y-4 md:space-y-0 md:space-x-8">
         <div className="flex-shrink-0 md:w-2/6">
           <h1 className="text-2xl font-semibold line-clamp-2 uppercase">
-            {data.vietnamese_title || title}
+            {title}
           </h1>
 
           <div className="md:w-4/6 flex flex-wrap items-center mt-4 text-lg gap-x-8">
@@ -84,4 +83,4 @@ const ShouldWatch: React.FC<DynamicData<Anime, Manga>> = ({
   );
 };
 
-export default ShouldWatch;
+export default React.memo(ShouldWatch);

@@ -2,9 +2,9 @@ import Image from "@/components/shared/Image";
 import TextIcon from "@/components/shared/TextIcon";
 import { Anime } from "@/types";
 import { isColorVisible, numberWithCommas } from "@/utils";
-import { convert } from "@/utils/data";
+import { convert, getTitle } from "@/utils/data";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useMemo } from "react";
 import { AiFillHeart } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
 
@@ -30,8 +30,7 @@ const TopCard: React.FC<TopCardProps> = ({ data, rank, type = "anime" }) => {
     router.push(redirectUrl);
   };
 
-  const title =
-    typeof data.title === "string" ? data.title : data.title.user_preferred;
+  const title = useMemo(() => getTitle(data), [data]);
 
   return (
     <div className="w-full h-[110px] grid grid-cols-18 gap-4">
@@ -51,7 +50,7 @@ const TopCard: React.FC<TopCardProps> = ({ data, rank, type = "anime" }) => {
             src={data.cover_image.extra_large}
             layout="fill"
             objectFit="cover"
-            alt={data.vietnamese_title || title}
+            alt={title}
           />
         </div>
         <div className="flex-1 md:grid grid-cols-12">
@@ -64,7 +63,7 @@ const TopCard: React.FC<TopCardProps> = ({ data, rank, type = "anime" }) => {
                 className="text-xl line-clamp-1 cursor-pointer"
                 onClick={handleNavigate}
               >
-                {data.vietnamese_title || title}
+                {title}
               </p>
               <p className="line-clamp-1 font-semibold">
                 {data.genres.join(", ")}
@@ -117,4 +116,4 @@ const TopCard: React.FC<TopCardProps> = ({ data, rank, type = "anime" }) => {
   );
 };
 
-export default TopCard;
+export default React.memo(TopCard);

@@ -4,15 +4,13 @@ import React from "react";
 import ListSwiperSkeleton from "@/components/skeletons/ListSwiperSkeleton";
 import CardSwiper from "@/components/shared/CardSwiper";
 import Section from "./Section";
+import { getTitle } from "@/utils/data";
 
 const composeData = (data: Watched) => {
-  const title =
-    typeof data.anime?.title === "string"
-      ? data.anime?.title
-      : data.anime?.title.user_preferred;
+  const title = getTitle(data.anime);
 
   return {
-    title: data.anime?.vietnamese_title || title,
+    title,
     list: data.anime?.recommendations?.map(({ anime }) => anime),
   };
 };

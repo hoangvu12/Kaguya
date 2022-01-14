@@ -1,15 +1,15 @@
-import React from "react";
+import React, { useMemo } from "react";
 import Image from "@/components/shared/Image";
 
 import { Anime, Manga } from "@/types";
+import { getTitle } from "@/utils/data";
 
 interface PlainCardProps {
   data: Anime | Manga;
 }
 
 const PlainCard: React.FC<PlainCardProps> = ({ data }) => {
-  const title =
-    typeof data.title === "string" ? data.title : data.title.user_preferred;
+  const title = useMemo(() => getTitle(data), [data]);
 
   return (
     <div className="relative aspect-w-9 aspect-h-16">
@@ -17,10 +17,10 @@ const PlainCard: React.FC<PlainCardProps> = ({ data }) => {
         src={data.cover_image.extra_large}
         layout="fill"
         objectFit="cover"
-        alt={data.vietnamese_title || title}
+        alt={title}
       />
     </div>
   );
 };
 
-export default PlainCard;
+export default React.memo(PlainCard);

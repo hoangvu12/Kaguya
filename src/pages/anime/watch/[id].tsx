@@ -19,6 +19,7 @@ import useSaveWatched from "@/hooks/useSaveWatched";
 import supabase from "@/lib/supabase";
 import { Anime } from "@/types";
 import { parseNumbersFromString } from "@/utils";
+import { getTitle } from "@/utils/data";
 import Storage from "@/utils/storage";
 import classNames from "classnames";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
@@ -188,10 +189,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
     });
   }, [episodeIndex, handleNavigateEpisode, sortedEpisodes.length]);
 
-  const title = useMemo(
-    () => anime.vietnamese_title || anime.title.user_preferred,
-    [anime.title.user_preferred, anime.vietnamese_title]
-  );
+  const title = useMemo(() => getTitle(anime), [anime]);
 
   useEffect(() => {
     const videoEl = videoRef.current;

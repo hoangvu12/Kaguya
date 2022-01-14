@@ -11,6 +11,7 @@ import { AiFillSave } from "react-icons/ai";
 import { RiDeleteBin7Fill } from "react-icons/ri";
 import Link from "next/link";
 import useDeleteAnime from "@/hooks/useDeleteAnime";
+import { getTitle } from "@/utils/data";
 
 const composeData = ({
   relations,
@@ -59,10 +60,7 @@ const AnimeAdminEditPage = ({ id }) => {
     );
   }
 
-  const fallbackTitle =
-    typeof data.title === "string" ? data.title : data.title.user_preferred;
-
-  const title = data.vietnamese_title || fallbackTitle;
+  const title = getTitle(data);
 
   return (
     <Section title={`Chỉnh sửa thông tin "${title}"`}>

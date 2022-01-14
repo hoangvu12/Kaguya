@@ -12,7 +12,7 @@ import dayjs from "@/lib/dayjs";
 import supabase from "@/lib/supabase";
 import { Anime, Comment } from "@/types";
 import { numberWithCommas, parseNumbersFromString } from "@/utils";
-import { convert } from "@/utils/data";
+import { convert, getTitle } from "@/utils/data";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
@@ -57,12 +57,12 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
     router.push(`/anime/watch/${anime.ani_id}?index=${index}`);
   };
 
+  const title = useMemo(() => getTitle(anime), [anime]);
+
   return (
     <>
       <Head
-        title={`${
-          anime.vietnamese_title || anime.title.user_preferred
-        } - Kaguya`}
+        title={`${title} - Kaguya`}
         description={anime.description}
         image={anime.banner_image}
       />
@@ -86,9 +86,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                 <p>Xem ngay</p>
               </Button>
 
-              <p className="mb-2 text-3xl font-semibold">
-                {anime.vietnamese_title || anime.title.user_preferred}
-              </p>
+              <p className="mb-2 text-3xl font-semibold">{title}</p>
 
               <DotList>
                 {anime.genres.map((genre) => (

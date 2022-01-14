@@ -10,10 +10,10 @@ import PlainCard from "@/components/shared/PlainCard";
 import TextIcon from "@/components/shared/TextIcon";
 import useAnimeDetails from "@/hooks/useAnimeDetails";
 import { numberWithCommas } from "@/utils";
-import { convert } from "@/utils/data";
+import { convert, getTitle } from "@/utils/data";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useMemo } from "react";
 import { AiFillHeart, AiOutlineEdit } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
 
@@ -30,8 +30,7 @@ const AdminAnimeDetails = () => {
     return <p>Error...</p>;
   }
 
-  const title =
-    typeof data.title === "string" ? data.title : data.title.user_preferred;
+  const title = getTitle(data);
 
   return (
     <div className="w-full h-full">
@@ -43,7 +42,7 @@ const AdminAnimeDetails = () => {
 
           <div className="space-y-4 self-end">
             <div className="space-y-4">
-              <p className="text-3xl">{data.vietnamese_title || title}</p>
+              <p className="text-3xl">{title}</p>
               <p className="text-lg line-clamp-5">{data.description}</p>
               <div className="flex flex-wrap items-center mt-4 text-lg gap-x-8">
                 {data.average_score && (
