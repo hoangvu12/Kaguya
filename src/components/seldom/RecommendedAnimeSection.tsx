@@ -30,11 +30,11 @@ const RecommendedAnimeSection = () => {
 
   const composedData = composeData(data);
 
-  return (
+  return composedData ? (
     <Section title={`Vì bạn đã xem ${composedData.title}`}>
       <CardSwiper data={composedData.list} type="anime" />
     </Section>
-  );
+  ) : null;
 };
 
 export default React.memo(RecommendedAnimeSection);
