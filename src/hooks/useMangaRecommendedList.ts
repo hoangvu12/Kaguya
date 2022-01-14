@@ -16,7 +16,7 @@ const useMangaRecommendedList = () => {
             manga:manga_id(
                 title,
                 vietnamese_title,
-                recommendations!original_id(manga:recommend_id(*))
+                recommendations:manga_recommendations!original_id(manga:recommend_id(*))
             )
           `
         )
