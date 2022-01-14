@@ -7,6 +7,7 @@ import PlainCard from "@/components/shared/PlainCard";
 import Table from "@/components/shared/Table";
 import useAdminBrowse from "@/hooks/useAdminBrowse";
 import { Anime } from "@/types";
+import { getTitle } from "@/utils/data";
 import Link from "next/link";
 import React from "react";
 import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
@@ -31,16 +32,11 @@ const columns: Column<Anime>[] = [
     Cell: ({ cell }) => {
       const originalCell = cell.row.original;
 
-      const title =
-        typeof originalCell.title === "string"
-          ? originalCell.title
-          : originalCell.title.user_preferred;
+      const title = getTitle(originalCell);
 
       return (
         <div className="px-6 py-4">
-          <p className="line-clamp-5">
-            {originalCell.vietnamese_title || title}
-          </p>
+          <p className="line-clamp-5">{title}</p>
         </div>
       );
     },

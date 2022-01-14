@@ -12,6 +12,7 @@ import useSaveRead from "@/hooks/useSaveRead";
 import supabase from "@/lib/supabase";
 import { Manga } from "@/types";
 import { parseNumbersFromString } from "@/utils";
+import { getTitle } from "@/utils/data";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
@@ -47,8 +48,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
 
   const saveReadMutation = useSaveRead();
 
-  const title =
-    typeof manga.title === "string" ? manga.title : manga.title.user_preferred;
+  const title = useMemo(() => getTitle(manga), [manga]);
 
   const chapters = useMemo(
     () =>

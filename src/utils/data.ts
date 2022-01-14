@@ -11,6 +11,7 @@ import {
   VIETNAMESE_SORTS,
   VIETNAMESE_STATUSES,
 } from "@/constants";
+import { Anime, Manga } from "@/types";
 
 const constants = {
   season: {
@@ -60,4 +61,11 @@ export const convert = (
   const index = from.findIndex((el) => el === text);
 
   return to[index];
+};
+
+export const getTitle = <T extends Anime | Manga>(data: T) => {
+  const title =
+    typeof data?.title === "string" ? data?.title : data?.title.user_preferred;
+
+  return data?.vietnamese_title || title;
 };

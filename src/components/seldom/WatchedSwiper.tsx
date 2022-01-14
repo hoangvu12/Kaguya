@@ -3,6 +3,7 @@ import { Watched } from "@/types";
 import React from "react";
 import EpisodeCard from "@/components/shared/EpisodeCard";
 import { useRouter } from "next/router";
+import { getTitle } from "@/utils/data";
 
 interface WatchedSwiperProps extends SwiperProps {
   data: Watched[];
@@ -30,7 +31,7 @@ const WatchedSwiper: React.FC<WatchedSwiperProps> = ({ data, ...props }) => {
                 anime.banner_image ||
                 anime.cover_image.extra_large,
             }}
-            title={anime.vietnamese_title || anime.title.user_preferred}
+            title={getTitle(anime)}
           />
         </SwiperSlide>
       ))}
@@ -38,4 +39,4 @@ const WatchedSwiper: React.FC<WatchedSwiperProps> = ({ data, ...props }) => {
   );
 };
 
-export default WatchedSwiper;
+export default React.memo(WatchedSwiper);

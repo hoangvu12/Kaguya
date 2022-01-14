@@ -7,6 +7,7 @@ import useDeleteManga from "@/hooks/useDeleteManga";
 import useEditManga from "@/hooks/useEditManga";
 import useMangaDetails from "@/hooks/useMangaDetails";
 import { Anime, Manga } from "@/types";
+import { getTitle } from "@/utils/data";
 import Link from "next/link";
 import React, { useRef } from "react";
 import { AiFillSave } from "react-icons/ai";
@@ -59,10 +60,7 @@ const MangaAdminEditPage = ({ id }) => {
     );
   }
 
-  const fallbackTitle =
-    typeof data.title === "string" ? data.title : data.title.user_preferred;
-
-  const title = data.vietnamese_title || fallbackTitle;
+  const title = getTitle(data);
 
   return (
     <Section title={`Chỉnh sửa thông tin "${title}"`}>

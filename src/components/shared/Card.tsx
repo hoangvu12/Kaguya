@@ -4,11 +4,11 @@ import TextIcon from "@/components/shared/TextIcon";
 import useDevice from "@/hooks/useDevice";
 import { Anime, DynamicData, Manga } from "@/types";
 import { isColorVisible, numberWithCommas } from "@/utils";
-import { convert } from "@/utils/data";
+import { convert, getTitle } from "@/utils/data";
 import classNames from "classnames";
 import { motion, Variants } from "framer-motion";
 import Link from "next/link";
-import React from "react";
+import React, { useMemo } from "react";
 import { AiFillHeart } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
 
@@ -66,8 +66,7 @@ const Card: React.FC<AnimeCardProps & DynamicData<Anime, Manga>> = ({
       ? `/anime/details/${data.ani_id}`
       : `/manga/details/${data.ani_id}`;
 
-  const title =
-    typeof data.title === "string" ? data.title : data.title.user_preferred;
+  const title = useMemo(() => getTitle(data), [data]);
 
   return (
     <Link href={redirectUrl}>
@@ -90,7 +89,7 @@ const Card: React.FC<AnimeCardProps & DynamicData<Anime, Manga>> = ({
                 layout="fill"
                 objectFit="cover"
                 className="rounded-sm"
-                alt={data.vietnamese_title || title}
+                alt={title}
               />
 
               {imageEndSlot}
@@ -141,7 +140,7 @@ const Card: React.FC<AnimeCardProps & DynamicData<Anime, Manga>> = ({
             className="mt-2 text-base font-semibold line-clamp-2"
             style={{ color: primaryColor }}
           >
-            {data.vietnamese_title || title}
+            {title}
           </p>
         </motion.div>
       </a>
@@ -149,4 +148,4 @@ const Card: React.FC<AnimeCardProps & DynamicData<Anime, Manga>> = ({
   );
 };
 
-export default Card;
+export default React.memo(Card);
