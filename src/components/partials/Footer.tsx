@@ -20,7 +20,7 @@ const Footer = () => {
         <ContactItem href={FACEBOOK_URL} Icon={AiFillFacebook} />
       </div>
 
-      <div className="flex items-center space-x-8">
+      <div className="flex items-center space-x-8 text-center">
         <Link href="/tos">
           <p className="text-lg">Điều khoản dịch vụ</p>
         </Link>
@@ -34,12 +34,12 @@ const Footer = () => {
         </Link>
       </div>
 
-      <p className="text-sm text-gray-300">
+      <p className="text-sm text-gray-300 text-center">
         Kaguya không lưu trữ bất kì tệp tin nào trên máy chủ, chúng tôi chỉ liên
         kết tới những phương tiện truyền thông được lưu trữ bên dịch vụ thứ 3.
       </p>
 
-      <p className="text-sm text-gray-300">© Kaguya.live</p>
+      <p className="text-sm text-gray-300 text-center">© Kaguya.live</p>
     </div>
   );
 };
