@@ -13,6 +13,7 @@ import ShouldWatch from "@/components/shared/ShouldWatch";
 import GenresSelector from "@/components/shared/GenresSelector";
 import ReadSection from "@/components/features/manga/ReadSection";
 import RecommendedMangaSection from "@/components/features/manga/RecommendedMangaSection";
+import NewestComments from "@/components/shared/NewestComments";
 
 interface HomeProps {
   trendingManga: Manga[];
@@ -34,9 +35,11 @@ const Home: NextPage<HomeProps> = ({
       <ClientOnly>
         <div className="pb-8">
           <HomeBanner type="manga" data={trendingManga} />
+
           <div className="space-y-8">
             <ReadSection />
             <RecommendedMangaSection />
+            <NewestComments type="manga" />
 
             <Section title="Mới cập nhật">
               <CardSwiper type="manga" data={recentlyUpdatedManga} />
