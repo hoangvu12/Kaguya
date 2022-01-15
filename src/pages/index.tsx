@@ -16,6 +16,7 @@ import { AiringSchedule, Anime } from "@/types";
 import { getSeason } from "@/utils";
 import { GetStaticProps, NextPage } from "next";
 import React from "react";
+import NewestComments from "@/components/shared/NewestComments";
 
 interface HomeProps {
   trendingAnime: Anime[];
@@ -43,6 +44,7 @@ const Home: NextPage<HomeProps> = ({
           <div className="space-y-8">
             <WatchedSection />
             <RecommendedAnimeSection />
+            <NewestComments type="anime" />
 
             <Section title="Anime mới cập nhật">
               <CardSwiper type="anime" data={recentlyUpdatedAnime} />
