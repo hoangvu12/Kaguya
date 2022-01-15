@@ -50,46 +50,43 @@ const HomeBanner: React.FC<DynamicData<Anime[], Manga[]>> = ({
             />
           )}
 
-          <div className="absolute inset-0 flex flex-col justify-center px-4 banner__overlay md:px-12">
-            <div className="w-full md:w-[45%]">
-              <h1 className="text-2xl font-bold uppercase md:text-4xl line-clamp-2 sm:line-clamp-3 md:line-clamp-4">
-                {title}
-              </h1>
+          <div className="absolute inset-0 flex flex-col justify-center px-4 banner__overlay md:px-12"></div>
 
-              <div className="flex flex-wrap items-center mt-4 text-lg gap-x-8">
-                {activeSlide.average_score && (
-                  <TextIcon
-                    LeftIcon={MdTagFaces}
-                    iconClassName="text-green-300"
-                  >
-                    <p>{activeSlide.average_score}%</p>
-                  </TextIcon>
-                )}
+          <div className="absolute left-12 top-1/2 -translate-y-1/2 w-full md:w-[45%]">
+            <h1 className="text-2xl font-bold uppercase md:text-4xl line-clamp-2 sm:line-clamp-3 md:line-clamp-4">
+              {title}
+            </h1>
 
-                <TextIcon LeftIcon={AiFillHeart} iconClassName="text-red-400">
-                  <p>{numberWithCommas(activeSlide.favourites)}</p>
+            <div className="flex flex-wrap items-center mt-4 text-lg gap-x-8">
+              {activeSlide.average_score && (
+                <TextIcon LeftIcon={MdTagFaces} iconClassName="text-green-300">
+                  <p>{activeSlide.average_score}%</p>
                 </TextIcon>
+              )}
 
-                <DotList>
-                  {activeSlide.genres.slice(0, 3).map((genre) => (
-                    <p key={genre}>{convert(genre, "genre")}</p>
-                  ))}
-                </DotList>
-              </div>
+              <TextIcon LeftIcon={AiFillHeart} iconClassName="text-red-400">
+                <p>{numberWithCommas(activeSlide.favourites)}</p>
+              </TextIcon>
 
-              <p className="hidden mt-2 text-base md:block text-typography-secondary md:line-clamp-5">
-                {activeSlide.description}
-              </p>
-
-              <Button
-                primary
-                LeftIcon={AiFillPlayCircle}
-                onClick={handleClick(activeSlide.ani_id)}
-                className="mt-4 md:hidden"
-              >
-                <p>Xem ngay</p>
-              </Button>
+              <DotList>
+                {activeSlide.genres.slice(0, 3).map((genre) => (
+                  <p key={genre}>{convert(genre, "genre")}</p>
+                ))}
+              </DotList>
             </div>
+
+            <p className="hidden mt-2 text-base md:block text-typography-secondary md:line-clamp-5">
+              {activeSlide.description}
+            </p>
+
+            <Button
+              primary
+              LeftIcon={AiFillPlayCircle}
+              onClick={handleClick(activeSlide.ani_id)}
+              className="mt-4 md:hidden"
+            >
+              <p>Xem ngay</p>
+            </Button>
           </div>
 
           <CircleButton
