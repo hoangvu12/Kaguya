@@ -71,7 +71,9 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const { data: recentlyUpdatedManga } = await supabase
     .from<Manga>("manga")
-    .select("*")
+    .select(
+      "cover_image, genres, average_score, favourites, title, vietnamese_title, ani_id"
+    )
     .order("chapters_updated_at", { ascending: false })
     .limit(15);
 
@@ -83,7 +85,9 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const { data: topManga } = await supabase
     .from<Manga>("manga")
-    .select("*")
+    .select(
+      "ani_id, cover_image, genres, average_score, favourites, title, vietnamese_title, format, status"
+    )
     .order("average_score", { ascending: false })
     .limit(10);
 
