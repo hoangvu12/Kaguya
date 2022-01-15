@@ -77,7 +77,9 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const { data: schedulesAnime } = await supabase
     .from<AiringSchedule>("airing_schedule")
-    .select("*, anime:anime_id(*)")
+    .select(
+      "*, anime:anime_id(cover_image, genres, average_score, favourites, title, vietnamese_title, ani_id)"
+    )
     .lte("airing_at", lastDayOfWeek.unix())
     .gte("airing_at", firstDayOfWeek.unix())
     .limit(1, {
@@ -93,7 +95,9 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const { data: recentlyUpdatedAnime } = await supabase
     .from<Anime>("anime")
-    .select("*")
+    .select(
+      "cover_image, genres, average_score, favourites, title, vietnamese_title, ani_id"
+    )
     .order("episodes_updated_at", { ascending: false })
     .limit(15);
 
@@ -105,7 +109,9 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const { data: topAnime } = await supabase
     .from<Anime>("anime")
-    .select("*")
+    .select(
+      "ani_id, cover_image, genres, average_score, favourites, title, vietnamese_title, format, season, season_year, status"
+    )
     .order("average_score", { ascending: false })
     .eq("season", currentSeason.season)
     .eq("season_year", currentSeason.year)
