@@ -19,6 +19,7 @@ const BannerSwiper: React.FC<BannerSwiperProps> = ({ data, ...props }) => {
       centeredSlides
       loop
       slidesPerView={2}
+      spaceBetween={20}
       breakpoints={{
         1280: {
           slidesPerView: 6,
@@ -62,4 +63,4 @@ const BannerSwiper: React.FC<BannerSwiperProps> = ({ data, ...props }) => {
   );
 };
 
-export default BannerSwiper;
+export default React.memo(BannerSwiper);
