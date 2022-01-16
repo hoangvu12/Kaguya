@@ -198,7 +198,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
     if (isSavedDataLoading) return;
     if (!watchedEpisodeData?.watched_time) return;
 
-    if (watchedEpisode.episode_id !== currentEpisode.episode_id) return;
+    if (watchedEpisode?.episode_id !== currentEpisode?.episode_id) return;
 
     const handleVideoPlay = () => {
       videoEl.currentTime = watchedEpisodeData.watched_time;

@@ -1,4 +1,4 @@
-import { useVideoOptions } from "@/contexts/VideoOptionsContext";
+import { useVideoState } from "@/contexts/VideoStateContext";
 import React from "react";
 import { FiSettings } from "react-icons/fi";
 import { FcCheckmark } from "react-icons/fc";
@@ -21,13 +21,13 @@ const qualityTypes = [
 ];
 
 const QualitiesSelector = () => {
-  const { options, setOptions } = useVideoOptions();
+  const { state, setState } = useVideoState();
 
   const handleQualityChange = (qualitiy: string) => () => {
-    setOptions((prev) => ({ ...prev, currentQuality: qualitiy }));
+    setState((prev) => ({ ...prev, currentQuality: qualitiy }));
   };
 
-  return options?.qualities.length ? (
+  return state?.qualities.length ? (
     <Popup
       portalSelector=".video-wrapper"
       reference={<ControlsIcon whileTap={{ rotate: 360 }} Icon={FiSettings} />}
@@ -41,7 +41,7 @@ const QualitiesSelector = () => {
       <p className="mb-8">Chất lượng</p>
 
       <ul className="space-y-2">
-        {options?.qualities.map((quality) => {
+        {state?.qualities.map((quality) => {
           const qualType = qualityTypes.find(
             (qual) => quality === qual.quality
           );
@@ -52,7 +52,7 @@ const QualitiesSelector = () => {
               onClick={handleQualityChange(quality)}
               key={quality}
             >
-              {options.currentQuality === quality && (
+              {state.currentQuality === quality && (
                 <FcCheckmark className="w-5 h-5 absolute top-1/2 -translate-y-1/2 left-5" />
               )}
 

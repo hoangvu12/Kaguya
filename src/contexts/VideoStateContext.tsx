@@ -7,15 +7,15 @@ import {
   useState,
 } from "react";
 
-export interface VideoOptions {
+export interface VideoState {
   qualities?: string[];
   currentQuality?: string;
   isLocked?: boolean;
 }
 
 interface ContextProps {
-  options: VideoOptions;
-  setOptions: Dispatch<SetStateAction<VideoOptions>>;
+  state: VideoState;
+  setState: Dispatch<SetStateAction<VideoState>>;
 }
 
 interface ProviderProps {
@@ -24,37 +24,37 @@ interface ProviderProps {
 }
 
 const defaultValue = {
-  options: { qualities: [], currentQuality: "NONE", isLocked: false },
-  setOptions: () => {},
+  state: { qualities: [], currentQuality: "NONE", isLocked: false },
+  setState: () => {},
 } as ContextProps;
 
 const VideoContext = createContext<ContextProps>(defaultValue);
 
-export const VideoOptionsProvider: React.FC<ProviderProps> = ({
+export const VideoStateProvider: React.FC<ProviderProps> = ({
   children,
   defaultQualities,
   onQualityChange,
 }) => {
-  const [options, setOptions] = useState<VideoOptions>(() => {
+  const [state, setState] = useState<VideoState>(() => {
     if (defaultQualities.length) {
-      defaultValue.options.qualities = defaultQualities;
+      defaultValue.state.qualities = defaultQualities;
     }
 
-    return defaultValue.options;
+    return defaultValue.state;
   });
 
   useEffect(() => {
-    onQualityChange?.(options.currentQuality);
-  }, [onQualityChange, options.currentQuality]);
+    onQualityChange?.(state.currentQuality);
+  }, [onQualityChange, state.currentQuality]);
 
   return (
-    <VideoContext.Provider value={{ options, setOptions }}>
+    <VideoContext.Provider value={{ state, setState }}>
       {children}
     </VideoContext.Provider>
   );
 };
 
-export const useVideoOptions = () => {
+export const useVideoState = () => {
   return useContext(VideoContext);
 };
 
