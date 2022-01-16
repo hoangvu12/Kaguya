@@ -98,8 +98,8 @@ const Card: React.FC<AnimeCardProps & DynamicData<Anime, Manga>> = ({
             <motion.div className="absolute bottom-0 flex flex-col items-center justify-end px-2 py-4 text-center">
               <motion.div variants={infoVariants} className="mt-2 !mb-1">
                 <DotList>
-                  {data.genres.slice(0, 2).map((genre) => (
-                    <p
+                  {data.genres.map((genre) => (
+                    <span
                       className="text-sm font-semibold"
                       style={{
                         color: primaryColor,
@@ -107,7 +107,7 @@ const Card: React.FC<AnimeCardProps & DynamicData<Anime, Manga>> = ({
                       key={genre}
                     >
                       {convert(genre, "genre")}
-                    </p>
+                    </span>
                   ))}
                 </DotList>
               </motion.div>

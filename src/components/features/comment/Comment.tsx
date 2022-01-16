@@ -98,10 +98,12 @@ const Comment: React.FC<CommentProps> = ({
           <div className="flex items-center space-x-2">
             <div className="relative inline-block p-3 mb-2 space-y-2 rounded-md bg-background-900">
               <DotList>
-                <p className="text-lg">{comment.user.user_metadata.name}</p>
-                <p className="text-sm text-gray-300">
+                <span className="text-lg">
+                  {comment.user.user_metadata.name}
+                </span>
+                <span className="text-sm text-gray-300">
                   {dayjs(comment.created_at).fromNow()}
-                </p>
+                </span>
               </DotList>
 
               <EmojiText text={comment.body} disabled className="break-words" />

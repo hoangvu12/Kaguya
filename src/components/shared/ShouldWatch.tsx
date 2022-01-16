@@ -1,16 +1,15 @@
+import CircleButton from "@/components/shared/CircleButton";
+import DotList from "@/components/shared/DotList";
+import Image from "@/components/shared/Image";
+import Section from "@/components/shared/Section";
+import TextIcon from "@/components/shared/TextIcon";
 import { Anime, DynamicData, Manga } from "@/types";
 import { numberWithCommas } from "@/utils";
 import { convert, getTitle } from "@/utils/data";
-import router from "next/router";
-import React, { useMemo } from "react";
-import { AiFillPlayCircle, AiFillHeart } from "react-icons/ai";
-import { MdTagFaces } from "react-icons/md";
-import CircleButton from "@/components/shared/CircleButton";
-import DotList from "@/components/shared/DotList";
-import TextIcon from "@/components/shared/TextIcon";
-import Section from "@/components/shared/Section";
-import Image from "@/components/shared/Image";
 import Link from "next/link";
+import React, { useMemo } from "react";
+import { AiFillHeart, AiFillPlayCircle } from "react-icons/ai";
+import { MdTagFaces } from "react-icons/md";
 
 const ShouldWatch: React.FC<DynamicData<Anime, Manga>> = ({
   data,
@@ -73,8 +72,8 @@ const ShouldWatch: React.FC<DynamicData<Anime, Manga>> = ({
                 </TextIcon>
 
                 <DotList>
-                  {data.genres.slice(0, 3).map((genre) => (
-                    <p key={genre}>{convert(genre, "genre")}</p>
+                  {data.genres.map((genre) => (
+                    <span key={genre}>{convert(genre, "genre")}</span>
                   ))}
                 </DotList>
               </div>

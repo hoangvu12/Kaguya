@@ -57,8 +57,8 @@ const AdminMangaDetails = () => {
                   <p>{numberWithCommas(data.favourites)}</p>
                 </TextIcon>
                 <DotList>
-                  {data.genres.slice(0, 3).map((genre) => (
-                    <p key={genre}>{convert(genre, "genre")}</p>
+                  {data.genres.map((genre) => (
+                    <span key={genre}>{convert(genre, "genre")}</span>
                   ))}
                 </DotList>
               </div>
