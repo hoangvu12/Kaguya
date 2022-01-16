@@ -1,13 +1,13 @@
-import useNewestComments from "@/hooks/useNewestComments";
-import React, { PropsWithChildren, useMemo } from "react";
+import Avatar from "@/components/shared/Avatar";
 import Section from "@/components/shared/Section";
 import Swiper, { SwiperSlide } from "@/components/shared/Swiper";
-import Avatar from "@/components/shared/Avatar";
+import useNewestComments from "@/hooks/useNewestComments";
 import dayjs from "@/lib/dayjs";
-import EmojiText from "./EmojiText";
 import { getTitle } from "@/utils/data";
 import Link from "next/link";
+import React, { PropsWithChildren, useMemo } from "react";
 import CommentsSwiperSkeleton from "../skeletons/CommentsSwiperSkeleton";
+import EmojiText from "./EmojiText";
 
 interface NewestCommentsProps<T> {
   type: T;
@@ -26,7 +26,31 @@ const NewestComments = <T extends "anime" | "manga">(
 
   return data?.length ? (
     <Section title="Bình luận gần đây">
-      <Swiper freeMode>
+      <Swiper
+        freeMode
+        breakpoints={{
+          1280: {
+            slidesPerView: 5,
+            slidesPerGroup: 5,
+          },
+          1024: {
+            slidesPerView: 4,
+            slidesPerGroup: 4,
+          },
+          768: {
+            slidesPerView: 3,
+            slidesPerGroup: 3,
+          },
+          640: {
+            slidesPerView: 2,
+            slidesPerGroup: 2,
+          },
+          0: {
+            slidesPerView: 1,
+            slidesPerGroup: 1,
+          },
+        }}
+      >
         {data.map((comment) => {
           const user = comment?.user?.user_metadata;
           const source = isAnime ? comment.anime : comment.manga;
