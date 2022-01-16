@@ -1,6 +1,7 @@
 import Button from "@/components/shared/Button";
 import Head from "@/components/shared/Head";
 import Image from "@/components/shared/Image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -27,9 +28,13 @@ const Error404Page = () => {
         Nhưng đáng tiếc thay, chiều không gian này không có thứ gì cả
       </p>
 
-      <Button primary outline className="mt-8" onClick={() => router.push("/")}>
-        <p>Quay về chiều không gian cũ</p>
-      </Button>
+      <Link href="/">
+        <a>
+          <Button primary outline className="mt-8">
+            <p>Quay về chiều không gian cũ</p>
+          </Button>
+        </a>
+      </Link>
     </div>
   );
 };

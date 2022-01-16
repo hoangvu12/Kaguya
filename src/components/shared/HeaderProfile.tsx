@@ -9,6 +9,7 @@ import Avatar from "@/components/shared/Avatar";
 import useSyncUser from "@/hooks/useSyncUser";
 import { MdOutlineManageAccounts } from "react-icons/md";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 const roles = {
   user: "Người dùng",
@@ -43,19 +44,20 @@ const HeaderProfile = () => {
 
       <div className="space-y-2">
         {syncUser?.auth_role === "admin" && (
-          <Button
-            className="w-full !bg-transparent hover:!bg-white/20"
-            onClick={() => router.push("/admin")}
-          >
-            <TextIcon LeftIcon={MdOutlineManageAccounts}>
-              <p>Admin dashboard</p>
-            </TextIcon>
-          </Button>
+          <Link href="/admin">
+            <a>
+              <Button className="w-full !bg-transparent hover:!bg-white/20">
+                <TextIcon LeftIcon={MdOutlineManageAccounts}>
+                  <p>Admin dashboard</p>
+                </TextIcon>
+              </Button>
+            </a>
+          </Link>
         )}
 
         <Button
           className="w-full !bg-transparent hover:!bg-white/20"
-          onClick={() => supabase.auth.signOut()}
+          onClick={supabase.auth.signOut}
         >
           <TextIcon LeftIcon={HiOutlineLogout}>
             <p>Đăng xuất</p>

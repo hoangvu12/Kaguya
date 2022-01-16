@@ -6,6 +6,7 @@ import React from "react";
 import { DISCORD_URL, FACEBOOK_URL } from "@/constants";
 import { AiFillFacebook } from "react-icons/ai";
 import { FaDiscord } from "react-icons/fa";
+import Link from "next/link";
 
 const Error500Page = () => {
   const router = useRouter();
@@ -29,9 +30,13 @@ const Error500Page = () => {
         </a>
       </div>
 
-      <Button primary outline className="mt-8" onClick={() => router.push("/")}>
-        <p>Quay về chiều không gian cũ</p>
-      </Button>
+      <Link href="/">
+        <a>
+          <Button primary outline className="mt-8">
+            <p>Quay về chiều không gian cũ</p>
+          </Button>
+        </a>
+      </Link>
     </div>
   );
 };

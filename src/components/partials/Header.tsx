@@ -10,6 +10,7 @@ import NavItem from "@/components/shared/NavItem";
 import Button from "@/components/shared/Button";
 import Drawer, { DrawerRef } from "@/components/shared/Drawer";
 import Logo from "@/components/shared/Logo";
+import Link from "next/link";
 
 const routes = [
   {
@@ -121,9 +122,13 @@ const Header = () => {
           <HeaderProfile />
         ) : (
           <div className="flex items-center space-x-2">
-            <Button primary onClick={() => router.push("/login")}>
-              <p>Đăng nhập</p>
-            </Button>
+            <Link href="/login">
+              <a>
+                <Button primary>
+                  <p>Đăng nhập</p>
+                </Button>
+              </a>
+            </Link>
           </div>
         )}
       </div>
