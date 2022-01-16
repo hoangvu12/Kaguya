@@ -53,7 +53,7 @@ const ShouldWatch: React.FC<DynamicData<Anime, Manga>> = ({
           </div>
 
           <div className="!mt-8 flex flex-col md:flex-row space-between space-y-4 md:space-y-0 md:space-x-8">
-            <div className="flex-shrink-0 md:w-2/6">
+            <div className="shrink-0 md:w-2/6">
               <h1 className="text-2xl font-semibold line-clamp-2 uppercase">
                 {title}
               </h1>

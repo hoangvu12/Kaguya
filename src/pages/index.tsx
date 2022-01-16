@@ -1,38 +1,46 @@
 import AnimeScheduling from "@/components/features/anime/AnimeScheduling";
-import GenresSelector from "@/components/shared/GenresSelector";
-import HomeBanner from "@/components/shared/HomeBanner";
 import RecommendedAnimeSection from "@/components/features/anime/RecommendedAnimeSection";
-import Section from "@/components/shared/Section";
-import ShouldWatch from "@/components/shared/ShouldWatch";
 import WatchedSection from "@/components/features/anime/WatchedSection";
 import CardSwiper from "@/components/shared/CardSwiper";
 import ClientOnly from "@/components/shared/ClientOnly";
+import ColumnSection from "@/components/shared/ColumnSection";
+import GenresSelector from "@/components/shared/GenresSelector";
 import Head from "@/components/shared/Head";
-import TopList from "@/components/shared/TopList";
+import HomeBanner from "@/components/shared/HomeBanner";
+import NewestComments from "@/components/shared/NewestComments";
+import Section from "@/components/shared/Section";
+import ShouldWatch from "@/components/shared/ShouldWatch";
 import { REVALIDATE_TIME } from "@/constants";
 import dayjs from "@/lib/dayjs";
 import supabase from "@/lib/supabase";
 import { AiringSchedule, Anime } from "@/types";
 import { getSeason } from "@/utils";
 import { GetStaticProps, NextPage } from "next";
-import React from "react";
-import NewestComments from "@/components/shared/NewestComments";
+import React, { useMemo } from "react";
 
 interface HomeProps {
   trendingAnime: Anime[];
-  topAnime: Anime[];
   randomAnime: Anime;
   recentlyUpdatedAnime: Anime[];
   schedulesAnime: AiringSchedule[];
+  popularSeason: Anime[];
+  popularAllTime: Anime[];
+  favouriteSeason: Anime[];
+  favouriteAllTime: Anime[];
 }
 
 const Home: NextPage<HomeProps> = ({
   trendingAnime,
-  topAnime,
   randomAnime,
   recentlyUpdatedAnime,
   schedulesAnime,
+  favouriteAllTime,
+  favouriteSeason,
+  popularAllTime,
+  popularSeason,
 }) => {
+  const currentSeason = useMemo(getSeason, []);
+
   return (
     <React.Fragment>
       <Head />
@@ -44,6 +52,34 @@ const Home: NextPage<HomeProps> = ({
           <div className="space-y-8">
             <WatchedSection />
             <RecommendedAnimeSection />
+
+            <Section className="flex flex-col md:flex-row items-center md:space-between space-y-4 space-x-0 md:space-y-0 md:space-x-4">
+              <ColumnSection
+                title="Nổi bật mùa này"
+                type="anime"
+                data={popularSeason}
+                viewMoreHref={`/browse?sort=popularity&type=anime&season=${currentSeason.season}&seasonYear=${currentSeason.year}`}
+              />
+              <ColumnSection
+                title="Nổi bật nhất"
+                type="anime"
+                data={popularAllTime}
+                viewMoreHref="/browse?sort=popularity&type=anime"
+              />
+              <ColumnSection
+                title="Được yêu thích mùa này"
+                type="anime"
+                data={favouriteSeason}
+                viewMoreHref={`/browse?sort=favourites&type=anime&season=${currentSeason.season}&seasonYear=${currentSeason.year}`}
+              />
+              <ColumnSection
+                title="Được yêu thích"
+                type="anime"
+                data={favouriteAllTime}
+                viewMoreHref="/browse?sort=favourites&type=anime"
+              />
+            </Section>
+
             <NewestComments type="anime" />
 
             <Section title="Anime mới cập nhật">
@@ -58,10 +94,6 @@ const Home: NextPage<HomeProps> = ({
 
             <Section title="Thể loại">
               <GenresSelector />
-            </Section>
-
-            <Section title="Top anime">
-              <TopList type="anime" data={topAnime} />
             </Section>
           </div>
         </div>
@@ -107,23 +139,52 @@ export const getStaticProps: GetStaticProps = async () => {
     .not("banner_image", "is", null)
     .single();
 
-  const { data: topAnime } = await supabase
+  const { data: popularSeason } = await supabase
     .from<Anime>("anime")
     .select(
-      "ani_id, cover_image, genres, average_score, favourites, title, vietnamese_title, format, season, season_year, status"
+      "ani_id, cover_image, genres, title, vietnamese_title, format, season, season_year, status"
     )
-    .order("average_score", { ascending: false })
+    .order("popularity", { ascending: false })
     .eq("season", currentSeason.season)
     .eq("season_year", currentSeason.year)
-    .limit(10);
+    .limit(5);
+
+  const { data: popularAllTime } = await supabase
+    .from<Anime>("anime")
+    .select(
+      "ani_id, cover_image, genres, title, vietnamese_title, format, season, season_year, status"
+    )
+    .order("popularity", { ascending: false })
+    .limit(5);
+
+  const { data: favouriteSeason } = await supabase
+    .from<Anime>("anime")
+    .select(
+      "ani_id, cover_image, genres, title, vietnamese_title, format, season, season_year, status"
+    )
+    .order("favourites", { ascending: false })
+    .eq("season", currentSeason.season)
+    .eq("season_year", currentSeason.year)
+    .limit(5);
+
+  const { data: favouriteAllTime } = await supabase
+    .from<Anime>("anime")
+    .select(
+      "ani_id, cover_image, genres, title, vietnamese_title, format, season, season_year, status"
+    )
+    .order("favourites", { ascending: false })
+    .limit(5);
 
   return {
     props: {
       trendingAnime,
       recentlyUpdatedAnime,
       randomAnime,
-      topAnime,
       schedulesAnime,
+      popularSeason,
+      popularAllTime,
+      favouriteAllTime,
+      favouriteSeason,
     },
 
     revalidate: REVALIDATE_TIME,

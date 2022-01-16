@@ -156,7 +156,7 @@ const ReadPanel: React.FC<ReadPanelProps> = ({ children }) => {
               shortcutKey="["
             />
 
-            <MobileView className="flex-grow">
+            <MobileView className="grow">
               <select
                 value={chapterIndex.toString()}
                 onChange={(e) => {

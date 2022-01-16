@@ -146,10 +146,7 @@ const CommentInput: React.FC<CommentInputProps> = ({
     <ClientOnly>
       {user ? (
         <div className="flex w-full space-x-2">
-          <Avatar
-            className="flex-shrink-0"
-            src={user.user_metadata.avatar_url}
-          />
+          <Avatar className="shrink-0" src={user.user_metadata.avatar_url} />
 
           <div className="relative flex-1">
             <div className="relative bg-background-900">

@@ -48,7 +48,7 @@ main {
 
   .snap-x > * {
     scroll-snap-align: start;
-    flex-shrink: 0;
+    shrink: 0;
   }
 
   .snap-none {
