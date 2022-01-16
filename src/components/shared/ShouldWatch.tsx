@@ -79,9 +79,11 @@ const ShouldWatch: React.FC<DynamicData<Anime, Manga>> = ({
                 </DotList>
               </div>
             </div>
-            <p className="text-base text-gray-300 line-clamp-3">
-              {data.description}
-            </p>
+            <div className="h-full w-full">
+              <p className="text-base text-gray-300 line-clamp-4">
+                {data.description}
+              </p>
+            </div>
           </div>
         </a>
       </Link>
