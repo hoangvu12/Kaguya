@@ -3,6 +3,7 @@ import TextIcon from "@/components/shared/TextIcon";
 import { Anime } from "@/types";
 import { isColorVisible, numberWithCommas } from "@/utils";
 import { convert, getTitle } from "@/utils/data";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { AiFillHeart } from "react-icons/ai";
@@ -21,14 +22,13 @@ const TopCard: React.FC<TopCardProps> = ({ data, rank, type = "anime" }) => {
     ? data.cover_image.color
     : "white";
 
-  const redirectUrl =
-    type === "anime"
-      ? `/anime/details/${data.ani_id}`
-      : `/manga/details/${data.ani_id}`;
-
-  const handleNavigate = () => {
-    router.push(redirectUrl);
-  };
+  const redirectUrl = useMemo(
+    () =>
+      type === "anime"
+        ? `/anime/details/${data.ani_id}`
+        : `/manga/details/${data.ani_id}`,
+    [data.ani_id, type]
+  );
 
   const title = useMemo(() => getTitle(data), [data]);
 
@@ -42,33 +42,33 @@ const TopCard: React.FC<TopCardProps> = ({ data, rank, type = "anime" }) => {
         <span className="text-4xl">{rank}</span>
       </div>
       <div className="flex col-span-16 space-x-4 bg-background-900">
-        <div
-          className="cursor-pointer flex-shrink-0 relative h-full w-14"
-          onClick={handleNavigate}
-        >
-          <Image
-            src={data.cover_image.extra_large}
-            layout="fill"
-            objectFit="cover"
-            alt={title}
-          />
-        </div>
+        <Link href={redirectUrl}>
+          <a>
+            <div className="cursor-pointer flex-shrink-0 relative h-full w-14">
+              <Image
+                src={data.cover_image.extra_large}
+                layout="fill"
+                objectFit="cover"
+                alt={title}
+              />
+            </div>
+          </a>
+        </Link>
         <div className="flex-1 md:grid grid-cols-12">
           <div className="col-span-4 flex items-center justify-center">
-            <div
-              className="py-2 flex flex-col justify-between w-full"
-              style={{ color }}
-            >
-              <p
-                className="text-xl line-clamp-1 cursor-pointer"
-                onClick={handleNavigate}
-              >
-                {title}
-              </p>
-              <p className="line-clamp-1 font-semibold">
-                {data.genres.join(", ")}
-              </p>
-            </div>
+            <Link href={redirectUrl}>
+              <a>
+                <div
+                  className="py-2 flex flex-col justify-between w-full"
+                  style={{ color }}
+                >
+                  <p className="text-xl line-clamp-1 cursor-pointer">{title}</p>
+                  <p className="line-clamp-1 font-semibold">
+                    {data.genres.join(", ")}
+                  </p>
+                </div>
+              </a>
+            </Link>
           </div>
 
           <div className="col-span-8 md:grid grid-cols-4 flex items-center space-x-4">
