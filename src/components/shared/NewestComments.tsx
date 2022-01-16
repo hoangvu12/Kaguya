@@ -73,7 +73,7 @@ const NewestComments = <T extends "anime" | "manga">(
 
                   <EmojiText
                     disabled
-                    className="flex-grow overflow-ellipsis overflow-hidden"
+                    className="grow text-ellipsis overflow-hidden"
                     text={comment.body}
                   />
 

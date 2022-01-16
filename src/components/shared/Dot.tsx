@@ -7,13 +7,13 @@ interface DotProps {
 
 const Dot: React.FC<DotProps> = (props) => {
   return (
-    <div
+    <span
       className={classNames(
-        "w-1.5 h-1.5 bg-background-200 rounded-full",
+        "w-1.5 h-1.5 bg-background-200 rounded-full inline-block",
         props.className
       )}
-    ></div>
+    ></span>
   );
 };
 
-export default Dot;
+export default React.memo(Dot);

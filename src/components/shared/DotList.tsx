@@ -15,8 +15,15 @@ const DotList: React.FC<DotListProps> = ({
   const childrenLength = React.Children.count(children);
 
   return (
-    <div className={classNames("flex items-center space-x-2", className)}>
+    <div
+      className={classNames(
+        "flex line-clamp-1 items-center space-x-2",
+        className
+      )}
+    >
       {React.Children.map(children, (child, index) => {
+        if (!child) return null;
+
         if (index === childrenLength - 1) {
           return child;
         }

@@ -2,7 +2,7 @@ const colors = require("tailwindcss/colors");
 
 module.exports = {
   mode: "jit",
-  purge: [
+  content: [
     "./src/components/**/*.{ts,tsx,js,jsx}",
     "./src/pages/**/*.{ts,tsx,js,jsx}",
   ],
@@ -24,12 +24,12 @@ module.exports = {
         },
         typography: {
           DEFAULT: "#FFFFFF",
-          secondary: colors.warmGray[300],
+          secondary: colors.stone["300"],
         },
       },
     },
   },
-  variants: {},
+
   plugins: [
     require("@tailwindcss/line-clamp"),
     require("@tailwindcss/aspect-ratio"),

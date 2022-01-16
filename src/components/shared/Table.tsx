@@ -171,7 +171,7 @@ const Table = <T extends object>(props: PropsWithChildren<TableProps<T>>) => {
         </div>
 
         <div className="flex items-center space-x-2">
-          <span className="flex-shrink-0">Hiển thị</span>
+          <span className="shrink-0">Hiển thị</span>
           <select
             value={pageSize}
             onChange={(e) => {

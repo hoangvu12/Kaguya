@@ -1,32 +1,34 @@
-import HomeBanner from "@/components/shared/HomeBanner";
+import ReadSection from "@/components/features/manga/ReadSection";
+import RecommendedMangaSection from "@/components/features/manga/RecommendedMangaSection";
 import CardSwiper from "@/components/shared/CardSwiper";
 import ClientOnly from "@/components/shared/ClientOnly";
+import ColumnSection from "@/components/shared/ColumnSection";
+import GenresSelector from "@/components/shared/GenresSelector";
 import Head from "@/components/shared/Head";
-import TopList from "@/components/shared/TopList";
+import HomeBanner from "@/components/shared/HomeBanner";
+import NewestComments from "@/components/shared/NewestComments";
 import Section from "@/components/shared/Section";
+import ShouldWatch from "@/components/shared/ShouldWatch";
 import { REVALIDATE_TIME } from "@/constants";
 import supabase from "@/lib/supabase";
 import { Manga } from "@/types";
 import { GetStaticProps, NextPage } from "next";
 import React from "react";
-import ShouldWatch from "@/components/shared/ShouldWatch";
-import GenresSelector from "@/components/shared/GenresSelector";
-import ReadSection from "@/components/features/manga/ReadSection";
-import RecommendedMangaSection from "@/components/features/manga/RecommendedMangaSection";
-import NewestComments from "@/components/shared/NewestComments";
 
 interface HomeProps {
   trendingManga: Manga[];
-  topManga: Manga[];
   randomManga: Manga;
+  popularManga: Manga[];
+  favouriteManga: Manga[];
   recentlyUpdatedManga: Manga[];
 }
 
 const Home: NextPage<HomeProps> = ({
   trendingManga,
-  topManga,
   randomManga,
   recentlyUpdatedManga,
+  favouriteManga,
+  popularManga,
 }) => {
   return (
     <React.Fragment>
@@ -39,6 +41,22 @@ const Home: NextPage<HomeProps> = ({
           <div className="space-y-8">
             <ReadSection />
             <RecommendedMangaSection />
+
+            <Section className="flex flex-col md:flex-row items-center md:space-between space-y-4 space-x-0 md:space-y-0 md:space-x-4">
+              <ColumnSection
+                title="Nổi bật nhất"
+                type="manga"
+                data={popularManga}
+                viewMoreHref="/browse?sort=popularity&type=manga"
+              />
+              <ColumnSection
+                title="Được yêu thích"
+                type="manga"
+                data={favouriteManga}
+                viewMoreHref="/browse?sort=favourites&type=manga"
+              />
+            </Section>
+
             <NewestComments type="manga" />
 
             <Section title="Mới cập nhật">
@@ -49,10 +67,6 @@ const Home: NextPage<HomeProps> = ({
 
             <Section title="Thể loại">
               <GenresSelector type="manga" />
-            </Section>
-
-            <Section title="Top manga">
-              <TopList type="manga" data={topManga} />
             </Section>
           </div>
         </div>
@@ -83,20 +97,29 @@ export const getStaticProps: GetStaticProps = async () => {
     .not("banner_image", "is", null)
     .single();
 
-  const { data: topManga } = await supabase
+  const { data: popularManga } = await supabase
     .from<Manga>("manga")
     .select(
-      "ani_id, cover_image, genres, average_score, favourites, title, vietnamese_title, format, status"
+      "ani_id, cover_image, genres, title, vietnamese_title, format, status"
     )
-    .order("average_score", { ascending: false })
-    .limit(10);
+    .order("popularity", { ascending: false })
+    .limit(5);
+
+  const { data: favouriteManga } = await supabase
+    .from<Manga>("manga")
+    .select(
+      "ani_id, cover_image, genres, title, vietnamese_title, format, status"
+    )
+    .order("favourites", { ascending: false })
+    .limit(5);
 
   return {
     props: {
       trendingManga,
       recentlyUpdatedManga,
       randomManga,
-      topManga,
+      popularManga,
+      favouriteManga,
     },
 
     revalidate: REVALIDATE_TIME,
