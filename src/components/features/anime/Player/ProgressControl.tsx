@@ -41,13 +41,15 @@ const ProgressControl = () => {
   }, [videoEl]);
 
   return (
-    <div className="progress-control flex items-center space-x-4">
+    <div
+      className="progress-control flex items-center space-x-4"
+      onMouseLeave={() => setIntent(0)}
+    >
       <ProgressBar
         value={videoEl.currentTime / videoEl.duration}
         onChangeEnd={handleProgressSeek}
         onChange={handleProgress}
         onIntent={handleIntent}
-        onIntentEnd={() => setIntent(0)}
         className="w-full h-2 group"
       >
         {({ backgroundBar, playedBar, handle }) => (
@@ -70,7 +72,7 @@ const ProgressControl = () => {
 
             {intent > 0 && (
               <p
-                className="absolute -translate-x-1/2 -top-8"
+                className="bg-background-800 p-1 absolute -translate-x-1/2 -top-10"
                 style={{
                   left: `${intent * 100}%`,
                 }}
