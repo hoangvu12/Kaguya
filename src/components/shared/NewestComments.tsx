@@ -27,27 +27,24 @@ const NewestComments = <T extends "anime" | "manga">(
   return data?.length ? (
     <Section title="Bình luận gần đây">
       <Swiper
-        freeMode
+        hideNavigation
+        slidesPerGroup={1}
         breakpoints={{
           1280: {
             slidesPerView: 5,
-            slidesPerGroup: 5,
+            spaceBetween: 20,
           },
           1024: {
             slidesPerView: 4,
-            slidesPerGroup: 4,
+            spaceBetween: 20,
           },
           768: {
             slidesPerView: 3,
-            slidesPerGroup: 3,
-          },
-          640: {
-            slidesPerView: 2,
-            slidesPerGroup: 2,
+            spaceBetween: 20,
           },
           0: {
-            slidesPerView: 1,
-            slidesPerGroup: 1,
+            slidesPerView: 2,
+            spaceBetween: 10,
           },
         }}
       >

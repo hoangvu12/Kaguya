@@ -29,27 +29,31 @@ const Swiper: React.FC<SwiperProps> = ({
 
   return (
     <ReactSwiper
-      spaceBetween={20}
       breakpoints={{
         1280: {
           slidesPerView: 6,
           slidesPerGroup: 6,
+          spaceBetween: 20,
         },
         1024: {
           slidesPerView: 5,
           slidesPerGroup: 5,
+          spaceBetween: 20,
         },
         768: {
           slidesPerView: 4,
           slidesPerGroup: 4,
+          spaceBetween: 20,
         },
         640: {
           slidesPerView: 3,
           slidesPerGroup: 3,
+          spaceBetween: 10,
         },
         0: {
           slidesPerView: 2,
           slidesPerGroup: 2,
+          spaceBetween: 10,
         },
       }}
       onInit={(swiper) => {

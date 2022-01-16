@@ -103,13 +103,19 @@ const HomeBanner: React.FC<DynamicData<Anime[], Manga[]>> = ({
         </div>
       </BrowserView>
 
-      <MobileView className="pt-16 pb-8 overflow-hidden">
-        <Swiper hideNavigation breakpoints={{}} slidesPerView={1} loop>
+      <MobileView className="px-4 pt-20 pb-8 overflow-hidden">
+        <Swiper
+          hideNavigation
+          spaceBetween={10}
+          breakpoints={{}}
+          slidesPerView={1}
+          loop
+        >
           {data.map((slide, index) => {
             const title = getTitle(slide);
 
             return (
-              <SwiperSlide key={index} className="p-4">
+              <SwiperSlide key={index}>
                 <Link href={getRedirectUrl(slide.ani_id)}>
                   <a>
                     <div className="relative aspect-w-16 aspect-h-9 rounded-md">

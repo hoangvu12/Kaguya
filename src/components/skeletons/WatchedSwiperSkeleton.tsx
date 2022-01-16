@@ -4,17 +4,36 @@ import Skeleton, { SkeletonItem } from "@/components/shared/Skeleton";
 import EpisodeCardSkeleton from "@/components/skeletons/EpisodeCardSkeleton";
 
 const WatchedSwiperSkeleton = () => {
-  const breakpoint = useBreakpoint();
+  const breakpoint = useBreakpoint({
+    1280: {
+      items: 4,
+    },
+    1024: {
+      items: 3,
+    },
+    768: {
+      items: 2,
+    },
+    640: {
+      items: 1,
+    },
+    0: {
+      items: 1,
+    },
+  });
 
   return (
-    <Skeleton className="md:px-6 space-y-4">
-      <SkeletonItem className="ml-6 mb-4 h-8 w-52" />
+    <Skeleton className="px-4 md:px-12">
+      <SkeletonItem className="mb-4 h-8 w-52" />
 
-      <SkeletonItem className="mx-4 flex flex-wrap" container>
-        {[...new Array(breakpoint.items - 1)].map((_, index) => (
+      <SkeletonItem
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 md:gap-5"
+        container
+      >
+        {[...new Array(breakpoint.items)].map((_, index) => (
           <SkeletonItem
             key={index}
-            className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 px-2"
+            className="w-full col-span-1 aspect-w-16 aspect-h-9"
             container
           >
             <EpisodeCardSkeleton />

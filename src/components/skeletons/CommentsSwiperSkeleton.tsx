@@ -17,7 +17,7 @@ const CommentsSwiperSkeleton = () => {
       items: 2,
     },
     0: {
-      items: 1,
+      items: 2,
     },
   });
 
@@ -26,7 +26,7 @@ const CommentsSwiperSkeleton = () => {
       <SkeletonItem className="mb-4 h-8 w-52" />
 
       <SkeletonItem
-        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5"
+        className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2.5 md:gap-5"
         container
       >
         {[...new Array(breakpoint.items)].map((_, index) => (
