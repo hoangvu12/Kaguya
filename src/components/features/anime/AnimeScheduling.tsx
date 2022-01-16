@@ -88,14 +88,14 @@ const AnimeScheduling: React.FC<AnimeSchedulingProps> = ({ schedules }) => {
                           <React.Fragment>
                             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60"></div>
                             <DotList className="p-2 absolute bottom-0 w-full">
-                              <p>Tập {cardWithSchedule.episode}</p>
-                              <p>
+                              <span>Tập {cardWithSchedule.episode}</span>
+                              <span>
                                 {!isReleased
                                   ? dayjs
                                       .unix(cardWithSchedule.airing_at)
                                       .format("HH:mm")
                                   : "Đã cập nhật"}
-                              </p>
+                              </span>
                             </DotList>
                           </React.Fragment>
                         }

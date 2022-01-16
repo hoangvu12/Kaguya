@@ -79,7 +79,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
 
               <DotList>
                 {manga.genres.map((genre) => (
-                  <p key={genre}>{convert(genre, "genre")}</p>
+                  <span key={genre}>{convert(genre, "genre")}</span>
                 ))}
               </DotList>
 

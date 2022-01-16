@@ -75,8 +75,8 @@ const HomeBanner: React.FC<DynamicData<Anime[], Manga[]>> = ({
               </TextIcon>
 
               <DotList>
-                {activeSlide.genres.slice(0, 3).map((genre) => (
-                  <p key={genre}>{convert(genre, "genre")}</p>
+                {activeSlide.genres.map((genre) => (
+                  <span key={genre}>{convert(genre, "genre")}</span>
                 ))}
               </DotList>
             </div>
@@ -149,8 +149,10 @@ const HomeBanner: React.FC<DynamicData<Anime[], Manga[]>> = ({
                               <p>{numberWithCommas(slide.favourites)}</p>
                             </TextIcon>
                             <DotList>
-                              {slide.genres.slice(0, 3).map((genre) => (
-                                <p key={genre}>{convert(genre, "genre")}</p>
+                              {slide.genres.map((genre) => (
+                                <span key={genre}>
+                                  {convert(genre, "genre")}
+                                </span>
                               ))}
                             </DotList>
                           </div>
