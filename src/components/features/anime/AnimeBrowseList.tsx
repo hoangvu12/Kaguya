@@ -145,6 +145,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
             onChange={handleInputChange}
             defaultValue={defaultValues.keyword}
             label="Tìm kiếm"
+            containerClassName="shrink-0"
           />
 
           <FormSelect
