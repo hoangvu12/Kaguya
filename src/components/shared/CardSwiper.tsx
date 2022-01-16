@@ -31,4 +31,4 @@ const CardSwiper: React.FC<CardSwiperProps> = (props) => {
   );
 };
 
-export default CardSwiper;
+export default React.memo(CardSwiper);
