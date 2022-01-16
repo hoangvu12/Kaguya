@@ -1,13 +1,21 @@
 import classNames from "classnames";
 import React from "react";
 
-export interface SkeletonProps {
+export interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
 }
 
-const Skeleton: React.FC<SkeletonProps> = (props) => {
-  return <div className={classNames(props.className)}>{props.children}</div>;
-};
+const Skeleton = React.forwardRef<HTMLDivElement, SkeletonProps>(
+  ({ className, ...props }, ref) => {
+    return (
+      <div ref={ref} className={classNames(className)} {...props}>
+        {props.children}
+      </div>
+    );
+  }
+);
+
+Skeleton.displayName = "Skeleton";
 
 interface SkeletonItemProps extends React.HTMLProps<HTMLDivElement> {
   container?: boolean;

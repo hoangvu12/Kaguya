@@ -1,14 +1,17 @@
 import BREAKPOINTS from "@/constants/breakpoints";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-const useBreakpoint = () => {
-  const [screenWidth, setScreenWidth] = useState(0);
+const useBreakpoint = (
+  breakpoints: typeof BREAKPOINTS = BREAKPOINTS,
+  element?: Element
+) => {
+  const [width, setWidth] = useState(0);
 
   useEffect(() => {
-    setScreenWidth(window.innerWidth);
+    setWidth(element ? element.clientWidth : window.innerWidth);
 
     const handleResize = () => {
-      setScreenWidth(window.innerWidth);
+      setWidth(element ? element.clientWidth : window.innerWidth);
     };
 
     window.addEventListener("resize", handleResize);
@@ -16,13 +19,17 @@ const useBreakpoint = () => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [element]);
 
-  const breakpoint = Object.keys(BREAKPOINTS)
-    .sort((a, b) => Number(b) - Number(a))
-    .find((breakpoint) => screenWidth >= Number(breakpoint));
+  const breakpoint = useMemo(
+    () =>
+      Object.keys(breakpoints)
+        .sort((a, b) => Number(b) - Number(a))
+        .find((breakpoint) => width >= Number(breakpoint)),
+    [breakpoints, width]
+  );
 
-  return BREAKPOINTS[Number(breakpoint) as keyof typeof BREAKPOINTS];
+  return breakpoints[Number(breakpoint) as keyof typeof breakpoints];
 };
 
 export default useBreakpoint;
