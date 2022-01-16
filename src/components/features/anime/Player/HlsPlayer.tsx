@@ -1,4 +1,4 @@
-import { useVideoOptions } from "@/contexts/VideoOptionsContext";
+import { useVideoState } from "@/contexts/VideoStateContext";
 import { Source } from "@/types";
 import Hls from "hls.js";
 import React, { MutableRefObject, useEffect, useRef } from "react";
@@ -20,15 +20,15 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
   ({ src, autoPlay, ...props }, ref) => {
     const myRef = useRef<HTMLVideoElement>(null);
     const hls = useRef(new Hls(config));
-    const { options, setOptions } = useVideoOptions();
+    const { state, setState } = useVideoState();
 
     useEffect(() => {
       if (!hls?.current?.levels) return;
 
       hls.current.currentLevel = hls.current.levels
         .sort((a, b) => b.bitrate - a.bitrate)
-        .findIndex((level) => level.height === options?.currentQuality);
-    }, [options?.currentQuality]);
+        .findIndex((level) => level.height === state?.currentQuality);
+    }, [state?.currentQuality]);
 
     useEffect(() => {
       function _initPlayer() {
@@ -61,7 +61,7 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
               .sort((a, b) => b.height - a.height)
               .map((level) => `${level.height}p`);
 
-            setOptions((prev) => ({
+            setState((prev) => ({
               ...prev,
               qualities: levels.length
                 ? [
@@ -99,7 +99,7 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
           ...new Set<string>(src.map((src) => src.label)),
         ];
 
-        setOptions((prev) => ({
+        setState((prev) => ({
           ...prev,
           qualities: src.length ? notDuplicatedQualities : [],
           currentQuality: src[0].label,
@@ -113,17 +113,17 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
           hls.current.destroy();
         }
       };
-    }, [autoPlay, setOptions, src]);
+    }, [autoPlay, setState, src]);
 
     useEffect(() => {
       if (!myRef.current || src[0].file.includes("m3u8")) return;
 
-      const quality = options?.currentQuality;
+      const quality = state?.currentQuality;
 
       const qualitySource = src.find((source) => source.label === quality);
 
       myRef.current.src = qualitySource?.file;
-    }, [options, src]);
+    }, [state, src]);
 
     return (
       <video

@@ -8,11 +8,6 @@ export interface VideoState {
   volume: number;
   seeking: boolean;
   buffering: boolean;
-  options?: VideoOptions;
-}
-
-export interface VideoOptions {
-  qualities?: number[];
 }
 
 export interface ContextProps {

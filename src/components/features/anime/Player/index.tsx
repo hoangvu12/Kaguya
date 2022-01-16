@@ -1,10 +1,11 @@
 import { VideoContextProvider } from "@/contexts/VideoContext";
-import { VideoOptionsProvider } from "@/contexts/VideoOptionsContext";
+import { VideoStateProvider } from "@/contexts/VideoStateContext";
 import useDevice from "@/hooks/useDevice";
 import useVideoShortcut from "@/hooks/useVideoShortcut";
+import useHandleTap from "@/hooks/useHandleTap";
 import { Source } from "@/types";
 import classNames from "classnames";
-import { motion } from "framer-motion";
+import { motion, TapHandlers } from "framer-motion";
 import React, {
   MutableRefObject,
   useCallback,
@@ -46,9 +47,7 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
       handleKeepControls(null);
     };
 
-    const handleKeepControls = (
-      e: React.MouseEvent<HTMLDivElement, MouseEvent> | null
-    ) => {
+    const handleKeepControls = (e: any) => {
       if (!e) {
         startControlsCycle();
 
@@ -75,6 +74,24 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
         setShowControls(false);
       }, 3000);
     }, []);
+
+    const handleDoubleTap: TapHandlers["onTap"] = (e, info) => {
+      const width = window.innerWidth / 2;
+
+      if (info.point.x < width) {
+        myRef.current.currentTime = myRef.current.currentTime - 10;
+      } else {
+        myRef.current.currentTime = myRef.current.currentTime + 10;
+      }
+
+      startControlsCycle();
+    };
+
+    const handleTap = useHandleTap({
+      onTap: handleKeepControls,
+      onDoubleTap: handleDoubleTap,
+      tapThreshold: isMobile ? 250 : 0,
+    });
 
     useEffect(() => {
       if (!myRef.current) return;
@@ -120,12 +137,12 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
 
     return (
       <VideoContextProvider el={refHolder}>
-        <VideoOptionsProvider defaultQualities={defaultQualities}>
-          <div
+        <VideoStateProvider defaultQualities={defaultQualities}>
+          <motion.div
             className={classNames("video-wrapper relative overflow-hidden")}
             onMouseMove={isMobile ? () => {} : handleKeepControls}
-            onClick={handleKeepControls}
             onTouchMove={handleTouchMove}
+            onTap={handleTap}
           >
             {/* Controls */}
             <motion.div
@@ -167,8 +184,8 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
                 {...props}
               />
             </div>
-          </div>
-        </VideoOptionsProvider>
+          </motion.div>
+        </VideoStateProvider>
       </VideoContextProvider>
     );
   }

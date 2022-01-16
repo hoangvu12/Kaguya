@@ -2,7 +2,7 @@ import ForwardIcon from "@/components/icons/ForwardIcon";
 import PlayIcon from "@/components/icons/PlayIcon";
 import RewindIcon from "@/components/icons/RewindIcon";
 import { useVideo } from "@/contexts/VideoContext";
-import { useVideoOptions } from "@/contexts/VideoOptionsContext";
+import { useVideoState } from "@/contexts/VideoStateContext";
 import useDevice from "@/hooks/useDevice";
 import classNames from "classnames";
 import { AnimatePresence, HTMLMotionProps, motion } from "framer-motion";
@@ -24,7 +24,7 @@ const Overlay: React.FC<OverlayProps & HTMLMotionProps<"div">> = ({
 }) => {
   const { state, videoEl } = useVideo();
   const { isMobile } = useDevice();
-  const { options } = useVideoOptions();
+  const { state: videoState } = useVideoState();
 
   const handleOverlayClick = () => {
     if (isMobile) return;
@@ -49,7 +49,7 @@ const Overlay: React.FC<OverlayProps & HTMLMotionProps<"div">> = ({
 
   const handlePause = () => videoEl.pause();
 
-  return !options.isLocked ? (
+  return !videoState.isLocked ? (
     <AnimatePresence exitBeforeEnter>
       {showControls && (
         <motion.div
