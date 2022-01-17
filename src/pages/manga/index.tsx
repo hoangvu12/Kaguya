@@ -63,11 +63,18 @@ const Home: NextPage<HomeProps> = ({
               <CardSwiper type="manga" data={recentlyUpdatedManga} />
             </Section>
 
-            <ShouldWatch type="manga" data={randomManga} />
+            <div className="flex flex-col md:flex-row gap-8">
+              <Section
+                title="Đọc gì hôm nay?"
+                className="w-full md:w-[80%] md:!pr-0"
+              >
+                <ShouldWatch type="manga" data={randomManga} />
+              </Section>
 
-            <Section title="Thể loại">
-              <GenresSelector type="manga" />
-            </Section>
+              <Section title="Thể loại" className="w-full md:w-[20%] md:!pl-0">
+                <GenresSelector className="md:h-[500px]" />
+              </Section>
+            </div>
           </div>
         </div>
       </ClientOnly>

@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import React, { useRef } from "react";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import SwiperCore, { Navigation } from "swiper";
@@ -9,17 +10,26 @@ import "swiper/swiper.min.css";
 import type SwiperClass from "swiper/types/swiper-class";
 
 export type SwiperInstance = SwiperClass;
-export interface SwiperProps extends React.ComponentProps<typeof ReactSwiper> {}
+export interface SwiperProps extends React.ComponentProps<typeof ReactSwiper> {
+  isOverflowHidden?: boolean;
+}
 
 SwiperCore.use([Navigation]);
 
-const ArrowSwiper: React.FC<SwiperProps> = ({ children, ...props }) => {
+const ArrowSwiper: React.FC<SwiperProps> = ({
+  children,
+  isOverflowHidden = false,
+  ...props
+}) => {
   const prevButtonRef = useRef<HTMLButtonElement>(null);
   const nextButtonRef = useRef<HTMLButtonElement>(null);
 
   return (
     <ReactSwiper
       spaceBetween={20}
+      className={classNames(
+        isOverflowHidden ? "!overflow-hidden" : "!overflow-visible"
+      )}
       breakpoints={{
         1280: {
           slidesPerView: 7,
