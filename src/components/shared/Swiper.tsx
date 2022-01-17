@@ -10,10 +10,12 @@ import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import "swiper/swiper.min.css";
 
 import CircleButton from "@/components/shared/CircleButton";
+import classNames from "classnames";
 
 export type SwiperInstance = SwiperClass;
 export interface SwiperProps extends React.ComponentProps<typeof ReactSwiper> {
   hideNavigation?: boolean;
+  isOverflowHidden?: boolean;
 }
 
 SwiperCore.use([Navigation]);
@@ -22,6 +24,8 @@ const Swiper: React.FC<SwiperProps> = ({
   children,
   hideNavigation,
   onInit,
+  isOverflowHidden = false,
+  className,
   ...props
 }) => {
   const prevButtonRef = useRef<HTMLButtonElement>(null);
@@ -29,6 +33,10 @@ const Swiper: React.FC<SwiperProps> = ({
 
   return (
     <ReactSwiper
+      className={classNames(
+        isOverflowHidden ? "!overflow-hidden" : "!overflow-visible",
+        className
+      )}
       breakpoints={{
         1280: {
           slidesPerView: 6,

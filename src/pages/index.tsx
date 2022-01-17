@@ -82,18 +82,25 @@ const Home: NextPage<HomeProps> = ({
 
             <NewestComments type="anime" />
 
-            <Section title="Anime mới cập nhật">
+            <Section title="Mới cập nhật">
               <CardSwiper type="anime" data={recentlyUpdatedAnime} />
             </Section>
 
-            <ShouldWatch type="anime" data={randomAnime} />
+            <div className="flex flex-col md:flex-row gap-8">
+              <Section
+                title="Xem gì hôm nay?"
+                className="w-full md:w-[80%] md:!pr-0"
+              >
+                <ShouldWatch type="anime" data={randomAnime} />
+              </Section>
+
+              <Section title="Thể loại" className="w-full md:w-[20%] md:!pl-0">
+                <GenresSelector className="md:h-[500px]" />
+              </Section>
+            </div>
 
             <Section title="Lịch phát sóng">
               <AnimeScheduling schedules={schedulesAnime} />
-            </Section>
-
-            <Section title="Thể loại">
-              <GenresSelector />
             </Section>
           </div>
         </div>
