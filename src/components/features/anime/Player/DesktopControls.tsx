@@ -8,11 +8,20 @@ import React, { useCallback } from "react";
 import { AiOutlineLoading3Quarters, AiOutlinePause } from "react-icons/ai";
 import screenfull from "screenfull";
 import ControlsIcon from "@/components/features/anime/Player/ControlsIcon";
-import ProgressControl from "@/components/features/anime/Player/ProgressControl";
 import QualitiesSelector from "@/components/features/anime/Player/QualitiesSelector";
 import ShortcutsPanel from "@/components/features/anime/Player/ShortcutsPanel";
 import SkipButton from "@/components/features/anime/Player/SkipButton";
-import VolumeControl from "@/components/features/anime/Player/VolumeControl";
+import dynamic from "next/dynamic";
+
+const ProgressControl = dynamic(
+  () => import("@/components/features/anime/Player/ProgressControl"),
+  { ssr: false }
+);
+
+const VolumeControl = dynamic(
+  () => import("@/components/features/anime/Player/VolumeControl"),
+  { ssr: false }
+);
 
 const Controls: React.FC = () => {
   const { state, videoEl } = useVideo();

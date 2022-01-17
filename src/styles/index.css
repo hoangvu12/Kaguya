@@ -286,3 +286,7 @@ div.jsoneditor-value.jsoneditor-null {
 div.jsoneditor-value.jsoneditor-invalid {
   color: white !important;
 }
+
+.ui-time-seek-slider {
+  width: 100%;
+}

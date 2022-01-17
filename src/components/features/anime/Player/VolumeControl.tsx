@@ -1,59 +1,43 @@
+import ControlsIcon from "@/components/features/anime/Player/ControlsIcon";
 import VolumeFullIcon from "@/components/icons/VolumeFullIcon";
 import VolumeMutedIcon from "@/components/icons/VolumeMutedIcon";
 import { useVideo } from "@/contexts/VideoContext";
-import { motion } from "framer-motion";
 import React, { useState } from "react";
-import ControlsIcon from "@/components/features/anime/Player/ControlsIcon";
-import ProgressBar from "@/components/shared/ProgressBar";
+import { TimeSeekSlider } from "react-time-seek-slider";
+import "react-time-seek-slider/lib/ui-time-seek-slider.css";
 
 const VolumeControl: React.FC = () => {
-  const [hover, setHover] = useState(false);
   const { state, videoEl } = useVideo();
 
   const volume = (volume: number) => () => {
-    if (!volume && volume !== 0) return videoEl.volume;
+    if (!volume && volume !== 0) return;
 
     videoEl.volume = volume;
   };
 
-  const handleMouseEnter = () => setHover(true);
-  const handleMouseLeave = () => setHover(false);
+  const handleVolumeChange = (volume: number) => {
+    if (!volume && volume !== 0) return;
+
+    videoEl.volume = volume;
+  };
 
   return (
-    <div
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      className="flex items-center space-x-4"
-    >
+    <div className="flex items-center space-x-4">
       {state.volume > 0 ? (
         <ControlsIcon Icon={VolumeFullIcon} onClick={volume(0)} />
       ) : (
         <ControlsIcon Icon={VolumeMutedIcon} onClick={volume(0.5)} />
       )}
 
-      <motion.div
-        initial={{ width: 0, opacity: 0 }}
-        animate={{
-          width: hover ? "5rem" : 0,
-          opacity: hover ? 1 : 0,
-        }}
-      >
-        <ProgressBar
-          value={state.volume}
-          onChange={(volume) => {
-            videoEl.volume = volume;
-          }}
-          className="w-full h-2"
-        >
-          {({ backgroundBar, playedBar, handle }) => (
-            <React.Fragment>
-              {backgroundBar}
-              {playedBar}
-              {handle}
-            </React.Fragment>
-          )}
-        </ProgressBar>
-      </motion.div>
+      <div className="w-20">
+        <TimeSeekSlider
+          max={1}
+          currentTime={state.volume}
+          onSeeking={handleVolumeChange}
+          offset={0}
+          hideHoverTime
+        />
+      </div>
     </div>
   );
 };

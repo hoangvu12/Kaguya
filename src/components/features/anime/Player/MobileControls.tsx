@@ -4,8 +4,14 @@ import classNames from "classnames";
 import React, { useCallback } from "react";
 import screenfull from "screenfull";
 import MobileControlsIcon from "@/components/features/anime/Player/MobileControlsIcon";
-import ProgressControl from "@/components/features/anime/Player/ProgressControl";
+// import ProgressControl from "@/components/features/anime/Player/ProgressControl";
 import SkipButton from "@/components/features/anime/Player/SkipButton";
+import dynamic from "next/dynamic";
+
+const ProgressControl = dynamic(
+  () => import("@/components/features/anime/Player/ProgressControl"),
+  { ssr: false }
+);
 
 const MobileControls = () => {
   const handleEnterFullScreen = useCallback(() => {

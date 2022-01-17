@@ -1,30 +1,21 @@
 import { useVideo } from "@/contexts/VideoContext";
 import { parseTime } from "@/utils";
 import React, { useCallback, useEffect, useState } from "react";
-import ProgressBar, { Bar } from "@/components/shared/ProgressBar";
+import { TimeSeekSlider } from "react-time-seek-slider";
+import "react-time-seek-slider/lib/ui-time-seek-slider.css";
 
 const ProgressControl = () => {
   const { state, videoEl } = useVideo();
-  const [intent, setIntent] = useState(0);
   const [buffer, setBuffer] = useState(0);
 
   const handleProgressSeek = useCallback(
-    (percent) => {
-      videoEl.currentTime = percent * videoEl.duration;
+    (time) => {
+      videoEl.currentTime = time;
 
       videoEl.play();
     },
     [videoEl]
   );
-
-  const handleProgress = useCallback(() => {
-    setIntent(0);
-    videoEl.pause();
-  }, [videoEl]);
-
-  const handleIntent = useCallback((percent) => {
-    setIntent(percent);
-  }, []);
 
   useEffect(() => {
     // https://stackoverflow.com/questions/5029519/html5-video-percentage-loaded
@@ -34,55 +25,19 @@ const ProgressControl = () => {
 
       if (!buffer.length) return;
 
-      const bufferPercentage = buffer.end(buffer.length - 1) / this.duration;
-
-      setBuffer(bufferPercentage);
+      setBuffer(buffer.end(buffer.length - 1));
     });
   }, [videoEl]);
 
   return (
-    <div
-      className="progress-control flex items-center space-x-4"
-      onMouseLeave={() => setIntent(0)}
-    >
-      <ProgressBar
-        value={videoEl.currentTime / videoEl.duration}
-        onChangeEnd={handleProgressSeek}
-        onChange={handleProgress}
-        onIntent={handleIntent}
-        className="w-full h-2 group"
-      >
-        {({ backgroundBar, playedBar, handle }) => (
-          <React.Fragment>
-            {backgroundBar}
-
-            <Bar
-              className="bg-white/40"
-              style={{ width: `${intent * 100}%` }}
-            />
-
-            <Bar
-              className="bg-white/60"
-              style={{ width: `${buffer * 100}%` }}
-            />
-
-            {playedBar}
-
-            {handle}
-
-            {intent > 0 && (
-              <p
-                className="bg-background-800 p-1 absolute -translate-x-1/2 -top-10"
-                style={{
-                  left: `${intent * 100}%`,
-                }}
-              >
-                {parseTime(intent * state.duration)}
-              </p>
-            )}
-          </React.Fragment>
-        )}
-      </ProgressBar>
+    <div className="progress-control flex items-center space-x-4">
+      <TimeSeekSlider
+        max={videoEl.duration}
+        currentTime={videoEl.currentTime}
+        progress={buffer}
+        onSeeking={handleProgressSeek}
+        offset={0}
+      />
 
       <div className="flex text-gray-300 space-x-2 items-center justify-between">
         <p>{parseTime(state.currentTime)}</p>
