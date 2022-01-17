@@ -78,6 +78,7 @@ const Episodes: React.FC<EpisodesProps> = ({
         slidesPerView={3}
         slidesPerGroup={3}
         breakpoints={{}}
+        spaceBetween={20}
         onInit={(swiper) => {
           const index = chunks[activeTabIndex].findIndex(
             (episode) => episode.episodeIndex === activeIndex
