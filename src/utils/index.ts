@@ -66,7 +66,7 @@ export function parseTime(seconds: string | number) {
   let hours = "";
 
   if (Number(minutes) > 59) {
-    let hours = Math.floor(Number(minutes) / 60).toString();
+    hours = Math.floor(Number(minutes) / 60).toString();
     hours = Number(hours) >= 10 ? hours : `0${hours}`;
     minutes = (Number(minutes) - Number(hours) * 60).toString();
     minutes = Number(minutes) >= 10 ? minutes : `0${minutes}`;
