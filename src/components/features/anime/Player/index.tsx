@@ -21,7 +21,9 @@ import DesktopControls from "@/components/features/anime/Player/DesktopControls"
 import HlsPlayer from "@/components/features/anime/Player/HlsPlayer";
 import MobileControls from "@/components/features/anime/Player/MobileControls";
 import Overlay from "@/components/features/anime/Player/Overlay";
+import { AiFillFastBackward, AiFillFastForward } from "react-icons/ai";
 
+const noop = () => {};
 interface VideoProps
   extends Omit<React.VideoHTMLAttributes<HTMLVideoElement>, "src"> {
   src: Source[];
@@ -48,6 +50,8 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
     };
 
     const handleKeepControls = (e: any) => {
+      console.log("single tap");
+
       if (!e) {
         startControlsCycle();
 
@@ -64,6 +68,8 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
     };
 
     const startControlsCycle = useCallback(() => {
+      console.log("controls cycle");
+
       setShowControls(true);
 
       if (timeout.current) {
@@ -76,15 +82,29 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
     }, []);
 
     const handleDoubleTap: TapHandlers["onTap"] = (e, info) => {
-      const width = window.innerWidth / 2;
+      console.log("double tap");
+
+      const backwardIndicator = document.querySelector(".backward-indicator");
+      const forwardIndicator = document.querySelector(".forward-indicator");
+
+      const widthPercent = 45;
+      const width = (window.innerWidth * widthPercent) / 100;
 
       if (info.point.x < width) {
         myRef.current.currentTime = myRef.current.currentTime - 10;
+        backwardIndicator.classList.toggle("opacity-0");
+
+        setTimeout(() => {
+          backwardIndicator.classList.toggle("opacity-0");
+        }, 350);
       } else {
         myRef.current.currentTime = myRef.current.currentTime + 10;
-      }
+        forwardIndicator.classList.toggle("opacity-0");
 
-      startControlsCycle();
+        setTimeout(() => {
+          forwardIndicator.classList.toggle("opacity-0");
+        }, 350);
+      }
     };
 
     const handleTap = useHandleTap({
@@ -140,7 +160,7 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
         <VideoStateProvider defaultQualities={defaultQualities}>
           <motion.div
             className={classNames("video-wrapper relative overflow-hidden")}
-            onMouseMove={isMobile ? () => {} : handleKeepControls}
+            onMouseMove={isMobile ? noop : handleKeepControls}
             onTouchMove={handleTouchMove}
             onTap={handleTap}
           >
@@ -170,6 +190,22 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
             <Overlay showControls={showControls || isBuffering}>
               {overlaySlot}
             </Overlay>
+
+            <div
+              className="backward-indicator bg-white/20 absolute left-0 w-[45vw] h-full flex flex-col items-center justify-center transition duration-300 opacity-0"
+              style={{ borderRadius: "0% 20% 20% 0% / 50% 50% 50% 50%" }}
+            >
+              <AiFillFastBackward className="w-12 h-12" />
+              <p className="rounded-full text-xl">-10 giây</p>
+            </div>
+
+            <div
+              className="forward-indicator bg-white/20 absolute right-0 w-[45vw] h-full flex flex-col items-center justify-center transition duration-300 opacity-0"
+              style={{ borderRadius: "20% 0% 0% 20% / 50% 50% 50% 50%" }}
+            >
+              <AiFillFastForward className="w-12 h-12" />
+              <p className="rounded-full text-xl">+10 giây</p>
+            </div>
 
             <div className="w-full h-screen">
               <HlsPlayer
