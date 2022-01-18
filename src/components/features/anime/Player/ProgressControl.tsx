@@ -39,10 +39,10 @@ const ProgressControl = () => {
         offset={0}
       />
 
-      <div className="flex text-gray-300 space-x-2 items-center justify-between">
-        <p>{parseTime(state.currentTime)}</p>
-        <p>/</p>
-        <p>{parseTime(state.duration)}</p>
+      <div className="flex text-white space-x-2 items-center justify-center w-40 select-none">
+        <p>
+          {parseTime(state.currentTime || 0)} / {parseTime(state.duration || 0)}
+        </p>
       </div>
     </div>
   );
