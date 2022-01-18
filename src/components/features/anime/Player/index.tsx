@@ -50,8 +50,6 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
     };
 
     const handleKeepControls = (e: any) => {
-      console.log("single tap");
-
       if (!e) {
         startControlsCycle();
 
@@ -68,8 +66,6 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
     };
 
     const startControlsCycle = useCallback(() => {
-      console.log("controls cycle");
-
       setShowControls(true);
 
       if (timeout.current) {
@@ -82,8 +78,6 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
     }, []);
 
     const handleDoubleTap: TapHandlers["onTap"] = (e, info) => {
-      console.log("double tap");
-
       const backwardIndicator = document.querySelector(".backward-indicator");
       const forwardIndicator = document.querySelector(".forward-indicator");
 
