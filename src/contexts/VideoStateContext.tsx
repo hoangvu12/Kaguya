@@ -10,7 +10,6 @@ import {
 export interface VideoState {
   qualities?: string[];
   currentQuality?: string;
-  isLocked?: boolean;
 }
 
 interface ContextProps {
@@ -24,7 +23,7 @@ interface ProviderProps {
 }
 
 const defaultValue = {
-  state: { qualities: [], currentQuality: "NONE", isLocked: false },
+  state: { qualities: [], currentQuality: "NONE" },
   setState: () => {},
 } as ContextProps;
 

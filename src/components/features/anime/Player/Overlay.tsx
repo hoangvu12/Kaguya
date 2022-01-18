@@ -24,7 +24,6 @@ const Overlay: React.FC<OverlayProps & HTMLMotionProps<"div">> = ({
 }) => {
   const { state, videoEl } = useVideo();
   const { isMobile } = useDevice();
-  const { state: videoState } = useVideoState();
 
   const handleOverlayClick = () => {
     if (isMobile) return;
@@ -49,7 +48,7 @@ const Overlay: React.FC<OverlayProps & HTMLMotionProps<"div">> = ({
 
   const handlePause = () => videoEl.pause();
 
-  return !videoState.isLocked ? (
+  return (
     <AnimatePresence exitBeforeEnter>
       {showControls && (
         <motion.div
@@ -126,7 +125,7 @@ const Overlay: React.FC<OverlayProps & HTMLMotionProps<"div">> = ({
         </motion.div>
       )}
     </AnimatePresence>
-  ) : null;
+  );
 };
 
 export default Overlay;
