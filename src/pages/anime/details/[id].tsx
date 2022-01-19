@@ -20,6 +20,7 @@ import CommentsSection from "@/components/features/comment/CommentsSection";
 import CharacterCard from "@/components/shared/CharacterCard";
 import DetailsBanner from "@/components/shared/DetailsBanner";
 import DetailsSection from "@/components/shared/DetailsSection";
+import Link from "next/link";
 
 interface DetailsPageProps {
   anime: Anime;
@@ -97,7 +98,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
 
               <p className="mt-4 mb-8 text-gray-300">{anime.description}</p>
 
-              <div className="flex space-x-8 overflow-x-auto md:scroll-bar snap-x md:space-x-16">
+              <div className="flex space-x-8 overflow-x-auto snap-x snap-mandatory md:space-x-16">
                 <InfoItem title="Quốc gia" value={anime.country_of_origin} />
                 <InfoItem title="Số tập" value={anime.total_episodes} />
 
@@ -132,34 +133,54 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
         </div>
 
         <div className="w-full min-h-screen gap-8 px-4 mt-8 space-y-8 md:space-y-0 md:grid md:grid-cols-10 sm:px-12">
-          <div className="md:col-span-2 bg-background-900 rounded-md p-4 space-y-4 h-[max-content]">
-            <InfoItem
-              title="Định dạng"
-              value={convert(anime.format, "format")}
-            />
-            <InfoItem title="English" value={anime.title.english} />
-            <InfoItem title="Native" value={anime.title.native} />
-            <InfoItem title="Romanji" value={anime.title.romaji} />
-            <InfoItem
-              title="Nổi bật"
-              value={numberWithCommas(anime.popularity)}
-            />
-            <InfoItem
-              title="Yêu thích"
-              value={numberWithCommas(anime.favourites)}
-            />
-            <InfoItem
-              title="Xu hướng"
-              value={numberWithCommas(anime.trending)}
-            />
-            <InfoItem
-              title="Studio"
-              value={anime.studios.slice(0, 3).join(", ")}
-            />
-            <InfoItem
-              title="Mùa"
-              value={`${convert(anime.season, "season")} ${anime.season_year}`}
-            />
+          <div className="md:col-span-2 xl:h-[max-content] space-y-4">
+            <div className="bg-background-900 rounded-md p-4 space-y-4">
+              <InfoItem
+                title="Định dạng"
+                value={convert(anime.format, "format")}
+              />
+              <InfoItem title="English" value={anime.title.english} />
+              <InfoItem title="Native" value={anime.title.native} />
+              <InfoItem title="Romanji" value={anime.title.romaji} />
+              <InfoItem
+                title="Nổi bật"
+                value={numberWithCommas(anime.popularity)}
+              />
+              <InfoItem
+                title="Yêu thích"
+                value={numberWithCommas(anime.favourites)}
+              />
+              <InfoItem
+                title="Xu hướng"
+                value={numberWithCommas(anime.trending)}
+              />
+              <InfoItem
+                title="Studio"
+                value={anime.studios.slice(0, 3).join(", ")}
+              />
+              <InfoItem
+                title="Mùa"
+                value={`${convert(anime.season, "season")} ${
+                  anime.season_year
+                }`}
+              />
+            </div>
+
+            <div className="space-y-2 text-gray-400">
+              <h1 className="font-semibold">Tags</h1>
+
+              <ul className="space-y-2">
+                {anime.tags.map((tag) => (
+                  <Link href={`/browse?type=anime&tags=${tag}`} key={tag}>
+                    <a className="block">
+                      <li className="p-2 rounded-md bg-background-900 hover:text-primary-300 transition duration-300">
+                        {tag}
+                      </li>
+                    </a>
+                  </Link>
+                ))}
+              </ul>
+            </div>
           </div>
           <div className="space-y-12 md:col-span-8">
             <DetailsSection title="Tập phim" className="overflow-hidden">

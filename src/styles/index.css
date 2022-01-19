@@ -42,13 +42,8 @@ main {
     background: #888;
   }
 
-  .snap-x {
-    scroll-snap-type: x mandatory;
-  }
-
   .snap-x > * {
-    scroll-snap-align: start;
-    shrink: 0;
+    flex-shrink: 0;
   }
 
   .snap-none {
