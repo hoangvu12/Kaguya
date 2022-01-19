@@ -103,7 +103,7 @@ const HomeBanner: React.FC<DynamicData<Anime[], Manga[]>> = ({
         </div>
       </BrowserView>
 
-      <MobileView className="px-4 pt-20 pb-8 overflow-hidden">
+      <MobileView className="px-4 md:px-12 pt-20 pb-8 overflow-hidden">
         <Swiper
           hideNavigation
           spaceBetween={10}
