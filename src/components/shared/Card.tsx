@@ -2,7 +2,7 @@ import DotList from "@/components/shared/DotList";
 import Image from "@/components/shared/Image";
 import TextIcon from "@/components/shared/TextIcon";
 import useDevice from "@/hooks/useDevice";
-import { Anime, DynamicData, Manga } from "@/types";
+import { Anime, Manga } from "@/types";
 import { isColorVisible, numberWithCommas } from "@/utils";
 import { convert, getTitle } from "@/utils/data";
 import classNames from "classnames";
@@ -12,7 +12,9 @@ import React, { useMemo } from "react";
 import { AiFillHeart } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
 
-interface AnimeCardProps {
+interface AnimeCardProps<T> {
+  type: T;
+  data: T extends "anime" ? Anime : Manga;
   className?: string;
   containerEndSlot?: React.ReactNode;
   imageEndSlot?: React.ReactNode;
@@ -47,13 +49,13 @@ const slotVariants: Variants = {
   exit: { opacity: 1 },
 };
 
-const Card: React.FC<AnimeCardProps & DynamicData<Anime, Manga>> = ({
+const Card = <T extends "anime" | "manga">({
   data,
   className,
-  type = "anime",
+  type,
   containerEndSlot,
   imageEndSlot,
-}) => {
+}: AnimeCardProps<T>) => {
   const { isDesktop } = useDevice();
 
   const primaryColor =
@@ -148,4 +150,4 @@ const Card: React.FC<AnimeCardProps & DynamicData<Anime, Manga>> = ({
   );
 };
 
-export default React.memo(Card);
+export default React.memo(Card) as typeof Card;

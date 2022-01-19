@@ -4,34 +4,30 @@ import DotList from "@/components/shared/DotList";
 import Image from "@/components/shared/Image";
 import Swiper, { SwiperProps, SwiperSlide } from "@/components/shared/Swiper";
 import TextIcon from "@/components/shared/TextIcon";
-import { Anime, DynamicData, Manga } from "@/types";
+import { Anime, Manga } from "@/types";
 import { numberWithCommas } from "@/utils";
 import { convert, getTitle } from "@/utils/data";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import React, { useMemo, useState } from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import { AiFillHeart, AiFillPlayCircle } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
 
-const HomeBanner: React.FC<DynamicData<Anime[], Manga[]>> = ({
-  data,
-  type = "anime",
-}) => {
-  const router = useRouter();
+interface HomeBannerProps<T> {
+  data: T extends "anime" ? Anime[] : Manga[];
+  type: T;
+}
 
+const HomeBanner = <T extends "anime" | "manga">({
+  data,
+  type,
+}: HomeBannerProps<T>) => {
   const [index, setIndex] = useState<number>(0);
 
   const activeSlide = data[index];
 
   const handleSlideChange: SwiperProps["onSlideChange"] = (swiper) => {
     setIndex(swiper.realIndex);
-  };
-
-  const handleClick = (ani_id: number) => () => {
-    router.push(
-      type === "anime" ? `/anime/details/${ani_id}` : `/manga/details/${ani_id}`
-    );
   };
 
   const getRedirectUrl = (ani_id: number) => {
@@ -170,4 +166,4 @@ const HomeBanner: React.FC<DynamicData<Anime[], Manga[]>> = ({
   );
 };
 
-export default HomeBanner;
+export default React.memo(HomeBanner) as typeof HomeBanner;
