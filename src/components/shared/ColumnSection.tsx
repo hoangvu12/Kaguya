@@ -19,7 +19,11 @@ const ColumnSection = <T extends "manga" | "anime">({
 }: ColumnSectionProps<T>) => {
   return (
     <div className="w-full grow-0 bg-background-800 pt-4">
-      {title && <h2 className="px-4 text-xl font-semibold mb-4">{title}</h2>}
+      {title && (
+        <h2 className="px-4 text-xl font-semibold mb-4 line-clamp-1">
+          {title}
+        </h2>
+      )}
 
       <div className="space-y-2">
         {data.map((data) => (
