@@ -44,42 +44,37 @@ const useVideoShortcut = (
     }
   };
 
-  const handleVideoTime = (time: number) => {
-    videoEl.currentTime = time;
+  const handleVideoTime = (time: number) => () => {
+    videoEl.currentTime = videoEl.currentTime + time;
   };
 
   const handleVideoTimePercent = (percent: number) => () => {
     videoEl.currentTime = videoEl?.duration * percent;
   };
 
-  useHotkeys("space", handleToggleVideo, [videoEl]);
-  useHotkeys("k", handleToggleVideo, [videoEl]);
-  useHotkeys("m", handleToggleMute, [videoEl]);
-  useHotkeys("left", () => handleVideoTime(videoEl?.currentTime - 10), [
-    videoEl,
+  useHotkeys("space", handleToggleVideo, [videoEl?.duration]);
+  useHotkeys("k", handleToggleVideo, [videoEl?.duration]);
+  useHotkeys("m", handleToggleMute, [videoEl?.duration]);
+  useHotkeys("left", handleVideoTime(-10), [videoEl?.duration]);
+  useHotkeys("right", handleVideoTime(10), [videoEl?.duration]);
+  useHotkeys("f", handleFullscreen, [videoEl?.duration]);
+  useHotkeys("shift+n", onNextEpisode, [videoEl?.duration, onNextEpisode]);
+  useHotkeys("shift+p", onPreviousEpisode, [
+    videoEl?.duration,
+    onPreviousEpisode,
   ]);
-  useHotkeys("right", () => handleVideoTime(videoEl?.currentTime + 10), [
-    videoEl,
-  ]);
-  useHotkeys("f", handleFullscreen, [videoEl]);
-  useHotkeys("shift+n", onNextEpisode, [videoEl, onNextEpisode]);
-  useHotkeys("shift+p", onPreviousEpisode, [videoEl, onPreviousEpisode]);
-  useHotkeys(
-    "shift+right",
-    () => handleVideoTime(videoEl?.currentTime + SKIP_TIME),
-    [videoEl, onPreviousEpisode]
-  );
+  useHotkeys("shift+right", handleVideoTime(SKIP_TIME), [videoEl?.duration]);
 
-  useHotkeys("0", handleVideoTimePercent(0), [videoEl]);
-  useHotkeys("1", handleVideoTimePercent(0.1), [videoEl]);
-  useHotkeys("2", handleVideoTimePercent(0.2), [videoEl]);
-  useHotkeys("3", handleVideoTimePercent(0.3), [videoEl]);
-  useHotkeys("4", handleVideoTimePercent(0.4), [videoEl]);
-  useHotkeys("5", handleVideoTimePercent(0.5), [videoEl]);
-  useHotkeys("6", handleVideoTimePercent(0.6), [videoEl]);
-  useHotkeys("7", handleVideoTimePercent(0.7), [videoEl]);
-  useHotkeys("8", handleVideoTimePercent(0.8), [videoEl]);
-  useHotkeys("9", handleVideoTimePercent(0.9), [videoEl]);
+  useHotkeys("0", handleVideoTimePercent(0), [videoEl?.duration]);
+  useHotkeys("1", handleVideoTimePercent(0.1), [videoEl?.duration]);
+  useHotkeys("2", handleVideoTimePercent(0.2), [videoEl?.duration]);
+  useHotkeys("3", handleVideoTimePercent(0.3), [videoEl?.duration]);
+  useHotkeys("4", handleVideoTimePercent(0.4), [videoEl?.duration]);
+  useHotkeys("5", handleVideoTimePercent(0.5), [videoEl?.duration]);
+  useHotkeys("6", handleVideoTimePercent(0.6), [videoEl?.duration]);
+  useHotkeys("7", handleVideoTimePercent(0.7), [videoEl?.duration]);
+  useHotkeys("8", handleVideoTimePercent(0.8), [videoEl?.duration]);
+  useHotkeys("9", handleVideoTimePercent(0.9), [videoEl?.duration]);
 };
 
 export default useVideoShortcut;

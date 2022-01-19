@@ -34,6 +34,8 @@ import React, {
 import { BrowserView, MobileView } from "react-device-detect";
 import { BsArrowLeft } from "react-icons/bs";
 
+const noop = () => {};
+
 interface WatchPageProps {
   anime: Anime;
 }
@@ -176,17 +178,31 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   }, [currentEpisode.episode_id, id, saveWatchedMutation]);
 
   useEffect(() => {
-    navigator.mediaSession.setActionHandler("previoustrack", function () {
-      if (episodeIndex === 0) return;
+    if (!navigator?.mediaSession) return;
 
-      handleNavigateEpisode(Number(episodeIndex) - 1)();
-    });
+    const videoEl = videoRef.current;
 
-    navigator.mediaSession.setActionHandler("nexttrack", function () {
-      if (episodeIndex === sortedEpisodes.length - 1) return;
+    if (!videoEl) return;
 
-      handleNavigateEpisode(Number(episodeIndex) + 1)();
-    });
+    const handleNavigator = () => {
+      navigator.mediaSession.setActionHandler("previoustrack", function () {
+        if (episodeIndex === 0) return;
+
+        handleNavigateEpisode(Number(episodeIndex) - 1)();
+      });
+
+      navigator.mediaSession.setActionHandler("nexttrack", function () {
+        if (episodeIndex === sortedEpisodes.length - 1) return;
+
+        handleNavigateEpisode(Number(episodeIndex) + 1)();
+      });
+    };
+
+    videoEl.addEventListener("canplay", handleNavigator, { once: true });
+
+    return () => {
+      videoEl.removeEventListener("canplay", handleNavigator);
+    };
   }, [episodeIndex, handleNavigateEpisode, sortedEpisodes.length]);
 
   const title = useMemo(() => getTitle(anime), [anime]);
@@ -266,12 +282,12 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
         onKeyNextEpisode={
           episodeIndex < sortedEpisodes.length - 1
             ? handleNavigateEpisode(Number(episodeIndex) + 1)
-            : () => {}
+            : noop
         }
         onKeyPreviousEpisode={
           episodeIndex > 0
             ? handleNavigateEpisode(Number(episodeIndex) - 1)
-            : () => {}
+            : noop
         }
       />
 
