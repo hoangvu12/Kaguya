@@ -103,20 +103,39 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
         </div>
 
         <div className="space-y-8 md:space-y-0 px-4 md:grid md:grid-cols-10 w-full min-h-screen mt-8 sm:px-12 gap-8">
-          <div className="md:col-span-2 bg-background-900 rounded-md p-4 space-y-4 h-[max-content]">
-            <InfoItem
-              title="Nổi bật"
-              value={numberWithCommas(manga.popularity)}
-            />
-            <InfoItem
-              title="Yêu thích"
-              value={numberWithCommas(manga.favourites)}
-            />
-            <InfoItem
-              title="Xu hướng"
-              value={numberWithCommas(manga.trending)}
-            />
+          <div className="md:col-span-2 h-[max-content] space-y-4">
+            <div className="bg-background-900 rounded-md p-4 space-y-4">
+              <InfoItem
+                title="Nổi bật"
+                value={numberWithCommas(manga.popularity)}
+              />
+              <InfoItem
+                title="Yêu thích"
+                value={numberWithCommas(manga.favourites)}
+              />
+              <InfoItem
+                title="Xu hướng"
+                value={numberWithCommas(manga.trending)}
+              />
+            </div>
+
+            <div className="space-y-2 text-gray-400">
+              <h1 className="font-semibold">Tags</h1>
+
+              <ul className="space-y-2">
+                {manga.tags.map((tag) => (
+                  <Link href={`/browse?type=manga&tags=${tag}`} key={tag}>
+                    <a className="block">
+                      <li className="p-2 rounded-md bg-background-900 hover:text-primary-300 transition duration-300">
+                        {tag}
+                      </li>
+                    </a>
+                  </Link>
+                ))}
+              </ul>
+            </div>
           </div>
+
           <div className="md:col-span-8 space-y-12">
             <DetailsSection title="Chapter" className="relative">
               <motion.div
