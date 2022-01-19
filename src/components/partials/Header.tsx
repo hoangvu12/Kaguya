@@ -3,14 +3,16 @@ import classNames from "classnames";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
-import { AiOutlineSearch } from "react-icons/ai";
+import { AiFillFacebook, AiOutlineSearch } from "react-icons/ai";
 import { GiHamburgerMenu } from "react-icons/gi";
 import HeaderProfile from "@/components/shared/HeaderProfile";
 import NavItem from "@/components/shared/NavItem";
 import Button from "@/components/shared/Button";
 import Drawer, { DrawerRef } from "@/components/shared/Drawer";
 import Logo from "@/components/shared/Logo";
-import Link from "next/link";
+import Link, { LinkProps } from "next/link";
+import { DISCORD_URL, FACEBOOK_URL } from "@/constants";
+import { FaDiscord } from "react-icons/fa";
 
 const routes = [
   {
@@ -51,29 +53,52 @@ const Header = () => {
       <Drawer
         ref={drawerRef}
         containerClassName="sm:hidden mr-4"
-        className="py-8 space-y-2"
+        className="flex justify-between flex-col py-8"
         button={<GiHamburgerMenu className="w-6 h-6" />}
       >
-        <Logo className="border-b-2 border-gray-500" />
+        <div>
+          <Logo />
 
-        {routes.map((route) => (
-          <div onClick={drawerRef.current?.close} key={route.href}>
-            <NavItem className="block" href={route.href}>
-              {({ isActive }) => (
-                <p
-                  className={classNames(
-                    "pl-4 border-l-4 font-semibold text-2xl",
-                    isActive
-                      ? "border-primary-500 text-white"
-                      : "border-background-900 text-typography-secondary"
-                  )}
-                >
-                  {route.title}
-                </p>
-              )}
-            </NavItem>
+          {routes.map((route) => (
+            <div onClick={drawerRef.current?.close} key={route.href}>
+              <NavItem className="block" href={route.href}>
+                {({ isActive }) => (
+                  <p
+                    className={classNames(
+                      "pl-4 border-l-4 font-semibold text-2xl",
+                      isActive
+                        ? "border-primary-500 text-white"
+                        : "border-background-900 text-typography-secondary"
+                    )}
+                  >
+                    {route.title}
+                  </p>
+                )}
+              </NavItem>
+            </div>
+          ))}
+        </div>
+
+        <div className="px-4 space-y-4">
+          <div className="flex items-center justify-center space-x-4">
+            <ContactItem href={DISCORD_URL} Icon={FaDiscord} />
+            <ContactItem href={FACEBOOK_URL} Icon={AiFillFacebook} />
           </div>
-        ))}
+
+          <div className="flex items-center space-x-8 text-center">
+            <ModifiedLink href="/tos">
+              <p className="text-lg line-clamp-1">Điều khoản</p>
+            </ModifiedLink>
+
+            <ModifiedLink href="/dmca">
+              <p className="text-lg line-clamp-1">DMCA</p>
+            </ModifiedLink>
+
+            <ModifiedLink href="/contact">
+              <p className="text-lg line-clamp-1">Liên hệ</p>
+            </ModifiedLink>
+          </div>
+        </div>
       </Drawer>
 
       <div className="relative h-2/3 w-10 mr-8">
@@ -136,4 +161,25 @@ const Header = () => {
   );
 };
 
-export default Header;
+const ContactItem: React.FC<{
+  Icon: React.ComponentType<any>;
+  href: string;
+}> = ({ Icon, href }) => {
+  return (
+    <a href={href} target="_blank" rel="noreferrer">
+      <Icon className="w-6 h-6 hover:text-primary-500 transition duration-300" />
+    </a>
+  );
+};
+
+const ModifiedLink: React.FC<LinkProps> = (props) => {
+  return (
+    <Link {...props}>
+      <a className="hover:text-primary-300 transition duration-300">
+        {props.children}
+      </a>
+    </Link>
+  );
+};
+
+export default React.memo(Header);
