@@ -57,7 +57,9 @@ const HeaderProfile = () => {
 
         <Button
           className="w-full !bg-transparent hover:!bg-white/20"
-          onClick={supabase.auth.signOut}
+          onClick={() => {
+            supabase.auth.signOut();
+          }}
         >
           <TextIcon LeftIcon={HiOutlineLogout}>
             <p>Đăng xuất</p>

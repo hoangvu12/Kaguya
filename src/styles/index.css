@@ -285,3 +285,41 @@ div.jsoneditor-value.jsoneditor-invalid {
 .ui-time-seek-slider {
   width: 100%;
 }
+
+.fadeIn {
+  animation: fadeIn 0.3s;
+}
+
+.fadeOut {
+  animation: fadeOut 0.3s;
+}
+
+@keyframes fadeIn {
+  1% {
+    opacity: 0;
+    visibility: hidden;
+  }
+  2% {
+    opacity: 0;
+    visibility: visible;
+  }
+  100% {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+@keyframes fadeOut {
+  1% {
+    opacity: 1;
+    visibility: visible;
+  }
+  99% {
+    opacity: 0;
+    visibility: visible;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}

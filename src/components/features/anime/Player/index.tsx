@@ -58,7 +58,7 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
 
       const target = e.target as HTMLDivElement;
 
-      if (target.classList.contains("video-overlay") && isMobile) {
+      if (target.closest(".video-overlay") && isMobile) {
         setShowControls(false);
       } else {
         startControlsCycle();
@@ -87,16 +87,20 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
       if (info.point.x < width) {
         myRef.current.currentTime = myRef.current.currentTime - 10;
         backwardIndicator.classList.toggle("opacity-0");
+        backwardIndicator.classList.toggle("z-50");
 
         setTimeout(() => {
           backwardIndicator.classList.toggle("opacity-0");
+          backwardIndicator.classList.toggle("z-50");
         }, 350);
       } else {
         myRef.current.currentTime = myRef.current.currentTime + 10;
         forwardIndicator.classList.toggle("opacity-0");
+        forwardIndicator.classList.toggle("z-50");
 
         setTimeout(() => {
           forwardIndicator.classList.toggle("opacity-0");
+          forwardIndicator.classList.toggle("z-50");
         }, 350);
       }
     };
