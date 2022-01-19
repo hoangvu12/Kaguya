@@ -2,7 +2,7 @@ import CircleButton from "@/components/shared/CircleButton";
 import DotList from "@/components/shared/DotList";
 import Image from "@/components/shared/Image";
 import TextIcon from "@/components/shared/TextIcon";
-import { Anime, DynamicData, Manga } from "@/types";
+import { Anime, Manga } from "@/types";
 import { numberWithCommas } from "@/utils";
 import { convert, getTitle } from "@/utils/data";
 import Link from "next/link";
@@ -10,10 +10,15 @@ import React, { useMemo } from "react";
 import { AiFillHeart, AiFillPlayCircle } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
 
-const ShouldWatch: React.FC<DynamicData<Anime, Manga>> = ({
+interface ShouldWatchProps<T> {
+  data: T extends "anime" ? Anime : Manga;
+  type: T;
+}
+
+const ShouldWatch = <T extends "anime" | "manga">({
   data,
-  type = "anime",
-}) => {
+  type,
+}: ShouldWatchProps<T>) => {
   const title = useMemo(() => getTitle(data), [data]);
 
   const redirectUrl = useMemo(
@@ -84,4 +89,4 @@ const ShouldWatch: React.FC<DynamicData<Anime, Manga>> = ({
   );
 };
 
-export default React.memo(ShouldWatch);
+export default React.memo(ShouldWatch) as typeof ShouldWatch;

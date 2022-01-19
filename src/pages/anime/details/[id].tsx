@@ -21,6 +21,7 @@ import CharacterCard from "@/components/shared/CharacterCard";
 import DetailsBanner from "@/components/shared/DetailsBanner";
 import DetailsSection from "@/components/shared/DetailsSection";
 import Link from "next/link";
+import Card from "@/components/shared/Card";
 
 interface DetailsPageProps {
   anime: Anime;
