@@ -36,7 +36,7 @@ const useAdminBrowse = <T extends "anime" | "manga">(type: T) => {
   const onSubmit = handleSubmit(setQuery);
 
   const queryResult = useSupabaseQuery(
-    ["admin-browse", query],
+    ["admin-browse", query, type],
     () => {
       let db: PostgrestFilterBuilder<T extends "anime" ? Anime : Manga>;
 
