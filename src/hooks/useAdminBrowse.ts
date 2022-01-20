@@ -47,7 +47,7 @@ const useAdminBrowse = <T extends "anime" | "manga">(type: T) => {
           })
           .select("*");
       } else {
-        db = supabase.from("anime").select("*");
+        db = supabase.from(type === "anime" ? "anime" : "manga").select("*");
       }
 
       if (source_id) {
