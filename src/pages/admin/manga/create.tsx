@@ -10,7 +10,7 @@ import { Manga } from "@/types";
 import React, { useRef } from "react";
 import { AiFillSave } from "react-icons/ai";
 
-const AnimeCreatePage = () => {
+const MangaCreatePage = () => {
   const { onSubmit, register, isLoading, isError, data } =
     useFetchInfo("manga");
   const createMutation = useCreateData("manga");
@@ -77,6 +77,6 @@ const AnimeCreatePage = () => {
   );
 };
 
-AnimeCreatePage.getLayout = (page) => <AdminLayout>{page}</AdminLayout>;
+MangaCreatePage.getLayout = (page) => <AdminLayout>{page}</AdminLayout>;
 
-export default AnimeCreatePage;
+export default MangaCreatePage;
