@@ -59,24 +59,26 @@ const Header = () => {
         <div>
           <Logo />
 
-          {routes.map((route) => (
-            <div onClick={drawerRef.current?.close} key={route.href}>
-              <NavItem className="block" href={route.href}>
-                {({ isActive }) => (
-                  <p
-                    className={classNames(
-                      "pl-4 border-l-4 font-semibold text-2xl",
-                      isActive
-                        ? "border-primary-500 text-white"
-                        : "border-background-900 text-typography-secondary"
-                    )}
-                  >
-                    {route.title}
-                  </p>
-                )}
-              </NavItem>
-            </div>
-          ))}
+          <div className="space-y-2">
+            {routes.map((route) => (
+              <div onClick={drawerRef.current?.close} key={route.href}>
+                <NavItem className="block" href={route.href}>
+                  {({ isActive }) => (
+                    <p
+                      className={classNames(
+                        "pl-4 border-l-4 font-semibold text-2xl",
+                        isActive
+                          ? "border-primary-500 text-white"
+                          : "border-background-900 text-typography-secondary"
+                      )}
+                    >
+                      {route.title}
+                    </p>
+                  )}
+                </NavItem>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="px-4 space-y-4">
