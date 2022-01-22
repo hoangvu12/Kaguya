@@ -2,13 +2,11 @@ import ArrowSwiper, {
   SwiperProps,
   SwiperSlide,
 } from "@/components/shared/ArrowSwiper";
-import ClientOnly from "@/components/shared/ClientOnly";
 import useDevice from "@/hooks/useDevice";
 import { Episode } from "@/types";
 import { chunk } from "@/utils";
 import classNames from "classnames";
-import Link from "next/link";
-import { useRouter } from "next/router";
+import Link, { LinkProps } from "next/link";
 import React, { useMemo } from "react";
 import { Tab } from "react-tabs";
 
@@ -16,12 +14,14 @@ interface EpisodeSelectorProps {
   episodes: Episode[];
   activeIndex?: number | null;
   chunkSwiperProps?: SwiperProps;
+  episodeLinkProps?: Omit<LinkProps, "href">;
 }
 
 const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({
   episodes,
   activeIndex,
   chunkSwiperProps,
+  episodeLinkProps,
 }) => {
   const { isMobile } = useDevice();
 
@@ -37,8 +37,6 @@ const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({
 
     return index === -1 ? 0 : index;
   });
-
-  const router = useRouter();
 
   return (
     <React.Fragment>
@@ -85,7 +83,8 @@ const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({
           <Link
             href={`/anime/watch/${episode.anime_id}?index=${episode.episodeIndex}`}
             key={episode.id}
-            shallow={router.asPath.includes("/anime/watch")}
+            shallow
+            {...episodeLinkProps}
           >
             <a
               className={classNames(
