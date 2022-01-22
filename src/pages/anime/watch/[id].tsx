@@ -1,4 +1,4 @@
-import EpisodesSelector from "@/components/features/anime/EpisodesSelector";
+import EpisodeSelector from "@/components/features/anime/EpisodeSelector";
 import Button from "@/components/shared/Button";
 import ClientOnly from "@/components/shared/ClientOnly";
 import EpisodeCard from "@/components/features/anime/EpisodeCard";
@@ -317,11 +317,10 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
             )}
 
             <EpisodesButton>
-              <div className="w-[70vw] min-h-[40vh] overflow-hidden">
-                <EpisodesSelector
+              <div className="w-[70vw] overflow-hidden">
+                <EpisodeSelector
                   episodes={sortedEpisodes}
                   activeIndex={Number(episodeIndex)}
-                  onClick={(index) => handleNavigateEpisode(index)()}
                 />
               </div>
             </EpisodesButton>
@@ -345,34 +344,9 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
                     />
 
                     <div>
-                      <EpisodesSelector
+                      <EpisodeSelector
                         episodes={sortedEpisodes}
                         activeIndex={Number(episodeIndex)}
-                        onClick={(index) => {
-                          handleNavigateEpisode(index)();
-
-                          setIsOpen(false);
-                        }}
-                        swiperProps={{
-                          breakpoints: {
-                            1024: {
-                              slidesPerView: 4,
-                              slidesPerGroup: 4,
-                            },
-                            768: {
-                              slidesPerView: 3,
-                              slidesPerGroup: 3,
-                            },
-                            640: {
-                              slidesPerView: 2,
-                              slidesPerGroup: 2,
-                            },
-                            0: {
-                              slidesPerView: 1,
-                              slidesPerGroup: 1,
-                            },
-                          },
-                        }}
                       />
                     </div>
                   </div>
