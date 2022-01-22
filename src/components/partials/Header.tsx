@@ -1,18 +1,18 @@
+import Button from "@/components/shared/Button";
+import Drawer, { DrawerRef } from "@/components/shared/Drawer";
+import HeaderProfile from "@/components/shared/HeaderProfile";
+import Logo from "@/components/shared/Logo";
+import NavItem from "@/components/shared/NavItem";
+import { DISCORD_URL, FACEBOOK_URL } from "@/constants";
 import { useUser } from "@/contexts/AuthContext";
 import classNames from "classnames";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import { AiFillFacebook, AiOutlineSearch } from "react-icons/ai";
-import { GiHamburgerMenu } from "react-icons/gi";
-import HeaderProfile from "@/components/shared/HeaderProfile";
-import NavItem from "@/components/shared/NavItem";
-import Button from "@/components/shared/Button";
-import Drawer, { DrawerRef } from "@/components/shared/Drawer";
-import Logo from "@/components/shared/Logo";
-import Link, { LinkProps } from "next/link";
-import { DISCORD_URL, FACEBOOK_URL } from "@/constants";
 import { FaDiscord } from "react-icons/fa";
+import { GiHamburgerMenu } from "react-icons/gi";
 
 const routes = [
   {
@@ -83,20 +83,6 @@ const Header = () => {
           <div className="flex items-center justify-center space-x-4">
             <ContactItem href={DISCORD_URL} Icon={FaDiscord} />
             <ContactItem href={FACEBOOK_URL} Icon={AiFillFacebook} />
-          </div>
-
-          <div className="flex items-center space-x-8 text-center">
-            <ModifiedLink href="/tos">
-              <p className="text-lg line-clamp-1">Điều khoản</p>
-            </ModifiedLink>
-
-            <ModifiedLink href="/dmca">
-              <p className="text-lg line-clamp-1">DMCA</p>
-            </ModifiedLink>
-
-            <ModifiedLink href="/contact">
-              <p className="text-lg line-clamp-1">Liên hệ</p>
-            </ModifiedLink>
           </div>
         </div>
       </Drawer>
@@ -169,16 +155,6 @@ const ContactItem: React.FC<{
     <a href={href} target="_blank" rel="noreferrer">
       <Icon className="w-6 h-6 hover:text-primary-500 transition duration-300" />
     </a>
-  );
-};
-
-const ModifiedLink: React.FC<LinkProps> = (props) => {
-  return (
-    <Link {...props}>
-      <a className="hover:text-primary-300 transition duration-300">
-        {props.children}
-      </a>
-    </Link>
   );
 };
 
