@@ -18,6 +18,7 @@ SwiperCore.use([Navigation]);
 
 const ArrowSwiper: React.FC<SwiperProps> = ({
   children,
+  className,
   isOverflowHidden = false,
   ...props
 }) => {
@@ -28,7 +29,8 @@ const ArrowSwiper: React.FC<SwiperProps> = ({
     <ReactSwiper
       spaceBetween={20}
       className={classNames(
-        isOverflowHidden ? "!overflow-hidden" : "!overflow-visible"
+        isOverflowHidden ? "!overflow-hidden" : "!overflow-visible",
+        className
       )}
       breakpoints={{
         1280: {

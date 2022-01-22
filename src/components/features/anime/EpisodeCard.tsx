@@ -4,7 +4,6 @@ import Image from "@/components/shared/Image";
 
 interface EpisodeCardProps {
   episode: Episode;
-  onClick?: () => void;
   isActive?: boolean;
   title?: string;
 }
@@ -27,12 +26,6 @@ const EpisodeCard: React.FC<EpisodeCardProps> = ({
         objectFit="cover"
         className="hover:scale-105 transition duration-300"
       />
-
-      {isActive && (
-        <div className="absolute left-4 top-4 bg-primary-500 p-2 rounded-md">
-          Đang xem
-        </div>
-      )}
 
       <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60"></div>
 

@@ -1,7 +1,13 @@
-import List from "@/components/shared/List";
+import EpisodeSelector from "@/components/features/anime/EpisodeSelector";
+import CommentsSection from "@/components/features/comment/CommentsSection";
 import Button from "@/components/shared/Button";
+import CharacterCard from "@/components/shared/CharacterCard";
+import DetailsBanner from "@/components/shared/DetailsBanner";
+import DetailsSection from "@/components/shared/DetailsSection";
 import DotList from "@/components/shared/DotList";
 import Head from "@/components/shared/Head";
+import InfoItem from "@/components/shared/InfoItem";
+import List from "@/components/shared/List";
 import PlainCard from "@/components/shared/PlainCard";
 import { REVALIDATE_TIME } from "@/constants";
 import dayjs from "@/lib/dayjs";
@@ -9,19 +15,11 @@ import supabase from "@/lib/supabase";
 import { Anime, Comment } from "@/types";
 import { numberWithCommas, parseNumbersFromString } from "@/utils";
 import { convert, getTitle } from "@/utils/data";
-
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { BsFillPlayFill } from "react-icons/bs";
-import EpisodesSelector from "@/components/features/anime/EpisodesSelector";
-import InfoItem from "@/components/shared/InfoItem";
-import CommentsSection from "@/components/features/comment/CommentsSection";
-import CharacterCard from "@/components/shared/CharacterCard";
-import DetailsBanner from "@/components/shared/DetailsBanner";
-import DetailsSection from "@/components/shared/DetailsSection";
-import Link from "next/link";
-import Card from "@/components/shared/Card";
 
 interface DetailsPageProps {
   anime: Anime;
@@ -185,26 +183,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
           </div>
           <div className="space-y-12 md:col-span-8">
             <DetailsSection title="Tập phim" className="overflow-hidden">
-              <EpisodesSelector
-                episodes={sortedEpisodes}
-                onClick={handleNavigateEpisode}
-                swiperProps={{
-                  breakpoints: {
-                    1024: {
-                      slidesPerView: 3,
-                      slidesPerGroup: 3,
-                    },
-                    768: {
-                      slidesPerView: 2,
-                      slidesPerGroup: 2,
-                    },
-                    0: {
-                      slidesPerView: 1,
-                      slidesPerGroup: 1,
-                    },
-                  },
-                }}
-              />
+              <EpisodeSelector episodes={sortedEpisodes} />
             </DetailsSection>
 
             {!!anime?.characters?.length && (
