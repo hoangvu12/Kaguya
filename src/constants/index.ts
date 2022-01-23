@@ -202,3 +202,33 @@ export const VIETNAMESE_CHARACTERS_ROLES = [
   "Nhân vật phụ",
   "Nhân vật nền",
 ];
+
+export const WATCH_STATUS = [
+  {
+    value: "WATCHING",
+    label: "Đang xem",
+  },
+  {
+    value: "PLANNING",
+    label: "Dự định xem",
+  },
+  {
+    value: "COMPLETED",
+    label: "Đã xem",
+  },
+] as const;
+
+export const READ_STATUS = [
+  {
+    value: "READING",
+    label: "Đang đọc",
+  },
+  {
+    value: "PLANNING",
+    label: "Dự định đọc",
+  },
+  {
+    value: "COMPLETED",
+    label: "Đã đọc",
+  },
+] as const;
