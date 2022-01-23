@@ -1,12 +1,20 @@
-import { PostgrestError } from "@supabase/supabase-js";
 import axios from "axios";
 import { useMutation, useQueryClient } from "react-query";
+import { toast } from "react-toastify";
+
+interface ReturnSuccess {
+  success: true;
+}
+interface ReturnError {
+  success: false;
+  error: string;
+}
 
 const useDeleteAnime = (animeId: number) => {
   const queryClient = useQueryClient();
   const queryKey = ["anime", animeId];
 
-  return useMutation<any, PostgrestError, any, any>(
+  return useMutation<ReturnSuccess, ReturnError, any, any>(
     async () => axios.delete(`/api/anime/delete?id=${animeId}`),
     {
       onMutate: () => {
@@ -14,6 +22,12 @@ const useDeleteAnime = (animeId: number) => {
       },
       onSettled: () => {
         queryClient.invalidateQueries(queryKey);
+      },
+      onSuccess: () => {
+        toast.success("Anime deleted successfully");
+      },
+      onError: (error) => {
+        toast.error(error.error);
       },
     }
   );

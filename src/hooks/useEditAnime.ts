@@ -1,13 +1,21 @@
 import { Anime } from "@/types";
-import { PostgrestError } from "@supabase/supabase-js";
 import axios from "axios";
 import { useMutation, useQueryClient } from "react-query";
+import { toast } from "react-toastify";
+
+interface ReturnSuccess {
+  success: true;
+}
+interface ReturnError {
+  success: false;
+  error: string;
+}
 
 const useEditAnime = (animeId: number) => {
   const queryClient = useQueryClient();
   const queryKey = ["anime", animeId];
 
-  return useMutation<any, PostgrestError, Anime, any>(
+  return useMutation<ReturnSuccess, ReturnError, Anime, any>(
     async (data) => axios.patch(`/api/anime/edit?id=${animeId}`, data),
     {
       onMutate: (data) => {
@@ -18,6 +26,12 @@ const useEditAnime = (animeId: number) => {
         }
 
         queryClient.setQueryData(queryKey, { ...anime, ...data });
+      },
+      onSuccess: () => {
+        toast.success("Anime updated successfully");
+      },
+      onError: (error) => {
+        toast.error(error.error);
       },
       onSettled: () => {
         queryClient.invalidateQueries(queryKey);
