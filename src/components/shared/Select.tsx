@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import React, { useEffect } from "react";
+import React, { CSSProperties, useEffect } from "react";
 import { AiFillCheckCircle } from "react-icons/ai";
 import ReactSelect, {
   components,
@@ -58,76 +58,80 @@ const Option: React.ComponentType<
   );
 };
 
-const Select = React.forwardRef<any, Props>((props, ref) => {
-  const [portalTarget, setPortalTarget] = React.useState<HTMLElement>();
+const Select = React.forwardRef<any, Props>(
+  ({ components, styles, ...props }, ref) => {
+    const [portalTarget, setPortalTarget] = React.useState<HTMLElement>();
 
-  useEffect(() => {
-    setPortalTarget(document.body);
-  }, []);
+    useEffect(() => {
+      setPortalTarget(document.body);
+    }, []);
 
-  return (
-    <ReactSelect
-      ref={ref}
-      theme={(theme) => ({
-        ...theme,
-        colors: {
-          ...theme.colors,
-          primary: "#ef4444",
-          primary75: "#f87171",
-          primary50: "#fca5a5",
-          primary20: "#fecaca",
-        },
-      })}
-      styles={{
-        control: (provided) => {
-          return {
-            ...provided,
-            backgroundColor: "#1a1a1a",
-            minWidth: "12rem",
-            maxWidth: "14rem",
-          };
-        },
-        menu: (provided) => {
-          return { ...provided, backgroundColor: "#1a1a1a" };
-        },
-        singleValue: (provided) => {
-          return { ...provided, color: "#fff" };
-        },
-        multiValue: (provided) => {
-          return {
-            ...provided,
-            backgroundColor: "#262626",
-            maxWidth: "70%",
-          };
-        },
-        multiValueLabel: (provided) => {
-          return { ...provided, color: "white" };
-        },
-        multiValueRemove: (provided) => {
-          return {
-            ...provided,
-            color: "gray",
-            ":hover": {
-              backgroundColor: "transparent",
-              color: "white",
-            },
-            transition: "all 300ms",
-          };
-        },
+    return (
+      <ReactSelect
+        ref={ref}
+        theme={(theme) => ({
+          ...theme,
+          colors: {
+            ...theme.colors,
+            primary: "#ef4444",
+            primary75: "#f87171",
+            primary50: "#fca5a5",
+            primary20: "#fecaca",
+          },
+        })}
+        styles={{
+          control: (provided) => {
+            return {
+              ...provided,
+              backgroundColor: "#1a1a1a",
+              minWidth: "12rem",
+              maxWidth: "14rem",
+            };
+          },
+          menu: (provided) => {
+            return { ...provided, backgroundColor: "#1a1a1a", zIndex: 50 };
+          },
+          singleValue: (provided) => {
+            return { ...provided, color: "#fff" };
+          },
+          multiValue: (provided) => {
+            return {
+              ...provided,
+              backgroundColor: "#262626",
+              maxWidth: "70%",
+            };
+          },
+          multiValueLabel: (provided) => {
+            return { ...provided, color: "white" };
+          },
+          multiValueRemove: (provided) => {
+            return {
+              ...provided,
+              color: "gray",
+              ":hover": {
+                backgroundColor: "transparent",
+                color: "white",
+              },
+              transition: "all 300ms",
+            };
+          },
 
-        input: (provided) => {
-          return { ...provided, color: "white" };
-        },
-      }}
-      hideSelectedOptions={false}
-      noOptionsMessage={() => "Không còn lựa chọn"}
-      components={{ MultiValue, Option }}
-      isClearable
-      menuPortalTarget={portalTarget}
-      {...props}
-    />
-  );
-});
+          input: (provided) => {
+            return { ...provided, color: "white" };
+          },
+
+          ...styles,
+        }}
+        hideSelectedOptions={false}
+        noOptionsMessage={() => "Không còn lựa chọn"}
+        components={{ MultiValue, Option, ...components }}
+        isClearable
+        menuPortalTarget={portalTarget}
+        {...props}
+      />
+    );
+  }
+);
 
 Select.displayName = "Select";
 
