@@ -5,8 +5,10 @@ import {
   CHARACTERS_ROLES,
   FORMATS,
   GENRES,
+  READ_STATUS,
   SEASONS,
   STATUSES,
+  WATCH_STATUS,
 } from "@/constants";
 import { SupabaseQueryFunction, SupabaseQueryOptions } from "@/utils/supabase";
 
@@ -222,3 +224,24 @@ export type Source = {
 export type CallbackSetter<T> = (handler: T) => void;
 
 export type Noop = () => void;
+
+const WatchStatus = WATCH_STATUS.map((status) => status.value);
+const ReadStatus = READ_STATUS.map((status) => status.value);
+
+export type WatchStatus = typeof WatchStatus[number];
+export type ReadStatus = typeof ReadStatus[number];
+
+export type SourceStatus<T> = (T extends "anime"
+  ? {
+      status?: WatchStatus;
+      anime_id?: number;
+      anime?: Anime;
+    }
+  : {
+      status?: ReadStatus;
+      anime_id?: number;
+      anime?: Manga;
+    }) & {
+  user_id?: number;
+  user?: User;
+};
