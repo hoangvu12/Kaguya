@@ -8,6 +8,8 @@ import NProgress from "nprogress";
 import React, { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 
 Router.events.on("routeChangeStart", NProgress.start);
 Router.events.on("routeChangeComplete", NProgress.done);
@@ -44,13 +46,27 @@ function App({ Component, pageProps }: AppProps) {
     Component.getLayout || ((page) => <BaseLayout>{page}</BaseLayout>);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthContextProvider>
-        {getLayout(<Component {...pageProps} />)}
-      </AuthContextProvider>
+    <React.Fragment>
+      <ToastContainer
+        position="bottom-left"
+        autoClose={5000}
+        hideProgressBar={true}
+        newestOnTop={true}
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
 
-      {process.env.NODE_ENV === "development" && <ReactQueryDevtools />}
-    </QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthContextProvider>
+          {getLayout(<Component {...pageProps} />)}
+        </AuthContextProvider>
+
+        {process.env.NODE_ENV === "development" && <ReactQueryDevtools />}
+      </QueryClientProvider>
+    </React.Fragment>
   );
 }
 
