@@ -32,7 +32,7 @@ export const SubscriptionContextProvider: React.FC = ({ children }) => {
   }, [user]);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || !sub) return;
 
     createSubscription.mutate(sub);
     // eslint-disable-next-line react-hooks/exhaustive-deps
