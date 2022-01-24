@@ -7,10 +7,6 @@ import {
   useQueryClient,
 } from "react-query";
 
-type QueryData = InfiniteData<{
-  data: Comment[];
-}>;
-
 const useDeleteComment = (
   comment: Comment,
   options?: Omit<
