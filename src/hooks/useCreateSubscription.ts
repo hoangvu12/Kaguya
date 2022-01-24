@@ -12,7 +12,11 @@ const useCreateSubscription = () => {
 
       const { data, error } = await supabase
         .from("subscriptions")
-        .upsert({ subscription, user_id: user.id, user_agent: userAgent });
+        .upsert({
+          subscription,
+          user_id: user.id,
+          user_agent: encodeURIComponent(userAgent),
+        });
 
       if (error) throw error;
 
