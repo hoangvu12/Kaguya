@@ -20,6 +20,9 @@ import { useRouter } from "next/router";
 import React, { useMemo, useState } from "react";
 import { BsChevronDown, BsChevronUp, BsFillPlayFill } from "react-icons/bs";
 import { motion } from "framer-motion";
+import SourceStatus from "@/components/shared/SourceStatus";
+import NotificationButton from "@/components/shared/NotificationButton";
+import { useUser } from "@/contexts/AuthContext";
 
 interface DetailsPageProps {
   manga: Manga;
@@ -27,6 +30,8 @@ interface DetailsPageProps {
 
 const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
   const router = useRouter();
+  const user = useUser();
+
   const [isChapterExpanded, setIsChapterExpanded] = useState(false);
 
   const handleReadClick = () => {
@@ -60,9 +65,16 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
         <DetailsBanner image={manga.banner_image} />
 
         <div className="relative px-4 sm:px-12 z-10 bg-background-900 pb-4">
-          <div className="flex flex-col md:flex-row md:space-x-6">
-            <div className="shrink-0 relative left-1/2 -translate-x-1/2 md:static md:left-0 md:-translate-x-0 w-[186px] -mt-20">
+          <div className="flex flex-col md:flex-row md:space-x-8">
+            <div className="shrink-0 relative left-1/2 -translate-x-1/2 md:static md:left-0 md:-translate-x-0 w-[186px] -mt-20 space-y-6">
               <PlainCard data={manga} />
+
+              {user && (
+                <div className="flex items-center space-x-1">
+                  <SourceStatus type="manga" source={manga} />
+                  <NotificationButton type="manga" source={manga} />
+                </div>
+              )}
             </div>
 
             <div className="justify-between text-center md:text-left flex flex-col items-center md:items-start py-4 mt-4 md:-mt-16">
