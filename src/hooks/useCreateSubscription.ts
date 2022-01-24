@@ -8,9 +8,11 @@ const useCreateSubscription = () => {
 
   return useMutation<any, PostgrestError, PushSubscription, any>(
     async (subscription) => {
+      const userAgent = navigator.userAgent;
+
       const { data, error } = await supabase
         .from("subscriptions")
-        .upsert({ subscription, user_id: user.id });
+        .upsert({ subscription, user_id: user.id, user_agent: userAgent });
 
       if (error) throw error;
 
