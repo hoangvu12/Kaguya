@@ -1,4 +1,6 @@
+import SourceStatus from "@/components/shared/SourceStatus";
 import EpisodeSelector from "@/components/features/anime/EpisodeSelector";
+import NotificationButton from "@/components/shared/NotificationButton";
 import CommentsSection from "@/components/features/comment/CommentsSection";
 import Button from "@/components/shared/Button";
 import CharacterCard from "@/components/shared/CharacterCard";
@@ -20,6 +22,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { BsFillPlayFill } from "react-icons/bs";
+import { useUser } from "@/contexts/AuthContext";
 
 interface DetailsPageProps {
   anime: Anime;
@@ -27,6 +30,7 @@ interface DetailsPageProps {
 
 const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
   const router = useRouter();
+  const user = useUser();
 
   const sortedEpisodes = useMemo(
     () =>
@@ -71,10 +75,17 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
       <div className="pb-8">
         <DetailsBanner image={anime.banner_image} />
 
-        <div className="relative z-10 px-4 pb-4 sm:px-12 bg-background-900">
-          <div className="flex flex-col md:flex-row md:space-x-6">
-            <div className="shrink-0 relative left-1/2 -translate-x-1/2 md:static md:left-0 md:-translate-x-0 w-[186px] -mt-20">
+        <div className="relative px-4 pb-4 sm:px-12 bg-background-900">
+          <div className="flex flex-col md:flex-row md:space-x-8">
+            <div className="shrink-0 relative left-1/2 -translate-x-1/2 md:static md:left-0 md:-translate-x-0 w-[186px] -mt-20 space-y-6">
               <PlainCard data={anime} />
+
+              {user && (
+                <div className="flex items-center space-x-1">
+                  <SourceStatus type="anime" source={anime} />
+                  <NotificationButton type="anime" source={anime} />
+                </div>
+              )}
             </div>
 
             <div className="flex flex-col items-center justify-between py-4 mt-4 text-center md:text-left md:items-start md:-mt-16">

@@ -1,5 +1,6 @@
 import BaseLayout from "@/components/layouts/BaseLayout";
 import { AuthContextProvider } from "@/contexts/AuthContext";
+import { SubscriptionContextProvider } from "@/contexts/SubscriptionContext";
 import { pageview } from "@/lib/gtag";
 import "@/styles/index.css";
 import { AppProps } from "next/app";
@@ -61,7 +62,9 @@ function App({ Component, pageProps }: AppProps) {
 
       <QueryClientProvider client={queryClient}>
         <AuthContextProvider>
-          {getLayout(<Component {...pageProps} />)}
+          <SubscriptionContextProvider>
+            {getLayout(<Component {...pageProps} />)}
+          </SubscriptionContextProvider>
         </AuthContextProvider>
 
         {process.env.NODE_ENV === "development" && <ReactQueryDevtools />}
