@@ -7,6 +7,7 @@ import TextIcon from "@/components/shared/TextIcon";
 import { Anime, Manga } from "@/types";
 import { numberWithCommas } from "@/utils";
 import { convert, getTitle } from "@/utils/data";
+import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import React, { useMemo, useState } from "react";
 import { BrowserView, MobileView } from "react-device-detect";
@@ -17,6 +18,12 @@ interface HomeBannerProps<T> {
   data: T extends "anime" ? Anime[] : Manga[];
   type: T;
 }
+
+const bannerVariants = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
+};
 
 const HomeBanner = <T extends "anime" | "manga">({
   data,
@@ -42,15 +49,26 @@ const HomeBanner = <T extends "anime" | "manga">({
     <React.Fragment>
       <BrowserView>
         <div className="group relative w-full h-[320px] md:h-[500px]">
-          {activeSlide.banner_image && (
-            <Image
-              src={activeSlide.banner_image}
-              layout="fill"
-              objectFit="cover"
-              objectPosition="50% 35%"
-              alt={title}
-            />
-          )}
+          <AnimatePresence>
+            {activeSlide.banner_image && (
+              <motion.div
+                variants={bannerVariants}
+                animate="animate"
+                exit="exit"
+                initial="initial"
+                className="w-full h-full"
+                key={title}
+              >
+                <Image
+                  src={activeSlide.banner_image}
+                  layout="fill"
+                  objectFit="cover"
+                  objectPosition="50% 35%"
+                  alt={title}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <div className="absolute inset-0 flex flex-col justify-center px-4 banner__overlay md:px-12"></div>
 
