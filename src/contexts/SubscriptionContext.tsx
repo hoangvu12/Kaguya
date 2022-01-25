@@ -1,3 +1,4 @@
+import config from "@/config";
 import useCreateSubscription from "@/hooks/useCreateSubscription";
 import {
   createContext,
@@ -25,7 +26,14 @@ export const SubscriptionContextProvider: React.FC = ({ children }) => {
     if (!user) return;
 
     navigator.serviceWorker.getRegistration().then(async (registration) => {
-      const subscription = await registration.pushManager.getSubscription();
+      let subscription = await registration.pushManager.getSubscription();
+
+      if (!subscription) {
+        subscription = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: config.webPushPublicKey,
+        });
+      }
 
       setSub(subscription);
     });
