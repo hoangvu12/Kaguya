@@ -1,9 +1,9 @@
+import Popup from "@/components/shared/Popup";
+import TextIcon from "@/components/shared/TextIcon";
 import { SORTS } from "@/constants";
 import { convert } from "@/utils/data";
 import React, { useState } from "react";
 import { RiArrowUpDownFill } from "react-icons/ri";
-import Popup from "@/components/shared/Popup";
-import TextIcon from "@/components/shared/TextIcon";
 
 interface SortSelectorProps {
   onChange?: (item: string) => void;
@@ -39,9 +39,9 @@ const SortSelector: React.FC<SortSelectorProps> = (props) => {
           <p
             key={index}
             className="cursor-pointer text-sm text-gray-300 hover:text-primary-300 transition duration-300"
-            onClick={() => handleClick(sort)}
+            onClick={() => handleClick(sort.value)}
           >
-            {convert(sort, "sort")}
+            {sort.label}
           </p>
         ))}
       </div>
@@ -49,4 +49,4 @@ const SortSelector: React.FC<SortSelectorProps> = (props) => {
   );
 };
 
-export default SortSelector;
+export default React.memo(SortSelector);

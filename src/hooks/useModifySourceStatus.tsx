@@ -7,12 +7,9 @@ import { PostgrestError } from "@supabase/supabase-js";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 
-const WatchStatus = WATCH_STATUS.map((status) => status.value);
-const ReadStatus = READ_STATUS.map((status) => status.value);
-
 type StatusInput<T> = T extends "anime"
-  ? typeof WatchStatus[number]
-  : typeof ReadStatus[number];
+  ? typeof WATCH_STATUS[number]["value"]
+  : typeof READ_STATUS[number]["value"];
 
 const useModifySourceStatus = <T extends "anime" | "manga">(
   type: T,

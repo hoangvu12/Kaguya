@@ -8,7 +8,6 @@ import AnimeListSkeleton from "@/components/skeletons/AnimeListSkeleton";
 import { COUNTRIES, FORMATS, GENRES, TYPES } from "@/constants";
 import useBrowse, { UseBrowseOptions } from "@/hooks/useBrowseManga";
 import TAGS from "@/tags.json";
-import { convert } from "@/utils/data";
 import { debounce } from "debounce";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo } from "react";
@@ -27,12 +26,12 @@ const initialValues: UseBrowseOptions = {
 
 const genres = GENRES.map((genre) => ({
   value: genre.value,
-  label: convert(genre.value, "genre"),
+  label: genre.label,
 }));
 
 const formats = FORMATS.map((format) => ({
-  value: format,
-  label: convert(format, "format"),
+  value: format.value,
+  label: format.label,
 }));
 
 const tags = TAGS.map((tag) => ({

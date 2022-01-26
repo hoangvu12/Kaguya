@@ -4,45 +4,17 @@ import {
   GENRES,
   SEASONS,
   SORTS,
-  STATUSES,
-  VIETNAMESE_CHARACTERS_ROLES,
-  VIETNAMESE_FORMATS,
-  VIETNAMESE_SEASONS,
-  VIETNAMESE_SORTS,
-  VIETNAMESE_STATUSES,
+  STATUS,
 } from "@/constants";
 import { Anime, Manga } from "@/types";
 
 const constants = {
-  season: {
-    from: SEASONS,
-    to: VIETNAMESE_SEASONS,
-  },
-
-  format: {
-    from: FORMATS,
-    to: VIETNAMESE_FORMATS,
-  },
-
-  status: {
-    from: STATUSES,
-    to: VIETNAMESE_STATUSES,
-  },
-
-  genre: {
-    from: GENRES.map((genre) => genre.value),
-    to: GENRES.map((genre) => genre.value),
-  },
-
-  characterRole: {
-    from: CHARACTERS_ROLES,
-    to: VIETNAMESE_CHARACTERS_ROLES,
-  },
-
-  sort: {
-    from: SORTS,
-    to: VIETNAMESE_SORTS,
-  },
+  season: SEASONS,
+  format: FORMATS,
+  status: STATUS,
+  genre: GENRES,
+  characterRole: CHARACTERS_ROLES,
+  sort: SORTS,
 };
 
 export const convert = (
@@ -50,17 +22,15 @@ export const convert = (
   type: keyof typeof constants,
   reverse: boolean = false
 ) => {
-  const { from, to } = constants[type];
+  const constant = constants[type];
 
-  if (reverse) {
-    const index = to.findIndex((el) => el === text);
+  const index = constant.findIndex(
+    (el: typeof constant[number]) => el.value === text || el.label === text
+  );
 
-    return from[index];
-  }
+  if (reverse) return constant[index].value;
 
-  const index = from.findIndex((el) => el === text);
-
-  return to[index];
+  return constant[index].label;
 };
 
 export const getTitle = <T extends Anime | Manga>(data: T) => {

@@ -1,4 +1,10 @@
 import FormSelect from "@/components/shared/FormSelect";
+import Head from "@/components/shared/Head";
+import Input from "@/components/shared/Input";
+import InView from "@/components/shared/InView";
+import List from "@/components/shared/List";
+import SortSelector from "@/components/shared/SortSelector";
+import AnimeListSkeleton from "@/components/skeletons/AnimeListSkeleton";
 import {
   COUNTRIES,
   FORMATS,
@@ -9,18 +15,11 @@ import {
 } from "@/constants";
 import useBrowse, { UseBrowseOptions } from "@/hooks/useBrowseAnime";
 import TAGS from "@/tags.json";
-import { convert } from "@/utils/data";
 import { debounce } from "debounce";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { AiOutlineSearch } from "react-icons/ai";
-import Head from "@/components/shared/Head";
-import Input from "@/components/shared/Input";
-import InView from "@/components/shared/InView";
-import List from "@/components/shared/List";
-import AnimeListSkeleton from "@/components/skeletons/AnimeListSkeleton";
-import SortSelector from "@/components/shared/SortSelector";
 
 const initialValues: UseBrowseOptions = {
   format: undefined,
@@ -36,7 +35,7 @@ const initialValues: UseBrowseOptions = {
 
 const genres = GENRES.map((genre) => ({
   value: genre.value as string,
-  label: convert(genre.value, "genre"),
+  label: genre.label,
 }));
 
 const seasonYears = SEASON_YEARS.map((year) => ({
@@ -45,13 +44,13 @@ const seasonYears = SEASON_YEARS.map((year) => ({
 }));
 
 const seasons = SEASONS.map((season) => ({
-  value: season,
-  label: convert(season, "season"),
+  value: season.value,
+  label: season.label,
 }));
 
 const formats = FORMATS.map((format) => ({
-  value: format,
-  label: convert(format, "format"),
+  value: format.value,
+  label: format.label,
 }));
 
 const tags = TAGS.map((tag) => ({
