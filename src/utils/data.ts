@@ -1,9 +1,10 @@
 import {
+  ANIME_SORTS,
   CHARACTERS_ROLES,
   FORMATS,
   GENRES,
+  MANGA_SORTS,
   SEASONS,
-  SORTS,
   STATUS,
 } from "@/constants";
 import { Anime, Manga } from "@/types";
@@ -14,7 +15,8 @@ const constants = {
   status: STATUS,
   genre: GENRES,
   characterRole: CHARACTERS_ROLES,
-  sort: SORTS,
+  animeSort: ANIME_SORTS,
+  mangaSort: MANGA_SORTS,
 };
 
 export const convert = (
@@ -27,6 +29,8 @@ export const convert = (
   const index = constant.findIndex(
     (el: typeof constant[number]) => el.value === text || el.label === text
   );
+
+  if (index === -1) return null;
 
   if (reverse) return constant[index].value;
 

@@ -36,12 +36,20 @@ export const FORMATS = [
   { value: "MANGA", label: "Manga" },
 ] as const;
 
-export const SORTS = [
+export const ANIME_SORTS = [
   { value: "popularity", label: "Nổi bật" },
   { value: "trending", label: "Xu hướng" },
   { value: "favourites", label: "Yêu thích" },
   { value: "average_score", label: "Đánh giá" },
   { value: "episodes_updated_at", label: "Mới cập nhật" },
+] as const;
+
+export const MANGA_SORTS = [
+  { value: "popularity", label: "Nổi bật" },
+  { value: "trending", label: "Xu hướng" },
+  { value: "favourites", label: "Yêu thích" },
+  { value: "average_score", label: "Đánh giá" },
+  { value: "chapters_updated_at", label: "Mới cập nhật" },
 ] as const;
 
 export const GENRES = [

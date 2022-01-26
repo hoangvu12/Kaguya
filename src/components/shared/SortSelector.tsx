@@ -1,24 +1,49 @@
 import Popup from "@/components/shared/Popup";
 import TextIcon from "@/components/shared/TextIcon";
-import { SORTS } from "@/constants";
+import { ANIME_SORTS, MANGA_SORTS } from "@/constants";
 import { convert } from "@/utils/data";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { RiArrowUpDownFill } from "react-icons/ri";
 
-interface SortSelectorProps {
+interface SortSelectorProps<T> {
+  type: T;
   onChange?: (item: string) => void;
   defaultValue?: string;
 }
 
-const SortSelector: React.FC<SortSelectorProps> = (props) => {
-  const { onChange, defaultValue = "average_score" } = props;
+const SortSelector = <T extends "anime" | "manga">(
+  props: SortSelectorProps<T>
+) => {
+  const { onChange, defaultValue = "average_score", type } = props;
   const [activeItem, setActiveItem] = useState(defaultValue);
 
-  const handleClick = (item: string) => {
-    setActiveItem(item);
+  const SORTS = useMemo(
+    () => (type === "anime" ? ANIME_SORTS : MANGA_SORTS),
+    [type]
+  );
+  const placeholder = useMemo(
+    () => convert(activeItem, type === "anime" ? "animeSort" : "mangaSort"),
+    [activeItem, type]
+  );
 
-    onChange(item);
-  };
+  const handleClick = useCallback(
+    (item: string) => () => {
+      setActiveItem(item);
+
+      onChange?.(item);
+    },
+    [onChange]
+  );
+
+  useEffect(() => {
+    if (placeholder) return;
+
+    const fallbackValue = SORTS[0].value;
+
+    setActiveItem(fallbackValue);
+
+    onChange?.(fallbackValue);
+  }, [SORTS, defaultValue, onChange, placeholder]);
 
   return (
     <Popup
@@ -29,7 +54,7 @@ const SortSelector: React.FC<SortSelectorProps> = (props) => {
           LeftIcon={RiArrowUpDownFill}
           iconClassName="w-5 h-5"
         >
-          <p>{convert(activeItem, "sort")}</p>
+          <p>{placeholder}</p>
         </TextIcon>
       }
       placement="bottom-start"
@@ -39,7 +64,7 @@ const SortSelector: React.FC<SortSelectorProps> = (props) => {
           <p
             key={index}
             className="cursor-pointer text-sm text-gray-300 hover:text-primary-300 transition duration-300"
-            onClick={() => handleClick(sort.value)}
+            onClick={handleClick(sort.value)}
           >
             {sort.label}
           </p>
@@ -49,4 +74,4 @@ const SortSelector: React.FC<SortSelectorProps> = (props) => {
   );
 };
 
-export default React.memo(SortSelector);
+export default React.memo(SortSelector) as typeof SortSelector;

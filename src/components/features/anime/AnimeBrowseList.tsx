@@ -236,7 +236,11 @@ const BrowseList: React.FC<BrowseListProps> = ({
               control={control}
               defaultValue={defaultQuery.sort}
               render={({ field: { value, onChange } }) => (
-                <SortSelector defaultValue={value} onChange={onChange} />
+                <SortSelector
+                  type="anime"
+                  defaultValue={value}
+                  onChange={onChange}
+                />
               )}
             />
           </div>
@@ -248,7 +252,11 @@ const BrowseList: React.FC<BrowseListProps> = ({
             control={control}
             defaultValue={defaultQuery.sort}
             render={({ field: { value, onChange } }) => (
-              <SortSelector defaultValue={value} onChange={onChange} />
+              <SortSelector
+                type="anime"
+                defaultValue={value}
+                onChange={onChange}
+              />
             )}
           />
         </div>
