@@ -1,14 +1,19 @@
 import Avatar from "@/components/shared/Avatar";
+import CircleButton from "@/components/shared/CircleButton";
+import ClientOnly from "@/components/shared/ClientOnly";
 import EmojiPicker from "@/components/shared/EmojiPicker";
+import EmojiSuggestion from "@/components/shared/EmojiSuggestion";
+import EmojiText from "@/components/shared/EmojiText";
 import { useUser } from "@/contexts/AuthContext";
+import useDevice from "@/hooks/useDevice";
+import { insertBreaklineAtCursor, insertTextAtCursor } from "@/utils";
+import classNames from "classnames";
 import { EmojiData } from "emoji-mart";
+import Link from "next/link";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 import { BsEmojiSmile } from "react-icons/bs";
-import EmojiSuggestion from "@/components/shared/EmojiSuggestion";
-import ClientOnly from "@/components/shared/ClientOnly";
-import EmojiText from "@/components/shared/EmojiText";
-import Link from "next/link";
+import { RiSendPlaneFill, RiSendPlaneLine } from "react-icons/ri";
 
 interface CommentInputProps {
   placeholder?: string;
@@ -26,17 +31,15 @@ const CommentInput: React.FC<CommentInputProps> = ({
   const [latestText, setLatestText] = useState("");
   const inputRef = useRef<ContentEditable & HTMLDivElement>();
   const text = useRef("");
+  const { isDesktop } = useDevice();
 
   const handleChange = useCallback((event: ContentEditableEvent) => {
     setHTML(event.target.value);
   }, []);
 
-  const handleEmojiSelect = useCallback(
-    (emojiData: EmojiData) => {
-      setHTML(html + emojiData.colons);
-    },
-    [html]
-  );
+  const handleEmojiSelect = useCallback((emojiData: EmojiData) => {
+    insertTextAtCursor(emojiData.colons);
+  }, []);
 
   const handleEmojiSuggestionSelect = useCallback(
     (emoji: EmojiData) => {
@@ -53,6 +56,14 @@ const CommentInput: React.FC<CommentInputProps> = ({
     },
     [latestText, html]
   );
+
+  const handleSubmit = useCallback(() => {
+    if (text.current) {
+      onEnter?.(text.current);
+    }
+
+    setHTML("");
+  }, [onEnter]);
 
   useEffect(() => {
     const tempEl = document.createElement("div");
@@ -117,31 +128,39 @@ const CommentInput: React.FC<CommentInputProps> = ({
 
     if (!element) return;
 
-    const handleKeydown = (event: KeyboardEvent) => {
+    const handleDesktopKeydown = (event: KeyboardEvent) => {
       if (event.key === "Enter") {
         event.preventDefault();
 
         if (event.shiftKey) {
-          setHTML((html) => html + "<br /><br />");
+          insertBreaklineAtCursor();
         } else {
-          if (onEnter) {
-            if (!text.current) return;
-
-            onEnter?.(text.current);
-          }
-
-          setHTML("");
+          handleSubmit();
         }
       }
     };
 
-    element.addEventListener("keydown", handleKeydown);
+    const handleMobileKeydown = (event: KeyboardEvent) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+
+        insertBreaklineAtCursor();
+      }
+    };
+
+    element.addEventListener(
+      "keydown",
+      isDesktop ? handleDesktopKeydown : handleMobileKeydown
+    );
 
     return () => {
-      element.removeEventListener("keydown", handleKeydown);
+      element.removeEventListener(
+        "keydown",
+        isDesktop ? handleDesktopKeydown : handleMobileKeydown
+      );
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onEnter, inputRef.current]);
+  }, [inputRef.current]);
 
   return (
     <ClientOnly>
@@ -158,7 +177,7 @@ const CommentInput: React.FC<CommentInputProps> = ({
               />
 
               {!html && (
-                <p className="absolute z-0 px-3 text-gray-400 -translate-y-1/2 top-1/2">
+                <p className="absolute z-0 px-3 text-gray-400 -translate-y-1/2 top-1/2 line-clamp-1">
                   {placeholder}
                 </p>
               )}
@@ -171,12 +190,21 @@ const CommentInput: React.FC<CommentInputProps> = ({
               />
             </div>
 
-            <div className="absolute right-0 z-10 flex items-center px-3 space-x-2 -translate-y-1/2 top-1/2">
+            <div className="mt-2 md:mt-0 md:absolute md:right-0 z-10 flex justify-end md:justify-start items-center md:px-3 md:space-x-2 md:-translate-y-1/2 md:top-1/2">
               <EmojiPicker
                 buttonClassName="p-2 transition duration-300 rounded-full hover:bg-white/20"
                 onSelect={handleEmojiSelect}
                 reference={<BsEmojiSmile className="w-6 h-6" />}
               />
+
+              {!isDesktop && (
+                <CircleButton
+                  className={classNames(html && "text-primary-500")}
+                  LeftIcon={html ? RiSendPlaneFill : RiSendPlaneLine}
+                  secondary
+                  onClick={handleSubmit}
+                />
+              )}
             </div>
           </div>
         </div>

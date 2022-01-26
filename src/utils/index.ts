@@ -170,3 +170,33 @@ export const base64ToUint8Array = (base64: string) => {
   }
   return outputArray;
 };
+
+// https://stackoverflow.com/questions/2920150/insert-text-at-cursor-in-a-content-editable-div
+export const insertTextAtCursor = (text: string) => {
+  const selection = window.getSelection();
+  const range = selection.getRangeAt(0);
+  const node = document.createTextNode(text);
+
+  range.deleteContents();
+  range.insertNode(node);
+
+  selection.removeAllRanges();
+  selection.addRange(range);
+};
+
+// https://stackoverflow.com/questions/6023307/dealing-with-line-breaks-on-contenteditable-div
+export const insertBreaklineAtCursor = () => {
+  const selection = window.getSelection();
+  const range = selection.getRangeAt(0);
+  const br = document.createElement("br");
+  const textNode = document.createTextNode("\u00a0");
+
+  range.deleteContents();
+  range.insertNode(br);
+  range.collapse(false);
+  range.insertNode(textNode);
+  range.selectNodeContents(textNode);
+
+  selection.removeAllRanges();
+  selection.addRange(range);
+};
