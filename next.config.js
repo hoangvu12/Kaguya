@@ -12,5 +12,6 @@ module.exports = withPWA({
   pwa: {
     dest: "public",
     buildExcludes: [/middleware-manifest\.json$/, /_middleware\.js$/],
+    disable: process.env.NODE_ENV === "development",
   },
 });

@@ -1,5 +1,3 @@
-import { User } from "@supabase/gotrue-js";
-import { QueryKey } from "react-query";
 import { SkeletonProps } from "@/components/shared/Skeleton";
 import {
   CHARACTERS_ROLES,
@@ -7,10 +5,12 @@ import {
   GENRES,
   READ_STATUS,
   SEASONS,
-  STATUSES,
+  STATUS,
   WATCH_STATUS,
 } from "@/constants";
 import { SupabaseQueryFunction, SupabaseQueryOptions } from "@/utils/supabase";
+import { User } from "@supabase/gotrue-js";
+import { QueryKey } from "react-query";
 
 export interface Title {
   romaji: string;
@@ -31,7 +31,6 @@ export interface CharacterImage {
   medium: string;
 }
 
-export type CharacterRole = typeof CHARACTERS_ROLES[number];
 export interface Character {
   role: CharacterRole;
   name: string;
@@ -80,10 +79,11 @@ export interface MangaRelation {
   manga: Manga;
 }
 
-export type Season = typeof SEASONS[number];
-export type Format = typeof FORMATS[number];
-export type Status = typeof STATUSES[number];
+export type Season = typeof SEASONS[number]["value"];
+export type Format = typeof FORMATS[number]["value"];
+export type Status = typeof STATUS[number]["value"];
 export type Genre = typeof GENRES[number]["value"];
+export type CharacterRole = typeof CHARACTERS_ROLES[number]["value"];
 
 export interface Anime {
   title: Title;
@@ -225,11 +225,8 @@ export type CallbackSetter<T> = (handler: T) => void;
 
 export type Noop = () => void;
 
-const WatchStatus = WATCH_STATUS.map((status) => status.value);
-const ReadStatus = READ_STATUS.map((status) => status.value);
-
-export type WatchStatus = typeof WatchStatus[number];
-export type ReadStatus = typeof ReadStatus[number];
+export type WatchStatus = typeof WATCH_STATUS[number]["value"];
+export type ReadStatus = typeof READ_STATUS[number]["value"];
 
 export type SourceStatus<T> = (T extends "anime"
   ? {

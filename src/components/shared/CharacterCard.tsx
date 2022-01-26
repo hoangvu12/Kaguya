@@ -1,7 +1,7 @@
-import { Character } from "@/types";
-import React from "react";
 import Image from "@/components/shared/Image";
+import { Character } from "@/types";
 import { convert } from "@/utils/data";
+import React from "react";
 
 interface CharacterCardProps {
   character: Character;
