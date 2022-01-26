@@ -48,7 +48,7 @@ const GenresSelector: React.FC<GenresSelectorProps> = ({
     >
       {GENRES.map((genre) => (
         <SwiperSlide key={genre.value}>
-          <Link href={`/browse?type=${type}&genre=${genre.value}`}>
+          <Link href={`/browse?type=${type}&genres=${genre.value}`}>
             <a>
               <div
                 className={classNames(

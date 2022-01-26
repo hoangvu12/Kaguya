@@ -4,7 +4,7 @@ import WatchedSection from "@/components/features/anime/WatchedSection";
 import CardSwiper from "@/components/shared/CardSwiper";
 import ClientOnly from "@/components/shared/ClientOnly";
 import ColumnSection from "@/components/shared/ColumnSection";
-import GenresSelector from "@/components/shared/GenresSelector";
+import GenreSwiper from "@/components/shared/GenreSwiper";
 import Head from "@/components/shared/Head";
 import HomeBanner from "@/components/shared/HomeBanner";
 import NewestComments from "@/components/shared/NewestComments";
@@ -95,7 +95,7 @@ const Home: NextPage<HomeProps> = ({
               </Section>
 
               <Section title="Thể loại" className="w-full md:w-[20%] md:!pl-0">
-                <GenresSelector className="md:h-[500px]" />
+                <GenreSwiper className="md:h-[500px]" />
               </Section>
             </div>
 
