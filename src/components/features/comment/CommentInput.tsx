@@ -8,6 +8,7 @@ import { BsEmojiSmile } from "react-icons/bs";
 import EmojiSuggestion from "@/components/shared/EmojiSuggestion";
 import ClientOnly from "@/components/shared/ClientOnly";
 import EmojiText from "@/components/shared/EmojiText";
+import Link from "next/link";
 
 interface CommentInputProps {
   placeholder?: string;
@@ -181,7 +182,13 @@ const CommentInput: React.FC<CommentInputProps> = ({
         </div>
       ) : (
         <div className="flex items-center p-3 rounded bg-background-900">
-          <p className="text-gray-300">Bạn phải đăng nhập dể bình luận.</p>
+          <p className="text-gray-300">
+            Bạn phải{" "}
+            <Link href="/login">
+              <a className="text-primary-300 hover:underline">đăng nhập</a>
+            </Link>{" "}
+            dể bình luận.
+          </p>
         </div>
       )}
     </ClientOnly>
