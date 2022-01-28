@@ -1,11 +1,12 @@
 import AnimeBrowseList from "@/components/features/anime/AnimeBrowseList";
 import CharacterBrowseList from "@/components/features/characters/CharacterBrowseList";
 import MangaBrowseList from "@/components/features/manga/MangaBrowseList";
+import Head from "@/components/shared/Head";
 import Select from "@/components/shared/Select";
 import { TYPES } from "@/constants";
 import { Anime, Format, Genre } from "@/types";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 const components = {
   anime: AnimeBrowseList,
@@ -58,17 +59,20 @@ const BrowsePage = ({ query: baseQuery }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
 
-  const BrowseComponent = components[type];
+  const BrowseComponent = useMemo(() => components[type], [type]);
+  const chosenType = useMemo(() => TYPES.find((t) => t.value === type), [type]);
 
   return (
     <div className="py-20 px-4 md:px-12">
+      <Head title={`Tìm kiếm ${chosenType.label} - Kaguya`} />
+
       <div className="mb-8 flex items-center space-x-2">
         <p className="text-4xl font-semibold text-center md:text-left">
           Tìm kiếm
         </p>
 
         <Select
-          defaultValue={TYPES.find(({ value }) => value === type)}
+          defaultValue={chosenType.value}
           options={TYPES}
           isClearable={false}
           components={{ IndicatorSeparator: () => null }}
