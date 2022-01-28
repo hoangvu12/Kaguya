@@ -2,11 +2,11 @@ import config from "@/config";
 import useCreateSubscription from "@/hooks/useCreateSubscription";
 import {
   createContext,
-  useState,
-  useEffect,
   Dispatch,
   SetStateAction,
   useContext,
+  useEffect,
+  useState,
 } from "react";
 import { useUser } from "./AuthContext";
 
@@ -17,13 +17,15 @@ interface ContextProps {
 
 const SubscriptionContext = createContext<ContextProps>(null);
 
+const isDev = process.env.NODE_ENV === "development";
+
 export const SubscriptionContextProvider: React.FC = ({ children }) => {
   const [sub, setSub] = useState<PushSubscription>(null);
   const user = useUser();
   const createSubscription = useCreateSubscription();
 
   useEffect(() => {
-    if (!user) return;
+    if (!user || isDev) return;
 
     navigator.serviceWorker.getRegistration().then(async (registration) => {
       let subscription = await registration.pushManager.getSubscription();
@@ -40,7 +42,7 @@ export const SubscriptionContextProvider: React.FC = ({ children }) => {
   }, [user]);
 
   useEffect(() => {
-    if (!user || !sub) return;
+    if (!user || !sub || isDev) return;
 
     createSubscription.mutate(sub);
     // eslint-disable-next-line react-hooks/exhaustive-deps
