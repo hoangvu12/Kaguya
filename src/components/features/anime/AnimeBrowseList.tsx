@@ -17,7 +17,7 @@ const initialValues: UseBrowseOptions = {
   format: undefined,
   keyword: "",
   genres: [],
-  season: "FALL",
+  season: undefined,
   seasonYear: undefined,
   tags: [],
   sort: "average_score",
