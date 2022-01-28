@@ -4,6 +4,7 @@ import MangaBrowseList from "@/components/features/manga/MangaBrowseList";
 import Head from "@/components/shared/Head";
 import Select from "@/components/shared/Select";
 import { TYPES } from "@/constants";
+import useDevice from "@/hooks/useDevice";
 import { Anime, Format, Genre } from "@/types";
 import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useState } from "react";
@@ -20,9 +21,40 @@ const convertQueryToArray = <T,>(query: T[]) => {
   return query;
 };
 
+const typeSelectStyles = {
+  control: (provided) => {
+    return {
+      ...provided,
+      backgroundColor: "#1a1a1a",
+      border: 0,
+      boxShadow: "none",
+      padding: "0.25rem",
+    };
+  },
+  singleValue: (provided) => {
+    return {
+      ...provided,
+      fontSize: "2.25rem",
+      lineHeight: "2.5rem",
+      color: "white",
+      fontWeight: 600,
+    };
+  },
+  placeholder: (provided) => {
+    return {
+      ...provided,
+      fontSize: "2.25rem",
+      lineHeight: "2.5rem",
+      color: "white",
+      fontWeight: 600,
+    };
+  },
+};
+
 const BrowsePage = ({ query: baseQuery }) => {
   const [type, setType] = useState(baseQuery.type);
   const router = useRouter();
+  const { isMobile } = useDevice();
 
   const {
     format = undefined,
@@ -68,17 +100,19 @@ const BrowsePage = ({ query: baseQuery }) => {
 
       <div className="mb-8 flex items-center space-x-2">
         <p className="text-4xl font-semibold text-center md:text-left">
-          Tìm kiếm
+          {isMobile ? "Tìm" : "Tìm kiếm"}
         </p>
 
         <Select
           defaultValue={chosenType}
           options={TYPES}
           isClearable={false}
+          isSearchable={false}
           components={{ IndicatorSeparator: () => null }}
           onChange={({ value }) => {
             setType(value);
           }}
+          styles={typeSelectStyles}
         />
       </div>
 
