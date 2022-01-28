@@ -40,7 +40,7 @@ interface DetailsPageProps {
 
 const DetailsPage: NextPage<DetailsPageProps> = ({ character }) => {
   const gender = useMemo(
-    () => genders[character.gender.toLowerCase()],
+    () => genders[character.gender?.toLowerCase()] || character.gender,
     [character.gender]
   );
 
