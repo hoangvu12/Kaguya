@@ -11,7 +11,7 @@ const useMangaDetails = (mangaId: number) => {
         .select(
           `
           *,
-          characters:manga_characters(*),
+          characters:new_manga_characters!manga_id(*, character:character_id(*)),
           recommendations:manga_recommendations!original_id(manga:recommend_id(*)),
           relations:manga_relations!original_id(manga:relation_id(*))
       `

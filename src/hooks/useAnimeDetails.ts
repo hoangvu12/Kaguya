@@ -11,7 +11,7 @@ const useAnimeDetails = (animeId: number) => {
         .select(
           `
         *,
-        characters(*),
+        characters:anime_characters!anime_id(*, character:character_id(*)),
         recommendations!original_id(anime:recommend_id(*)),
         relations!original_id(anime:relation_id(*))
       `

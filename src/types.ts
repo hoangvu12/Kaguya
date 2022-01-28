@@ -51,6 +51,7 @@ export type CharacterConnection<T> = (T extends "anime"
 };
 
 export interface Character {
+  id: number;
   gender?: string;
   dateOfBirth?: FuzzyDate;
   name: string;

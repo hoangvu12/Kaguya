@@ -1,19 +1,19 @@
 import AdminLayout from "@/components/layouts/AdminLayout";
-import CharacterCard from "@/components/shared/CharacterCard";
+import CharacterConnectionCard from "@/components/shared/CharacterConnectionCard";
 import DetailsSection from "@/components/shared/DetailsSection";
-import InfoItem from "@/components/shared/InfoItem";
-import Section from "@/components/shared/Section";
 import DotList from "@/components/shared/DotList";
+import InfoItem from "@/components/shared/InfoItem";
 import List from "@/components/shared/List";
 import Loading from "@/components/shared/Loading";
 import PlainCard from "@/components/shared/PlainCard";
+import Section from "@/components/shared/Section";
 import TextIcon from "@/components/shared/TextIcon";
 import useAnimeDetails from "@/hooks/useAnimeDetails";
 import { numberWithCommas } from "@/utils";
 import { convert, getTitle } from "@/utils/data";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useMemo } from "react";
+import React from "react";
 import { AiFillHeart, AiOutlineEdit } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
 
@@ -97,7 +97,11 @@ const AdminAnimeDetails = () => {
               className="grid w-full grid-cols-1 gap-4 md:grid-cols-2"
             >
               {data.characters.map((character, index) => (
-                <CharacterCard character={character} key={index} />
+                <CharacterConnectionCard
+                  type="anime"
+                  characterConnection={character}
+                  key={index}
+                />
               ))}
             </DetailsSection>
           )}

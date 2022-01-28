@@ -1,4 +1,5 @@
 import AnimeBrowseList from "@/components/features/anime/AnimeBrowseList";
+import CharacterBrowseList from "@/components/features/characters/CharacterBrowseList";
 import MangaBrowseList from "@/components/features/manga/MangaBrowseList";
 import Select from "@/components/shared/Select";
 import { TYPES } from "@/constants";
@@ -9,6 +10,7 @@ import React, { useEffect, useState } from "react";
 const components = {
   anime: AnimeBrowseList,
   manga: MangaBrowseList,
+  characters: CharacterBrowseList,
 };
 
 const convertQueryToArray = <T,>(query: T[]) => {

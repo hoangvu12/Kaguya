@@ -1,34 +1,29 @@
 import Image from "@/components/shared/Image";
-import { CharacterConnection } from "@/types";
-import { convert } from "@/utils/data";
+import { Character } from "@/types";
+import Link from "next/link";
 import React from "react";
 
-interface CharacterCardProps<T> {
-  characterConnection: CharacterConnection<T>;
-  type: T;
+interface CharacterCardProps {
+  character: Character;
 }
 
-const CharacterCard = <T extends "anime" | "manga">({
-  characterConnection,
-  type: T,
-}: CharacterCardProps<T>) => {
+const CharacterCard: React.FC<CharacterCardProps> = ({ character }) => {
   return (
-    <div className="text-gray-300 space-x-4 col-span-1 flex w-full h-24 bg-background-900">
-      <div className="relative h-full w-16">
-        <Image
-          src={characterConnection.character.image.large}
-          layout="fill"
-          objectFit="cover"
-          alt={`${characterConnection.character.name}`}
-        />
-      </div>
-
-      <div className="py-2 flex flex-col justify-between">
-        <p className="font-semibold">{characterConnection.character.name}</p>
-
-        <p>{convert(characterConnection.role, "characterRole")}</p>
-      </div>
-    </div>
+    <Link href={`/characters/details/${character.id}`}>
+      <a>
+        <div className="space-y-2">
+          <div className="aspect-w-9 aspect-h-16 space-y-2">
+            <Image
+              src={character.image.large}
+              alt={character.name}
+              layout="fill"
+              objectFit="cover"
+            />
+          </div>
+          <p>{character.name}</p>
+        </div>
+      </a>
+    </Link>
   );
 };
 
