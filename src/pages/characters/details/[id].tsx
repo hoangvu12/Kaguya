@@ -49,6 +49,10 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ character }) => {
     let date = dayjs();
     let format = [];
 
+    if (!Object.keys(dateOfBirth).every((key) => dateOfBirth[key])) {
+      return null;
+    }
+
     if (!isFalsy(dateOfBirth.day)) {
       date = date.date(dateOfBirth.day);
       format.push("DD");
@@ -90,7 +94,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ character }) => {
               <PlainCard src={character.image.large} alt={character.name} />
             </div>
 
-            <div className="space-y-8 text-center md:text-left flex flex-col items-center md:items-start py-4 mt-4 md:-mt-16">
+            <div className="space-y-8 text-center md:text-left flex flex-col items-center md:items-start py-4 mt-4">
               <div className="flex items-center space-x-2">
                 <h1 className="text-3xl font-semibold">{character.name}</h1>
 
