@@ -5,6 +5,7 @@ import useSubscribe from "@/hooks/useSubscribe";
 import useUnsubscribe from "@/hooks/useUnsubscribe";
 import { Anime, Manga } from "@/types";
 import React, { useCallback } from "react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { MdNotificationsActive, MdNotificationsNone } from "react-icons/md";
 import { toast } from "react-toastify";
 
@@ -39,7 +40,15 @@ const NotificationButton = <T extends "anime" | "manga">(
     [subscribe, subscription, unsubscribe]
   );
 
-  if (isLoading) return null;
+  if (isLoading) {
+    return (
+      <CircleButton
+        secondary
+        iconClassName="w-6 h-6 animate-spin"
+        LeftIcon={AiOutlineLoading3Quarters}
+      />
+    );
+  }
 
   return !!isSubscribed ? (
     <CircleButton
