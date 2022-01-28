@@ -35,7 +35,7 @@ const HorizontalCard = <T extends "anime" | "manga">({
       <div className="shrink-0 w-12">
         <Link href={redirectUrl}>
           <a>
-            <PlainCard data={data} />
+            <PlainCard src={data.cover_image.extra_large} alt={title} />
           </a>
         </Link>
       </div>

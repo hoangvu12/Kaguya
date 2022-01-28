@@ -2,6 +2,7 @@ import PlainCard from "@/components/shared/PlainCard";
 import Swiper, { SwiperProps, SwiperSlide } from "@/components/shared/Swiper";
 import useDevice from "@/hooks/useDevice";
 import { Anime, Manga } from "@/types";
+import { getTitle } from "@/utils/data";
 import { motion } from "framer-motion";
 import React from "react";
 
@@ -38,25 +39,29 @@ const BannerSwiper: React.FC<BannerSwiperProps> = ({ data, ...props }) => {
     >
       {data.map((anime) => (
         <SwiperSlide key={anime.ani_id}>
-          {({ isActive }) => (
-            <motion.div
-              variants={{
-                enter: {
-                  opacity: 1,
-                  y: isDesktop ? -40 : 0,
-                  speed: 300,
-                },
-                exit: {
-                  opacity: 0.2,
-                  y: 0,
-                },
-              }}
-              className="w-full"
-              animate={isActive ? "enter" : "exit"}
-            >
-              <PlainCard data={anime} />
-            </motion.div>
-          )}
+          {({ isActive }) => {
+            const title = getTitle(anime);
+
+            return (
+              <motion.div
+                variants={{
+                  enter: {
+                    opacity: 1,
+                    y: isDesktop ? -40 : 0,
+                    speed: 300,
+                  },
+                  exit: {
+                    opacity: 0.2,
+                    y: 0,
+                  },
+                }}
+                className="w-full"
+                animate={isActive ? "enter" : "exit"}
+              >
+                <PlainCard src={anime.cover_image.extra_large} alt={title} />
+              </motion.div>
+            );
+          }}
         </SwiperSlide>
       ))}
     </Swiper>
