@@ -49,7 +49,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ character }) => {
     let date = dayjs();
     let format = [];
 
-    if (!Object.keys(dateOfBirth).every((key) => dateOfBirth[key])) {
+    if (Object.keys(dateOfBirth).every((key) => !dateOfBirth[key])) {
       return null;
     }
 
