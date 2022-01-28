@@ -37,7 +37,7 @@ const AdminMangaDetails = () => {
       <Section title="Thông tin">
         <div className="relative !mb-8 flex space-y-4 md:flex-row flex-col md:space-y-0 md:space-x-4 bg-background-900 p-4 md:p-8">
           <div className="w-40 shrink-0">
-            <PlainCard data={data} />
+            <PlainCard src={data.cover_image.extra_large} alt={title} />
           </div>
 
           <div className="space-y-4 self-end">

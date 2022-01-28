@@ -1,9 +1,9 @@
 import AdminLayout from "@/components/layouts/AdminLayout";
-import Section from "@/components/shared/Section";
 import Button from "@/components/shared/Button";
 import Input from "@/components/shared/Input";
 import Loading from "@/components/shared/Loading";
 import PlainCard from "@/components/shared/PlainCard";
+import Section from "@/components/shared/Section";
 import Table from "@/components/shared/Table";
 import useAdminBrowse from "@/hooks/useAdminBrowse";
 import { Anime } from "@/types";
@@ -18,10 +18,11 @@ const columns: Column<Anime>[] = [
     Header: "Ảnh",
     Cell: ({ cell }) => {
       const originalCell = cell.row.original;
+      const title = getTitle(originalCell);
 
       return (
         <div className="p-2">
-          <PlainCard data={originalCell}></PlainCard>
+          <PlainCard src={originalCell.cover_image.extra_large} alt={title} />
         </div>
       );
     },

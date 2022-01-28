@@ -58,6 +58,7 @@ export interface Character {
   image: CharacterImage;
   age?: string;
   favourites?: number;
+  updated_at?: Date;
 }
 
 export interface AnimeRecommendation {

@@ -67,7 +67,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
         <div className="relative px-4 sm:px-12 z-10 bg-background-900 pb-4">
           <div className="flex flex-col md:flex-row md:space-x-8">
             <div className="shrink-0 relative left-1/2 -translate-x-1/2 md:static md:left-0 md:-translate-x-0 w-[186px] -mt-20 space-y-6">
-              <PlainCard data={manga} />
+              <PlainCard src={manga.cover_image.extra_large} alt={title} />
 
               {user && (
                 <div className="flex items-center space-x-1">
