@@ -21,7 +21,6 @@ const initialValues: UseBrowseOptions = {
   seasonYear: undefined,
   tags: [],
   sort: "average_score",
-  type: "anime",
   countries: [],
 };
 

@@ -13,7 +13,6 @@ export interface UseBrowseOptions {
   limit?: number;
   tags?: string[];
   sort?: keyof Anime;
-  type?: "anime" | "manga";
   countries?: string[];
 }
 

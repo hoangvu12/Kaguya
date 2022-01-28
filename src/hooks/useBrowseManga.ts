@@ -12,7 +12,6 @@ export interface UseBrowseOptions {
   tags?: string[];
   sort?: keyof Manga;
   countries?: string[];
-  type?: "manga" | "anime";
 }
 
 const useBrowse = (options: UseBrowseOptions) => {
