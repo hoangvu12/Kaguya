@@ -178,6 +178,10 @@ export const TYPES = [
     value: "manga",
     label: "Manga",
   },
+  {
+    value: "characters",
+    label: "Nhân vật",
+  },
 ] as const;
 
 export const COUNTRIES = [
