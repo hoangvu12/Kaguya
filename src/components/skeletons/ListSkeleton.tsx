@@ -4,13 +4,9 @@ import React from "react";
 
 const ListSkeleton = () => {
   return (
-    <Skeleton className="flex flex-wrap -my-8">
+    <Skeleton className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
       {new Array(15).fill(null).map((_, index) => (
-        <SkeletonItem
-          container
-          className="w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6 px-2 snap-mandatory my-8"
-          key={index}
-        >
+        <SkeletonItem container className="col-span-1" key={index}>
           <CardSkeleton />
         </SkeletonItem>
       ))}
