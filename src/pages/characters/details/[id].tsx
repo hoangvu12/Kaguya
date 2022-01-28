@@ -86,7 +86,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ character }) => {
       />
 
       <div className="pb-8">
-        <div className="w-full h-[100px] md:h-[200px] bg-background"></div>
+        <div className="w-full h-[200px] bg-background"></div>
 
         <div className="relative px-4 sm:px-12 z-10 bg-background-900 pb-4 mb-8">
           <div className="flex flex-col md:flex-row md:space-x-8">
@@ -95,7 +95,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ character }) => {
             </div>
 
             <div className="space-y-8 text-center md:text-left flex flex-col items-center md:items-start py-4 mt-4">
-              <div className="flex items-center space-x-2">
+              <div className="flex flex-col md:flex-row items-center gap-4">
                 <h1 className="text-3xl font-semibold">{character.name}</h1>
 
                 <TextIcon
