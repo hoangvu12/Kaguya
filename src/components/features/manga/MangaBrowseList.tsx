@@ -1,11 +1,10 @@
 import FormSelect from "@/components/shared/FormSelect";
-import Head from "@/components/shared/Head";
 import Input from "@/components/shared/Input";
 import InView from "@/components/shared/InView";
 import List from "@/components/shared/List";
 import SortSelector from "@/components/shared/SortSelector";
 import AnimeListSkeleton from "@/components/skeletons/AnimeListSkeleton";
-import { COUNTRIES, FORMATS, GENRES, TYPES } from "@/constants";
+import { COUNTRIES, FORMATS, GENRES } from "@/constants";
 import useBrowse, { UseBrowseOptions } from "@/hooks/useBrowseManga";
 import TAGS from "@/tags.json";
 import { debounce } from "debounce";
@@ -41,12 +40,10 @@ const tags = TAGS.map((tag) => ({
 
 interface BrowseListProps {
   defaultQuery?: UseBrowseOptions;
-  title?: string;
 }
 
 const BrowseList: React.FC<BrowseListProps> = ({
   defaultQuery = initialValues,
-  title,
 }) => {
   const defaultValues = { ...initialValues, ...defaultQuery };
 
@@ -110,15 +107,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
   }, [isDirty]);
 
   return (
-    <div className="min-h-screen px-4 md:px-12">
-      <Head title={`${title} - Kaguya` || "Kaguya"} />
-
-      {title && (
-        <p className="mb-8 text-4xl font-semibold text-center md:text-left">
-          {title}
-        </p>
-      )}
-
+    <div className="min-h-screen">
       <form className="space-y-4">
         <div className="flex items-center gap-4 overflow-x-auto lg:flex-wrap lg:justify-between lg:space-x-0 lg:overflow-x-visible snap-x lg:snap-none">
           <Input
@@ -164,18 +153,6 @@ const BrowseList: React.FC<BrowseListProps> = ({
               options: tags,
             }}
             label="Tags"
-          />
-
-          <FormSelect
-            control={control}
-            name="type"
-            defaultValue={defaultValues.type}
-            selectProps={{
-              placeholder: "Loại tìm kiếm",
-              options: TYPES,
-              isClearable: false,
-            }}
-            label="Loại tìm kiếm"
           />
 
           <FormSelect

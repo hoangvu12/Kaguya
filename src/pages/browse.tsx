@@ -1,55 +1,82 @@
 import AnimeBrowseList from "@/components/features/anime/AnimeBrowseList";
 import MangaBrowseList from "@/components/features/manga/MangaBrowseList";
-import { Anime, Format, Genre, Manga } from "@/types";
-import React from "react";
+import Select from "@/components/shared/Select";
+import { TYPES } from "@/constants";
+import { Anime, Format, Genre } from "@/types";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 
-const BrowsePage = ({ query }) => {
+const components = {
+  anime: AnimeBrowseList,
+  manga: MangaBrowseList,
+};
+
+const convertQueryToArray = <T,>(query: T[]) => {
+  if (typeof query === "string") return [query];
+
+  return query;
+};
+
+const BrowsePage = ({ query: baseQuery }) => {
+  const [type, setType] = useState(baseQuery.type);
+  const router = useRouter();
+
   const {
     format = undefined,
     keyword = "",
     season = undefined,
     seasonYear = undefined,
     sort = "popularity",
-    type,
     genres = [],
     tags = [],
     countries = [],
-  } = query;
+  } = baseQuery;
 
-  const convertQueryToArray = <T,>(query: T[]) => {
-    if (typeof query === "string") return [query];
-
-    return query;
-  };
-
-  const baseQuery = {
+  const query = {
     format: format as Format,
     keyword: keyword as string,
-    type: type as "manga" | "anime",
     genres: convertQueryToArray<Genre>(genres),
     tags: convertQueryToArray<string>(tags),
     countries: convertQueryToArray<string>(countries),
-  };
-
-  const animeBrowseQuery = {
-    ...baseQuery,
     season: season as string,
     seasonYear: seasonYear as string,
     sort: sort as keyof Anime,
   };
 
-  const mangaBrowseQuery = {
-    ...baseQuery,
-    sort: sort as keyof Manga,
-  };
+  useEffect(() => {
+    const truthyQuery = {};
+
+    Object.keys(query).forEach((key) => {
+      if (!query[key]) return;
+
+      truthyQuery[key] = query[key];
+    });
+
+    router.replace({ query: { ...truthyQuery, type }, pathname: "/browse" });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [type]);
+
+  const BrowseComponent = components[type];
 
   return (
-    <div className="py-20">
-      {type === "anime" ? (
-        <AnimeBrowseList title="Tìm kiếm" defaultQuery={animeBrowseQuery} />
-      ) : (
-        <MangaBrowseList title="Tìm kiếm" defaultQuery={mangaBrowseQuery} />
-      )}
+    <div className="py-20 px-4 md:px-12">
+      <div className="mb-8 flex items-center space-x-2">
+        <p className="text-4xl font-semibold text-center md:text-left">
+          Tìm kiếm
+        </p>
+
+        <Select
+          defaultValue={TYPES.find(({ value }) => value === type)}
+          options={TYPES}
+          isClearable={false}
+          components={{ IndicatorSeparator: () => null }}
+          onChange={({ value }) => {
+            setType(value);
+          }}
+        />
+      </div>
+
+      <BrowseComponent defaultQuery={baseQuery} />
     </div>
   );
 };
