@@ -1,6 +1,4 @@
-import SourceStatus from "@/components/shared/SourceStatus";
 import EpisodeSelector from "@/components/features/anime/EpisodeSelector";
-import NotificationButton from "@/components/shared/NotificationButton";
 import CommentsSection from "@/components/features/comment/CommentsSection";
 import Button from "@/components/shared/Button";
 import CharacterCard from "@/components/shared/CharacterCard";
@@ -10,8 +8,11 @@ import DotList from "@/components/shared/DotList";
 import Head from "@/components/shared/Head";
 import InfoItem from "@/components/shared/InfoItem";
 import List from "@/components/shared/List";
+import NotificationButton from "@/components/shared/NotificationButton";
 import PlainCard from "@/components/shared/PlainCard";
+import SourceStatus from "@/components/shared/SourceStatus";
 import { REVALIDATE_TIME } from "@/constants";
+import { useUser } from "@/contexts/AuthContext";
 import dayjs from "@/lib/dayjs";
 import supabase from "@/lib/supabase";
 import { Anime, Comment } from "@/types";
@@ -22,7 +23,6 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { BsFillPlayFill } from "react-icons/bs";
-import { useUser } from "@/contexts/AuthContext";
 
 interface DetailsPageProps {
   anime: Anime;
@@ -203,7 +203,11 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                 className="grid w-full grid-cols-1 gap-4 md:grid-cols-2"
               >
                 {anime.characters.map((character, index) => (
-                  <CharacterCard character={character} key={index} />
+                  <CharacterCard
+                    characterConnection={character}
+                    key={index}
+                    type="anime"
+                  />
                 ))}
               </DetailsSection>
             )}
@@ -271,7 +275,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       `
         *,
         airing_schedule(*),
-        characters(*),
+        characters:anime_characters!anime_id(*, character:character_id(*)),
         recommendations!original_id(anime:recommend_id(*)),
         relations!original_id(anime:relation_id(*)),
         episodes!episodes_anime_id_fkey(*)

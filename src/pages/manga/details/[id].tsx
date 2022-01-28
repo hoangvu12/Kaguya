@@ -1,28 +1,28 @@
+import CommentsSection from "@/components/features/comment/CommentsSection";
+import Button from "@/components/shared/Button";
 import CharacterCard from "@/components/shared/CharacterCard";
+import CircleButton from "@/components/shared/CircleButton";
 import DetailsBanner from "@/components/shared/DetailsBanner";
 import DetailsSection from "@/components/shared/DetailsSection";
-import InfoItem from "@/components/shared/InfoItem";
-import List from "@/components/shared/List";
-import Button from "@/components/shared/Button";
 import DotList from "@/components/shared/DotList";
 import Head from "@/components/shared/Head";
-import CircleButton from "@/components/shared/CircleButton";
+import InfoItem from "@/components/shared/InfoItem";
+import List from "@/components/shared/List";
+import NotificationButton from "@/components/shared/NotificationButton";
 import PlainCard from "@/components/shared/PlainCard";
-import CommentsSection from "@/components/features/comment/CommentsSection";
-import Link from "next/link";
+import SourceStatus from "@/components/shared/SourceStatus";
 import { REVALIDATE_TIME } from "@/constants";
+import { useUser } from "@/contexts/AuthContext";
 import supabase from "@/lib/supabase";
 import { Comment, Manga } from "@/types";
 import { numberWithCommas, parseNumbersFromString } from "@/utils";
 import { convert, getTitle } from "@/utils/data";
+import { motion } from "framer-motion";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useMemo, useState } from "react";
 import { BsChevronDown, BsChevronUp, BsFillPlayFill } from "react-icons/bs";
-import { motion } from "framer-motion";
-import SourceStatus from "@/components/shared/SourceStatus";
-import NotificationButton from "@/components/shared/NotificationButton";
-import { useUser } from "@/contexts/AuthContext";
 
 interface DetailsPageProps {
   manga: Manga;
@@ -194,7 +194,11 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
                 className="w-full grid md:grid-cols-2 grid-cols-1 gap-4"
               >
                 {manga.characters.map((character, index) => (
-                  <CharacterCard character={character} key={index} />
+                  <CharacterCard
+                    type="manga"
+                    characterConnection={character}
+                    key={index}
+                  />
                 ))}
               </DetailsSection>
             )}
@@ -261,7 +265,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     .select(
       `
         *,
-        characters:manga_characters(*),
+        characters:new_manga_characters!manga_id(*, character:character_id(*)),
         recommendations:manga_recommendations!original_id(manga:recommend_id(*)),
         relations:manga_relations!original_id(manga:relation_id(*)),
         chapters!chapters_manga_id_fkey(*)
