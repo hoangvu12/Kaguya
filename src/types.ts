@@ -12,6 +12,11 @@ import { SupabaseQueryFunction, SupabaseQueryOptions } from "@/utils/supabase";
 import { User } from "@supabase/gotrue-js";
 import { QueryKey } from "react-query";
 
+export interface FuzzyDate {
+  day?: number;
+  month?: number;
+  year?: number;
+}
 export interface Title {
   romaji: string;
   english: string;
@@ -31,10 +36,27 @@ export interface CharacterImage {
   medium: string;
 }
 
-export interface Character {
+export type CharacterConnection<T> = (T extends "anime"
+  ? {
+      anime_id?: number;
+      anime?: Anime;
+    }
+  : {
+      manga_id: number;
+      manga?: Manga;
+    }) & {
+  character_id?: number;
+  character: Character;
   role: CharacterRole;
+};
+
+export interface Character {
+  gender?: string;
+  dateOfBirth?: FuzzyDate;
   name: string;
   image: CharacterImage;
+  age?: string;
+  favourites?: number;
 }
 
 export interface AnimeRecommendation {
@@ -103,7 +125,7 @@ export interface Anime {
   country_of_origin?: string;
   average_score?: number;
   studios?: string[];
-  characters?: Character[];
+  characters?: CharacterConnection<"anime">[];
   relations?: AnimeRelation[];
   recommendations?: AnimeRecommendation[];
   airing_schedule?: AiringSchedule[];
@@ -138,7 +160,7 @@ export interface Manga {
   country_of_origin?: string;
   average_score?: number;
   studios?: string[];
-  characters?: Character[];
+  characters?: CharacterConnection<"manga">[];
   relations?: MangaRelation[];
   recommendations?: MangaRecommendation[];
   ani_id?: number;
