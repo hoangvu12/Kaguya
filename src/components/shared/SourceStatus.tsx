@@ -1,10 +1,10 @@
 import Select from "@/components/shared/Select";
-import { WATCH_STATUS, READ_STATUS } from "@/constants";
+import { READ_STATUS, WATCH_STATUS } from "@/constants";
 import useModifySourceStatus from "@/hooks/useModifySourceStatus";
 import useSourceStatus from "@/hooks/useSourceStatus";
 import { Anime, Manga } from "@/types";
 import React from "react";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { AiFillPlusCircle, AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const styles = {
   control: (provided, state) => {
@@ -75,7 +75,13 @@ const SourceStatus = <T extends "anime" | "manga">(
     </div>
   ) : (
     <Select
-      placeholder="Trạng thái"
+      placeholder={
+        <div className="flex items-center space-x-2">
+          <AiFillPlusCircle className="w-6 h-6" />
+
+          <p>Danh sách</p>
+        </div>
+      }
       styles={styles}
       className="grow z-50"
       options={options}
