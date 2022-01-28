@@ -1,8 +1,8 @@
-import React from "react";
 import Skeleton, { SkeletonItem } from "@/components/shared/Skeleton";
 import CardSkeleton from "@/components/skeletons/CardSkeleton";
+import React from "react";
 
-const AnimeListSkeleton = () => {
+const ListSkeleton = () => {
   return (
     <Skeleton className="flex flex-wrap -my-8">
       {new Array(15).fill(null).map((_, index) => (
@@ -18,4 +18,4 @@ const AnimeListSkeleton = () => {
   );
 };
 
-export default AnimeListSkeleton;
+export default React.memo(ListSkeleton);

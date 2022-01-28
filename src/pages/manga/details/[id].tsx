@@ -1,6 +1,6 @@
 import CommentsSection from "@/components/features/comment/CommentsSection";
 import Button from "@/components/shared/Button";
-import CharacterCard from "@/components/shared/CharacterCard";
+import CharacterConnectionCard from "@/components/shared/CharacterConnectionCard";
 import CircleButton from "@/components/shared/CircleButton";
 import DetailsBanner from "@/components/shared/DetailsBanner";
 import DetailsSection from "@/components/shared/DetailsSection";
@@ -194,7 +194,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
                 className="w-full grid md:grid-cols-2 grid-cols-1 gap-4"
               >
                 {manga.characters.map((character, index) => (
-                  <CharacterCard
+                  <CharacterConnectionCard
                     type="manga"
                     characterConnection={character}
                     key={index}

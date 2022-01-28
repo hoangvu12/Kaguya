@@ -1,32 +1,36 @@
-import { Anime, Manga } from "@/types";
-import classNames from "classnames";
-import React, { PropsWithChildren } from "react";
 import Card from "@/components/shared/Card";
+import { Anime, Character, Manga } from "@/types";
+import classNames from "classnames";
+import React from "react";
 
+type Data<T> = T extends "anime"
+  ? Anime
+  : T extends "characters"
+  ? Character
+  : Manga;
 interface ListProps<T> {
-  data: T extends "anime" ? Anime[] : Manga[];
+  data: Data<T>[];
   type: T;
-
-  onEachCard?: (data: T extends "anime" ? Anime : Manga) => React.ReactNode;
+  onEachCard?: (data: Data<T>) => React.ReactNode;
 }
 
-const List = <T extends "anime" | "manga">({
+const List = <T extends "anime" | "manga" | "characters">({
   data,
   type,
+  // @ts-ignore
   onEachCard = (data) => <Card data={data} type={type} />,
 }: ListProps<T>) => {
   return (
     <div
       className={classNames(
-        data.length ? "flex flex-wrap -my-8" : "text-center"
+        data.length
+          ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4"
+          : "text-center"
       )}
     >
       {data.length ? (
-        data.map((item) => (
-          <div
-            className="w-1/2 px-2 my-8 sm:w-1/3 md:w-1/4 lg:w-1/5 xl:w-1/6 snap-mandatory"
-            key={item.ani_id}
-          >
+        data.map((item, index) => (
+          <div className="col-span-1" key={index}>
             {onEachCard(item)}
           </div>
         ))

@@ -3,7 +3,7 @@ import Input from "@/components/shared/Input";
 import InView from "@/components/shared/InView";
 import List from "@/components/shared/List";
 import SortSelector from "@/components/shared/SortSelector";
-import AnimeListSkeleton from "@/components/skeletons/AnimeListSkeleton";
+import ListSkeleton from "@/components/skeletons/ListSkeleton";
 import { COUNTRIES, FORMATS, GENRES } from "@/constants";
 import useBrowse, { UseBrowseOptions } from "@/hooks/useBrowseManga";
 import TAGS from "@/tags.json";
@@ -191,7 +191,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
 
             {isFetchingNextPage && !isError && (
               <div className="mt-4">
-                <AnimeListSkeleton />
+                <ListSkeleton />
               </div>
             )}
 
@@ -204,7 +204,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
             )}
           </React.Fragment>
         ) : (
-          <AnimeListSkeleton />
+          <ListSkeleton />
         )}
       </div>
     </div>

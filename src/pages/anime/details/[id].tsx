@@ -1,7 +1,7 @@
 import EpisodeSelector from "@/components/features/anime/EpisodeSelector";
 import CommentsSection from "@/components/features/comment/CommentsSection";
 import Button from "@/components/shared/Button";
-import CharacterCard from "@/components/shared/CharacterCard";
+import CharacterConnectionCard from "@/components/shared/CharacterConnectionCard";
 import DetailsBanner from "@/components/shared/DetailsBanner";
 import DetailsSection from "@/components/shared/DetailsSection";
 import DotList from "@/components/shared/DotList";
@@ -203,7 +203,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                 className="grid w-full grid-cols-1 gap-4 md:grid-cols-2"
               >
                 {anime.characters.map((character, index) => (
-                  <CharacterCard
+                  <CharacterConnectionCard
                     characterConnection={character}
                     key={index}
                     type="anime"
