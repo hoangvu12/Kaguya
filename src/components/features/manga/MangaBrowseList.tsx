@@ -19,7 +19,6 @@ const initialValues: UseBrowseOptions = {
   genres: [],
   tags: [],
   sort: "average_score",
-  type: "manga",
   countries: [],
 };
 

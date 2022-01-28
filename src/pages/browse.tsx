@@ -7,7 +7,7 @@ import { TYPES } from "@/constants";
 import useDevice from "@/hooks/useDevice";
 import { Anime, Format, Genre } from "@/types";
 import { useRouter } from "next/router";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 
 const components = {
   anime: AnimeBrowseList,
@@ -52,7 +52,6 @@ const typeSelectStyles = {
 };
 
 const BrowsePage = ({ query: baseQuery }) => {
-  const [type, setType] = useState(baseQuery.type);
   const router = useRouter();
   const { isMobile } = useDevice();
 
@@ -65,6 +64,7 @@ const BrowsePage = ({ query: baseQuery }) => {
     genres = [],
     tags = [],
     countries = [],
+    type = "anime",
   } = baseQuery;
 
   const query = {
@@ -78,7 +78,7 @@ const BrowsePage = ({ query: baseQuery }) => {
     sort: sort as keyof Anime,
   };
 
-  useEffect(() => {
+  const handleTypeChange = (type: typeof TYPES[number]) => {
     const truthyQuery = {};
 
     Object.keys(query).forEach((key) => {
@@ -87,9 +87,11 @@ const BrowsePage = ({ query: baseQuery }) => {
       truthyQuery[key] = query[key];
     });
 
-    router.replace({ query: { ...truthyQuery, type }, pathname: "/browse" });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type]);
+    router.replace({
+      query: { ...truthyQuery, type: type.value },
+      pathname: "/browse",
+    });
+  };
 
   const BrowseComponent = useMemo(() => components[type], [type]);
   const chosenType = useMemo(() => TYPES.find((t) => t.value === type), [type]);
@@ -109,9 +111,7 @@ const BrowsePage = ({ query: baseQuery }) => {
           isClearable={false}
           isSearchable={false}
           components={{ IndicatorSeparator: () => null }}
-          onChange={({ value }) => {
-            setType(value);
-          }}
+          onChange={handleTypeChange}
           styles={typeSelectStyles}
         />
       </div>
