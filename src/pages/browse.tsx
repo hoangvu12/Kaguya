@@ -72,7 +72,7 @@ const BrowsePage = ({ query: baseQuery }) => {
         </p>
 
         <Select
-          defaultValue={chosenType.value}
+          defaultValue={chosenType}
           options={TYPES}
           isClearable={false}
           components={{ IndicatorSeparator: () => null }}
