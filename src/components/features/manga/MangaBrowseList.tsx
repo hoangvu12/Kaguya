@@ -104,7 +104,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
   return (
     <div className="min-h-screen">
       <form className="space-y-4">
-        <div className="flex items-center gap-4 overflow-x-auto lg:flex-wrap lg:justify-between lg:space-x-0 lg:overflow-x-visible snap-x lg:snap-none">
+        <div className="flex flex-col md:flex-row md:items-end gap-6 lg:flex-wrap lg:justify-between lg:space-x-0">
           <Input
             {...register("keyword")}
             containerInputClassName="border border-white/80"
@@ -112,47 +112,58 @@ const BrowseList: React.FC<BrowseListProps> = ({
             onChange={handleInputChange}
             defaultValue={defaultValues.keyword}
             label="Tìm kiếm"
-            containerClassName="shrink-0"
+            containerClassName="md:hidden shrink-0"
           />
 
-          <GenresFormSelect
-            value={[...query.genres, ...query.tags]}
-            onChange={handleGenresChange}
-          />
+          <div className="snap-x overflow-x-auto flex items-center justify-between w-full gap-6">
+            <Input
+              {...register("keyword")}
+              containerInputClassName="border border-white/80"
+              LeftIcon={AiOutlineSearch}
+              onChange={handleInputChange}
+              defaultValue={defaultValues.keyword}
+              label="Tìm kiếm"
+              containerClassName="hidden md:block shrink-0"
+            />
 
-          <FormSelect
-            control={control}
-            name="format"
-            defaultValue={defaultValues.format}
-            selectProps={{
-              placeholder: "Định dạng",
-              options: FORMATS,
-            }}
-            label="Định dạng"
-          />
+            <GenresFormSelect
+              value={[...query.genres, ...query.tags]}
+              onChange={handleGenresChange}
+            />
 
-          <FormSelect
-            control={control}
-            name="status"
-            defaultValue={defaultValues.format}
-            selectProps={{
-              placeholder: "Tình trạng",
-              options: STATUS,
-            }}
-            label="Tình trạng"
-          />
+            <FormSelect
+              control={control}
+              name="format"
+              defaultValue={defaultValues.format}
+              selectProps={{
+                placeholder: "Định dạng",
+                options: FORMATS,
+              }}
+              label="Định dạng"
+            />
+            <FormSelect
+              control={control}
+              name="status"
+              defaultValue={defaultValues.format}
+              selectProps={{
+                placeholder: "Tình trạng",
+                options: STATUS,
+              }}
+              label="Tình trạng"
+            />
 
-          <FormSelect
-            control={control}
-            name="countries"
-            defaultValue={defaultValues.countries}
-            selectProps={{
-              placeholder: "Quốc gia",
-              options: COUNTRIES,
-              isMulti: true,
-            }}
-            label="Quốc gia"
-          />
+            <FormSelect
+              control={control}
+              name="countries"
+              defaultValue={defaultValues.countries}
+              selectProps={{
+                placeholder: "Quốc gia",
+                options: COUNTRIES,
+                isMulti: true,
+              }}
+              label="Quốc gia"
+            />
+          </div>
         </div>
 
         <div className="flex items-end justify-end">

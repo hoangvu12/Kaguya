@@ -89,8 +89,9 @@ const Select = React.forwardRef<any, Props>(
             };
           },
           menu: (provided) => {
-            return { ...provided, backgroundColor: "#1a1a1a", zIndex: 50 };
+            return { ...provided, backgroundColor: "#1a1a1a" };
           },
+          menuPortal: (provided) => ({ ...provided, zIndex: 9999 }),
           singleValue: (provided) => {
             return { ...provided, color: "#fff" };
           },

@@ -1,3 +1,4 @@
+import AdvancedSettings from "@/components/shared/AdvancedSettings";
 import FormSelect from "@/components/shared/FormSelect";
 import GenresFormSelect from "@/components/shared/GenresFormSelect";
 import Input from "@/components/shared/Input";
@@ -5,11 +6,12 @@ import InView from "@/components/shared/InView";
 import List from "@/components/shared/List";
 import SortSelector from "@/components/shared/SortSelector";
 import ListSkeleton from "@/components/skeletons/ListSkeleton";
-import { COUNTRIES, FORMATS, SEASONS, SEASON_YEARS } from "@/constants";
+import { COUNTRIES, FORMATS, SEASONS, SEASON_YEARS, STATUS } from "@/constants";
 import useBrowse, { UseBrowseOptions } from "@/hooks/useBrowseAnime";
 import { debounce } from "debounce";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useMemo } from "react";
+import { MobileView } from "react-device-detect";
 import { Controller, useForm } from "react-hook-form";
 import { AiOutlineSearch } from "react-icons/ai";
 
@@ -121,7 +123,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
   return (
     <div className="min-h-screen">
       <form className="space-y-4">
-        <div className="flex items-center gap-4 overflow-x-auto lg:flex-wrap lg:justify-between lg:space-x-0 lg:overflow-x-visible snap-x lg:snap-none">
+        <div className="flex flex-col md:flex-row md:items-end gap-6 lg:flex-wrap lg:justify-between lg:space-x-0">
           <Input
             {...register("keyword")}
             containerInputClassName="border border-white/80"
@@ -129,48 +131,85 @@ const BrowseList: React.FC<BrowseListProps> = ({
             onChange={handleInputChange}
             defaultValue={defaultValues.keyword}
             label="Tìm kiếm"
-            containerClassName="shrink-0"
+            containerClassName="md:hidden shrink-0"
           />
 
-          <GenresFormSelect
-            value={[...query.genres, ...query.tags]}
-            onChange={handleGenresChange}
-          />
+          <div className="snap-x overflow-x-auto flex items-center gap-6">
+            <Input
+              {...register("keyword")}
+              containerInputClassName="border border-white/80"
+              LeftIcon={AiOutlineSearch}
+              onChange={handleInputChange}
+              defaultValue={defaultValues.keyword}
+              label="Tìm kiếm"
+              containerClassName="hidden md:block shrink-0"
+            />
 
-          <FormSelect
-            control={control}
-            name="season"
-            defaultValue={defaultValues.season}
-            selectProps={{
-              placeholder: "Mùa",
-              options: seasons,
-            }}
-            label="Mùa"
-          />
+            <GenresFormSelect
+              value={[...query.genres, ...query.tags]}
+              onChange={handleGenresChange}
+            />
 
-          <FormSelect
-            control={control}
-            name="seasonYear"
-            defaultValue={defaultValues.seasonYear}
-            selectProps={{
-              placeholder: "Năm",
-              options: seasonYears,
-            }}
-            label="Năm"
-          />
+            <FormSelect
+              control={control}
+              name="season"
+              defaultValue={defaultValues.season}
+              selectProps={{
+                placeholder: "Mùa",
+                options: seasons,
+              }}
+              label="Mùa"
+            />
 
-          <FormSelect
-            control={control}
-            name="format"
-            defaultValue={defaultValues.format}
-            selectProps={{
-              placeholder: "Định dạng",
-              options: formats,
-            }}
-            label="Định dạng"
-          />
+            <FormSelect
+              control={control}
+              name="seasonYear"
+              defaultValue={defaultValues.seasonYear}
+              selectProps={{
+                placeholder: "Năm",
+                options: seasonYears,
+              }}
+              label="Năm"
+            />
 
-          <div className="flex items-center space-x-2 md:space-x-8">
+            <FormSelect
+              control={control}
+              name="format"
+              defaultValue={defaultValues.format}
+              selectProps={{
+                placeholder: "Định dạng",
+                options: formats,
+              }}
+              label="Định dạng"
+            />
+
+            <MobileView renderWithFragment>
+              <FormSelect
+                control={control}
+                name="countries"
+                defaultValue={defaultValues.countries}
+                selectProps={{
+                  placeholder: "Quốc gia",
+                  options: COUNTRIES,
+                  isMulti: true,
+                }}
+                label="Quốc gia"
+              />
+
+              <FormSelect
+                control={control}
+                name="status"
+                defaultValue={defaultValues.status}
+                selectProps={{
+                  placeholder: "Tình trạng",
+                  options: STATUS,
+                }}
+                label="Tình trạng"
+              />
+            </MobileView>
+          </div>
+
+          <AdvancedSettings referenceClassName="hidden md:flex">
             <FormSelect
               control={control}
               name="countries"
@@ -182,25 +221,21 @@ const BrowseList: React.FC<BrowseListProps> = ({
               }}
               label="Quốc gia"
             />
-          </div>
 
-          <div className="hidden lg:block">
-            <Controller
-              name="sort"
+            <FormSelect
               control={control}
-              defaultValue={defaultQuery.sort}
-              render={({ field: { value, onChange } }) => (
-                <SortSelector
-                  type="anime"
-                  defaultValue={value}
-                  onChange={onChange}
-                />
-              )}
+              name="status"
+              defaultValue={defaultValues.status}
+              selectProps={{
+                placeholder: "Tình trạng",
+                options: STATUS,
+              }}
+              label="Tình trạng"
             />
-          </div>
+          </AdvancedSettings>
         </div>
 
-        <div className="flex items-end justify-end lg:hidden">
+        <div className="flex items-end justify-end">
           <Controller
             name="sort"
             control={control}
