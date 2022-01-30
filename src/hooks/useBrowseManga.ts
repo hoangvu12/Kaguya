@@ -1,5 +1,5 @@
 import supabase from "@/lib/supabase";
-import { Format, Genre, Manga } from "@/types";
+import { Format, Genre, Manga, Status } from "@/types";
 import { useSupaInfiniteQuery } from "@/utils/supabase";
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
 
@@ -12,11 +12,12 @@ export interface UseBrowseOptions {
   tags?: string[];
   sort?: keyof Manga;
   countries?: string[];
+  status?: Status
 }
 
 const useBrowse = (options: UseBrowseOptions) => {
   return useSupaInfiniteQuery(["browse", options], (from, to) => {
-    const { format, countries, genres, keyword, select, sort, limit, tags } =
+    const { format, countries, genres, keyword, select, sort, limit, tags, status } =
       options;
 
     let db: PostgrestFilterBuilder<Manga>;
@@ -54,6 +55,10 @@ const useBrowse = (options: UseBrowseOptions) => {
 
     if (limit) {
       db = db.limit(limit);
+    }
+
+    if (status) {
+      db = db.eq("status", status);
     }
 
     // https://stackoverflow.com/questions/13580826/postgresql-repeating-rows-from-limit-offset

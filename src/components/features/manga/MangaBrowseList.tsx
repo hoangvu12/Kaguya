@@ -5,7 +5,7 @@ import InView from "@/components/shared/InView";
 import List from "@/components/shared/List";
 import SortSelector from "@/components/shared/SortSelector";
 import ListSkeleton from "@/components/skeletons/ListSkeleton";
-import { COUNTRIES, FORMATS } from "@/constants";
+import { COUNTRIES, FORMATS, STATUS } from "@/constants";
 import useBrowse, { UseBrowseOptions } from "@/hooks/useBrowseManga";
 import { debounce } from "debounce";
 import { useRouter } from "next/router";
@@ -21,11 +21,6 @@ const initialValues: UseBrowseOptions = {
   sort: "average_score",
   countries: [],
 };
-
-const formats = FORMATS.map((format) => ({
-  value: format.value,
-  label: format.label,
-}));
 
 interface BrowseListProps {
   defaultQuery?: UseBrowseOptions;
@@ -131,9 +126,20 @@ const BrowseList: React.FC<BrowseListProps> = ({
             defaultValue={defaultValues.format}
             selectProps={{
               placeholder: "Định dạng",
-              options: formats,
+              options: FORMATS,
             }}
             label="Định dạng"
+          />
+
+          <FormSelect
+            control={control}
+            name="status"
+            defaultValue={defaultValues.format}
+            selectProps={{
+              placeholder: "Tình trạng",
+              options: STATUS,
+            }}
+            label="Tình trạng"
           />
 
           <FormSelect
