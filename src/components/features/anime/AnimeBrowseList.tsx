@@ -1,15 +1,15 @@
 import FormSelect from "@/components/shared/FormSelect";
+import GenresFormSelect from "@/components/shared/GenresFormSelect";
 import Input from "@/components/shared/Input";
 import InView from "@/components/shared/InView";
 import List from "@/components/shared/List";
 import SortSelector from "@/components/shared/SortSelector";
 import ListSkeleton from "@/components/skeletons/ListSkeleton";
-import { COUNTRIES, FORMATS, GENRES, SEASONS, SEASON_YEARS } from "@/constants";
+import { COUNTRIES, FORMATS, SEASONS, SEASON_YEARS } from "@/constants";
 import useBrowse, { UseBrowseOptions } from "@/hooks/useBrowseAnime";
-import TAGS from "@/tags.json";
 import { debounce } from "debounce";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { AiOutlineSearch } from "react-icons/ai";
 
@@ -24,11 +24,6 @@ const initialValues: UseBrowseOptions = {
   countries: [],
 };
 
-const genres = GENRES.map((genre) => ({
-  value: genre.value as string,
-  label: genre.label,
-}));
-
 const seasonYears = SEASON_YEARS.map((year) => ({
   value: year.toString(),
   label: year.toString(),
@@ -42,11 +37,6 @@ const seasons = SEASONS.map((season) => ({
 const formats = FORMATS.map((format) => ({
   value: format.value,
   label: format.label,
-}));
-
-const tags = TAGS.map((tag) => ({
-  value: tag,
-  label: tag,
 }));
 
 interface BrowseListProps {
@@ -94,7 +84,21 @@ const BrowseList: React.FC<BrowseListProps> = ({
     500
   );
 
-  const totalData = data?.pages.map((el) => el.data).flat();
+  const handleGenresChange = useCallback(
+    (values) => {
+      values.forEach(({ type, value }) => {
+        setValue(type === "TAGS" ? "tags" : "genres", value, {
+          shouldDirty: true,
+        });
+      });
+    },
+    [setValue]
+  );
+
+  const totalData = useMemo(
+    () => data?.pages.map((el) => el.data).flat(),
+    [data?.pages]
+  );
 
   useEffect(() => {
     if (!isDirty) return;
@@ -128,16 +132,9 @@ const BrowseList: React.FC<BrowseListProps> = ({
             containerClassName="shrink-0"
           />
 
-          <FormSelect
-            control={control}
-            name="genres"
-            defaultValue={defaultValues.genres}
-            selectProps={{
-              placeholder: "Thể loại",
-              isMulti: true,
-              options: genres,
-            }}
-            label="Thể loại"
+          <GenresFormSelect
+            value={[...query.genres, ...query.tags]}
+            onChange={handleGenresChange}
           />
 
           <FormSelect
@@ -174,18 +171,6 @@ const BrowseList: React.FC<BrowseListProps> = ({
           />
 
           <div className="flex items-center space-x-2 md:space-x-8">
-            <FormSelect
-              control={control}
-              name="tags"
-              defaultValue={defaultValues.tags}
-              selectProps={{
-                placeholder: "Tags",
-                isMulti: true,
-                options: tags,
-              }}
-              label="Tags"
-            />
-
             <FormSelect
               control={control}
               name="countries"

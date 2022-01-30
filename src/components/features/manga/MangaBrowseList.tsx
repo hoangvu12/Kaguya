@@ -1,15 +1,15 @@
 import FormSelect from "@/components/shared/FormSelect";
+import GenresFormSelect from "@/components/shared/GenresFormSelect";
 import Input from "@/components/shared/Input";
 import InView from "@/components/shared/InView";
 import List from "@/components/shared/List";
 import SortSelector from "@/components/shared/SortSelector";
 import ListSkeleton from "@/components/skeletons/ListSkeleton";
-import { COUNTRIES, FORMATS, GENRES } from "@/constants";
+import { COUNTRIES, FORMATS } from "@/constants";
 import useBrowse, { UseBrowseOptions } from "@/hooks/useBrowseManga";
-import TAGS from "@/tags.json";
 import { debounce } from "debounce";
 import { useRouter } from "next/router";
-import React, { useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { AiOutlineSearch } from "react-icons/ai";
 
@@ -22,19 +22,9 @@ const initialValues: UseBrowseOptions = {
   countries: [],
 };
 
-const genres = GENRES.map((genre) => ({
-  value: genre.value,
-  label: genre.label,
-}));
-
 const formats = FORMATS.map((format) => ({
   value: format.value,
   label: format.label,
-}));
-
-const tags = TAGS.map((tag) => ({
-  value: tag,
-  label: tag,
 }));
 
 interface BrowseListProps {
@@ -82,6 +72,17 @@ const BrowseList: React.FC<BrowseListProps> = ({
     500
   );
 
+  const handleGenresChange = useCallback(
+    (values) => {
+      values.forEach(({ type, value }) => {
+        setValue(type === "TAGS" ? "tags" : "genres", value, {
+          shouldDirty: true,
+        });
+      });
+    },
+    [setValue]
+  );
+
   const totalData = useMemo(
     () => data?.pages.map((el) => el.data).flat(),
     [data?.pages]
@@ -119,16 +120,9 @@ const BrowseList: React.FC<BrowseListProps> = ({
             containerClassName="shrink-0"
           />
 
-          <FormSelect
-            control={control}
-            name="genres"
-            defaultValue={defaultValues.genres}
-            selectProps={{
-              placeholder: "Thể loại",
-              isMulti: true,
-              options: genres,
-            }}
-            label="Thể loại"
+          <GenresFormSelect
+            value={[...query.genres, ...query.tags]}
+            onChange={handleGenresChange}
           />
 
           <FormSelect
@@ -140,18 +134,6 @@ const BrowseList: React.FC<BrowseListProps> = ({
               options: formats,
             }}
             label="Định dạng"
-          />
-
-          <FormSelect
-            control={control}
-            name="tags"
-            defaultValue={defaultValues.tags}
-            selectProps={{
-              placeholder: "Tags",
-              isMulti: true,
-              options: tags,
-            }}
-            label="Tags"
           />
 
           <FormSelect

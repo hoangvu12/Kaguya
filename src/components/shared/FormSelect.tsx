@@ -36,8 +36,6 @@ const FormSelect: React.FC<FormSelectProps> = ({
 
                 onChange(onChangeValue);
               }}
-              options={options}
-              isMulti={isMulti}
               {...selectProps}
             />
           </div>
