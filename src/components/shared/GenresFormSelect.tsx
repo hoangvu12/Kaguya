@@ -19,6 +19,17 @@ const groups = [
   { label: "Tags", options: tags },
 ] as const;
 
+const styles = {
+  groupHeading: (provided) => {
+    return {
+      ...provided,
+      fontSize: "90%",
+      color: "#ccc",
+      fontWeight: 600,
+    };
+  },
+};
+
 type OnChangeValue = {
   type: "TAGS" | "GENRES";
   value: string[];
@@ -79,6 +90,7 @@ const GenresFormSelect: React.FC<GenresFormSelectProps> = ({
         isMulti
         options={groups}
         placeholder="Thể loại"
+        styles={styles}
         {...selectProps}
       />
     </div>
