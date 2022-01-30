@@ -3,6 +3,7 @@ import Select from "./Select";
 import { GENRES } from "@/constants";
 import TAGS from "@/tags.json";
 import { Props } from "react-select";
+import classNames from "classnames";
 
 const genres = GENRES.map((genre) => ({
   value: genre.value as string,
@@ -35,7 +36,8 @@ type OnChangeValue = {
   value: string[];
 };
 
-interface GenresFormSelectProps {
+interface GenresFormSelectProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
   value?: string[];
   onChange?: (values: OnChangeValue[]) => void;
   selectProps?: Omit<Props, "onChange">;
@@ -45,6 +47,8 @@ const GenresFormSelect: React.FC<GenresFormSelectProps> = ({
   value = [],
   onChange = () => {},
   selectProps,
+  className,
+  ...props
 }) => {
   const selectValue = useMemo(
     () =>
@@ -81,7 +85,7 @@ const GenresFormSelect: React.FC<GenresFormSelectProps> = ({
   );
 
   return (
-    <div className="space-y-2">
+    <div className={classNames("space-y-2", className)} {...props}>
       <p className="font-semibold">Thể loại</p>
 
       <Select
