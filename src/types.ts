@@ -36,6 +36,7 @@ export interface CharacterImage {
   medium: string;
 }
 
+
 export type CharacterConnection<T> = (T extends "anime"
   ? {
       anime_id?: number;
@@ -50,6 +51,32 @@ export type CharacterConnection<T> = (T extends "anime"
   role: CharacterRole;
 };
 
+export interface VoiceActorImage {
+  large: string;
+  medium: string;
+}
+export interface VoiceActorName {
+  first: string;
+  middle?: string;
+  last: string;
+  full: string;
+  native: string;
+  userPreferred: string;
+}
+export interface VoiceActor {
+  id: number;
+  name: VoiceActorName;
+  language: string;
+  image: VoiceActorImage;
+  gender: string;
+  dateOfBirth: FuzzyDate;
+  dateOfDeath: FuzzyDate;
+  age: number;
+  yearsActive: number[];
+  homeTown: string;
+  bloodType: string;
+  favourites: number;
+}
 export interface Character {
   id: number;
   gender?: string;

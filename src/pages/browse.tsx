@@ -1,5 +1,6 @@
 import AnimeBrowseList from "@/components/features/anime/AnimeBrowseList";
 import CharacterBrowseList from "@/components/features/characters/CharacterBrowseList";
+import VABrowseList from "@/components/features/va/VABrowseList";
 import MangaBrowseList from "@/components/features/manga/MangaBrowseList";
 import Head from "@/components/shared/Head";
 import Select from "@/components/shared/Select";
@@ -13,6 +14,7 @@ const components = {
   anime: AnimeBrowseList,
   manga: MangaBrowseList,
   characters: CharacterBrowseList,
+  voice_actors: VABrowseList,
 };
 
 const convertQueryToArray = <T,>(query: T[]) => {

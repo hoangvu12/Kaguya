@@ -1,5 +1,5 @@
 import Card from "@/components/shared/Card";
-import { Anime, Character, Manga } from "@/types";
+import { Anime, Character, Manga, VoiceActor } from "@/types";
 import classNames from "classnames";
 import React from "react";
 
@@ -7,6 +7,8 @@ type Data<T> = T extends "anime"
   ? Anime
   : T extends "characters"
   ? Character
+  : T extends "voice_actors"
+  ? VoiceActor
   : Manga;
 interface ListProps<T> {
   data: Data<T>[];
@@ -14,11 +16,11 @@ interface ListProps<T> {
   onEachCard?: (data: Data<T>) => React.ReactNode;
 }
 
-const List = <T extends "anime" | "manga" | "characters">({
+const List = <T extends "anime" | "manga" | "characters" | "voice_actors">({
   data,
   type,
   // @ts-ignore
-  onEachCard = (data) => <Card data={data} type={type} />,
+  onEachCard,
 }: ListProps<T>) => {
   return (
     <div
@@ -31,7 +33,8 @@ const List = <T extends "anime" | "manga" | "characters">({
       {data.length ? (
         data.map((item, index) => (
           <div className="col-span-1" key={index}>
-            {onEachCard(item)}
+            {/* @ts-ignore */}
+            {onEachCard ? onEachCard(item) : <Card data={item} type={type} />}
           </div>
         ))
       ) : (
