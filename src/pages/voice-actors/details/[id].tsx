@@ -96,8 +96,8 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ voiceActor }) => {
               />
             </div>
 
-            <div className="space-y-8 text-center md:text-left flex flex-col items-center md:items-start py-4 mt-4">
-              <div className="space-y-2">
+            <div className="space-y-6 text-center md:text-left flex flex-col items-center md:items-start py-4 -mt-24">
+              <div className="space-y-1">
                 <div className="flex flex-col md:flex-row items-center gap-4">
                   <h1 className="text-3xl font-semibold">
                     {voiceActor.name.userPreferred}
