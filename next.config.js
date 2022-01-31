@@ -11,7 +11,12 @@ module.exports = withPWA({
   },
   pwa: {
     dest: "public",
-    buildExcludes: [/middleware-manifest\.json$/, /_middleware\.js$/],
+    buildExcludes: [
+      /middleware-manifest\.json$/,
+      /_middleware\.js$/,
+      /_middleware\.js\.map$/,
+      /middleware-runtime\.js$/,
+    ],
     disable: process.env.NODE_ENV === "development",
   },
 });
