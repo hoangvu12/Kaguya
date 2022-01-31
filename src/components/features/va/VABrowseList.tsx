@@ -58,7 +58,7 @@ const BrowseList: React.FC<BrowseListProps> = ({ defaultQuery }) => {
           defaultValue={keyword}
           label="Tìm kiếm"
           containerClassName="w-full md:w-96"
-          placeholder="Tên nhân vật"
+          placeholder="Tên seiyuu"
         />
       </form>
 
