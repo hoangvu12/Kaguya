@@ -9,7 +9,7 @@ interface VACardProps {
 
 const VACard: React.FC<VACardProps> = ({ voiceActor }) => {
   return (
-    <Link href={`/voice-actor/details/${voiceActor.id}`}>
+    <Link href={`/voice-actors/details/${voiceActor.id}`}>
       <a>
         <div className="space-y-2">
           <div className="aspect-w-9 aspect-h-16 space-y-2">

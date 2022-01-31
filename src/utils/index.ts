@@ -200,3 +200,32 @@ export const insertBreaklineAtCursor = () => {
   selection.removeAllRanges();
   selection.addRange(range);
 };
+
+export const arePropertiesFalsy = (obj: any) =>
+  Object.keys(obj).every((key) => isFalsy(obj[key]));
+
+export const formatDate = (date: {
+  day?: number;
+  month?: number;
+  year?: number;
+}) => {
+  let day = dayjs();
+  let format = [];
+
+  if (!isFalsy(date.day)) {
+    day = day.date(date.day);
+    format.push("DD");
+  }
+
+  if (!isFalsy(date.month)) {
+    day = day.month(date.month - 1);
+    format.push("MM");
+  }
+
+  if (!isFalsy(date.year)) {
+    day = day.year(date.year);
+    format.push("YYYY");
+  }
+
+  return day.format(format.join("/"));
+};
