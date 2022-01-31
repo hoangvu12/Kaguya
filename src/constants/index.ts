@@ -182,6 +182,10 @@ export const TYPES = [
     value: "characters",
     label: "Nhân vật",
   },
+  {
+    value: "voice_actors",
+    label: "Seiyuu",
+  },
 ] as const;
 
 export const COUNTRIES = [
