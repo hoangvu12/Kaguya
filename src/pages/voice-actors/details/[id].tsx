@@ -96,7 +96,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ voiceActor }) => {
               />
             </div>
 
-            <div className="space-y-6 text-center md:text-left flex flex-col items-center md:items-start py-4 -mt-24">
+            <div className="space-y-8 text-center md:text-left flex flex-col items-center md:items-start py-4 md:-mt-[5.5rem]">
               <div className="space-y-1">
                 <div className="flex flex-col md:flex-row items-center gap-4">
                   <h1 className="text-3xl font-semibold">
@@ -129,7 +129,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ voiceActor }) => {
                     value={formatDate(voiceActor.dateOfDeath)}
                   />
                 )}
-                <KeyValue property="Tuổi" value={voiceActor.age.toString()} />
+                <KeyValue property="Tuổi" value={voiceActor.age?.toString()} />
                 <KeyValue property="Thời gian hoạt động" value={yearsActive} />
                 <KeyValue property="Nhóm máu" value={voiceActor.bloodType} />
                 <KeyValue property="Quê nhà" value={voiceActor.homeTown} />
