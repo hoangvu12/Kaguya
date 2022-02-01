@@ -1,3 +1,4 @@
+import VACard from "@/components/features/va/VACard";
 import DetailsSection from "@/components/shared/DetailsSection";
 import Head from "@/components/shared/Head";
 import List from "@/components/shared/List";
@@ -6,7 +7,7 @@ import TextIcon from "@/components/shared/TextIcon";
 import { REVALIDATE_TIME } from "@/constants";
 import dayjs from "@/lib/dayjs";
 import supabase from "@/lib/supabase";
-import { Character, CharacterConnection } from "@/types";
+import { Character, CharacterConnection, VoiceActor } from "@/types";
 import { isFalsy, numberWithCommas } from "@/utils";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import React, { useMemo } from "react";
@@ -29,13 +30,14 @@ const KeyValue: React.FC<{ property: string; value: string }> = ({
   </div>
 );
 
-interface CharacterWithSources extends Character {
+interface AdvancedCharacter extends Character {
   manga_connections: CharacterConnection<"manga">[];
   anime_connections: CharacterConnection<"anime">[];
+  voice_actors: VoiceActor[];
 }
 
 interface DetailsPageProps {
-  character: CharacterWithSources;
+  character: AdvancedCharacter;
 }
 
 const DetailsPage: NextPage<DetailsPageProps> = ({ character }) => {
@@ -122,6 +124,16 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ character }) => {
         </div>
 
         <div className="px-4 sm:px-12 space-y-8">
+          {!!character.voice_actors?.length && (
+            <DetailsSection title="Seiyuu">
+              <List
+                type="voice_actors"
+                data={character.voice_actors}
+                onEachCard={(voiceActor) => <VACard voiceActor={voiceActor} />}
+              />
+            </DetailsSection>
+          )}
+
           {!!character.anime_connections?.length && (
             <DetailsSection title="Anime">
               <List
@@ -155,6 +167,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     .select(
       `
         *,
+        voice_actors(*)
         manga_connections:new_manga_characters!character_id(manga:manga_id(*)),
         anime_connections:anime_characters!character_id(anime:anime_id(*))
       `
@@ -170,7 +183,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   return {
     props: {
-      character: data as CharacterWithSources,
+      character: data as AdvancedCharacter,
     },
     revalidate: REVALIDATE_TIME,
   };
