@@ -160,20 +160,39 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   ]);
 
   useEffect(() => {
-    if (saveWatchedInterval.current) {
-      clearInterval(saveWatchedInterval.current);
-    }
+    const videoEl = videoRef.current;
 
-    saveWatchedInterval.current = setInterval(() => {
-      saveWatchedMutation.mutate({
-        anime_id: Number(id),
-        episode_id: currentEpisode.episode_id,
-        watched_time: videoRef.current?.currentTime,
-      });
-    }, 30000);
+    if (!videoEl) return;
+
+    const handleVideoPlay = () => {
+      if (saveWatchedInterval.current) {
+        clearInterval(saveWatchedInterval.current);
+      }
+
+      saveWatchedInterval.current = setInterval(() => {
+        saveWatchedMutation.mutate({
+          anime_id: Number(id),
+          episode_id: currentEpisode.episode_id,
+          watched_time: videoRef.current?.currentTime,
+        });
+      }, 30000);
+    };
+
+    const handleVideoPause = () => {
+      if (saveWatchedInterval.current) {
+        clearInterval(saveWatchedInterval.current);
+      }
+    };
+
+    videoEl.addEventListener("play", handleVideoPlay);
+    videoEl.addEventListener("pause", handleVideoPause);
+    videoEl.addEventListener("ended", handleVideoPause);
 
     return () => {
       clearInterval(saveWatchedInterval.current);
+      videoEl.removeEventListener("play", handleVideoPlay);
+      videoEl.removeEventListener("pause", handleVideoPause);
+      videoEl.removeEventListener("ended", handleVideoPause);
     };
   }, [currentEpisode.episode_id, id, saveWatchedMutation]);
 
