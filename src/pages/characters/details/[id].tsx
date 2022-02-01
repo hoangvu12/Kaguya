@@ -167,7 +167,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     .select(
       `
         *,
-        voice_actors(*)
+        voice_actors(*),
         manga_connections:new_manga_characters!character_id(manga:manga_id(*)),
         anime_connections:anime_characters!character_id(anime:anime_id(*))
       `
