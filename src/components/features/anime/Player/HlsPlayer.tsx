@@ -1,5 +1,6 @@
 import { useVideoState } from "@/contexts/VideoStateContext";
 import { Source } from "@/types";
+import Storage from "@/utils/storage";
 import Hls from "hls.js";
 import React, { MutableRefObject, useEffect, useRef } from "react";
 
@@ -116,15 +117,30 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
     }, [autoPlay, setState, src]);
 
     useEffect(() => {
-      if (!myRef.current || src[0].file.includes("m3u8")) return;
-
       const quality = state?.currentQuality;
-
       const qualitySource = src.find((source) => source.label === quality);
+      const beforeChangeTime = myRef.current.currentTime;
+
+      if (!myRef.current || qualitySource?.file.includes("m3u8")) return;
+
+      const handleQualityChange = () => {
+        myRef.current.currentTime = beforeChangeTime;
+      };
+
+      // If sources includes playing source (before change to new source)
+      // that mean user changing quality.
+      if (src.some((source) => source.file === myRef.current.currentSrc)) {
+        myRef.current.addEventListener("canplay", handleQualityChange, {
+          once: true,
+        });
+      }
 
       myRef.current.src = qualitySource?.file;
-    }, [state, src]);
 
+      return () => {
+        myRef.current.removeEventListener("canplay", handleQualityChange);
+      };
+    }, [state, src]);
     return (
       <video
         className="hls-player"
