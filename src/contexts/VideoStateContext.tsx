@@ -3,7 +3,6 @@ import {
   Dispatch,
   SetStateAction,
   useContext,
-  useEffect,
   useState,
 } from "react";
 
@@ -19,7 +18,6 @@ interface ContextProps {
 
 interface ProviderProps {
   defaultQualities?: string[];
-  onQualityChange?: (quality: string) => void;
 }
 
 const defaultValue = {
@@ -32,7 +30,6 @@ const VideoContext = createContext<ContextProps>(defaultValue);
 export const VideoStateProvider: React.FC<ProviderProps> = ({
   children,
   defaultQualities,
-  onQualityChange,
 }) => {
   const [state, setState] = useState<VideoState>(() => {
     if (defaultQualities.length) {
@@ -41,10 +38,6 @@ export const VideoStateProvider: React.FC<ProviderProps> = ({
 
     return defaultValue.state;
   });
-
-  useEffect(() => {
-    onQualityChange?.(state.currentQuality);
-  }, [onQualityChange, state.currentQuality]);
 
   return (
     <VideoContext.Provider value={{ state, setState }}>
