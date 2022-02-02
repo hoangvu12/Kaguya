@@ -2,6 +2,7 @@ import NextIcon from "@/components/icons/NextIcon";
 import React from "react";
 import Popup from "@/components/shared/Popup";
 import ControlsIcon from "@/components/features/anime/Player/ControlsIcon";
+import { useHotkeys } from "react-hotkeys-hook";
 
 interface NextEpisodeButtonProps {
   className?: string;
@@ -13,6 +14,8 @@ const NextEpisodeButton: React.FC<NextEpisodeButtonProps> = ({
   className,
   onClick,
 }) => {
+  useHotkeys("shift+n", onClick, [onClick]);
+
   return (
     <Popup
       portalSelector=".video-wrapper"
