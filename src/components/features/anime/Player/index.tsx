@@ -28,12 +28,10 @@ interface VideoProps
   extends Omit<React.VideoHTMLAttributes<HTMLVideoElement>, "src"> {
   src: Source[];
   overlaySlot?: React.ReactNode;
-  onKeyNextEpisode: () => void;
-  onKeyPreviousEpisode: () => void;
 }
 
 const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
-  ({ overlaySlot, onKeyNextEpisode, onKeyPreviousEpisode, ...props }, ref) => {
+  ({ overlaySlot, ...props }, ref) => {
     const myRef = useRef<HTMLVideoElement>();
     const [refHolder, setRefHolder] = useState<HTMLVideoElement>(null);
     const [showControls, setShowControls] = useState(true);
@@ -139,10 +137,7 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
       };
     }, []);
 
-    useVideoShortcut(refHolder, {
-      onNextEpisode: onKeyNextEpisode,
-      onPreviousEpisode: onKeyPreviousEpisode,
-    });
+    useVideoShortcut(refHolder);
 
     useHotkeys("*", () => {
       handleKeepControls(null);

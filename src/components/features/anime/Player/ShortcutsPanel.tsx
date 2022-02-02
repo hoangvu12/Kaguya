@@ -28,10 +28,6 @@ const shortcuts = [
     func: "Sang tập tiếp theo",
   },
   {
-    key: "Shift + P",
-    func: "Sang tập trước",
-  },
-  {
     key: "Shift + >",
     func: `Skip OP/ED (${SKIP_TIME} giây)`,
   },
