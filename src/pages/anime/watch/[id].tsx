@@ -340,7 +340,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
                 <EpisodeSelector
                   episodes={sortedEpisodes}
                   activeIndex={Number(episodeIndex)}
-                  episodeLinkProps={{ shallow: true }}
+                  episodeLinkProps={{ shallow: true, replace: true }}
                 />
               </div>
             </EpisodesButton>

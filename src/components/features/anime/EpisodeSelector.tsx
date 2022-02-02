@@ -84,7 +84,6 @@ const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({
             href={`/anime/watch/${episode.anime_id}?index=${episode.episodeIndex}`}
             key={episode.id}
             shallow
-            replace
             {...episodeLinkProps}
           >
             <a
