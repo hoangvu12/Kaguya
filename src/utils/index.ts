@@ -232,7 +232,7 @@ export const formatDate = (date: {
 
 // https://stackoverflow.com/questions/5717093/check-if-a-javascript-string-is-a-url
 export function isValidUrl(string: string) {
-  let url: string;
+  let url: URL;
 
   try {
     url = new URL(string);
