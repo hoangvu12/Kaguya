@@ -23,6 +23,10 @@ const routes = [
     title: "Manga",
     href: "/manga",
   },
+  {
+    title: "Tìm Anime bằng ảnh",
+    href: "/trace",
+  },
 ];
 
 const Header = () => {

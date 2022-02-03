@@ -229,3 +229,16 @@ export const formatDate = (date: {
 
   return day.format(format.join("/"));
 };
+
+// https://stackoverflow.com/questions/5717093/check-if-a-javascript-string-is-a-url
+export function isValidUrl(string: string) {
+  let url: string;
+
+  try {
+    url = new URL(string);
+  } catch (_) {
+    return false;
+  }
+
+  return url.protocol === "http:" || url.protocol === "https:";
+}
