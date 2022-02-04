@@ -42,7 +42,7 @@ const TracePanel: React.FC<TracePanelProps> = ({ data, image }) => {
           </div>
         </div>
 
-        {data.result.map((result, index) => (
+        {data.result.slice(0, 5).map((result, index) => (
           <TraceCard
             data={result}
             key={index}
