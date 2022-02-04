@@ -3,28 +3,24 @@ import TracePanel from "@/components/features/trace/TracePanel";
 import Button from "@/components/shared/Button";
 import Head from "@/components/shared/Head";
 import Loading from "@/components/shared/Loading";
-import { TraceImageResponse } from "@/hooks/useTraceImage";
+import useTraceImage, { TraceImageResponse } from "@/hooks/useTraceImage";
 import React, { useState } from "react";
 import { MdOutlineRestartAlt } from "react-icons/md";
+import { ImageType } from "react-images-uploading";
 
 const TracePage = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [traceResult, setTraceResult] =
-    // @ts-ignore
-    useState<TraceImageResponse>(null);
+  const [traceResult, setTraceResult] = useState<TraceImageResponse>(null);
 
-  const handleOnSearch = async (result: TraceImageResponse) => {
+  const { mutateAsync, isLoading } = useTraceImage();
+
+  const handleOnSearch = async (image: ImageType) => {
+    const result = await mutateAsync(image);
+
     setTraceResult(result);
-    setIsLoading(false);
-  };
-
-  const handleOnLoading = async () => {
-    setIsLoading(true);
   };
 
   const handleReset = () => {
     setTraceResult(null);
-    setIsLoading(false);
   };
 
   return (
@@ -72,10 +68,7 @@ const TracePage = () => {
         ) : isLoading ? (
           <Loading />
         ) : (
-          <TraceImageSearch
-            onSearch={handleOnSearch}
-            onLoading={handleOnLoading}
-          />
+          <TraceImageSearch onSearch={handleOnSearch} />
         )}
       </div>
     </React.Fragment>
