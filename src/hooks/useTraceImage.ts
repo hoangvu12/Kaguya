@@ -71,13 +71,7 @@ const composeData = (
   };
 };
 
-export const useTraceImage = (
-  onSuccess: (
-    data: TraceImageResponse,
-    variables: ImageType,
-    context: any
-  ) => void | Promise<unknown>
-) => {
+export const useTraceImage = () => {
   return useMutation<TraceImageResponse, Error, ImageType, any>(
     async (image) => {
       let data: RawTraceImageResponse;
@@ -117,7 +111,6 @@ export const useTraceImage = (
       onError: (error) => {
         toast.error(error.message);
       },
-      onSuccess,
     }
   );
 };

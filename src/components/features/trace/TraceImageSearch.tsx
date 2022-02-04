@@ -11,24 +11,19 @@ import ReactImageUploading, { ImageType } from "react-images-uploading";
 import { toast } from "react-toastify";
 
 interface TraceImageSearchProps {
-  onSearch?: (response: TraceImageResponse) => void;
-  onLoading?: () => void;
+  onSearch?: (image: ImageType) => void;
 }
 
 const noop = () => {};
 
 const TraceImageSearch: React.FC<TraceImageSearchProps> = ({
   onSearch = noop,
-  onLoading = noop,
 }) => {
   const [image, setImage] = useState<ImageType>(null);
   const [inputValue, setInputValue] = useState(null);
 
-  const trace = useTraceImage(onSearch);
-
   const handleSearch = () => {
-    onLoading();
-    trace.mutate(image);
+    onSearch?.(image);
   };
 
   return (
