@@ -52,13 +52,16 @@ const TracePanel: React.FC<TracePanelProps> = ({ data, image }) => {
         ))}
       </div>
       <div className="w-full md:w-[70%] bg-background-900 h-max space-y-4">
-        <video
-          src={`${card.video}&size=l`}
-          loop
-          className="w-full object-contain"
-          autoPlay
-          muted
-        />
+        <div className="w-full aspect-h-9 aspect-w-16">
+          <video
+            src={`${card.video}&size=l`}
+            loop
+            className="w-full object-contain"
+            autoPlay
+            muted
+            controls
+          />
+        </div>
 
         <div className="p-8 space-y-8">
           <div className="text-center md:text-left flex flex-col md:flex-row items-start gap-4">
