@@ -5,6 +5,7 @@ import Head from "@/components/shared/Head";
 import Loading from "@/components/shared/Loading";
 import useTraceImage, { TraceImageResponse } from "@/hooks/useTraceImage";
 import React, { useCallback, useState } from "react";
+import { CgArrowLongRight } from "react-icons/cg";
 import { MdOutlineRestartAlt } from "react-icons/md";
 import { ImageType } from "react-images-uploading";
 
@@ -44,7 +45,7 @@ const TracePage = () => {
             Nó cho bạn biết anime, tập và khoảnh khắc mà hình ảnh đó xuất hiện!
           </h3>
 
-          <p className="italic mb-1">
+          <p className="italic text-lg mb-1">
             Công cụ sử dụng công nghệ tìm kiếm của{" "}
             <a
               className="text-primary-300 hover:underline"
@@ -57,7 +58,32 @@ const TracePage = () => {
           <p className="italic">
             Lưu ý: Kết quả tìm kiếm không hoàn toàn chính xác 100%.
           </p>
-          <p className="italic">Lưu ý: Chỉ sử dụng hình ảnh trong phim.</p>
+          <p className="italic">
+            Lưu ý: Chỉ hoạt động với cảnh ở trong phim. Không hoạt động với art
+            hay những ảnh không có trong phim.
+          </p>
+        </div>
+
+        <div className="hidden md:flex items-center justify-center gap-4">
+          <div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="https://i.ibb.co/rGRC9vw/www-kaguya-live-trace.png"
+              alt="example image"
+              className="border border-white/60 object-cover"
+            />
+          </div>
+
+          <CgArrowLongRight className="shrink-0 w-10 h-10" />
+
+          <div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="https://i.ibb.co/cg7TwWR/www-kaguya-live-trace-1.png"
+              alt="example image"
+              className="border border-white/60 object-cover"
+            />
+          </div>
         </div>
 
         {traceResult ? (
