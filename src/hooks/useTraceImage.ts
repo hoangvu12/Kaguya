@@ -88,7 +88,7 @@ export const useTraceImage = () => {
         data = responseData;
       } else {
         const { data: responseData } = await axios.get<RawTraceImageResponse>(
-          `${apiUrl}&url=${image.dataURL}`
+          `${apiUrl}&url=${encodeURIComponent(image.dataURL)}`
         );
 
         data = responseData;
