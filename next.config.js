@@ -7,6 +7,7 @@ module.exports = withPWA({
       "res.cloudinary.com",
       "lh3.googleusercontent.com",
       "platform-lookaside.fbsbx.com",
+      "i.ibb.co",
     ],
   },
   pwa: {

@@ -2,6 +2,7 @@ import TraceImageSearch from "@/components/features/trace/TraceImageSearch";
 import TracePanel from "@/components/features/trace/TracePanel";
 import Button from "@/components/shared/Button";
 import Head from "@/components/shared/Head";
+import Image from "@/components/shared/Image";
 import Loading from "@/components/shared/Loading";
 import useTraceImage, { TraceImageResponse } from "@/hooks/useTraceImage";
 import React, { useCallback, useState } from "react";
@@ -64,24 +65,24 @@ const TracePage = () => {
           </p>
         </div>
 
-        <div className="hidden md:flex items-center justify-center gap-4">
-          <div>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+        <div className="w-full hidden md:flex items-center justify-center gap-4">
+          <div className="border border-white/60 relative h-64 w-full">
+            <Image
               src="https://i.ibb.co/rGRC9vw/www-kaguya-live-trace.png"
               alt="example image"
-              className="border border-white/60 object-cover"
+              objectFit="cover"
+              layout="fill"
             />
           </div>
 
           <CgArrowLongRight className="shrink-0 w-10 h-10" />
 
-          <div>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+          <div className="border border-white/60 relative h-64 w-full">
+            <Image
               src="https://i.ibb.co/cg7TwWR/www-kaguya-live-trace-1.png"
               alt="example image"
-              className="border border-white/60 object-cover"
+              objectFit="cover"
+              layout="fill"
             />
           </div>
         </div>
