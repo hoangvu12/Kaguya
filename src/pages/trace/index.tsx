@@ -100,7 +100,9 @@ const TracePage = () => {
             <TracePanel data={traceResult} image={image} />
           </React.Fragment>
         ) : isLoading ? (
-          <Loading />
+          <div className="relative py-8">
+            <Loading />
+          </div>
         ) : (
           <TraceImageSearch onSearch={handleOnSearch} />
         )}
