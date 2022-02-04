@@ -7,27 +7,41 @@ import { TraceImageResponse } from "@/hooks/useTraceImage";
 import { numberWithCommas } from "@/utils";
 import { getTitle, convert } from "@/utils/data";
 import Link from "next/link";
-import React from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { AiFillHeart } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
+import { ImageType } from "react-images-uploading";
 import TraceCard from "./TraceCard";
 
 interface TracePanelProps {
   data: TraceImageResponse;
+  image?: ImageType;
 }
 
-const TracePanel: React.FC<TracePanelProps> = ({ data }) => {
-  const [cardIndex, setCardIndex] = React.useState<number>(0);
+const TracePanel: React.FC<TracePanelProps> = ({ data, image }) => {
+  const [cardIndex, setCardIndex] = useState(0);
 
-  const handleCardClick = (index: number) => {
+  const handleCardClick = useCallback((index: number) => {
     setCardIndex(index);
-  };
+  }, []);
 
-  const card = data.result[cardIndex];
+  const card = useMemo(() => data.result[cardIndex], [cardIndex, data.result]);
 
   return (
     <div className="w-full flex flex-col md:flex-row gap-8">
       <div className="w-full md:w-[30%] space-y-4">
+        <div className="bg-background-900 p-4 space-y-2">
+          <span className="text-xl font-semibold">Ảnh của bạn</span>
+          <span className="ml-3 text-sm text-gray-300">
+            Đã tìm {numberWithCommas(data.frameCount)} ảnh.
+          </span>
+
+          <div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={image.dataURL} alt="Search image" />
+          </div>
+        </div>
+
         {data.result.map((result, index) => (
           <TraceCard
             data={result}
