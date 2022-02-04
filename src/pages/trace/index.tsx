@@ -4,24 +4,31 @@ import Button from "@/components/shared/Button";
 import Head from "@/components/shared/Head";
 import Loading from "@/components/shared/Loading";
 import useTraceImage, { TraceImageResponse } from "@/hooks/useTraceImage";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { MdOutlineRestartAlt } from "react-icons/md";
 import { ImageType } from "react-images-uploading";
 
 const TracePage = () => {
   const [traceResult, setTraceResult] = useState<TraceImageResponse>(null);
+  const [image, setImage] = useState<ImageType>(null);
 
   const { mutateAsync, isLoading } = useTraceImage();
 
-  const handleOnSearch = async (image: ImageType) => {
-    const result = await mutateAsync(image);
+  const handleOnSearch = useCallback(
+    async (image: ImageType) => {
+      setImage(image);
 
-    setTraceResult(result);
-  };
+      const result = await mutateAsync(image);
 
-  const handleReset = () => {
+      setTraceResult(result);
+    },
+    [mutateAsync]
+  );
+
+  const handleReset = useCallback(() => {
     setTraceResult(null);
-  };
+    setImage(null);
+  }, []);
 
   return (
     <React.Fragment>
@@ -63,7 +70,7 @@ const TracePage = () => {
               <p>Thử ảnh khác</p>
             </Button>
 
-            <TracePanel data={traceResult} />
+            <TracePanel data={traceResult} image={image} />
           </React.Fragment>
         ) : isLoading ? (
           <Loading />
