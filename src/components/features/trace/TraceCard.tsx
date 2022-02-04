@@ -1,4 +1,3 @@
-import useDevice from "@/hooks/useDevice";
 import { TraceImageResult } from "@/hooks/useTraceImage";
 import { parseTime } from "@/utils";
 import { getTitle } from "@/utils/data";
@@ -16,8 +15,6 @@ const TraceCard: React.FC<TraceCardProps> = ({
   isActive,
   ...props
 }) => {
-  const { isMobile } = useDevice();
-
   return (
     <div
       className={classNames(
@@ -40,22 +37,13 @@ const TraceCard: React.FC<TraceCardProps> = ({
           <p>~{(data.similarity * 100).toFixed(2)}% chính xác</p>
         </div>
         <div className="col-span-5">
-          {isMobile ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={data.image}
-              className="w-full object-contain"
-              alt={getTitle(data.anime)}
-            />
-          ) : (
-            <video
-              src={data.video}
-              loop
-              className="w-full object-contain"
-              autoPlay
-              muted
-            />
-          )}
+          <video
+            src={`${data.video}&size=s`}
+            loop
+            className="w-full object-contain"
+            autoPlay
+            muted
+          />
         </div>
       </div>
     </div>
