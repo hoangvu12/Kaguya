@@ -287,8 +287,8 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   return (
     <div className="relative w-full h-screen">
       <Head
-        title={`${title} - Kaguya`}
-        description={`Xem phim ${title} tại Kaguya. Hoàn toàn miễn phí, không quảng cáo`}
+        title={`${title} (${currentEpisode.name}) - Kaguya`}
+        description={`Xem phim ${title} (${currentEpisode.name}) tại Kaguya. Hoàn toàn miễn phí, không quảng cáo`}
         image={currentEpisode.thumbnail_image || anime.banner_image}
       />
 
