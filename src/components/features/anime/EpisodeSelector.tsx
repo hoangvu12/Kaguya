@@ -32,7 +32,7 @@ const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({
 
   const [activeTabIndex, setActiveTabIndex] = React.useState(() => {
     const index = chunks.findIndex((chunk) =>
-      chunk.some((episode) => episode.episode_id === activeEpisode.episode_id)
+      chunk.some((episode) => episode.episode_id === activeEpisode?.episode_id)
     );
 
     return index === -1 ? 0 : index;
@@ -89,7 +89,7 @@ const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({
             <a
               className={classNames(
                 "rounded-md bg-background-800 col-span-1 aspect-w-2 aspect-h-1 group",
-                episode.episode_id === activeEpisode.episode_id &&
+                episode.episode_id === activeEpisode?.episode_id &&
                   "text-primary-300"
               )}
             >
