@@ -12,14 +12,14 @@ import { Tab } from "react-tabs";
 
 interface EpisodeSelectorProps {
   episodes: Episode[];
-  activeIndex?: number | null;
+  activeEpisode?: Episode;
   chunkSwiperProps?: SwiperProps;
   episodeLinkProps?: Omit<LinkProps, "href">;
 }
 
 const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({
   episodes,
-  activeIndex,
+  activeEpisode,
   chunkSwiperProps,
   episodeLinkProps,
 }) => {
@@ -32,7 +32,7 @@ const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({
 
   const [activeTabIndex, setActiveTabIndex] = React.useState(() => {
     const index = chunks.findIndex((chunk) =>
-      chunk.some((episode) => episode.episodeIndex === activeIndex)
+      chunk.some((episode) => episode.episode_id === activeEpisode.episode_id)
     );
 
     return index === -1 ? 0 : index;
@@ -89,7 +89,8 @@ const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({
             <a
               className={classNames(
                 "rounded-md bg-background-800 col-span-1 aspect-w-2 aspect-h-1 group",
-                activeIndex === episode.episodeIndex && "text-primary-300"
+                episode.episode_id === activeEpisode.episode_id &&
+                  "text-primary-300"
               )}
             >
               <div className="flex items-center justify-center w-full h-full group-hover:bg-white/10 rounded-md transition duration-300">

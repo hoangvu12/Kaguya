@@ -328,7 +328,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
               <div className="w-[70vw] overflow-hidden">
                 <EpisodeSelector
                   episodes={sortedEpisodes}
-                  activeIndex={currentEpisodeIndex}
+                  activeEpisode={currentEpisode}
                   episodeLinkProps={{ shallow: true, replace: true }}
                 />
               </div>
@@ -355,7 +355,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
                     <div>
                       <EpisodeSelector
                         episodes={sortedEpisodes}
-                        activeIndex={Number(currentEpisodeIndex)}
+                        activeEpisode={currentEpisode}
                       />
                     </div>
                   </div>
