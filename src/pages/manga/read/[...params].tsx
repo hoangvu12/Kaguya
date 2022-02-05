@@ -156,8 +156,8 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
       <ReadSettingsContextProvider>
         <div className="flex items-center justify-center w-full min-h-screen">
           <Head
-            title={`${title} - Kaguya`}
-            description={`Đọc truyện ${title} tại Kaguya. Hoàn toàn miễn phí, không quảng cáo`}
+            title={`${title} (${currentChapter.name}) - Kaguya`}
+            description={`Đọc truyện ${title} (${currentChapter.name}) tại Kaguya. Hoàn toàn miễn phí, không quảng cáo`}
             image={manga.banner_image || manga.cover_image.large}
           />
 
