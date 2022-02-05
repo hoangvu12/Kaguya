@@ -27,9 +27,9 @@ const NextEpisodeButton: React.FC<NextEpisodeButtonProps> = ({
       type="hover"
       className={className}
     >
-      {children}
+      <p className="rounded-sm">Tập tiếp theo</p>
     </Popup>
   );
 };
 
-export default NextEpisodeButton;
+export default React.memo(NextEpisodeButton);
