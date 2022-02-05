@@ -433,8 +433,6 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
 export const getStaticProps: GetStaticProps = async ({
   params: { params },
 }) => {
-  console.log(params);
-
   const { data, error } = await supabase
     .from("anime")
     .select(

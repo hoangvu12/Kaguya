@@ -32,21 +32,26 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
     }, [state?.currentQuality]);
 
     useEffect(() => {
-      function _initPlayer() {
-        if (hls.current != null) {
-          hls.current.destroy();
+      let _hls = hls.current;
 
-          hls.current = new Hls(config);
+      function _initPlayer() {
+        if (_hls != null) {
+          _hls.destroy();
+
+          const newHls = new Hls(config);
+
+          hls.current = newHls;
+          _hls = newHls;
         }
 
         if (myRef.current != null) {
-          hls.current.attachMedia(myRef.current);
+          _hls.attachMedia(myRef.current);
         }
 
-        hls.current.on(Hls.Events.MEDIA_ATTACHED, () => {
-          hls.current.loadSource(src[0].file);
+        _hls.on(Hls.Events.MEDIA_ATTACHED, () => {
+          _hls.loadSource(src[0].file);
 
-          hls.current.on(Hls.Events.MANIFEST_PARSED, () => {
+          _hls.on(Hls.Events.MANIFEST_PARSED, () => {
             if (autoPlay) {
               myRef?.current
                 ?.play()
@@ -57,7 +62,7 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
                 );
             }
 
-            const levels = hls.current.levels
+            const levels = _hls.levels
               .filter((level) => level.height)
               .sort((a, b) => b.height - a.height)
               .map((level) => `${level.height}p`);
@@ -75,14 +80,14 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
           });
         });
 
-        hls.current.on(Hls.Events.ERROR, function (event, data) {
+        _hls.on(Hls.Events.ERROR, function (event, data) {
           if (data.fatal) {
             switch (data.type) {
               case Hls.ErrorTypes.NETWORK_ERROR:
-                hls.current.startLoad();
+                _hls.startLoad();
                 break;
               case Hls.ErrorTypes.MEDIA_ERROR:
-                hls.current.recoverMediaError();
+                _hls.recoverMediaError();
                 break;
               default:
                 _initPlayer();
@@ -110,37 +115,38 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
       myRef.current.autoplay = autoPlay;
 
       return () => {
-        if (hls.current != null) {
-          hls.current.destroy();
+        if (_hls != null) {
+          _hls.destroy();
         }
       };
     }, [autoPlay, setState, src]);
 
     useEffect(() => {
+      const videoRef = myRef.current;
       const quality = state?.currentQuality;
       const qualitySource = src.find((source) => source.label === quality);
-      const beforeChangeTime = myRef.current.currentTime;
+      const beforeChangeTime = videoRef.currentTime;
 
       if (!qualitySource) return;
 
-      if (!myRef.current || qualitySource?.file.includes("m3u8")) return;
+      if (!videoRef || qualitySource?.file.includes("m3u8")) return;
 
       const handleQualityChange = () => {
-        myRef.current.currentTime = beforeChangeTime;
+        videoRef.currentTime = beforeChangeTime;
       };
 
       // If sources includes playing source (before change to new source)
       // that mean user changing quality.
-      if (src.some((source) => source.file === myRef.current.currentSrc)) {
-        myRef.current.addEventListener("canplay", handleQualityChange, {
+      if (src.some((source) => source.file === videoRef.currentSrc)) {
+        videoRef.addEventListener("canplay", handleQualityChange, {
           once: true,
         });
       }
 
-      myRef.current.src = qualitySource?.file;
+      videoRef.src = qualitySource?.file;
 
       return () => {
-        myRef.current.removeEventListener("canplay", handleQualityChange);
+        videoRef.removeEventListener("canplay", handleQualityChange);
       };
     }, [state, src]);
     return (
