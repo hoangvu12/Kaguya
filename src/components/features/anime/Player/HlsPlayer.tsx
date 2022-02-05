@@ -121,6 +121,8 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
       const qualitySource = src.find((source) => source.label === quality);
       const beforeChangeTime = myRef.current.currentTime;
 
+      if (!qualitySource) return;
+
       if (!myRef.current || qualitySource?.file.includes("m3u8")) return;
 
       const handleQualityChange = () => {
