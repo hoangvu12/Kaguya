@@ -20,7 +20,6 @@ import { numberWithCommas, parseNumbersFromString } from "@/utils";
 import { convert, getTitle } from "@/utils/data";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { BsFillPlayFill } from "react-icons/bs";
 
@@ -29,7 +28,6 @@ interface DetailsPageProps {
 }
 
 const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
-  const router = useRouter();
   const user = useUser();
 
   const sortedEpisodes = useMemo(
@@ -52,15 +50,15 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
     [anime]
   );
 
-  const nextAiringSchedule = anime.airing_schedule.length
-    ? anime.airing_schedule.find((schedule) =>
-        dayjs.unix(schedule.airing_at).isAfter(dayjs())
-      )
-    : null;
-
-  const handleNavigateEpisode = (index) => {
-    router.push(`/anime/watch/${anime.ani_id}?index=${index}`);
-  };
+  const nextAiringSchedule = useMemo(
+    () =>
+      anime.airing_schedule.length
+        ? anime.airing_schedule.find((schedule) =>
+            dayjs.unix(schedule.airing_at).isAfter(dayjs())
+          )
+        : null,
+    [anime.airing_schedule]
+  );
 
   const title = useMemo(() => getTitle(anime), [anime]);
 
@@ -89,14 +87,13 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
             </div>
 
             <div className="flex flex-col items-center justify-between py-4 mt-4 text-center md:text-left md:items-start md:-mt-16">
-              <Button
-                primary
-                LeftIcon={BsFillPlayFill}
-                className="mb-8"
-                onClick={() => handleNavigateEpisode(0)}
-              >
-                <p>Xem ngay</p>
-              </Button>
+              <Link href={`/anime/watch/${anime.ani_id}`}>
+                <a>
+                  <Button primary LeftIcon={BsFillPlayFill} className="mb-8">
+                    <p>Xem ngay</p>
+                  </Button>
+                </a>
+              </Link>
 
               <p className="mb-2 text-3xl font-semibold">{title}</p>
 

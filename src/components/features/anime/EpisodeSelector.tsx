@@ -81,8 +81,8 @@ const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({
       <div className="mt-10 grid xl:grid-cols-8 lg:grid-cols-7 md:grid-cols-6 sm:grid-cols-5 grid-cols-4 gap-4">
         {chunks[activeTabIndex].map((episode) => (
           <Link
-            href={`/anime/watch/${episode.anime_id}?index=${episode.episodeIndex}`}
-            key={episode.id}
+            href={`/anime/watch/${episode.anime_id}/${episode.episode_id}`}
+            key={episode.episode_id}
             shallow
             {...episodeLinkProps}
           >

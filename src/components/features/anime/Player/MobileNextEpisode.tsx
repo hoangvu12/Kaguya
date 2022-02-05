@@ -6,15 +6,14 @@ interface MobileNextEpisodeProps {
   onClick?: () => void;
 }
 
-const MobileNextEpisode: React.FC<MobileNextEpisodeProps> = ({
-  children,
-  onClick,
-}) => {
+const MobileNextEpisode: React.FC<MobileNextEpisodeProps> = ({ onClick }) => {
   return (
-    <MobileControlsIcon Icon={NextIcon} title="Tập tiếp theo" onClick={onClick}>
-      {children}
-    </MobileControlsIcon>
+    <MobileControlsIcon
+      Icon={NextIcon}
+      title="Tập tiếp theo"
+      onClick={onClick}
+    />
   );
 };
 
-export default MobileNextEpisode;
+export default React.memo(MobileNextEpisode);

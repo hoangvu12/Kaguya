@@ -1,15 +1,14 @@
 import EpisodeSelector from "@/components/features/anime/EpisodeSelector";
-import Button from "@/components/shared/Button";
-import ClientOnly from "@/components/shared/ClientOnly";
-import EpisodeCard from "@/components/features/anime/EpisodeCard";
-import Head from "@/components/shared/Head";
-import Loading from "@/components/shared/Loading";
-import MobileNextEpisode from "@/components/features/anime/Player/MobileNextEpisode";
-import Portal from "@/components/shared/Portal";
 import Video from "@/components/features/anime/Player";
 import EpisodesButton from "@/components/features/anime/Player/EpisodesButton";
 import MobileEpisodesButton from "@/components/features/anime/Player/MobileEpisodesButton";
+import MobileNextEpisode from "@/components/features/anime/Player/MobileNextEpisode";
 import NextEpisodeButton from "@/components/features/anime/Player/NextEpisodeButton";
+import Button from "@/components/shared/Button";
+import ClientOnly from "@/components/shared/ClientOnly";
+import Head from "@/components/shared/Head";
+import Loading from "@/components/shared/Loading";
+import Portal from "@/components/shared/Portal";
 import { REVALIDATE_TIME } from "@/constants";
 import useDevice from "@/hooks/useDevice";
 import useEventListener from "@/hooks/useEventListener";
@@ -59,14 +58,6 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   const saveWatchedInterval = useRef<NodeJS.Timer>(null);
   const saveWatchedMutation = useSaveWatched();
 
-  const { index: episodeIndex = 0, id } = router.query;
-
-  const {
-    data: watchedEpisodeData,
-    isLoading: isSavedDataLoading,
-    isError: isSavedDataError,
-  } = useSavedWatched(Number(id));
-
   useEventListener("visibilitychange", () => {
     if (isMobile) return;
 
@@ -83,23 +74,25 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
 
   const sortedEpisodes = useMemo(
     () =>
-      anime.episodes
-        .sort((a, b) => {
-          const aNumber = parseNumbersFromString(a.name, 9999)?.[0];
-          const bNumber = parseNumbersFromString(b.name, 9999)?.[0];
+      anime.episodes.sort((a, b) => {
+        const aNumber = parseNumbersFromString(a.name, 9999)?.[0];
+        const bNumber = parseNumbersFromString(b.name, 9999)?.[0];
 
-          return aNumber - bNumber;
-        })
-        .map((episode, index) => ({
-          ...episode,
-          episodeIndex: index,
-          thumbnail_image:
-            episode.thumbnail_image ||
-            anime.banner_image ||
-            anime.cover_image.extra_large,
-        })),
-    [anime.banner_image, anime.cover_image, anime.episodes]
+        return aNumber - bNumber;
+      }),
+    [anime.episodes]
   );
+
+  const { params } = router.query;
+
+  const [animeId, episodeId = sortedEpisodes[0].episode_id] =
+    params as string[];
+
+  const {
+    data: watchedEpisodeData,
+    isLoading: isSavedDataLoading,
+    isError: isSavedDataError,
+  } = useSavedWatched(Number(animeId));
 
   const watchedEpisode = useMemo(
     () =>
@@ -112,21 +105,33 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   );
 
   const currentEpisode = useMemo(
-    () => sortedEpisodes[Number(episodeIndex)],
-    [sortedEpisodes, episodeIndex]
+    () =>
+      sortedEpisodes.find(
+        (episode) => episode.episode_id === Number(episodeId)
+      ),
+    [sortedEpisodes, episodeId]
   );
+
+  const currentEpisodeIndex = useMemo(
+    () =>
+      sortedEpisodes.findIndex(
+        (episode) => episode.episode_id === Number(episodeId)
+      ),
+    [episodeId, sortedEpisodes]
+  );
+
   const nextEpisode = useMemo(
-    () => sortedEpisodes[Number(episodeIndex) + 1],
-    [episodeIndex, sortedEpisodes]
+    () => sortedEpisodes[currentEpisodeIndex + 1],
+    [currentEpisodeIndex, sortedEpisodes]
   );
 
   const handleNavigateEpisode = useCallback(
-    (index: number) => () => {
-      router.replace(`/anime/watch/${id}?index=${index}`, null, {
+    (episodeId: number) => () => {
+      router.replace(`/anime/watch/${animeId}/${episodeId}`, null, {
         shallow: true,
       });
     },
-    [id, router]
+    [animeId, router]
   );
 
   const { data, isLoading } = useFetchSource(
@@ -171,7 +176,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
 
       saveWatchedInterval.current = setInterval(() => {
         saveWatchedMutation.mutate({
-          anime_id: Number(id),
+          anime_id: Number(animeId),
           episode_id: currentEpisode.episode_id,
           watched_time: videoRef.current?.currentTime,
         });
@@ -194,7 +199,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
       videoEl.removeEventListener("pause", handleVideoPause);
       videoEl.removeEventListener("ended", handleVideoPause);
     };
-  }, [currentEpisode.episode_id, id, saveWatchedMutation]);
+  }, [animeId, currentEpisode.episode_id, saveWatchedMutation]);
 
   useEffect(() => {
     if (!navigator?.mediaSession) return;
@@ -205,15 +210,15 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
 
     const handleNavigator = () => {
       navigator.mediaSession.setActionHandler("previoustrack", function () {
-        if (episodeIndex === 0) return;
+        if (currentEpisodeIndex === 0) return;
 
-        handleNavigateEpisode(Number(episodeIndex) - 1)();
+        handleNavigateEpisode(Number(currentEpisodeIndex) - 1)();
       });
 
       navigator.mediaSession.setActionHandler("nexttrack", function () {
-        if (episodeIndex === sortedEpisodes.length - 1) return;
+        if (currentEpisodeIndex === sortedEpisodes.length - 1) return;
 
-        handleNavigateEpisode(Number(episodeIndex) + 1)();
+        handleNavigateEpisode(Number(currentEpisodeIndex) + 1)();
       });
     };
 
@@ -222,7 +227,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
     return () => {
       videoEl.removeEventListener("canplay", handleNavigator);
     };
-  }, [episodeIndex, handleNavigateEpisode, sortedEpisodes.length]);
+  }, [currentEpisodeIndex, handleNavigateEpisode, sortedEpisodes.length]);
 
   const title = useMemo(() => getTitle(anime), [anime]);
 
@@ -261,9 +266,9 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
 
     const handleTimeUpdate = () => {
       storage.update(
-        { anime_id: Number(id) },
+        { anime_id: Number(animeId) },
         {
-          anime_id: Number(id),
+          anime_id: Number(animeId),
           anime,
           episode_id: currentEpisode.episode_id,
           episode: currentEpisode,
@@ -277,7 +282,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
     return () => {
       videoEl.removeEventListener("timeupdate", handleTimeUpdate);
     };
-  }, [anime, currentEpisode, id, videoRef]);
+  }, [anime, animeId, currentEpisode, videoRef]);
 
   return (
     <div className="relative w-full h-screen">
@@ -313,23 +318,17 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
         {/* Browser Only */}
         <BrowserView>
           <Portal selector=".right-controls-slot">
-            {episodeIndex < sortedEpisodes.length - 1 && (
+            {currentEpisodeIndex < sortedEpisodes.length - 1 && (
               <NextEpisodeButton
-                onClick={handleNavigateEpisode(Number(episodeIndex) + 1)}
-              >
-                <div className="w-96">
-                  <p className="mb-4 text-xl">Tập tiếp theo</p>
-
-                  <EpisodeCard episode={nextEpisode} />
-                </div>
-              </NextEpisodeButton>
+                onClick={handleNavigateEpisode(nextEpisode.episode_id)}
+              />
             )}
 
             <EpisodesButton>
               <div className="w-[70vw] overflow-hidden">
                 <EpisodeSelector
                   episodes={sortedEpisodes}
-                  activeIndex={Number(episodeIndex)}
+                  activeIndex={currentEpisodeIndex}
                   episodeLinkProps={{ shallow: true, replace: true }}
                 />
               </div>
@@ -356,7 +355,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
                     <div>
                       <EpisodeSelector
                         episodes={sortedEpisodes}
-                        activeIndex={Number(episodeIndex)}
+                        activeIndex={Number(currentEpisodeIndex)}
                       />
                     </div>
                   </div>
@@ -364,9 +363,9 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
               }
             </MobileEpisodesButton>
 
-            {episodeIndex < sortedEpisodes.length - 1 && (
+            {currentEpisodeIndex < sortedEpisodes.length - 1 && (
               <MobileNextEpisode
-                onClick={handleNavigateEpisode(Number(episodeIndex) + 1)}
+                onClick={handleNavigateEpisode(nextEpisode.episode_id)}
               />
             )}
           </Portal>
@@ -418,16 +417,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
                 <p>Không</p>
               </Button>
               <Button
-                onClick={() => {
-                  if (!watchedEpisode || isSavedDataLoading) return;
-
-                  const episodeIndex = sortedEpisodes.findIndex(
-                    (episode) =>
-                      episode.episode_id === watchedEpisodeData.episode_id
-                  );
-
-                  handleNavigateEpisode(episodeIndex)();
-                }}
+                onClick={handleNavigateEpisode(watchedEpisodeData.episode_id)}
                 primary
               >
                 <p>Xem</p>
@@ -440,7 +430,11 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps = async ({
+  params: { params },
+}) => {
+  console.log(params);
+
   const { data, error } = await supabase
     .from("anime")
     .select(
@@ -453,7 +447,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         episodes!anime_id(*)
       `
     )
-    .eq("ani_id", Number(params.id))
+    .eq("ani_id", Number(params[0]))
     .single();
 
   if (error) {
@@ -478,7 +472,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     .limit(20);
 
   const paths = data.map((anime: Anime) => ({
-    params: { id: anime.ani_id.toString() },
+    params: { params: [anime.ani_id.toString()] },
   }));
 
   return { paths, fallback: "blocking" };
