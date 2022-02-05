@@ -239,7 +239,8 @@ export const getStaticProps: GetStaticProps = async ({
         slug,
         chapters!manga_id(*),
         banner_image,
-        cover_image
+        cover_image,
+        vietnamese_title
       `
     )
     .eq("ani_id", Number(params[0]))
