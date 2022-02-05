@@ -41,14 +41,6 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
   const [declinedReread, setDeclinedReread] = useState(false);
   const saveReadTimeout = useRef<NodeJS.Timeout>();
 
-  const { index: chapterIndex = 0, id } = router.query;
-
-  const {
-    data: savedReadData,
-    isLoading: isSavedDataLoading,
-    isError: isSavedDataError,
-  } = useSavedRead(Number(id));
-
   const saveReadMutation = useSaveRead();
 
   const title = useMemo(() => getTitle(manga), [manga]);
@@ -62,14 +54,29 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
     [manga]
   );
 
+  const { params } = router.query;
+  const [mangaId, chapterId = chapters[0].chapter_id] = params as string[];
+
+  const {
+    data: savedReadData,
+    isLoading: isSavedDataLoading,
+    isError: isSavedDataError,
+  } = useSavedRead(Number(mangaId));
+
   const currentChapter = useMemo(
-    () => chapters[Number(chapterIndex)],
-    [chapters, chapterIndex]
+    () => chapters.find((chapter) => chapter.chapter_id === Number(chapterId)),
+    [chapters, chapterId]
+  );
+
+  const currentChapterIndex = useMemo(
+    () =>
+      chapters.findIndex((chapter) => chapter.chapter_id === Number(chapterId)),
+    [chapters, chapterId]
   );
 
   const nextChapter = useMemo(
-    () => chapters[Number(chapterIndex) + 1],
-    [chapters, chapterIndex]
+    () => chapters[Number(currentChapterIndex) + 1],
+    [chapters, currentChapterIndex]
   );
 
   const readChapter = useMemo(
@@ -89,12 +96,12 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
   );
 
   const handleChapterNavigate = useCallback(
-    (chapterIndex: number) => {
-      router.replace(`/manga/read/${id}?index=${chapterIndex}`, null, {
+    (chapterId: number) => {
+      router.replace(`/manga/read/${mangaId}/${chapterId}`, null, {
         shallow: true,
       });
     },
-    [id, router]
+    [mangaId, router]
   );
 
   useEffect(() => {
@@ -129,23 +136,21 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
     saveReadTimeout.current = setTimeout(
       () =>
         saveReadMutation.mutate({
-          manga_id: Number(id),
+          manga_id: Number(mangaId),
           chapter_id: currentChapter.chapter_id,
         }),
       10000
     );
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentChapter.chapter_id]);
+  }, [currentChapter.chapter_id, mangaId, saveReadMutation]);
 
   return (
     <ReadContextProvider
       value={{
         manga,
         currentChapter,
+        currentChapterIndex,
         chapters,
-        chapterIndex: Number(chapterIndex),
-        setChapterIndex: handleChapterNavigate,
+        setChapter: handleChapterNavigate,
       }}
     >
       <ReadSettingsContextProvider>
@@ -223,7 +228,9 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps = async ({
+  params: { params },
+}) => {
   const { data, error } = await supabase
     .from<Manga>("manga")
     .select(
@@ -235,7 +242,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         cover_image
       `
     )
-    .eq("ani_id", Number(params.id))
+    .eq("ani_id", Number(params[0]))
     .single();
 
   if (error) {
@@ -246,7 +253,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   return {
     props: {
-      manga: { ...data, chapters: data.chapters.reverse() },
+      manga: data,
     },
     revalidate: REVALIDATE_TIME,
   };
@@ -260,7 +267,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     .limit(20);
 
   const paths = data.map((manga) => ({
-    params: { id: manga.ani_id.toString() },
+    params: { params: [manga.ani_id.toString()] },
   }));
 
   return { paths, fallback: "blocking" };
@@ -270,6 +277,3 @@ export const getStaticPaths: GetStaticPaths = async () => {
 ReadPage.getLayout = (page) => page;
 
 export default ReadPage;
-function useMangaImages(): {} {
-  throw new Error("Function not implemented.");
-}

@@ -36,7 +36,7 @@ const ReadImages: React.FC<ReadImagesProps> = ({
 }) => {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const { direction } = useReadSettings();
-  const { chapterIndex, chapters, setChapterIndex } = useReadInfo();
+  const { currentChapterIndex, chapters, setChapter } = useReadInfo();
   const { isMobile } = useDevice();
   const swiperRef = useRef<SwiperClass>();
 
@@ -71,6 +71,12 @@ const ReadImages: React.FC<ReadImagesProps> = ({
     nextImage,
     previousImage,
   ]);
+
+  const handleChangeChapter = (index: number) => () => {
+    const { chapter_id } = chapters[index];
+
+    setChapter(chapter_id);
+  };
 
   const handleSlideChange = (swiper: SwiperClass) => {
     setActiveImageIndex(swiper.realIndex);
@@ -132,12 +138,10 @@ const ReadImages: React.FC<ReadImagesProps> = ({
             </div>
           ))}
 
-          {chapterIndex < chapters.length - 1 && (
+          {currentChapterIndex < chapters.length - 1 && (
             <div className="w-full h-60 p-8">
               <button
-                onClick={() => {
-                  setChapterIndex(chapterIndex + 1);
-                }}
+                onClick={handleChangeChapter(currentChapterIndex + 1)}
                 className="w-full h-full border-2 border-dashed border-gray-600 text-gray-600 hover:border-white hover:text-white transition duration-300 flex items-center justify-center"
               >
                 <p className="text-2xl">Chapter tiếp theo</p>

@@ -61,14 +61,12 @@ const ReadPanel: React.FC<ReadPanelProps> = ({ children }) => {
   const router = useRouter();
   const { isMobile } = useDevice();
   const { zoom, fitMode, direction, setSetting } = useReadSettings();
-  const { manga, setChapterIndex, chapters, chapterIndex, currentChapter } =
+  const { manga, setChapter, chapters, currentChapter, currentChapterIndex } =
     useReadInfo();
   const containerRef = useRef<HTMLDivElement>(null);
 
   const filteredChapters = useMemo(() => {
-    return chapters
-      .map((chapter, index) => ({ ...chapter, chapter_index: index }))
-      .filter((chapter) => chapter.name.includes(filterText));
+    return chapters.filter((chapter) => chapter.name.includes(filterText));
   }, [chapters, filterText]);
 
   const handleSidebarState = (isOpen: boolean) => () =>
@@ -93,16 +91,20 @@ const ReadPanel: React.FC<ReadPanelProps> = ({ children }) => {
     setSetting("zoom", level);
   };
 
-  const handleChapterChange = (index: number) => () => setChapterIndex(index);
-
   const title = useMemo(() => getTitle(manga), [manga]);
+
+  const handleChangeChapterIndex = (index: number) => () => {
+    const { chapter_id } = chapters[index];
+
+    setChapter(chapter_id);
+  };
 
   // Scroll container to top when change chapter
   useEffect(() => {
     if (!containerRef.current) return;
 
     containerRef.current.scrollTo({ top: 0 });
-  }, [chapterIndex]);
+  }, [currentChapter]);
 
   return (
     <div className="flex w-full h-screen overflow-y-hidden">
@@ -151,23 +153,23 @@ const ReadPanel: React.FC<ReadPanelProps> = ({ children }) => {
               LeftIcon={BiChevronLeft}
               iconClassName="w-8 h-8"
               secondary
-              disabled={chapterIndex === 0}
-              onClick={handleChapterChange(chapterIndex - 1)}
+              disabled={currentChapterIndex === 0}
+              onClick={handleChangeChapterIndex(currentChapterIndex - 1)}
               shortcutKey="["
             />
 
             <MobileView className="grow">
               <select
-                value={chapterIndex.toString()}
+                value={currentChapter.chapter_id}
                 onChange={(e) => {
-                  const index = e.target.value;
+                  const chapter_id = e.target.value;
 
-                  setChapterIndex(Number(index));
+                  setChapter(Number(chapter_id));
                 }}
                 className="rounded-md py-1 px-2 appearance-none w-full bg-background-700"
               >
-                {chapters.map((chapter, index) => (
-                  <option key={chapter.id} value={index}>
+                {chapters.map((chapter) => (
+                  <option key={chapter.id} value={chapter.chapter_id}>
                     {chapter.name}
                   </option>
                 ))}
@@ -187,8 +189,8 @@ const ReadPanel: React.FC<ReadPanelProps> = ({ children }) => {
               LeftIcon={BiChevronRight}
               iconClassName="w-8 h-8"
               secondary
-              disabled={chapterIndex === chapters.length - 1}
-              onClick={handleChapterChange(chapterIndex + 1)}
+              disabled={currentChapterIndex === chapters.length - 1}
+              onClick={handleChangeChapterIndex(currentChapterIndex + 1)}
               shortcutKey="]"
             />
           </div>
@@ -261,11 +263,11 @@ const ReadPanel: React.FC<ReadPanelProps> = ({ children }) => {
                 <li
                   className="relative p-2 cursor-pointer hover:bg-white/20 transition duration-300"
                   key={chapter.chapter_id}
-                  onClick={handleChapterChange(chapter.chapter_index)}
+                  onClick={() => setChapter(chapter.chapter_id)}
                 >
                   {chapter.name}
 
-                  {chapter.chapter_index === chapterIndex && (
+                  {chapter.chapter_id === currentChapter.chapter_id && (
                     <p className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-primary-500 rounded-md">
                       Đang đọc
                     </p>
