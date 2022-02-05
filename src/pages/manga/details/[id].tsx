@@ -20,7 +20,6 @@ import { convert, getTitle } from "@/utils/data";
 import { motion } from "framer-motion";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import React, { useMemo, useState } from "react";
 import { BsChevronDown, BsChevronUp, BsFillPlayFill } from "react-icons/bs";
 
@@ -29,14 +28,9 @@ interface DetailsPageProps {
 }
 
 const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
-  const router = useRouter();
   const user = useUser();
 
   const [isChapterExpanded, setIsChapterExpanded] = useState(false);
-
-  const handleReadClick = () => {
-    router.push(`/manga/read/${manga.ani_id}`);
-  };
 
   const chapters = useMemo(
     () =>
@@ -46,7 +40,6 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
             parseNumbersFromString(a.name)[0] -
             parseNumbersFromString(b.name)[0]
         )
-        .map((chapter, index) => ({ ...chapter, chapterIndex: index }))
         .reverse(),
     [manga]
   );
@@ -78,14 +71,13 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
             </div>
 
             <div className="justify-between text-center md:text-left flex flex-col items-center md:items-start py-4 mt-4 md:-mt-16">
-              <Button
-                primary
-                LeftIcon={BsFillPlayFill}
-                className="mb-8"
-                onClick={handleReadClick}
-              >
-                <p>Đọc ngay</p>
-              </Button>
+              <Link href={`/manga/read/${manga.ani_id}`}>
+                <a>
+                  <Button primary LeftIcon={BsFillPlayFill} className="mb-8">
+                    <p>Đọc ngay</p>
+                  </Button>
+                </a>
+              </Link>
 
               <p className="text-3xl font-semibold mb-2">{title}</p>
 
@@ -166,7 +158,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
               >
                 {chapters.map((chapter) => (
                   <Link
-                    href={`/manga/read/${manga.ani_id}?index=${chapter.chapterIndex}`}
+                    href={`/manga/read/${manga.ani_id}/${chapter.chapter_id}`}
                     key={chapter.chapter_id}
                   >
                     <a className="block">
