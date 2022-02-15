@@ -20,7 +20,7 @@ const AnimeScheduling: React.FC<AnimeSchedulingProps> = ({ schedules }) => {
   const chunks = useMemo(
     () =>
       schedules.reduce((acc, cur) => {
-        const day = dayjs.unix(cur.airing_at);
+        const day = dayjs.unix(cur.airingAt);
 
         const dayIndex = day.day();
         const dayName = daysOfWeek[dayIndex];
@@ -68,16 +68,16 @@ const AnimeScheduling: React.FC<AnimeSchedulingProps> = ({ schedules }) => {
               ) : (
                 <CardSwiper
                   data={schedules.map(
-                    (schedule: AiringSchedule) => schedule.anime
+                    (schedule: AiringSchedule) => schedule.media
                   )}
                   type="anime"
                   onEachCard={(card) => {
                     const cardWithSchedule = schedules.find(
-                      (schedule) => schedule.anime.ani_id === card.ani_id
+                      (schedule) => schedule.media.id === card.id
                     );
 
                     const isReleased = dayjs
-                      .unix(cardWithSchedule.airing_at)
+                      .unix(cardWithSchedule.airingAt)
                       .isBefore(dayjs());
 
                     return (
@@ -92,7 +92,7 @@ const AnimeScheduling: React.FC<AnimeSchedulingProps> = ({ schedules }) => {
                               <span>
                                 {!isReleased
                                   ? dayjs
-                                      .unix(cardWithSchedule.airing_at)
+                                      .unix(cardWithSchedule.airingAt)
                                       .format("HH:mm")
                                   : "Đã cập nhật"}
                               </span>

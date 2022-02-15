@@ -31,7 +31,7 @@ interface HomeProps {
 
 const Home: NextPage<HomeProps> = ({
   trendingAnime,
-  randomAnime,
+  // randomAnime,
   recentlyUpdatedAnime,
   schedulesAnime,
   favouriteAllTime,
@@ -50,8 +50,8 @@ const Home: NextPage<HomeProps> = ({
           <HomeBanner type="anime" data={trendingAnime} />
 
           <div className="space-y-8">
-            <WatchedSection />
-            <RecommendedAnimeSection />
+            {/* <WatchedSection /> */}
+            {/* <RecommendedAnimeSection /> */}
 
             <Section className="flex flex-col md:flex-row items-center md:space-between space-y-4 space-x-0 md:space-y-0 md:space-x-4">
               <ColumnSection
@@ -91,7 +91,7 @@ const Home: NextPage<HomeProps> = ({
                 title="Xem gì hôm nay?"
                 className="w-full md:w-[80%] md:!pr-0"
               >
-                <ShouldWatch type="anime" data={randomAnime} />
+                {/* <ShouldWatch type="anime" data={randomAnime} /> */}
               </Section>
 
               <Section title="Thể loại" className="w-full md:w-[20%] md:!pl-0">
@@ -115,69 +115,69 @@ export const getStaticProps: GetStaticProps = async () => {
   const lastDayOfWeek = dayjs().endOf("week");
 
   const { data: schedulesAnime } = await supabase
-    .from<AiringSchedule>("airing_schedule")
+    .from<AiringSchedule>("kaguya_airing_schedules")
     .select(
-      "*, anime:anime_id(cover_image, genres, average_score, favourites, title, vietnamese_title, ani_id)"
+      "*, media:mediaId(coverImage, genres, averageScore, favourites, title, vietnameseTitle, id)"
     )
-    .lte("airing_at", lastDayOfWeek.unix())
-    .gte("airing_at", firstDayOfWeek.unix())
+    .lte("airingAt", lastDayOfWeek.unix())
+    .gte("airingAt", firstDayOfWeek.unix())
     .limit(1, {
       foreignTable: "anime",
     });
 
   const { data: trendingAnime } = await supabase
-    .from<Anime>("anime")
+    .from<Anime>("kaguya_anime")
     .select("*")
     .order("trending", { ascending: false })
-    .not("banner_image", "is", null)
+    .not("bannerImage", "is", null)
     .limit(15);
 
   const { data: recentlyUpdatedAnime } = await supabase
-    .from<Anime>("anime")
+    .from<Anime>("kaguya_anime")
     .select(
-      "cover_image, genres, average_score, favourites, title, vietnamese_title, ani_id"
+      "coverImage, genres, averageScore, favourites, title, vietnameseTitle, id"
     )
-    .order("episodes_updated_at", { ascending: false })
+    .order("episodeUpdatedAt", { ascending: false })
     .limit(15);
 
-  const { data: randomAnime } = await supabase
-    .rpc<Anime>("anime_random")
-    .limit(1)
-    .not("banner_image", "is", null)
-    .single();
+  // const { data: randomAnime } = await supabase
+  //   .rpc<Anime>("anime_random")
+  //   .limit(1)
+  //   .not("bannerImage", "is", null)
+  //   .single();
 
   const { data: popularSeason } = await supabase
-    .from<Anime>("anime")
+    .from<Anime>("kaguya_anime")
     .select(
-      "ani_id, cover_image, genres, title, vietnamese_title, format, season, season_year, status"
+      "id, coverImage, genres, title, vietnameseTitle, format, season, seasonYear, status"
     )
     .order("popularity", { ascending: false })
     .eq("season", currentSeason.season)
-    .eq("season_year", currentSeason.year)
+    .eq("seasonYear", currentSeason.year)
     .limit(5);
 
   const { data: popularAllTime } = await supabase
-    .from<Anime>("anime")
+    .from<Anime>("kaguya_anime")
     .select(
-      "ani_id, cover_image, genres, title, vietnamese_title, format, season, season_year, status"
+      "id, coverImage, genres, title, vietnameseTitle, format, season, seasonYear, status"
     )
     .order("popularity", { ascending: false })
     .limit(5);
 
   const { data: favouriteSeason } = await supabase
-    .from<Anime>("anime")
+    .from<Anime>("kaguya_anime")
     .select(
-      "ani_id, cover_image, genres, title, vietnamese_title, format, season, season_year, status"
+      "id, coverImage, genres, title, vietnameseTitle, format, season, seasonYear, status"
     )
     .order("favourites", { ascending: false })
     .eq("season", currentSeason.season)
-    .eq("season_year", currentSeason.year)
+    .eq("seasonYear", currentSeason.year)
     .limit(5);
 
   const { data: favouriteAllTime } = await supabase
-    .from<Anime>("anime")
+    .from<Anime>("kaguya_anime")
     .select(
-      "ani_id, cover_image, genres, title, vietnamese_title, format, season, season_year, status"
+      "id, coverImage, genres, title, vietnameseTitle, format, season, seasonYear, status"
     )
     .order("favourites", { ascending: false })
     .limit(5);
@@ -186,7 +186,7 @@ export const getStaticProps: GetStaticProps = async () => {
     props: {
       trendingAnime,
       recentlyUpdatedAnime,
-      randomAnime,
+      // randomAnime,
       schedulesAnime,
       popularSeason,
       popularAllTime,

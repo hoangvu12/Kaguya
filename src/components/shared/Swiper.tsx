@@ -16,6 +16,7 @@ export type SwiperInstance = SwiperClass;
 export interface SwiperProps extends React.ComponentProps<typeof ReactSwiper> {
   hideNavigation?: boolean;
   isOverflowHidden?: boolean;
+  defaultActiveSlide?: number;
 }
 
 SwiperCore.use([Navigation]);
@@ -26,6 +27,7 @@ const Swiper: React.FC<SwiperProps> = ({
   onInit,
   isOverflowHidden = false,
   className,
+  defaultActiveSlide,
   ...props
 }) => {
   const prevButtonRef = useRef<HTMLButtonElement>(null);
@@ -72,6 +74,8 @@ const Swiper: React.FC<SwiperProps> = ({
         // eslint-disable-next-line no-param-reassign
         swiper.params.navigation.nextEl = nextButtonRef.current;
         swiper.navigation.update();
+
+        swiper.slideTo(defaultActiveSlide || 0);
 
         onInit?.(swiper);
       }}

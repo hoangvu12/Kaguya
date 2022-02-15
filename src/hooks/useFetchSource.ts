@@ -1,10 +1,10 @@
-import { Source } from "@/types";
+import { Episode, VideoSource } from "@/types";
 import axios, { AxiosError } from "axios";
 import { useQuery, useQueryClient } from "react-query";
 
 interface ReturnSuccessType {
   success: true;
-  sources: Source[];
+  sources: VideoSource[];
 }
 
 interface ReturnFailType {
@@ -14,25 +14,28 @@ interface ReturnFailType {
 }
 
 export const useFetchSource = (
-  currentEpisodeId: number,
-  nextEpisodeId: number
+  currentEpisode: Episode,
+  nextEpisode?: Episode
 ) => {
   const queryClient = useQueryClient();
 
-  const fetchSource = (episodeId: number) =>
+  const fetchSource = (episodeId: number, sourceId: string) =>
     axios
-      .get<ReturnSuccessType>(`/api/anime/source?id=${episodeId}`)
+      .get<ReturnSuccessType>(
+        `/api/anime/source?episode_id=${episodeId}&source_id=${sourceId}`
+      )
       .then(({ data }) => data);
 
   return useQuery<ReturnSuccessType, AxiosError<ReturnFailType>>(
-    `source-${currentEpisodeId}`,
-    () => fetchSource(currentEpisodeId),
+    `source-${currentEpisode.sourceEpisodeId}`,
+    () => fetchSource(currentEpisode.sourceEpisodeId, currentEpisode.sourceId),
     {
       onSuccess: () => {
-        if (!nextEpisodeId) return;
+        if (!nextEpisode?.sourceEpisodeId) return;
 
-        queryClient.prefetchQuery(`source-${nextEpisodeId}`, () =>
-          fetchSource(nextEpisodeId)
+        queryClient.prefetchQuery(
+          `source-${nextEpisode?.sourceEpisodeId}`,
+          () => fetchSource(nextEpisode.sourceEpisodeId, nextEpisode.sourceId)
         );
       },
     }

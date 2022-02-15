@@ -5,7 +5,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const {
-    query: { id: episode_id },
+    query: { episode_id, source_id },
   } = req;
 
   try {
@@ -29,9 +29,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       return;
     }
 
-    const { data }: any = await axios.get(
-      `${config.nodeServerUrl}/source?id=${episode_id}`
-    );
+    const { data }: any = await axios.get(`${config.nodeServerUrl}/source`, {
+      params: { episode_id, source_id },
+    });
 
     res.setHeader(
       "Cache-Control",
