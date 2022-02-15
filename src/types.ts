@@ -11,59 +11,60 @@ import {
 import { SupabaseQueryFunction, SupabaseQueryOptions } from "@/utils/supabase";
 import { User } from "@supabase/gotrue-js";
 import { QueryKey } from "react-query";
+import {
+  CharacterRole,
+  FuzzyDate,
+  MediaFormat,
+  MediaRelation,
+  MediaStatus,
+  MediaTitle,
+} from "./anilist";
 
-export interface FuzzyDate {
-  day?: number;
-  month?: number;
-  year?: number;
-}
-export interface Title {
-  romaji: string;
-  english: string;
-  native: string;
-  user_preferred: string;
-}
-
-export interface CoverImage {
-  extra_large: string;
-  large: string;
-  medium: string;
-  color: string;
-}
-
-export interface CharacterImage {
-  large: string;
-  medium: string;
-}
-
-
-export type CharacterConnection<T> = (T extends "anime"
-  ? {
-      anime_id?: number;
-      anime?: Anime;
-    }
-  : {
-      manga_id: number;
-      manga?: Manga;
-    }) & {
-  character_id?: number;
-  character: Character;
-  role: CharacterRole;
+export type Source = {
+  id: string;
+  name: string;
 };
 
-export interface VoiceActorImage {
+export type Episode = {
+  name: string;
+  mediaId: number;
+  sourceId: string;
+  sourceEpisodeId: number;
+  sourceMediaId: number;
+  source: Source;
+};
+
+export type Chapter = {
+  name: string;
+  mediaId: number;
+  sourceId: string;
+  sourceChapterId: number;
+  sourceMediaId: number;
+};
+
+export type VoiceActorImage = {
   large: string;
   medium: string;
-}
-export interface VoiceActorName {
+};
+
+export type VoiceActorName = {
   first: string;
-  middle?: string;
+  middle: string;
   last: string;
   full: string;
   native: string;
+  alternative: string[];
   userPreferred: string;
-}
-export interface VoiceActor {
+};
+
+export type VoiceActorConnection = {
+  voiceActorId: number;
+  characterId: number;
+  voiceActor?: VoiceActor;
+  character?: Character;
+};
+
+export type VoiceActor = {
   id: number;
   name: VoiceActorName;
   language: string;
@@ -76,134 +77,127 @@ export interface VoiceActor {
   homeTown: string;
   bloodType: string;
   favourites: number;
-}
-export interface Character {
+};
+
+export type AiringSchedule = {
   id: number;
-  gender?: string;
-  dateOfBirth?: FuzzyDate;
-  name: string;
-  image: CharacterImage;
-  age?: string;
-  favourites?: number;
-  updated_at?: Date;
-}
-
-export interface AnimeRecommendation {
-  anime: Anime;
-}
-
-export interface MangaRecommendation {
-  manga: Manga;
-}
-export interface AiringSchedule {
-  airing_at: number;
+  airingAt: number;
   episode: number;
-  anime_id: number;
-  anime?: Anime;
-}
+  mediaId: number;
+  media?: Anime;
+};
 
-export interface Episode {
-  name?: string;
-  episode_id?: number;
-  source_id?: number;
-  thumbnail_image?: string;
-  anime_id?: number;
-  id?: number;
-  episodeIndex?: number;
-  count?: number;
-}
+export type Recommendation<T extends Anime | Manga> = {
+  media: T;
+};
 
-export interface Chapter {
-  name?: string;
-  chapter_id?: number;
-  source_id?: number;
-  manga_id?: number;
-  id?: number;
-  count?: number;
-}
+export type Relation<T extends Anime | Manga> = {
+  media: T;
+  relationType: MediaRelation;
+};
 
-export interface AnimeRelation {
-  anime: Anime;
-}
+export type CharacterImage = {
+  large: string;
+  medium: string;
+};
 
-export interface MangaRelation {
-  manga: Manga;
-}
+export type CharacterName = {
+  first: string;
+  middle: string;
+  last: string;
+  full: string;
+  native: string;
+  alternative: string[];
+  alternativeSpoiler: string[];
+  userPreferred: string;
+};
 
-export type Season = typeof SEASONS[number]["value"];
-export type Format = typeof FORMATS[number]["value"];
-export type Status = typeof STATUS[number]["value"];
-export type Genre = typeof GENRES[number]["value"];
-export type CharacterRole = typeof CHARACTERS_ROLES[number]["value"];
+export type CharacterConnection<T extends Anime | Manga> = {
+  characterId: number;
+  id: number;
+  role: CharacterRole;
+  name: string;
+  mediaId: number;
+  media?: T;
+  character: Character;
+};
 
-export interface Anime {
-  title: Title;
-  cover_image: CoverImage;
-  start_date?: number;
-  trending?: number;
-  popularity?: number;
-  favourites?: number;
-  banner_image?: string;
-  season?: Season;
-  season_year?: number;
-  format?: Format;
-  status?: Status;
-  duration?: number;
-  genres?: Genre[];
-  is_adult?: boolean;
-  country_of_origin?: string;
-  average_score?: number;
-  studios?: string[];
-  characters?: CharacterConnection<"anime">[];
-  relations?: AnimeRelation[];
-  recommendations?: AnimeRecommendation[];
-  airing_schedule?: AiringSchedule[];
-  total_episodes?: number;
-  ani_id?: number;
-  description?: string;
-  episodes?: Episode[];
-  source_id?: number;
-  created_at?: Date;
+export type Character = {
+  id: number;
+  name: CharacterName;
+  image: CharacterImage;
+  gender: string;
+  dateOfBirth: FuzzyDate;
+  age: string;
+  favourites: number;
+};
+
+export type StudioConnection = {
+  studioId: number;
+  isMain: boolean;
+  id: number;
+  mediaId: number;
+  studio: Studio;
+  media: Anime;
+};
+
+export type Studio = {
+  id: number;
+  name: string;
+  isAnimationStudio: boolean;
+  favourites: number;
+};
+
+export type CoverImage = {
+  extraLarge: string;
+  large: string;
+  medium: string;
+  color: string;
+};
+
+export interface Media<T extends Anime | Manga> {
+  id: number;
+  idMal: number;
+  title: MediaTitle;
+  coverImage: CoverImage;
+  startDate: FuzzyDate;
+  trending: number;
+  popularity: number;
+  favourites: number;
+  bannerImage: string;
+  format: MediaFormat;
+  status: MediaStatus;
+  characters: CharacterConnection<T>[];
+  relations: Relation<T>[];
+  recommendations: Recommendation<T>[];
+  tags: string[];
+  genres: string[];
+  countryOfOrigin: string;
+  isAdult: boolean;
+  synonyms: string[];
+  averageScore: number;
+  description: string;
+  vietnameseTitle?: string;
   updated_at?: Date;
-  episodes_updated_at?: Date;
-  tags?: string[];
-  vietnamese_title?: string;
-  synonyms?: string[];
-  titles?: string[];
-}
-
-export interface Manga {
-  title: string | Title;
-  cover_image: CoverImage;
-  start_date?: number;
-  trending?: number;
-  popularity?: number;
-  favourites?: number;
-  banner_image?: string;
-  season?: Season;
-  season_year?: number;
-  format?: Format;
-  status?: Status;
-  genres?: Genre[];
-  is_adult?: boolean;
-  country_of_origin?: string;
-  average_score?: number;
-  studios?: string[];
-  characters?: CharacterConnection<"manga">[];
-  relations?: MangaRelation[];
-  recommendations?: MangaRecommendation[];
-  ani_id?: number;
-  description?: string;
-  source_id?: number;
   created_at?: Date;
-  updated_at?: Date;
-  tags?: string[];
-  slug?: string;
-  chapters?: Chapter[];
-  vietnamese_title?: string;
-  chapters_updated_at?: Date;
 }
 
+export interface Anime extends Media<Anime> {
+  episodes: Episode[];
+  season: string;
+  seasonYear: number;
+  totalEpisodes: number;
+  studios: StudioConnection[];
+  voiceActors: VoiceActorConnection[];
+  airingSchedules: AiringSchedule[];
+  episodeUpdatedAt: Date;
+  duration: number;
+}
+
+export interface Manga extends Media<Manga> {
+  totalChapters: number;
+  chapterUpdatedAt: Date;
+}
 export interface Section<T> {
   title: string;
   query?: {
@@ -217,14 +211,14 @@ export interface Section<T> {
 }
 
 export interface Watched {
-  anime: Anime;
+  media: Anime;
   episode: Episode;
-  anime_id?: number;
-  episode_id?: number;
-  user_id: string;
+  mediaId?: number;
+  sourceEpisodeId?: number;
+  userId: string;
   updated_at?: Date;
   created_at?: Date;
-  watched_time?: number;
+  watchedTime?: number;
 }
 
 export interface Read {
@@ -267,7 +261,7 @@ export interface Comment {
   reactions?: Reaction[];
 }
 
-export type Source = {
+export type VideoSource = {
   file: string;
   label: string;
 };

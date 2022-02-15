@@ -52,7 +52,7 @@ const HomeBanner = <T extends "anime" | "manga">({
       <BrowserView>
         <div className="group relative w-full h-[320px] md:h-[450px]">
           <AnimatePresence>
-            {activeSlide.banner_image && (
+            {activeSlide.bannerImage && (
               <motion.div
                 variants={bannerVariants}
                 animate="animate"
@@ -62,7 +62,7 @@ const HomeBanner = <T extends "anime" | "manga">({
                 key={title}
               >
                 <Image
-                  src={activeSlide.banner_image}
+                  src={activeSlide.bannerImage}
                   layout="fill"
                   objectFit="cover"
                   objectPosition="50% 35%"
@@ -87,9 +87,9 @@ const HomeBanner = <T extends "anime" | "manga">({
             </h1>
 
             <div className="flex flex-wrap items-center mt-4 text-lg gap-x-8">
-              {activeSlide.average_score && (
+              {activeSlide.averageScore && (
                 <TextIcon LeftIcon={MdTagFaces} iconClassName="text-green-300">
-                  <p>{activeSlide.average_score}%</p>
+                  <p>{activeSlide.averageScore}%</p>
                 </TextIcon>
               )}
 
@@ -109,7 +109,7 @@ const HomeBanner = <T extends "anime" | "manga">({
             </p>
           </motion.div>
 
-          <Link href={getRedirectUrl(activeSlide.ani_id)}>
+          <Link href={getRedirectUrl(activeSlide.id)}>
             <a>
               <CircleButton
                 LeftIcon={AiFillPlayCircle}

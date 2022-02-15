@@ -59,14 +59,14 @@ const Card = <T extends "anime" | "manga">({
   const { isDesktop } = useDevice();
 
   const primaryColor =
-    data.cover_image?.color && isColorVisible(data.cover_image.color, "#3a3939")
-      ? data.cover_image.color
+    data.coverImage?.color && isColorVisible(data.coverImage.color, "#3a3939")
+      ? data.coverImage.color
       : "white";
 
   const redirectUrl =
     type === "anime"
-      ? `/anime/details/${data.ani_id}`
-      : `/manga/details/${data.ani_id}`;
+      ? `/anime/details/${data.id}`
+      : `/manga/details/${data.id}`;
 
   const title = useMemo(() => getTitle(data), [data]);
 
@@ -87,7 +87,10 @@ const Card = <T extends "anime" | "manga">({
           >
             <motion.div className="w-full h-full" variants={imageVariants}>
               <Image
-                src={data.cover_image.extra_large}
+                src={
+                  data.coverImage?.extraLarge ||
+                  "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx120288-eS9CxXtaMx8Q.png"
+                }
                 layout="fill"
                 objectFit="cover"
                 className="rounded-sm"
@@ -100,7 +103,7 @@ const Card = <T extends "anime" | "manga">({
             <motion.div className="absolute bottom-0 flex flex-col items-center justify-end px-2 py-4 text-center">
               <motion.div variants={infoVariants} className="mt-2 !mb-1">
                 <DotList>
-                  {data.genres.map((genre) => (
+                  {data.genres?.map((genre) => (
                     <span
                       className="text-sm font-semibold"
                       style={{
@@ -118,12 +121,12 @@ const Card = <T extends "anime" | "manga">({
                 variants={infoVariants}
                 className="flex items-center space-x-2"
               >
-                {data.average_score && (
+                {data.averageScore && (
                   <TextIcon
                     LeftIcon={MdTagFaces}
                     iconClassName="text-green-300"
                   >
-                    <p>{data.average_score}%</p>
+                    <p>{data.averageScore}%</p>
                   </TextIcon>
                 )}
 

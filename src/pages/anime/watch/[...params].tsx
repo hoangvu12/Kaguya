@@ -4,6 +4,7 @@ import EpisodesButton from "@/components/features/anime/Player/EpisodesButton";
 import MobileEpisodesButton from "@/components/features/anime/Player/MobileEpisodesButton";
 import MobileNextEpisode from "@/components/features/anime/Player/MobileNextEpisode";
 import NextEpisodeButton from "@/components/features/anime/Player/NextEpisodeButton";
+import SourceEpisodeSelector from "@/components/features/anime/SourceEpisodeSelector";
 import Button from "@/components/shared/Button";
 import ClientOnly from "@/components/shared/ClientOnly";
 import Head from "@/components/shared/Head";
@@ -18,7 +19,7 @@ import useSaveWatched from "@/hooks/useSaveWatched";
 import supabase from "@/lib/supabase";
 import { Anime } from "@/types";
 import { parseNumbersFromString } from "@/utils";
-import { getTitle } from "@/utils/data";
+import { getTitle, sortMediaUnit } from "@/utils/data";
 import Storage from "@/utils/storage";
 import classNames from "classnames";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
@@ -72,134 +73,133 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
     }, 5000);
   });
 
-  const sortedEpisodes = useMemo(
-    () =>
-      anime.episodes.sort((a, b) => {
-        const aNumber = parseNumbersFromString(a.name, 9999)?.[0];
-        const bNumber = parseNumbersFromString(b.name, 9999)?.[0];
+  const { params } = router.query;
 
-        return aNumber - bNumber;
-      }),
+  const sortedEpisodes = useMemo(
+    () => sortMediaUnit(anime.episodes),
     [anime.episodes]
   );
 
-  const { params } = router.query;
+  const [
+    animeId,
+    sourceId = sortedEpisodes[0].sourceId,
+    episodeId = sortedEpisodes[0].sourceEpisodeId,
+  ] = params as string[];
 
-  const [animeId, episodeId = sortedEpisodes[0].episode_id] =
-    params as string[];
+  // const {
+  //   data: watchedEpisodeData,
+  //   isLoading: isSavedDataLoading,
+  //   isError: isSavedDataError,
+  // } = useSavedWatched(Number(animeId));
 
-  const {
-    data: watchedEpisodeData,
-    isLoading: isSavedDataLoading,
-    isError: isSavedDataError,
-  } = useSavedWatched(Number(animeId));
+  // const watchedEpisode = useMemo(
+  //   () =>
+  //     isSavedDataError
+  //       ? null
+  //       : sortedEpisodes.find(
+  //           (episode) => episode.sourceEpisodeId === watchedEpisodeData?.sourceEpisodeId
+  //         ),
+  //   [isSavedDataError, sortedEpisodes, watchedEpisodeData?.sourceEpisodeId]
+  // );
 
-  const watchedEpisode = useMemo(
-    () =>
-      isSavedDataError
-        ? null
-        : sortedEpisodes.find(
-            (episode) => episode.episode_id === watchedEpisodeData?.episode_id
-          ),
-    [isSavedDataError, sortedEpisodes, watchedEpisodeData?.episode_id]
+  const sourceEpisodes = useMemo(
+    () => anime.episodes.filter((episode) => episode.sourceId === sourceId),
+    [anime.episodes, sourceId]
   );
 
   const currentEpisode = useMemo(
     () =>
-      sortedEpisodes.find(
-        (episode) => episode.episode_id === Number(episodeId)
+      sourceEpisodes.find(
+        (episode) => episode.sourceEpisodeId === Number(episodeId)
       ),
-    [sortedEpisodes, episodeId]
+    [sourceEpisodes, episodeId]
   );
 
   const currentEpisodeIndex = useMemo(
     () =>
-      sortedEpisodes.findIndex(
-        (episode) => episode.episode_id === Number(episodeId)
+      sourceEpisodes.findIndex(
+        (episode) => episode.sourceEpisodeId === Number(episodeId)
       ),
-    [episodeId, sortedEpisodes]
+    [episodeId, sourceEpisodes]
   );
 
   const nextEpisode = useMemo(
-    () => sortedEpisodes[currentEpisodeIndex + 1],
-    [currentEpisodeIndex, sortedEpisodes]
+    () => sourceEpisodes[currentEpisodeIndex + 1],
+    [currentEpisodeIndex, sourceEpisodes]
   );
 
   const handleNavigateEpisode = useCallback(
     (episodeId: number) => () => {
-      router.replace(`/anime/watch/${animeId}/${episodeId}`, null, {
+      router.replace(`/anime/watch/${animeId}/${sourceId}/${episodeId}`, null, {
         shallow: true,
       });
     },
-    [animeId, router]
+    [animeId, router, sourceId]
   );
 
-  const { data, isLoading } = useFetchSource(
-    currentEpisode.episode_id,
-    nextEpisode?.episode_id
-  );
+  const { data, isLoading } = useFetchSource(currentEpisode, nextEpisode);
 
   // Show watched overlay
-  useEffect(() => {
-    if (
-      !watchedEpisode ||
-      isSavedDataLoading ||
-      isSavedDataError ||
-      declinedRewatch
-    )
-      return;
+  // useEffect(() => {
+  //   if (
+  //     !watchedEpisode ||
+  //     isSavedDataLoading ||
+  //     isSavedDataError ||
+  //     declinedRewatch
+  //   )
+  //     return;
 
-    if (currentEpisode.episode_id === watchedEpisode?.episode_id) {
-      setDeclinedRewatch(true);
+  //   if (currentEpisode.sourceEpisodeId === watchedEpisode?.sourceEpisodeId) {
+  //     setDeclinedRewatch(true);
 
-      return;
-    }
+  //     return;
+  //   }
 
-    setShowWatchedOverlay(true);
-  }, [
-    currentEpisode.episode_id,
-    declinedRewatch,
-    isSavedDataError,
-    isSavedDataLoading,
-    watchedEpisode,
-  ]);
+  //   setShowWatchedOverlay(true);
+  // }, [
+  //   currentEpisode.sourceEpisodeId,
+  //   declinedRewatch,
+  //   isSavedDataError,
+  //   isSavedDataLoading,
+  //   watchedEpisode,
+  // ]);
 
-  useEffect(() => {
-    const videoEl = videoRef.current;
+  // useEffect(() => {
+  //   const videoEl = videoRef.current;
 
-    if (!videoEl) return;
+  //   if (!videoEl) return;
 
-    const handleVideoPlay = () => {
-      if (saveWatchedInterval.current) {
-        clearInterval(saveWatchedInterval.current);
-      }
+  //   const handleVideoPlay = () => {
+  //     if (saveWatchedInterval.current) {
+  //       clearInterval(saveWatchedInterval.current);
+  //     }
 
-      saveWatchedInterval.current = setInterval(() => {
-        saveWatchedMutation.mutate({
-          anime_id: Number(animeId),
-          episode_id: currentEpisode.episode_id,
-          watched_time: videoRef.current?.currentTime,
-        });
-      }, 30000);
-    };
+  //     saveWatchedInterval.current = setInterval(() => {
+  //       saveWatchedMutation.mutate({
+  //         anime_id: Number(animeId),
+  //         sourceEpisodeId: currentEpisode.sourceEpisodeId,
+  //         watched_time: videoRef.current?.currentTime,
+  //       });
+  //     }, 30000);
+  //   };
 
-    const handleVideoPause = () => {
-      if (saveWatchedInterval.current) {
-        clearInterval(saveWatchedInterval.current);
-      }
-    };
+  //   const handleVideoPause = () => {
+  //     if (saveWatchedInterval.current) {
+  //       clearInterval(saveWatchedInterval.current);
+  //     }
+  //   };
 
-    videoEl.addEventListener("play", handleVideoPlay);
-    videoEl.addEventListener("pause", handleVideoPause);
-    videoEl.addEventListener("ended", handleVideoPause);
+  //   videoEl.addEventListener("play", handleVideoPlay);
+  //   videoEl.addEventListener("pause", handleVideoPause);
+  //   videoEl.addEventListener("ended", handleVideoPause);
 
-    return () => {
-      clearInterval(saveWatchedInterval.current);
-      videoEl.removeEventListener("play", handleVideoPlay);
-      videoEl.removeEventListener("pause", handleVideoPause);
-      videoEl.removeEventListener("ended", handleVideoPause);
-    };
-  }, [animeId, currentEpisode.episode_id, saveWatchedMutation]);
+  //   return () => {
+  //     clearInterval(saveWatchedInterval.current);
+  //     videoEl.removeEventListener("play", handleVideoPlay);
+  //     videoEl.removeEventListener("pause", handleVideoPause);
+  //     videoEl.removeEventListener("ended", handleVideoPause);
+  //   };
+  // }, [animeId, currentEpisode.sourceEpisodeId, saveWatchedMutation]);
 
   useEffect(() => {
     if (!navigator?.mediaSession) return;
@@ -216,7 +216,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
       });
 
       navigator.mediaSession.setActionHandler("nexttrack", function () {
-        if (currentEpisodeIndex === sortedEpisodes.length - 1) return;
+        if (currentEpisodeIndex === sourceEpisodes.length - 1) return;
 
         handleNavigateEpisode(Number(currentEpisodeIndex) + 1)();
       });
@@ -227,35 +227,35 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
     return () => {
       videoEl.removeEventListener("canplay", handleNavigator);
     };
-  }, [currentEpisodeIndex, handleNavigateEpisode, sortedEpisodes.length]);
+  }, [currentEpisodeIndex, handleNavigateEpisode, sourceEpisodes.length]);
 
   const title = useMemo(() => getTitle(anime), [anime]);
 
-  useEffect(() => {
-    const videoEl = videoRef.current;
+  // useEffect(() => {
+  //   const videoEl = videoRef.current;
 
-    if (!videoEl) return;
-    if (isSavedDataLoading) return;
-    if (!watchedEpisodeData?.watched_time) return;
+  //   if (!videoEl) return;
+  //   if (isSavedDataLoading) return;
+  //   if (!watchedEpisodeData?.watched_time) return;
 
-    if (watchedEpisode?.episode_id !== currentEpisode?.episode_id) return;
+  //   if (watchedEpisode?.sourceEpisodeId !== currentEpisode?.sourceEpisodeId) return;
 
-    const handleVideoPlay = () => {
-      videoEl.currentTime = watchedEpisodeData.watched_time;
-    };
+  //   const handleVideoPlay = () => {
+  //     videoEl.currentTime = watchedEpisodeData.watched_time;
+  //   };
 
-    // Only set the video time if the video is ready
-    videoEl.addEventListener("canplay", handleVideoPlay, { once: true });
+  //   // Only set the video time if the video is ready
+  //   videoEl.addEventListener("canplay", handleVideoPlay, { once: true });
 
-    return () => {
-      videoEl.removeEventListener("canplay", handleVideoPlay);
-    };
-  }, [
-    currentEpisode?.episode_id,
-    isSavedDataLoading,
-    watchedEpisode?.episode_id,
-    watchedEpisodeData,
-  ]);
+  //   return () => {
+  //     videoEl.removeEventListener("canplay", handleVideoPlay);
+  //   };
+  // }, [
+  //   currentEpisode?.sourceEpisodeId,
+  //   isSavedDataLoading,
+  //   watchedEpisode?.sourceEpisodeId,
+  //   watchedEpisodeData,
+  // ]);
 
   useEffect(() => {
     const videoEl = videoRef.current;
@@ -270,7 +270,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
         {
           anime_id: Number(animeId),
           anime,
-          episode_id: currentEpisode.episode_id,
+          sourceEpisodeId: currentEpisode.sourceEpisodeId,
           episode: currentEpisode,
           watched_time: videoEl.currentTime,
         }
@@ -289,7 +289,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
       <Head
         title={`${title} (${currentEpisode.name}) - Kaguya`}
         description={`Xem phim ${title} (${currentEpisode.name}) tại Kaguya. Hoàn toàn miễn phí, không quảng cáo`}
-        image={currentEpisode.thumbnail_image || anime.banner_image}
+        image={anime.bannerImage}
       />
 
       <Video
@@ -318,15 +318,15 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
         {/* Browser Only */}
         <BrowserView>
           <Portal selector=".right-controls-slot">
-            {currentEpisodeIndex < sortedEpisodes.length - 1 && (
+            {currentEpisodeIndex < sourceEpisodes.length - 1 && (
               <NextEpisodeButton
-                onClick={handleNavigateEpisode(nextEpisode.episode_id)}
+                onClick={handleNavigateEpisode(nextEpisode.sourceEpisodeId)}
               />
             )}
 
             <EpisodesButton>
               <div className="w-[70vw] overflow-hidden">
-                <EpisodeSelector
+                <SourceEpisodeSelector
                   episodes={sortedEpisodes}
                   activeEpisode={currentEpisode}
                   episodeLinkProps={{ shallow: true, replace: true }}
@@ -363,9 +363,9 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
               }
             </MobileEpisodesButton>
 
-            {currentEpisodeIndex < sortedEpisodes.length - 1 && (
+            {currentEpisodeIndex < sourceEpisodes.length - 1 && (
               <MobileNextEpisode
-                onClick={handleNavigateEpisode(nextEpisode.episode_id)}
+                onClick={handleNavigateEpisode(nextEpisode.sourceEpisodeId)}
               />
             )}
           </Portal>
@@ -389,7 +389,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
         </Portal>
       )}
 
-      {showWatchedOverlay && !declinedRewatch && (
+      {/* {showWatchedOverlay && !declinedRewatch && (
         <Portal selector=".video-wrapper">
           <div
             className="fixed inset-0 z-40 bg-black/70"
@@ -417,7 +417,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
                 <p>Không</p>
               </Button>
               <Button
-                onClick={handleNavigateEpisode(watchedEpisodeData.episode_id)}
+                onClick={handleNavigateEpisode(watchedEpisodeData.sourceEpisodeId)}
                 primary
               >
                 <p>Xem</p>
@@ -425,7 +425,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
             </div>
           </div>
         </Portal>
-      )}
+      )} */}
     </div>
   );
 };
@@ -434,18 +434,18 @@ export const getStaticProps: GetStaticProps = async ({
   params: { params },
 }) => {
   const { data, error } = await supabase
-    .from("anime")
+    .from<Anime>("kaguya_anime")
     .select(
       `
         title,
-        vietnamese_title,
+        vietnameseTitle,
         description,
-        banner_image,
-        cover_image,
-        episodes!anime_id(*)
+        bannerImage,
+        coverImage,
+        episodes:kaguya_episodes!mediaId(*, source:kaguya_sources(id, name))
       `
     )
-    .eq("ani_id", Number(params[0]))
+    .eq("id", Number(params[0]))
     .single();
 
   if (error) {
@@ -456,7 +456,7 @@ export const getStaticProps: GetStaticProps = async ({
 
   return {
     props: {
-      anime: data as Anime,
+      anime: data,
     },
     revalidate: REVALIDATE_TIME,
   };
@@ -464,13 +464,13 @@ export const getStaticProps: GetStaticProps = async ({
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const { data } = await supabase
-    .from<Anime>("anime")
-    .select("ani_id")
+    .from<Anime>("kaguya_anime")
+    .select("id")
     .order("updated_at", { ascending: false })
     .limit(20);
 
   const paths = data.map((anime: Anime) => ({
-    params: { params: [anime.ani_id.toString()] },
+    params: { params: [anime.id.toString()] },
   }));
 
   return { paths, fallback: "blocking" };

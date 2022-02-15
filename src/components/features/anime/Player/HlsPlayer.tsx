@@ -1,12 +1,11 @@
 import { useVideoState } from "@/contexts/VideoStateContext";
-import { Source } from "@/types";
-import Storage from "@/utils/storage";
+import { VideoSource } from "@/types";
 import Hls from "hls.js";
 import React, { MutableRefObject, useEffect, useRef } from "react";
 
 export interface HlsPlayerProps
   extends Omit<React.VideoHTMLAttributes<HTMLVideoElement>, "src"> {
-  src: Source[];
+  src: VideoSource[];
   autoPlay?: boolean;
 }
 
@@ -102,7 +101,9 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
       } else {
         const notDuplicatedQualities = [
           // @ts-ignore
-          ...new Set<string>(src.map((src) => src.label)),
+          ...new Set<string>(
+            src.filter((src) => src.label).map((src) => src.label)
+          ),
         ];
 
         setState((prev) => ({

@@ -1,9 +1,14 @@
+import DesktopControls from "@/components/features/anime/Player/DesktopControls";
+import HlsPlayer from "@/components/features/anime/Player/HlsPlayer";
+import MobileControls from "@/components/features/anime/Player/MobileControls";
+import Overlay from "@/components/features/anime/Player/Overlay";
+import ClientOnly from "@/components/shared/ClientOnly";
 import { VideoContextProvider } from "@/contexts/VideoContext";
 import { VideoStateProvider } from "@/contexts/VideoStateContext";
 import useDevice from "@/hooks/useDevice";
-import useVideoShortcut from "@/hooks/useVideoShortcut";
 import useHandleTap from "@/hooks/useHandleTap";
-import { Source } from "@/types";
+import useVideoShortcut from "@/hooks/useVideoShortcut";
+import { VideoSource } from "@/types";
 import classNames from "classnames";
 import { motion, TapHandlers } from "framer-motion";
 import React, {
@@ -16,17 +21,12 @@ import React, {
 } from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import { useHotkeys } from "react-hotkeys-hook";
-import ClientOnly from "@/components/shared/ClientOnly";
-import DesktopControls from "@/components/features/anime/Player/DesktopControls";
-import HlsPlayer from "@/components/features/anime/Player/HlsPlayer";
-import MobileControls from "@/components/features/anime/Player/MobileControls";
-import Overlay from "@/components/features/anime/Player/Overlay";
 import { AiFillFastBackward, AiFillFastForward } from "react-icons/ai";
 
 const noop = () => {};
 interface VideoProps
   extends Omit<React.VideoHTMLAttributes<HTMLVideoElement>, "src"> {
-  src: Source[];
+  src: VideoSource[];
   overlaySlot?: React.ReactNode;
 }
 

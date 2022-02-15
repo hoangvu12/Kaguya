@@ -7,7 +7,8 @@ import {
   SEASONS,
   STATUS,
 } from "@/constants";
-import { Anime, Manga } from "@/types";
+import { Anime, Chapter, Episode, Manga } from "@/types";
+import { parseNumbersFromString } from ".";
 
 const constants = {
   season: SEASONS,
@@ -39,7 +40,16 @@ export const convert = (
 
 export const getTitle = <T extends Anime | Manga>(data: T) => {
   const title =
-    typeof data?.title === "string" ? data?.title : data?.title.user_preferred;
+    typeof data?.title === "string" ? data?.title : data?.title.userPreferred;
 
-  return data?.vietnamese_title || title;
+  return data?.vietnameseTitle || title;
+};
+
+export const sortMediaUnit = <T extends Chapter | Episode>(data: T[]) => {
+  return data.sort((a, b) => {
+    const aNumber = parseNumbersFromString(a.name, 9999)?.[0];
+    const bNumber = parseNumbersFromString(b.name, 9999)?.[0];
+
+    return aNumber - bNumber;
+  });
 };

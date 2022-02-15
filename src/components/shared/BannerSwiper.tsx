@@ -38,7 +38,7 @@ const BannerSwiper: React.FC<BannerSwiperProps> = ({ data, ...props }) => {
       {...props}
     >
       {data.map((anime) => (
-        <SwiperSlide key={anime.ani_id}>
+        <SwiperSlide key={anime.id}>
           {({ isActive }) => {
             const title = getTitle(anime);
 
@@ -58,7 +58,7 @@ const BannerSwiper: React.FC<BannerSwiperProps> = ({ data, ...props }) => {
                 className="w-full"
                 animate={isActive ? "enter" : "exit"}
               >
-                <PlainCard src={anime.cover_image.extra_large} alt={title} />
+                <PlainCard src={anime.coverImage.extraLarge} alt={title} />
               </motion.div>
             );
           }}

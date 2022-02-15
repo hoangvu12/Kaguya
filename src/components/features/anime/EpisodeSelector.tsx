@@ -8,9 +8,8 @@ import { chunk } from "@/utils";
 import classNames from "classnames";
 import Link, { LinkProps } from "next/link";
 import React, { useMemo } from "react";
-import { Tab } from "react-tabs";
 
-interface EpisodeSelectorProps {
+export interface EpisodeSelectorProps {
   episodes: Episode[];
   activeEpisode?: Episode;
   chunkSwiperProps?: SwiperProps;
@@ -32,17 +31,25 @@ const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({
 
   const [activeTabIndex, setActiveTabIndex] = React.useState(() => {
     const index = chunks.findIndex((chunk) =>
-      chunk.some((episode) => episode.episode_id === activeEpisode?.episode_id)
+      chunk.some(
+        (episode) => episode.sourceEpisodeId === activeEpisode?.sourceEpisodeId
+      )
     );
 
     return index === -1 ? 0 : index;
   });
+
+  const realActiveTabIndex = useMemo(
+    () => (activeTabIndex > chunks.length ? 0 : activeTabIndex),
+    [activeTabIndex, chunks.length]
+  );
 
   return (
     <React.Fragment>
       <ArrowSwiper
         isOverflowHidden={false}
         className="w-11/12 mx-auto"
+        defaultActiveSlide={realActiveTabIndex}
         {...chunkSwiperProps}
       >
         {chunks.map((chunk, i) => {
@@ -58,38 +65,34 @@ const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({
               : `${firstEpisodeName} - ${lastEpisodeName}`;
 
           return (
-            <SwiperSlide
-              onClick={() => setActiveTabIndex(i)}
-              key={i}
-              className=""
-            >
-              <Tab
+            <SwiperSlide onClick={() => setActiveTabIndex(i)} key={i}>
+              <div
                 className={classNames(
                   "text-gray-300 cursor-pointer mx-auto rounded-[18px] px-2 py-1 w-[max-content] duration-300 transition",
-                  activeTabIndex === i
+                  realActiveTabIndex === i
                     ? "bg-white text-black"
                     : "hover:text-white"
                 )}
               >
                 {title}
-              </Tab>
+              </div>
             </SwiperSlide>
           );
         })}
       </ArrowSwiper>
 
       <div className="mt-10 grid xl:grid-cols-8 lg:grid-cols-7 md:grid-cols-6 sm:grid-cols-5 grid-cols-4 gap-4">
-        {chunks[activeTabIndex].map((episode) => (
+        {chunks[realActiveTabIndex].map((episode) => (
           <Link
-            href={`/anime/watch/${episode.anime_id}/${episode.episode_id}`}
-            key={episode.episode_id}
+            href={`/anime/watch/${episode.mediaId}/${episode.sourceId}/${episode.sourceEpisodeId}`}
+            key={episode.sourceEpisodeId}
             shallow
             {...episodeLinkProps}
           >
             <a
               className={classNames(
                 "rounded-md bg-background-800 col-span-1 aspect-w-2 aspect-h-1 group",
-                episode.episode_id === activeEpisode?.episode_id &&
+                episode.sourceEpisodeId === activeEpisode?.sourceEpisodeId &&
                   "text-primary-300"
               )}
             >

@@ -20,9 +20,9 @@ const HorizontalCard = <T extends "anime" | "manga">({
   const redirectUrl = useMemo(
     () =>
       type === "anime"
-        ? `/anime/details/${data.ani_id}`
-        : `/manga/details/${data.ani_id}`,
-    [data.ani_id, type]
+        ? `/anime/details/${data.id}`
+        : `/manga/details/${data.id}`,
+    [data.id, type]
   );
 
   const title = useMemo(() => getTitle(data), [data]);
@@ -35,7 +35,7 @@ const HorizontalCard = <T extends "anime" | "manga">({
       <div className="shrink-0 w-12">
         <Link href={redirectUrl}>
           <a>
-            <PlainCard src={data.cover_image.extra_large} alt={title} />
+            <PlainCard src={data.coverImage.extraLarge} alt={title} />
           </a>
         </Link>
       </div>
@@ -52,9 +52,9 @@ const HorizontalCard = <T extends "anime" | "manga">({
         <DotList className="text-sm text-gray-300">
           {data.format && <span>{convert(data.format, "format")}</span>}
 
-          {data.season && data.season_year && (
+          {"season" in data && "seasonYear" in data && (
             <span>
-              {convert(data.season, "season")} {data.season_year}
+              {convert(data.season, "season")} {data.seasonYear}
             </span>
           )}
 
@@ -62,7 +62,7 @@ const HorizontalCard = <T extends "anime" | "manga">({
         </DotList>
 
         <DotList className="text-sm text-gray-300">
-          {data.genres.map((genre) => (
+          {data.genres?.map((genre) => (
             <span key={genre}>{convert(genre, "genre")}</span>
           ))}
         </DotList>
