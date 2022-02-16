@@ -15,12 +15,12 @@ const CharacterCard: React.FC<CharacterCardProps> = ({ character }) => {
           <div className="aspect-w-9 aspect-h-16 space-y-2">
             <Image
               src={character.image.large}
-              alt={character.name}
+              alt={character.name.userPreferred}
               layout="fill"
               objectFit="cover"
             />
           </div>
-          <p>{character.name}</p>
+          <p>{character.name.userPreferred}</p>
         </div>
       </a>
     </Link>
