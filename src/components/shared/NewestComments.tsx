@@ -52,8 +52,8 @@ const NewestComments = <T extends "anime" | "manga">(
           const user = comment?.user?.user_metadata;
           const source = isAnime ? comment.anime : comment.manga;
           const redirectUrl = isAnime
-            ? `/anime/details/${source?.ani_id}`
-            : `/manga/details/${source?.ani_id}`;
+            ? `/anime/details/${source?.id}`
+            : `/manga/details/${source?.id}`;
 
           return (
             <SwiperSlide key={comment.id}>
