@@ -1,24 +1,22 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import axios from "axios";
-import { JSDOM } from "jsdom";
+import config from "@/config";
 import { REVALIDATE_TIME } from "@/constants";
+import axios from "axios";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 const images = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { slug, chapter_id } = req.query;
-  res.setHeader("Cache-Control", "s-maxage=86400");
+  const { source_media_id, chapter_id, source_id } = req.query;
 
   try {
     const { data } = await axios.get(
-      `http://www.nettruyengo.com/truyen-tranh/${slug}/chap-0/${chapter_id}`
+      `${config.nodeServerUrl}/images?source_media_id=${source_media_id}&source_id=${source_id}&chapter_id=${chapter_id}`
     );
-
-    const images = composeImages(data);
 
     res.setHeader(
       "Cache-Control",
       `public, s-maxage=3600, stale-while-revalidate=${REVALIDATE_TIME}`
     );
-    res.status(200).json({ success: true, images });
+
+    res.status(200).json(data);
   } catch (err) {
     res.status(500).json({
       success: false,
@@ -26,27 +24,6 @@ const images = async (req: NextApiRequest, res: NextApiResponse) => {
       errorMessage: "Something went wrong",
     });
   }
-};
-
-const composeImages = (html) => {
-  const dom = new JSDOM(html);
-  const document = dom.window.document;
-
-  const images = [];
-
-  document.querySelectorAll(".page-chapter img").forEach((el) => {
-    const source = (el as HTMLImageElement).dataset.original;
-
-    const protocols = ["http", "https"];
-
-    const image = protocols.some((protocol) => source.includes(protocol))
-      ? source
-      : `https:${source}`;
-
-    images.push(image);
-  });
-
-  return images;
 };
 
 export default images;

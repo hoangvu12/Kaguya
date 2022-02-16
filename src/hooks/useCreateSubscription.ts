@@ -11,11 +11,11 @@ const useCreateSubscription = () => {
       const userAgent = navigator.userAgent;
 
       const { data, error } = await supabase
-        .from("subscriptions")
+        .from("kaguya_subscriptions")
         .upsert({
           subscription,
-          user_id: user.id,
-          user_agent: encodeURIComponent(userAgent),
+          userId: user.id,
+          userAgent: encodeURIComponent(userAgent),
         });
 
       if (error) throw error;

@@ -84,39 +84,34 @@ const Home: NextPage<HomeProps> = ({
 
 export const getStaticProps: GetStaticProps = async () => {
   const { data: trendingManga } = await supabase
-    .from<Manga>("manga")
+    .from<Manga>("kaguya_manga")
     .select("*")
     .order("trending", { ascending: false })
-    .not("banner_image", "is", null)
     .limit(15);
 
   const { data: recentlyUpdatedManga } = await supabase
-    .from<Manga>("manga")
+    .from<Manga>("kaguya_manga")
     .select(
-      "cover_image, genres, average_score, favourites, title, vietnamese_title, ani_id"
+      "coverImage, genres, averageScore, favourites, title, vietnameseTitle, id"
     )
-    .order("chapters_updated_at", { ascending: false })
+    .order("chapterUpdatedAt", { ascending: false })
     .limit(15);
 
   const { data: randomManga } = await supabase
     .rpc<Manga>("manga_random")
     .limit(1)
-    .not("banner_image", "is", null)
+    .not("bannerImage", "is", null)
     .single();
 
   const { data: popularManga } = await supabase
-    .from<Manga>("manga")
-    .select(
-      "ani_id, cover_image, genres, title, vietnamese_title, format, status"
-    )
+    .from<Manga>("kaguya_manga")
+    .select("id, coverImage, genres, title, vietnameseTitle, format, status")
     .order("popularity", { ascending: false })
     .limit(5);
 
   const { data: favouriteManga } = await supabase
-    .from<Manga>("manga")
-    .select(
-      "ani_id, cover_image, genres, title, vietnamese_title, format, status"
-    )
+    .from<Manga>("kaguya_manga")
+    .select("id, coverImage, genres, title, vietnameseTitle, format, status")
     .order("favourites", { ascending: false })
     .limit(5);
 

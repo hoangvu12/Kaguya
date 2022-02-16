@@ -1,4 +1,5 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
+import { Chapter } from "@/types";
+import axios, { AxiosError } from "axios";
 import { useQuery, useQueryClient } from "react-query";
 
 interface ReturnSuccessType {
@@ -12,29 +13,26 @@ interface ReturnFailType {
   errorMessage: string;
 }
 
-const useFetchImages = (
-  slug: string,
-  currentChapterId: number,
-  nextChapterId: number | null
-) => {
+const useFetchImages = (currentChapter: Chapter, nextChapter?: Chapter) => {
   const queryClient = useQueryClient();
 
-  const fetchImages = (chapterId: number) =>
+  const fetchImages = (chapter: Chapter) =>
     axios
       .get<ReturnSuccessType>(
-        `/api/manga/images?slug=${slug}&chapter_id=${chapterId}`
+        `/api/manga/images?source_media_id=${chapter.sourceMediaId}&chapter_id=${chapter.sourceChapterId}&source_id=${chapter.sourceId}`
       )
       .then(({ data }) => data);
 
   return useQuery<ReturnSuccessType, AxiosError<ReturnFailType>>(
-    `images-${currentChapterId}`,
-    () => fetchImages(currentChapterId),
+    `images-${currentChapter.sourceChapterId}`,
+    () => fetchImages(currentChapter),
     {
       onSuccess: () => {
-        if (!nextChapterId) return;
+        if (!nextChapter?.sourceChapterId) return;
 
-        queryClient.prefetchQuery(`images-${nextChapterId}`, () =>
-          fetchImages(nextChapterId)
+        queryClient.prefetchQuery(
+          `images-${nextChapter?.sourceChapterId}`,
+          () => fetchImages(nextChapter)
         );
       },
     }

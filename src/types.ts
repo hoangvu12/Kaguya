@@ -32,6 +32,7 @@ export type Episode = {
   sourceEpisodeId: number;
   sourceMediaId: number;
   source: Source;
+  slug: string;
 };
 
 export type Chapter = {
@@ -40,6 +41,8 @@ export type Chapter = {
   sourceId: string;
   sourceChapterId: number;
   sourceMediaId: number;
+  source: Source;
+  slug: string;
 };
 
 export type VoiceActorImage = {
@@ -197,6 +200,7 @@ export interface Anime extends Media<Anime> {
 export interface Manga extends Media<Manga> {
   totalChapters: number;
   chapterUpdatedAt: Date;
+  chapters: Chapter[];
 }
 export interface Section<T> {
   title: string;
@@ -213,8 +217,8 @@ export interface Section<T> {
 export interface Watched {
   media: Anime;
   episode: Episode;
+  episodeId: string;
   mediaId?: number;
-  sourceEpisodeId?: number;
   userId: string;
   updated_at?: Date;
   created_at?: Date;
@@ -222,11 +226,11 @@ export interface Watched {
 }
 
 export interface Read {
-  manga: Manga;
-  manga_id?: number;
-  chapter_id?: number;
+  media: Manga;
+  mediaId?: number;
+  chapterId?: string;
   chapter: Chapter;
-  user_id: string;
+  userId: string;
   updated_at?: Date;
   created_at?: Date;
 }

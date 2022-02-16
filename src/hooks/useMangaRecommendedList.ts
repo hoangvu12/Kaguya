@@ -10,17 +10,17 @@ const useMangaRecommendedList = () => {
     ["manga", "recommended"],
     () => {
       return supabase
-        .from<Read>("read")
+        .from<Read>("kaguya_read")
         .select(
           `
-            manga:manga_id(
+            media:mediaId(
                 title,
-                vietnamese_title,
-                recommendations:manga_recommendations!original_id(manga:recommend_id(*))
+                vietnameseTitle,
+                recommendations:kaguya_manga_recommendations!originalId(media:recommendationId(*))
             )
           `
         )
-        .eq("user_id", user.id)
+        .eq("userId", user.id)
         .order("updated_at", { ascending: false })
         .limit(1)
         .single();

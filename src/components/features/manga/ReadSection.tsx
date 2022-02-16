@@ -7,6 +7,8 @@ import Section from "@/components/shared/Section";
 const ReadSection = () => {
   const { data, isLoading, isError } = useRead();
 
+  console.log(data);
+
   if (isLoading) {
     return <ListSwiperSkeleton />;
   }
@@ -17,7 +19,7 @@ const ReadSection = () => {
 
   return (
     <Section title="Đọc gần đây">
-      <CardSwiper data={data.map((read) => read.manga)} type="manga" />
+      <CardSwiper data={data.map((read) => read.media)} type="manga" />
     </Section>
   );
 };
