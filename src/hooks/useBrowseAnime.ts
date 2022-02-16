@@ -1,20 +1,21 @@
 import supabase from "@/lib/supabase";
-import { Anime, Format, Genre, Status } from "@/types";
+import { MediaFormat, MediaStatus } from "@/anilist";
+import { Anime, MediaGenre } from "@/types";
 import { useSupaInfiniteQuery } from "@/utils/supabase";
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
 
 export interface UseBrowseOptions {
   keyword?: string;
-  genres?: Genre[];
+  genres?: MediaGenre[];
   seasonYear?: string;
   season?: string;
-  format?: Format;
+  format?: MediaFormat;
   select?: string;
   limit?: number;
   tags?: string[];
   sort?: keyof Anime;
   countries?: string[];
-  status?: Status;
+  status?: MediaStatus;
 }
 
 const useBrowse = (options: UseBrowseOptions) => {
@@ -30,7 +31,7 @@ const useBrowse = (options: UseBrowseOptions) => {
       limit,
       tags,
       countries,
-      status
+      status,
     } = options;
 
     let db: PostgrestFilterBuilder<Anime>;
@@ -50,7 +51,7 @@ const useBrowse = (options: UseBrowseOptions) => {
     }
 
     if (seasonYear) {
-      db = db.eq("season_year", Number(seasonYear));
+      db = db.eq("seasonYear", Number(seasonYear));
     }
 
     if (season) {
@@ -66,7 +67,7 @@ const useBrowse = (options: UseBrowseOptions) => {
     }
 
     if (countries?.length) {
-      db = db.in("country_of_origin", countries);
+      db = db.in("countryOfOrigin", countries);
     }
 
     if (sort) {
@@ -82,7 +83,7 @@ const useBrowse = (options: UseBrowseOptions) => {
     }
 
     // https://stackoverflow.com/questions/13580826/postgresql-repeating-rows-from-limit-offset
-    db = db.order("ani_id", { ascending: false });
+    db = db.order("id", { ascending: false });
 
     db = db.range(from, to);
 

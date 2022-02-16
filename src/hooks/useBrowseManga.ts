@@ -1,24 +1,35 @@
+import { MediaFormat } from "@/anilist";
 import supabase from "@/lib/supabase";
-import { Format, Genre, Manga, Status } from "@/types";
+import { MediaStatus } from "@/anilist";
+import { Manga, MediaGenre } from "@/types";
 import { useSupaInfiniteQuery } from "@/utils/supabase";
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
 
 export interface UseBrowseOptions {
   keyword?: string;
-  genres?: Genre[];
-  format?: Format;
+  genres?: MediaGenre[];
+  format?: MediaFormat;
   select?: string;
   limit?: number;
   tags?: string[];
   sort?: keyof Manga;
   countries?: string[];
-  status?: Status
+  status?: MediaStatus;
 }
 
 const useBrowse = (options: UseBrowseOptions) => {
   return useSupaInfiniteQuery(["browse", options], (from, to) => {
-    const { format, countries, genres, keyword, select, sort, limit, tags, status } =
-      options;
+    const {
+      format,
+      countries,
+      genres,
+      keyword,
+      select,
+      sort,
+      limit,
+      tags,
+      status,
+    } = options;
 
     let db: PostgrestFilterBuilder<Manga>;
 
@@ -46,7 +57,7 @@ const useBrowse = (options: UseBrowseOptions) => {
     }
 
     if (countries?.length) {
-      db = db.in("country_of_origin", countries);
+      db = db.in("countryOfOrigin", countries);
     }
 
     if (sort) {
@@ -62,7 +73,7 @@ const useBrowse = (options: UseBrowseOptions) => {
     }
 
     // https://stackoverflow.com/questions/13580826/postgresql-repeating-rows-from-limit-offset
-    db = db.order("ani_id", { ascending: false });
+    db = db.order("id", { ascending: false });
 
     db = db.range(from, to);
 

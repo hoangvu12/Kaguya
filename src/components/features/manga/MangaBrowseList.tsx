@@ -18,7 +18,7 @@ const initialValues: UseBrowseOptions = {
   keyword: "",
   genres: [],
   tags: [],
-  sort: "average_score",
+  sort: "averageScore",
   countries: [],
 };
 
