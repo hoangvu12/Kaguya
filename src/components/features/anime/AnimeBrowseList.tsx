@@ -22,7 +22,7 @@ const initialValues: UseBrowseOptions = {
   season: undefined,
   seasonYear: undefined,
   tags: [],
-  sort: "average_score",
+  sort: "averageScore",
   countries: [],
 };
 

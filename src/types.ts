@@ -1,13 +1,5 @@
 import { SkeletonProps } from "@/components/shared/Skeleton";
-import {
-  CHARACTERS_ROLES,
-  FORMATS,
-  GENRES,
-  READ_STATUS,
-  SEASONS,
-  STATUS,
-  WATCH_STATUS,
-} from "@/constants";
+import { GENRES, READ_STATUS, WATCH_STATUS } from "@/constants";
 import { SupabaseQueryFunction, SupabaseQueryOptions } from "@/utils/supabase";
 import { User } from "@supabase/gotrue-js";
 import { QueryKey } from "react-query";
@@ -19,6 +11,8 @@ import {
   MediaStatus,
   MediaTitle,
 } from "./anilist";
+
+export type MediaGenre = typeof GENRES[number]["value"];
 
 export type Source = {
   id: string;

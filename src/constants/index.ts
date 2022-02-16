@@ -40,16 +40,16 @@ export const ANIME_SORTS = [
   { value: "popularity", label: "Nổi bật" },
   { value: "trending", label: "Xu hướng" },
   { value: "favourites", label: "Yêu thích" },
-  { value: "average_score", label: "Đánh giá" },
-  { value: "episodes_updated_at", label: "Mới cập nhật" },
+  { value: "averageScore", label: "Đánh giá" },
+  { value: "episodeUpdatedAt", label: "Mới cập nhật" },
 ] as const;
 
 export const MANGA_SORTS = [
   { value: "popularity", label: "Nổi bật" },
   { value: "trending", label: "Xu hướng" },
   { value: "favourites", label: "Yêu thích" },
-  { value: "average_score", label: "Đánh giá" },
-  { value: "chapters_updated_at", label: "Mới cập nhật" },
+  { value: "averageScore", label: "Đánh giá" },
+  { value: "chapterUpdatedAt", label: "Mới cập nhật" },
 ] as const;
 
 export const GENRES = [

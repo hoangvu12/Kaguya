@@ -87,10 +87,7 @@ const Card = <T extends "anime" | "manga">({
           >
             <motion.div className="w-full h-full" variants={imageVariants}>
               <Image
-                src={
-                  data.coverImage?.extraLarge ||
-                  "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx120288-eS9CxXtaMx8Q.png"
-                }
+                src={data.coverImage?.extraLarge}
                 layout="fill"
                 objectFit="cover"
                 className="rounded-sm"
