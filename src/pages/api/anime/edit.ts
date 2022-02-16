@@ -41,7 +41,7 @@ const edit = async (req: NextApiRequest, res: NextApiResponse) => {
   const { error } = await supabase
     .from<Anime>("anime")
     .update(req.body, { returning: "minimal" })
-    .match({ ani_id: Number(id) });
+    .match({ id: Number(id) });
 
   if (error) {
     res.status(400).json({ success: false, error: error.message });

@@ -65,7 +65,7 @@ const columns: Column<Manga>[] = [
         </Link>
       );
     },
-    accessor: "ani_id",
+    accessor: "id",
   },
 ];
 
@@ -97,7 +97,7 @@ const AdminMangaPage = () => {
               label="Từ khóa"
             />
             <Input
-              {...register("ani_id")}
+              {...register("id")}
               className="px-3 py-2"
               placeholder="Nhập ID"
               label="Anilist ID"

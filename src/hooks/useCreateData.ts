@@ -27,7 +27,7 @@ const useCreateData = <T extends "anime" | "manga">(type: T) => {
     },
     {
       onMutate(body) {
-        const queryKey = [type, body.ani_id];
+        const queryKey = [type, body.id];
 
         queryClient.setQueryData(queryKey, body);
       },
@@ -41,7 +41,7 @@ const useCreateData = <T extends "anime" | "manga">(type: T) => {
       },
 
       onSettled(_, __, body) {
-        const queryKey = [type, body.ani_id];
+        const queryKey = [type, body.id];
 
         queryClient.invalidateQueries(queryKey);
       },

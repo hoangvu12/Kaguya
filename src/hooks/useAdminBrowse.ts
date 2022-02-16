@@ -9,18 +9,18 @@ import { useQueryClient } from "react-query";
 export interface UseAdminBrowseOptions {
   keyword?: string;
   source_id?: number;
-  ani_id?: number;
+  id?: number;
 }
 
 const initialOptions: UseAdminBrowseOptions = {
   keyword: "",
   source_id: null,
-  ani_id: null,
+  id: null,
 };
 
 const useAdminBrowse = <T extends "anime" | "manga">(type: T) => {
   const [query, setQuery] = useState<UseAdminBrowseOptions>(initialOptions);
-  const { keyword, source_id, ani_id } = query;
+  const { keyword, source_id, id } = query;
 
   const { handleSubmit, ...form } = useForm<UseAdminBrowseOptions>({
     defaultValues: initialOptions,
@@ -55,9 +55,9 @@ const useAdminBrowse = <T extends "anime" | "manga">(type: T) => {
         db = db.eq("source_id", source_id);
       }
 
-      if (ani_id) {
+      if (id) {
         // @ts-ignore
-        db = db.eq("ani_id", ani_id);
+        db = db.eq("id", id);
       }
 
       return db;
@@ -67,7 +67,7 @@ const useAdminBrowse = <T extends "anime" | "manga">(type: T) => {
       retry: 0,
       onSuccess: (list) => {
         list.forEach((data) => {
-          const queryKey = [type, data.ani_id];
+          const queryKey = [type, data.id];
 
           queryClient.setQueryData(queryKey, data);
         });

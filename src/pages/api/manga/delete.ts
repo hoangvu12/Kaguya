@@ -41,7 +41,7 @@ const DeleteMangaAPI = async (req: NextApiRequest, res: NextApiResponse) => {
   const { error } = await supabase
     .from<Manga>("manga")
     .delete({ returning: "minimal" })
-    .match({ ani_id: Number(id) });
+    .match({ id: Number(id) });
 
   if (error) {
     res.status(400).json({ success: false, error: error.message });

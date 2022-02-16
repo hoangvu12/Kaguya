@@ -5,13 +5,13 @@ import { useSupabaseQuery } from "@/utils/supabase";
 const mangaQuery = `
   *,
   user:user_id(*),
-  manga:manga_id(ani_id, title, vietnamese_title)
+  manga:manga_id(id, title, vietnamese_title)
 `;
 
 const animeQuery = `
   *,
   user:user_id(*),
-  anime:anime_id(ani_id, title, vietnamese_title)
+  anime:anime_id(id, title, vietnamese_title)
 `;
 
 const useNewestComments = <T extends "anime" | "manga">(type: T) => {

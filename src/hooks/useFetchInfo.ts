@@ -6,17 +6,17 @@ import { useQuery, useQueryClient } from "react-query";
 
 type UseFetchInfoProps<T> = T extends "anime"
   ? {
-      ani_id?: number;
+      id?: number;
       source_id?: number;
     }
   : {
       slug?: string;
-      ani_id?: number;
+      id?: number;
       source_id?: number;
     };
 
 const initialOptions: UseFetchInfoProps<"manga"> = {
-  ani_id: 0,
+  id: 0,
   source_id: 0,
   slug: "",
 };
@@ -48,9 +48,9 @@ const useFetchInfo = <T extends "anime" | "manga">(type: T) => {
       enabled: isEnabled,
       onSuccess: (info) => {
         if (type === "anime") {
-          queryClient.setQueryData(["anime", info.ani_id], info);
+          queryClient.setQueryData(["anime", info.id], info);
         } else if (type === "manga") {
-          queryClient.setQueryData(["manga", info.ani_id], info);
+          queryClient.setQueryData(["manga", info.id], info);
         }
       },
     }

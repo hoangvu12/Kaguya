@@ -30,7 +30,7 @@ const MangaCreatePage = () => {
       <form onSubmit={onSubmit} className="w-full my-8">
         <div className="flex items-end md:justify-center space-x-2 snap-x overflow-x-auto">
           <Input
-            {...register("ani_id")}
+            {...register("id")}
             className="px-3 py-2"
             placeholder="Nhập ID"
             label="Anilist ID"
