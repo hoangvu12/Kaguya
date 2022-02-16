@@ -22,11 +22,11 @@ const columns: Column<Manga>[] = [
 
       return (
         <div className="p-2">
-          <PlainCard src={originalCell.cover_image.extra_large} alt={title} />
+          <PlainCard src={originalCell.coverImage.extraLarge} alt={title} />
         </div>
       );
     },
-    accessor: "cover_image",
+    accessor: "coverImage",
   },
   {
     Header: "Tên",
