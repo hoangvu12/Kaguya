@@ -24,9 +24,9 @@ const ShouldWatch = <T extends "anime" | "manga">({
   const redirectUrl = useMemo(
     () =>
       type === "anime"
-        ? `/anime/details/${data.ani_id}`
-        : `/manga/details/${data.ani_id}`,
-    [data.ani_id, type]
+        ? `/anime/details/${data.id}`
+        : `/manga/details/${data.id}`,
+    [data.id, type]
   );
 
   return (
@@ -34,7 +34,7 @@ const ShouldWatch = <T extends "anime" | "manga">({
       <a>
         <div className="cursor-pointer group relative z-0 w-full h-[200px] md:h-[400px] rounded-md">
           <Image
-            src={data.banner_image}
+            src={data.bannerImage}
             layout="fill"
             objectFit="cover"
             objectPosition="50% 35%"
@@ -61,9 +61,9 @@ const ShouldWatch = <T extends "anime" | "manga">({
             </h1>
 
             <div className="flex flex-wrap items-center mt-4 text-lg gap-x-8">
-              {data.average_score && (
+              {data.averageScore && (
                 <TextIcon LeftIcon={MdTagFaces} iconClassName="text-green-300">
-                  <p>{data.average_score}%</p>
+                  <p>{data.averageScore}%</p>
                 </TextIcon>
               )}
 

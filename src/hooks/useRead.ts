@@ -10,9 +10,9 @@ const useRead = () => {
     "read",
     () => {
       return supabase
-        .from<Read>("read")
-        .select("manga:manga_id(*), chapter:chapter_id(name)")
-        .eq("user_id", user.id)
+        .from<Read>("kaguya_read")
+        .select("media:mediaId(*)")
+        .eq("userId", user.id)
         .order("updated_at", { ascending: false })
         .limit(15);
     },

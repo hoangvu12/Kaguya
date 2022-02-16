@@ -10,10 +10,10 @@ const useSavedRead = (mangaId: number) => {
     ["read", mangaId],
     () =>
       supabase
-        .from<Read>("read")
-        .select("chapter_id")
-        .eq("manga_id", mangaId)
-        .eq("user_id", user.id)
+        .from<Read>("kaguya_read")
+        .select("chapter:chapterId(*)")
+        .eq("mediaId", mangaId)
+        .eq("userId", user.id)
         .limit(1)
         .single(),
     {

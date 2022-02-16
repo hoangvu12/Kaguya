@@ -15,19 +15,14 @@ const useSubscribe = <T extends "anime" | "manga">(
   const user = useUser();
   const queryClient = useQueryClient();
   const tableName =
-    type === "anime" ? "anime_subscribers" : "manga_subscribers";
-  const queryKey = ["is_subscribed", user.id, source.ani_id];
-
-  const upsertValue =
-    type === "anime"
-      ? { anime_id: source.ani_id }
-      : { manga_id: source.ani_id };
+    type === "anime" ? "kaguya_anime_subscribers" : "kaguya_manga_subscribers";
+  const queryKey = ["is_subscribed", user.id, source.id];
 
   return useMutation<any, PostgrestError, any, any>(
     async () => {
       const { data, error } = await supabase
         .from(tableName)
-        .upsert({ user_id: user.id, ...upsertValue });
+        .upsert({ userId: user.id, mediaId: source.id });
 
       if (error) throw error;
 

@@ -6,7 +6,8 @@ interface ContextProps {
   chapters: Chapter[];
   currentChapter: Chapter;
   currentChapterIndex: number;
-  setChapter: (chapter_id: number) => void;
+  setChapter: (chapter: Chapter) => void;
+  sourceId: string;
 }
 
 interface ReactContextProviderProps {

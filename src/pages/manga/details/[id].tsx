@@ -1,7 +1,7 @@
 import CommentsSection from "@/components/features/comment/CommentsSection";
+import ChapterSelector from "@/components/features/manga/ChapterSelector";
 import Button from "@/components/shared/Button";
 import CharacterConnectionCard from "@/components/shared/CharacterConnectionCard";
-import CircleButton from "@/components/shared/CircleButton";
 import DetailsBanner from "@/components/shared/DetailsBanner";
 import DetailsSection from "@/components/shared/DetailsSection";
 import DotList from "@/components/shared/DotList";
@@ -15,13 +15,12 @@ import { REVALIDATE_TIME } from "@/constants";
 import { useUser } from "@/contexts/AuthContext";
 import supabase from "@/lib/supabase";
 import { Comment, Manga } from "@/types";
-import { numberWithCommas, parseNumbersFromString } from "@/utils";
+import { numberWithCommas } from "@/utils";
 import { convert, getTitle } from "@/utils/data";
-import { motion } from "framer-motion";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Link from "next/link";
-import React, { useMemo, useState } from "react";
-import { BsChevronDown, BsChevronUp, BsFillPlayFill } from "react-icons/bs";
+import React, { useMemo } from "react";
+import { BsFillPlayFill } from "react-icons/bs";
 
 interface DetailsPageProps {
   manga: Manga;
@@ -30,20 +29,6 @@ interface DetailsPageProps {
 const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
   const user = useUser();
 
-  const [isChapterExpanded, setIsChapterExpanded] = useState(false);
-
-  const chapters = useMemo(
-    () =>
-      manga.chapters
-        .sort(
-          (a, b) =>
-            parseNumbersFromString(a.name)[0] -
-            parseNumbersFromString(b.name)[0]
-        )
-        .reverse(),
-    [manga]
-  );
-
   const title = useMemo(() => getTitle(manga), [manga]);
 
   return (
@@ -51,16 +36,16 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
       <Head
         title={`${title} - Kaguya`}
         description={manga.description}
-        image={manga.banner_image}
+        image={manga.bannerImage}
       />
 
       <div className="pb-8">
-        <DetailsBanner image={manga.banner_image} />
+        <DetailsBanner image={manga.bannerImage} />
 
         <div className="relative px-4 sm:px-12 z-10 bg-background-900 pb-4">
           <div className="flex flex-col md:flex-row md:space-x-8">
             <div className="shrink-0 relative left-1/2 -translate-x-1/2 md:static md:left-0 md:-translate-x-0 w-[186px] -mt-20 space-y-6">
-              <PlainCard src={manga.cover_image.extra_large} alt={title} />
+              <PlainCard src={manga.coverImage.extraLarge} alt={title} />
 
               {user && (
                 <div className="flex items-center space-x-1">
@@ -71,7 +56,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
             </div>
 
             <div className="justify-between text-center md:text-left flex flex-col items-center md:items-start py-4 mt-4 md:-mt-16">
-              <Link href={`/manga/read/${manga.ani_id}`}>
+              <Link href={`/manga/read/${manga.id}`}>
                 <a>
                   <Button primary LeftIcon={BsFillPlayFill} className="mb-8">
                     <p>Đọc ngay</p>
@@ -90,7 +75,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
               <p className="mt-4 text-gray-300 mb-8">{manga.description}</p>
 
               <div className="flex overflow-x-auto md:scroll-bar snap-x space-x-8 md:space-x-16">
-                <InfoItem title="Quốc gia" value={manga.country_of_origin} />
+                <InfoItem title="Quốc gia" value={manga.countryOfOrigin} />
 
                 <InfoItem
                   title="Tình trạng"
@@ -99,7 +84,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
 
                 <InfoItem
                   title="Giới hạn tuổi"
-                  value={manga.is_adult ? "18+" : ""}
+                  value={manga.isAdult ? "18+" : ""}
                 />
               </div>
             </div>
@@ -142,42 +127,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
 
           <div className="md:col-span-8 space-y-12">
             <DetailsSection title="Chapter" className="relative">
-              <motion.div
-                className="space-y-2 overflow-hidden"
-                variants={{
-                  animate: {
-                    height: "100%",
-                  },
-
-                  initial: {
-                    height: chapters.length <= 7 ? "100%" : 300,
-                  },
-                }}
-                transition={{ ease: "linear" }}
-                animate={isChapterExpanded ? "animate" : "initial"}
-              >
-                {chapters.map((chapter) => (
-                  <Link
-                    href={`/manga/read/${manga.ani_id}/${chapter.chapter_id}`}
-                    key={chapter.chapter_id}
-                  >
-                    <a className="block">
-                      <p className="line-clamp-1 bg-background-900 p-2 text-sm font-semibold hover:bg-white/20 duration-300 transition">
-                        {chapter.name}
-                      </p>
-                    </a>
-                  </Link>
-                ))}
-              </motion.div>
-
-              {chapters.length > 7 && (
-                <CircleButton
-                  onClick={() => setIsChapterExpanded(!isChapterExpanded)}
-                  outline
-                  className="absolute top-full mt-4 left-1/2 -translate-x-1/2"
-                  LeftIcon={isChapterExpanded ? BsChevronUp : BsChevronDown}
-                />
-              )}
+              <ChapterSelector manga={manga} />
             </DetailsSection>
 
             {!!manga?.characters?.length && (
@@ -198,7 +148,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
             {!!manga?.relations?.length && (
               <DetailsSection title="Manga liên quan">
                 <List
-                  data={manga.relations.map((relation) => relation.manga)}
+                  data={manga.relations.map((relation) => relation.media)}
                   type="manga"
                 />
               </DetailsSection>
@@ -208,7 +158,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
               <DetailsSection title="Manga hay khác">
                 <List
                   data={manga.recommendations.map(
-                    (recommendation) => recommendation.manga
+                    (recommendation) => recommendation.media
                   )}
                   type="manga"
                 />
@@ -235,13 +185,13 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
                         reactions:comment_reactions(*)
                         `
                       )
-                      .eq("manga_id", manga.ani_id)
+                      .eq("manga_id", manga.id)
                       .is("is_reply", false)
                       .order("created_at", { ascending: true })
                       .range(from, to),
-                  queryKey: ["comments", manga.ani_id],
+                  queryKey: ["comments", manga.id],
                 }}
-                manga_id={manga.ani_id}
+                manga_id={manga.id}
               />
             </DetailsSection>
           </div>
@@ -253,17 +203,17 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { data, error } = await supabase
-    .from("manga")
+    .from("kaguya_manga")
     .select(
       `
         *,
-        characters:new_manga_characters!manga_id(*, character:character_id(*)),
-        recommendations:manga_recommendations!original_id(manga:recommend_id(*)),
-        relations:manga_relations!original_id(manga:relation_id(*)),
-        chapters!chapters_manga_id_fkey(*)
+        characters:kaguya_manga_characters!mediaId(*, character:characterId(*)),
+        recommendations:kaguya_manga_recommendations!originalId(media:recommendationId(*)),
+        relations:kaguya_manga_relations!originalId(media:relationId(*)),
+        chapters:kaguya_chapters!mediaId(*, source:kaguya_sources(*))
       `
     )
-    .eq("ani_id", Number(params.id))
+    .eq("id", Number(params.id))
     .single();
 
   if (error) {
@@ -282,13 +232,13 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const { data } = await supabase
-    .from<Manga>("manga")
-    .select("ani_id")
+    .from<Manga>("kaguya_manga")
+    .select("id")
     .order("updated_at", { ascending: false })
     .limit(20);
 
   const paths = data.map((manga) => ({
-    params: { id: manga.ani_id.toString() },
+    params: { id: manga.id.toString() },
   }));
 
   return { paths, fallback: "blocking" };

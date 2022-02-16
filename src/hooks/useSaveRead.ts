@@ -3,8 +3,8 @@ import axios from "axios";
 import { useMutation } from "react-query";
 
 interface MutationInput {
-  manga_id: number;
-  chapter_id: number;
+  media_id: number;
+  chapter_id: string;
 }
 
 const useSaveRead = () => {

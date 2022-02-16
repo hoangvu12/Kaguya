@@ -1,6 +1,7 @@
 import supabase from "@/lib/supabaseAdmin";
 import { NextApiHandler } from "next";
 import { isFalsy } from "@/utils";
+import { Read } from "@/types";
 
 const handler: NextApiHandler = async (req, res) => {
   if (req.method !== "POST") {
@@ -10,63 +11,29 @@ const handler: NextApiHandler = async (req, res) => {
   }
 
   try {
-    const { manga_id, chapter_id } = req.body;
+    const { media_id, chapter_id } = req.body;
 
-    if (isFalsy(manga_id) || isFalsy(chapter_id)) {
-      res.json({ success: false });
-
-      return;
+    if (isFalsy(media_id) || isFalsy(chapter_id)) {
+      throw new Error("Missing required query params");
     }
 
     const { user, error: userError } = await supabase.auth.api.getUserByCookie(
       req
     );
 
-    if (userError) {
-      res.json({ success: false, error: userError.message });
-
-      return;
+    if (userError || !user) {
+      throw userError;
     }
 
-    const { data: isRead, error: watchedError } = await supabase
-      .from("read")
-      .select("id")
-      .eq("user_id", user.id)
-      .eq("manga_id", manga_id);
+    const { error: upsertError } = await supabase
+      .from<Read>("kaguya_read")
+      .upsert(
+        { mediaId: media_id, chapterId: chapter_id, userId: user.id },
+        { returning: "minimal" }
+      );
 
-    if (watchedError) {
-      res.json({ success: false, error: watchedError.message });
-
-      return;
-    }
-
-    if (isRead?.length) {
-      const { error: updateError } = await supabase
-        .from("read")
-        .update({
-          manga_id,
-          chapter_id,
-        })
-        .match({ user_id: user.id, manga_id });
-
-      if (updateError) {
-        res.json({ success: false, error: updateError.message });
-
-        return;
-      }
-    } else {
-      const { error } = await supabase
-        .from("read")
-        .upsert(
-          { user_id: user.id, manga_id, chapter_id },
-          { ignoreDuplicates: false }
-        );
-
-      if (error) {
-        res.json({ success: false, error: error.message });
-
-        return;
-      }
+    if (upsertError) {
+      throw upsertError;
     }
 
     res.json({ success: true });

@@ -7,10 +7,10 @@ import { getTitle } from "@/utils/data";
 import React from "react";
 
 const composeData = (data: Read) => {
-  const title = getTitle(data.manga);
+  const title = getTitle(data.media);
 
-  const recommendations = data.manga?.recommendations?.map(
-    ({ manga }) => manga
+  const recommendations = data.media?.recommendations?.map(
+    ({ media }) => media
   );
 
   return {

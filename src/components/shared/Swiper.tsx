@@ -75,7 +75,9 @@ const Swiper: React.FC<SwiperProps> = ({
         swiper.params.navigation.nextEl = nextButtonRef.current;
         swiper.navigation.update();
 
-        swiper.slideTo(defaultActiveSlide || 0);
+        if (defaultActiveSlide) {
+          swiper.slideTo(defaultActiveSlide);
+        }
 
         onInit?.(swiper);
       }}

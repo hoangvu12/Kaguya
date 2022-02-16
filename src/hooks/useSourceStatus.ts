@@ -7,9 +7,9 @@ const useSourceStatus = <T extends "anime" | "manga">(
   type: T,
   source: T extends "anime" ? Anime : Manga
 ) => {
-  const tableName = type === "anime" ? "watch_status" : "read_status";
-  const queryKey = [tableName, source.ani_id];
-  const filterKey = type === "anime" ? "anime_id" : "manga_id";
+  const tableName =
+    type === "anime" ? "kaguya_watch_status" : "kaguya_read_status";
+  const queryKey = [tableName, source.id];
   const user = useUser();
 
   return useSupabaseSingleQuery<SourceStatus<T>>(
@@ -18,8 +18,8 @@ const useSourceStatus = <T extends "anime" | "manga">(
       return supabase
         .from(tableName)
         .select("*")
-        .eq("user_id", user.id)
-        .eq(filterKey, source.ani_id)
+        .eq("userId", user.id)
+        .eq("mediaId", source.id)
         .limit(1)
         .single();
     },

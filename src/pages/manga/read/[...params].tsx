@@ -10,9 +10,9 @@ import useFetchImages from "@/hooks/useFetchImages";
 import useSavedRead from "@/hooks/useSavedRead";
 import useSaveRead from "@/hooks/useSaveRead";
 import supabase from "@/lib/supabase";
-import { Manga } from "@/types";
+import { Chapter, Manga } from "@/types";
 import { parseNumbersFromString } from "@/utils";
-import { getTitle } from "@/utils/data";
+import { getTitle, sortMediaUnit } from "@/utils/data";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
@@ -45,17 +45,14 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
 
   const title = useMemo(() => getTitle(manga), [manga]);
 
-  const chapters = useMemo(
-    () =>
-      manga.chapters.sort(
-        (a, b) =>
-          parseNumbersFromString(a.name)[0] - parseNumbersFromString(b.name)[0]
-      ),
-    [manga]
-  );
+  const chapters = useMemo(() => sortMediaUnit(manga.chapters), [manga]);
 
   const { params } = router.query;
-  const [mangaId, chapterId = chapters[0].chapter_id] = params as string[];
+  const [
+    mangaId,
+    sourceId = chapters[0].sourceId,
+    chapterId = chapters[0].sourceChapterId,
+  ] = params as string[];
 
   const {
     data: savedReadData,
@@ -64,13 +61,16 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
   } = useSavedRead(Number(mangaId));
 
   const currentChapter = useMemo(
-    () => chapters.find((chapter) => chapter.chapter_id === Number(chapterId)),
+    () =>
+      chapters.find((chapter) => chapter.sourceChapterId === Number(chapterId)),
     [chapters, chapterId]
   );
 
   const currentChapterIndex = useMemo(
     () =>
-      chapters.findIndex((chapter) => chapter.chapter_id === Number(chapterId)),
+      chapters.findIndex(
+        (chapter) => chapter.sourceChapterId === Number(chapterId)
+      ),
     [chapters, chapterId]
   );
 
@@ -84,22 +84,23 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
       isSavedDataError
         ? null
         : chapters.find(
-            (chapter) => chapter.chapter_id === savedReadData?.chapter_id
+            (chapter) =>
+              chapter.sourceChapterId === savedReadData?.chapter.sourceChapterId
           ),
     [chapters, savedReadData, isSavedDataError]
   );
 
-  const { data } = useFetchImages(
-    manga.slug,
-    currentChapter.chapter_id,
-    nextChapter?.chapter_id
-  );
+  const { data } = useFetchImages(currentChapter, nextChapter);
 
   const handleChapterNavigate = useCallback(
-    (chapterId: number) => {
-      router.replace(`/manga/read/${mangaId}/${chapterId}`, null, {
-        shallow: true,
-      });
+    (chapter: Chapter) => {
+      router.replace(
+        `/manga/read/${mangaId}/${chapter.sourceId}/${chapter.sourceChapterId}`,
+        null,
+        {
+          shallow: true,
+        }
+      );
     },
     [mangaId, router]
   );
@@ -113,7 +114,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
     )
       return;
 
-    if (currentChapter.chapter_id === readChapter?.chapter_id) {
+    if (currentChapter.sourceChapterId === readChapter?.sourceChapterId) {
       setDeclinedReread(true);
 
       return;
@@ -121,7 +122,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
 
     setShowReadOverlay(true);
   }, [
-    currentChapter.chapter_id,
+    currentChapter.sourceChapterId,
     declinedReread,
     isSavedDataError,
     isSavedDataLoading,
@@ -136,12 +137,17 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
     saveReadTimeout.current = setTimeout(
       () =>
         saveReadMutation.mutate({
-          manga_id: Number(mangaId),
-          chapter_id: currentChapter.chapter_id,
+          chapter_id: `${currentChapter.source.id}-${currentChapter.sourceChapterId}`,
+          media_id: Number(mangaId),
         }),
       10000
     );
-  }, [currentChapter.chapter_id, mangaId, saveReadMutation]);
+
+    return () => {
+      clearTimeout(saveReadTimeout.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentChapter, mangaId]);
 
   return (
     <ReadContextProvider
@@ -151,6 +157,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
         currentChapterIndex,
         chapters,
         setChapter: handleChapterNavigate,
+        sourceId,
       }}
     >
       <ReadSettingsContextProvider>
@@ -158,12 +165,12 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
           <Head
             title={`${title} (${currentChapter.name}) - Kaguya`}
             description={`Đọc truyện ${title} (${currentChapter.name}) tại Kaguya. Hoàn toàn miễn phí, không quảng cáo`}
-            image={manga.banner_image || manga.cover_image.large}
+            image={manga.bannerImage || manga.coverImage.extraLarge}
           />
 
           <ReadPanel>
             {({ isSidebarOpen }) =>
-              data?.images.length ? (
+              data?.images?.length ? (
                 <ReadImages
                   isSidebarOpen={isSidebarOpen}
                   images={data.images}
@@ -207,12 +214,13 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
                     onClick={() => {
                       if (!readChapter || isSavedDataLoading) return;
 
-                      const chapterIndex = chapters.findIndex(
+                      const chapter = chapters.find(
                         (chapter) =>
-                          chapter.chapter_id === readChapter.chapter_id
+                          chapter.sourceChapterId ===
+                          readChapter.sourceChapterId
                       );
 
-                      handleChapterNavigate(chapterIndex);
+                      handleChapterNavigate(chapter);
                     }}
                     primary
                   >
@@ -232,18 +240,17 @@ export const getStaticProps: GetStaticProps = async ({
   params: { params },
 }) => {
   const { data, error } = await supabase
-    .from<Manga>("manga")
+    .from<Manga>("kaguya_manga")
     .select(
       `
         title,
-        slug,
-        chapters!manga_id(*),
-        banner_image,
-        cover_image,
-        vietnamese_title
+        chapters:kaguya_chapters!mediaId(*, source:kaguya_sources(*)),
+        bannerImage,
+        coverImage,
+        vietnameseTitle
       `
     )
-    .eq("ani_id", Number(params[0]))
+    .eq("id", Number(params[0]))
     .single();
 
   if (error) {
@@ -262,13 +269,13 @@ export const getStaticProps: GetStaticProps = async ({
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const { data } = await supabase
-    .from<Manga>("manga")
-    .select("ani_id")
+    .from<Manga>("kaguya_manga")
+    .select("id")
     .order("updated_at", { ascending: false })
     .limit(20);
 
   const paths = data.map((manga) => ({
-    params: { params: [manga.ani_id.toString()] },
+    params: { params: [manga.id.toString()] },
   }));
 
   return { paths, fallback: "blocking" };

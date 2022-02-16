@@ -14,18 +14,17 @@ const useIsSubscribed = <T extends "anime" | "manga">(
 ) => {
   const user = useUser();
   const tableName =
-    type === "anime" ? "anime_subscribers" : "manga_subscribers";
-  const queryKey = ["is_subscribed", user.id, source.ani_id];
-  const filterKey = type === "anime" ? "anime_id" : "manga_id";
+    type === "anime" ? "kaguya_anime_subscribers" : "kaguya_manga_subscribers";
+  const queryKey = ["is_subscribed", user.id, source.id];
 
   return useQuery(
     queryKey,
     async () => {
       const { data, error } = await supabase
         .from(tableName)
-        .select("user_id")
-        .eq("user_id", user.id)
-        .eq(filterKey, source.ani_id)
+        .select("userId")
+        .eq("userId", user.id)
+        .eq("mediaId", source.id)
         .limit(1)
         .single();
 

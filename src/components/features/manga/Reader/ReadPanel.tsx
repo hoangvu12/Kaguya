@@ -1,3 +1,4 @@
+import ArrowSwiper, { SwiperSlide } from "@/components/shared/ArrowSwiper";
 import Button from "@/components/shared/Button";
 import ButtonTooltip from "@/components/shared/ButtonTooltip";
 import CircleButton from "@/components/shared/CircleButton";
@@ -10,6 +11,7 @@ import {
   useReadSettings,
 } from "@/contexts/ReadSettingsContext";
 import useDevice from "@/hooks/useDevice";
+import { groupBy } from "@/utils";
 import { getTitle } from "@/utils/data";
 import classNames from "classnames";
 import { motion, Variants } from "framer-motion";
@@ -65,9 +67,20 @@ const ReadPanel: React.FC<ReadPanelProps> = ({ children }) => {
     useReadInfo();
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const [activeSource, setActiveSource] = useState(chapters[0].source.name);
+
+  const sourceChapters = useMemo(
+    () => chapters.filter((chapter) => chapter.source.name === activeSource),
+    [activeSource, chapters]
+  );
+
   const filteredChapters = useMemo(() => {
-    return chapters.filter((chapter) => chapter.name.includes(filterText));
-  }, [chapters, filterText]);
+    return sourceChapters.filter((chapter) =>
+      chapter.name.includes(filterText)
+    );
+  }, [filterText, sourceChapters]);
+
+  const sources = groupBy(filteredChapters, (data) => data.source.name);
 
   const handleSidebarState = (isOpen: boolean) => () =>
     setIsSidebarOpen(isOpen);
@@ -94,9 +107,7 @@ const ReadPanel: React.FC<ReadPanelProps> = ({ children }) => {
   const title = useMemo(() => getTitle(manga), [manga]);
 
   const handleChangeChapterIndex = (index: number) => () => {
-    const { chapter_id } = chapters[index];
-
-    setChapter(chapter_id);
+    setChapter(chapters[index]);
   };
 
   // Scroll container to top when change chapter
@@ -142,6 +153,25 @@ const ReadPanel: React.FC<ReadPanelProps> = ({ children }) => {
             </BrowserView>
           </div>
 
+          <MobileView>
+            <div className="flex space-x-2 w-full px-2">
+              {Object.keys(sources).map((source) => (
+                <div
+                  className={classNames(
+                    "text-gray-300 cursor-pointer rounded-[18px] px-2 py-1 w-[max-content] duration-300 transition",
+                    activeSource === source
+                      ? "bg-white text-black"
+                      : "hover:text-white"
+                  )}
+                  key={source}
+                  onClick={() => setActiveSource(source)}
+                >
+                  {source}
+                </div>
+              ))}
+            </div>
+          </MobileView>
+
           {/* Mobile chapter selector */}
           <div className="flex items-center justify-center md:justify-between space-x-2 md:space-x-0">
             <ButtonTooltip
@@ -160,16 +190,23 @@ const ReadPanel: React.FC<ReadPanelProps> = ({ children }) => {
 
             <MobileView className="grow">
               <select
-                value={currentChapter.chapter_id}
+                value={currentChapter.sourceChapterId}
                 onChange={(e) => {
-                  const chapter_id = e.target.value;
+                  const sourceChapterId = e.target.value;
+                  const chapter = chapters.find(
+                    (chapter) =>
+                      chapter.sourceChapterId === Number(sourceChapterId)
+                  );
 
-                  setChapter(Number(chapter_id));
+                  setChapter(chapter);
                 }}
                 className="rounded-md py-1 px-2 appearance-none w-full bg-background-700"
               >
-                {chapters.map((chapter) => (
-                  <option key={chapter.id} value={chapter.chapter_id}>
+                {sourceChapters.map((chapter) => (
+                  <option
+                    key={chapter.sourceChapterId}
+                    value={chapter.sourceChapterId}
+                  >
                     {chapter.name}
                   </option>
                 ))}
@@ -258,16 +295,34 @@ const ReadPanel: React.FC<ReadPanelProps> = ({ children }) => {
               }
             />
 
+            <div className="flex space-x-2 w-full px-2 !my-4">
+              {Object.keys(sources).map((source) => (
+                <div
+                  className={classNames(
+                    "text-gray-300 cursor-pointer rounded-[18px] px-2 py-1 w-[max-content] duration-300 transition",
+                    activeSource === source
+                      ? "bg-white text-black"
+                      : "hover:text-white"
+                  )}
+                  key={source}
+                  onClick={() => setActiveSource(source)}
+                >
+                  {source}
+                </div>
+              ))}
+            </div>
+
             <ul className="h-full space-y-2 bg-background-900 p-2 overflow-y-auto">
               {filteredChapters.map((chapter) => (
                 <li
                   className="relative p-2 cursor-pointer hover:bg-white/20 transition duration-300"
-                  key={chapter.chapter_id}
-                  onClick={() => setChapter(chapter.chapter_id)}
+                  key={chapter.sourceChapterId}
+                  onClick={() => setChapter(chapter)}
                 >
                   {chapter.name}
 
-                  {chapter.chapter_id === currentChapter.chapter_id && (
+                  {chapter.sourceChapterId ===
+                    currentChapter.sourceChapterId && (
                     <p className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-primary-500 rounded-md">
                       Đang đọc
                     </p>
