@@ -67,7 +67,7 @@ const TracePanel: React.FC<TracePanelProps> = ({ data, image }) => {
           <div className="text-center md:text-left flex flex-col md:flex-row items-start gap-4">
             <div className="w-[183px] shrink-0 mx-auto md:mx-0">
               <PlainCard
-                src={card.anime.cover_image.extra_large}
+                src={card.anime.coverImage.extraLarge}
                 alt={getTitle(card.anime)}
               />
             </div>
@@ -78,12 +78,12 @@ const TracePanel: React.FC<TracePanelProps> = ({ data, image }) => {
               <p className="text-gray-300">{card.anime.title.native}</p>
 
               <div className="flex flex-wrap items-center text-lg gap-x-8">
-                {card.anime.average_score && (
+                {card.anime.averageScore && (
                   <TextIcon
                     LeftIcon={MdTagFaces}
                     iconClassName="text-green-300"
                   >
-                    <p>{card.anime.average_score}%</p>
+                    <p>{card.anime.averageScore}%</p>
                   </TextIcon>
                 )}
 
@@ -99,11 +99,8 @@ const TracePanel: React.FC<TracePanelProps> = ({ data, image }) => {
               </div>
 
               <div className="flex space-x-8 overflow-x-auto snap-x snap-mandatory md:space-x-16">
-                <InfoItem
-                  title="Quốc gia"
-                  value={card.anime.country_of_origin}
-                />
-                <InfoItem title="Số tập" value={card.anime.total_episodes} />
+                <InfoItem title="Quốc gia" value={card.anime.countryOfOrigin} />
+                <InfoItem title="Số tập" value={card.anime.totalEpisodes} />
 
                 {card.anime.duration && (
                   <InfoItem
@@ -119,7 +116,7 @@ const TracePanel: React.FC<TracePanelProps> = ({ data, image }) => {
 
                 <InfoItem
                   title="Giới hạn tuổi"
-                  value={card.anime.is_adult ? "18+" : ""}
+                  value={card.anime.isAdult ? "18+" : ""}
                 />
               </div>
 
@@ -127,7 +124,7 @@ const TracePanel: React.FC<TracePanelProps> = ({ data, image }) => {
                 {card.anime.description}
               </p>
 
-              <Link href={`/anime/details/${card.anime.ani_id}`}>
+              <Link href={`/anime/details/${card.anime.id}`}>
                 <a className="block">
                   <Button primary className="mx-auto md:mx-auto">
                     <p>Xem ngay</p>
