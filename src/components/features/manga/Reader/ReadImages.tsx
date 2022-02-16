@@ -73,9 +73,7 @@ const ReadImages: React.FC<ReadImagesProps> = ({
   ]);
 
   const handleChangeChapter = (index: number) => () => {
-    const { chapter_id } = chapters[index];
-
-    setChapter(chapter_id);
+    setChapter(chapters[index]);
   };
 
   const handleSlideChange = (swiper: SwiperClass) => {
