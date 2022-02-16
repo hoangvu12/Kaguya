@@ -10,17 +10,17 @@ const useAnimeRecommendedList = () => {
     ["anime", "recommended"],
     () => {
       return supabase
-        .from<Watched>("watched")
+        .from<Watched>("kaguya_watched")
         .select(
           `
-            anime:anime_id(
+            media:mediaId(
                 title,
-                vietnamese_title,
-                recommendations!original_id(anime:recommend_id(*))
+                vietnameseTitle,
+                recommendations:kaguya_anime_recommendations!originalId(media:recommendationId(*))
             )
           `
         )
-        .eq("user_id", user.id)
+        .eq("userId", user.id)
         .order("updated_at", { ascending: false })
         .limit(1)
         .single();

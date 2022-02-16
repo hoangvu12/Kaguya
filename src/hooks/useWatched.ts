@@ -10,11 +10,11 @@ const useWatched = () => {
     "watched",
     () => {
       return supabase
-        .from<Watched>("watched")
+        .from<Watched>("kaguya_watched")
         .select(
-          "anime:anime_id(ani_id, title, vietnamese_title, banner_image, cover_image, episodes!episodes_anime_id_fkey(id)), episode:episode_id(id, name, thumbnail_image)"
+          "media:mediaId(id, title, vietnameseTitle, bannerImage, coverImage), episode:kaguya_episodes!episodeId(id, name)"
         )
-        .eq("user_id", user.id)
+        .eq("userId", user.id)
         .order("updated_at", { ascending: false })
         .limit(15);
     },

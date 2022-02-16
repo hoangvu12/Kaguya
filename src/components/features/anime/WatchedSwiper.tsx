@@ -12,20 +12,18 @@ interface WatchedSwiperProps extends SwiperProps {
 const WatchedSwiper: React.FC<WatchedSwiperProps> = ({ data, ...props }) => {
   return (
     <Swiper speed={500} {...props}>
-      {data.map(({ anime, episode }, index) => {
+      {data.map(({ media, episode }, index) => {
         return (
           <SwiperSlide key={index}>
-            <Link href={`/anime/watch/${anime.ani_id}/${episode.episode_id}`}>
+            <Link href={`/anime/watch/${media.id}/${episode.sourceEpisodeId}`}>
               <a>
                 <EpisodeCard
                   episode={{
                     ...episode,
-                    thumbnail_image:
-                      episode.thumbnail_image ||
-                      anime.banner_image ||
-                      anime.cover_image.extra_large,
+                    thumbnailImage:
+                      media.bannerImage || media.coverImage.extraLarge,
                   }}
-                  title={getTitle(anime)}
+                  title={getTitle(media)}
                 />
               </a>
             </Link>

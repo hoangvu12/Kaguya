@@ -3,8 +3,8 @@ import axios from "axios";
 import { useMutation } from "react-query";
 
 interface MutationInput {
-  anime_id: number;
-  episode_id: number;
+  media_id: number;
+  episode_id: string;
   watched_time?: number;
 }
 

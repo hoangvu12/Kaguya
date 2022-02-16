@@ -7,10 +7,10 @@ import Section from "@/components/shared/Section";
 import { getTitle } from "@/utils/data";
 
 const composeData = (data: Watched) => {
-  const title = getTitle(data.anime);
+  const title = getTitle(data.media);
 
-  const recommendations = data.anime?.recommendations?.map(
-    ({ anime }) => anime
+  const recommendations = data.media?.recommendations?.map(
+    ({ media }) => media
   );
 
   return {

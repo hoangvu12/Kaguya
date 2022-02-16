@@ -86,21 +86,27 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
     episodeId = sortedEpisodes[0].sourceEpisodeId,
   ] = params as string[];
 
-  // const {
-  //   data: watchedEpisodeData,
-  //   isLoading: isSavedDataLoading,
-  //   isError: isSavedDataError,
-  // } = useSavedWatched(Number(animeId));
+  const {
+    data: watchedEpisodeData,
+    isLoading: isSavedDataLoading,
+    isError: isSavedDataError,
+  } = useSavedWatched(Number(animeId));
 
-  // const watchedEpisode = useMemo(
-  //   () =>
-  //     isSavedDataError
-  //       ? null
-  //       : sortedEpisodes.find(
-  //           (episode) => episode.sourceEpisodeId === watchedEpisodeData?.sourceEpisodeId
-  //         ),
-  //   [isSavedDataError, sortedEpisodes, watchedEpisodeData?.sourceEpisodeId]
-  // );
+  const watchedEpisode = useMemo(
+    () =>
+      isSavedDataError
+        ? null
+        : sortedEpisodes.find(
+            (episode) =>
+              episode.sourceEpisodeId ===
+              watchedEpisodeData?.episode?.sourceEpisodeId
+          ),
+    [
+      isSavedDataError,
+      sortedEpisodes,
+      watchedEpisodeData?.episode?.sourceEpisodeId,
+    ]
+  );
 
   const sourceEpisodes = useMemo(
     () => anime.episodes.filter((episode) => episode.sourceId === sourceId),
@@ -140,66 +146,57 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   const { data, isLoading } = useFetchSource(currentEpisode, nextEpisode);
 
   // Show watched overlay
-  // useEffect(() => {
-  //   if (
-  //     !watchedEpisode ||
-  //     isSavedDataLoading ||
-  //     isSavedDataError ||
-  //     declinedRewatch
-  //   )
-  //     return;
+  useEffect(() => {
+    if (
+      !watchedEpisode ||
+      isSavedDataLoading ||
+      isSavedDataError ||
+      declinedRewatch
+    )
+      return;
 
-  //   if (currentEpisode.sourceEpisodeId === watchedEpisode?.sourceEpisodeId) {
-  //     setDeclinedRewatch(true);
+    if (currentEpisode.sourceEpisodeId === watchedEpisode?.sourceEpisodeId) {
+      setDeclinedRewatch(true);
 
-  //     return;
-  //   }
+      return;
+    }
 
-  //   setShowWatchedOverlay(true);
-  // }, [
-  //   currentEpisode.sourceEpisodeId,
-  //   declinedRewatch,
-  //   isSavedDataError,
-  //   isSavedDataLoading,
-  //   watchedEpisode,
-  // ]);
+    setShowWatchedOverlay(true);
+  }, [
+    currentEpisode.sourceEpisodeId,
+    declinedRewatch,
+    isSavedDataError,
+    isSavedDataLoading,
+    watchedEpisode,
+  ]);
 
-  // useEffect(() => {
-  //   const videoEl = videoRef.current;
+  useEffect(() => {
+    const videoEl = videoRef.current;
 
-  //   if (!videoEl) return;
+    if (!videoEl) return;
 
-  //   const handleVideoPlay = () => {
-  //     if (saveWatchedInterval.current) {
-  //       clearInterval(saveWatchedInterval.current);
-  //     }
+    const handleSaveTime = () => {
+      if (saveWatchedInterval.current) {
+        clearInterval(saveWatchedInterval.current);
+      }
 
-  //     saveWatchedInterval.current = setInterval(() => {
-  //       saveWatchedMutation.mutate({
-  //         anime_id: Number(animeId),
-  //         sourceEpisodeId: currentEpisode.sourceEpisodeId,
-  //         watched_time: videoRef.current?.currentTime,
-  //       });
-  //     }, 30000);
-  //   };
+      saveWatchedInterval.current = setInterval(() => {
+        saveWatchedMutation.mutate({
+          media_id: Number(animeId),
+          episode_id: `${currentEpisode.sourceId}-${currentEpisode.sourceEpisodeId}`,
+          watched_time: videoRef.current?.currentTime,
+        });
+      }, 30000);
+    };
 
-  //   const handleVideoPause = () => {
-  //     if (saveWatchedInterval.current) {
-  //       clearInterval(saveWatchedInterval.current);
-  //     }
-  //   };
+    videoEl.addEventListener("canplay", handleSaveTime);
 
-  //   videoEl.addEventListener("play", handleVideoPlay);
-  //   videoEl.addEventListener("pause", handleVideoPause);
-  //   videoEl.addEventListener("ended", handleVideoPause);
-
-  //   return () => {
-  //     clearInterval(saveWatchedInterval.current);
-  //     videoEl.removeEventListener("play", handleVideoPlay);
-  //     videoEl.removeEventListener("pause", handleVideoPause);
-  //     videoEl.removeEventListener("ended", handleVideoPause);
-  //   };
-  // }, [animeId, currentEpisode.sourceEpisodeId, saveWatchedMutation]);
+    return () => {
+      clearInterval(saveWatchedInterval.current);
+      videoEl.removeEventListener("canplay", handleSaveTime);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [animeId, currentEpisode]);
 
   useEffect(() => {
     if (!navigator?.mediaSession) return;
@@ -231,31 +228,32 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
 
   const title = useMemo(() => getTitle(anime), [anime]);
 
-  // useEffect(() => {
-  //   const videoEl = videoRef.current;
+  useEffect(() => {
+    const videoEl = videoRef.current;
 
-  //   if (!videoEl) return;
-  //   if (isSavedDataLoading) return;
-  //   if (!watchedEpisodeData?.watched_time) return;
+    if (!videoEl) return;
+    if (isSavedDataLoading) return;
+    if (!watchedEpisodeData?.watchedTime) return;
 
-  //   if (watchedEpisode?.sourceEpisodeId !== currentEpisode?.sourceEpisodeId) return;
+    if (watchedEpisode?.sourceEpisodeId !== currentEpisode?.sourceEpisodeId)
+      return;
 
-  //   const handleVideoPlay = () => {
-  //     videoEl.currentTime = watchedEpisodeData.watched_time;
-  //   };
+    const handleVideoPlay = () => {
+      videoEl.currentTime = watchedEpisodeData.watchedTime;
+    };
 
-  //   // Only set the video time if the video is ready
-  //   videoEl.addEventListener("canplay", handleVideoPlay, { once: true });
+    // Only set the video time if the video is ready
+    videoEl.addEventListener("canplay", handleVideoPlay, { once: true });
 
-  //   return () => {
-  //     videoEl.removeEventListener("canplay", handleVideoPlay);
-  //   };
-  // }, [
-  //   currentEpisode?.sourceEpisodeId,
-  //   isSavedDataLoading,
-  //   watchedEpisode?.sourceEpisodeId,
-  //   watchedEpisodeData,
-  // ]);
+    return () => {
+      videoEl.removeEventListener("canplay", handleVideoPlay);
+    };
+  }, [
+    currentEpisode?.sourceEpisodeId,
+    isSavedDataLoading,
+    watchedEpisode?.sourceEpisodeId,
+    watchedEpisodeData,
+  ]);
 
   useEffect(() => {
     const videoEl = videoRef.current;
@@ -389,7 +387,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
         </Portal>
       )}
 
-      {/* {showWatchedOverlay && !declinedRewatch && (
+      {showWatchedOverlay && !declinedRewatch && (
         <Portal selector=".video-wrapper">
           <div
             className="fixed inset-0 z-40 bg-black/70"
@@ -417,7 +415,9 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
                 <p>Không</p>
               </Button>
               <Button
-                onClick={handleNavigateEpisode(watchedEpisodeData.sourceEpisodeId)}
+                onClick={handleNavigateEpisode(
+                  watchedEpisodeData?.episode?.sourceEpisodeId
+                )}
                 primary
               >
                 <p>Xem</p>
@@ -425,7 +425,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
             </div>
           </div>
         </Portal>
-      )} */}
+      )}
     </div>
   );
 };
