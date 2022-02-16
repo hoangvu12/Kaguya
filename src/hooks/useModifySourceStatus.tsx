@@ -16,7 +16,7 @@ const useModifySourceStatus = <T extends "anime" | "manga">(
   source: T extends "anime" ? Anime : Manga
 ) => {
   const tableName = type === "anime" ? "watch_status" : "read_status";
-  const queryKey = [tableName, source.ani_id];
+  const queryKey = [tableName, source.id];
   const queryClient = useQueryClient();
   const user = useUser();
 
@@ -29,8 +29,8 @@ const useModifySourceStatus = <T extends "anime" | "manga">(
 
       const upsertValue =
         type === "anime"
-          ? { ...defaultUpsertValue, anime_id: source.ani_id }
-          : { ...defaultUpsertValue, manga_id: source.ani_id };
+          ? { ...defaultUpsertValue, anime_id: source.id }
+          : { ...defaultUpsertValue, manga_id: source.id };
 
       const { data, error } = await supabase
         .from(tableName)

@@ -16,7 +16,7 @@ const useAnimeDetails = (animeId: number) => {
         relations!original_id(anime:relation_id(*))
       `
         )
-        .eq("ani_id", animeId)
+        .eq("id", animeId)
         .single(),
     { refetchOnMount: true }
   );

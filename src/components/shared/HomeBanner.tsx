@@ -39,10 +39,8 @@ const HomeBanner = <T extends "anime" | "manga">({
     setIndex(swiper.realIndex);
   };
 
-  const getRedirectUrl = (ani_id: number) => {
-    return type === "anime"
-      ? `/anime/details/${ani_id}`
-      : `/manga/details/${ani_id}`;
+  const getRedirectUrl = (id: number) => {
+    return type === "anime" ? `/anime/details/${id}` : `/manga/details/${id}`;
   };
 
   const title = useMemo(() => getTitle(activeSlide), [activeSlide]);
@@ -139,7 +137,7 @@ const HomeBanner = <T extends "anime" | "manga">({
 
             return (
               <SwiperSlide key={index}>
-                <Link href={getRedirectUrl(slide.ani_id)}>
+                <Link href={getRedirectUrl(slide.id)}>
                   <a>
                     <div className="relative aspect-w-16 aspect-h-9 rounded-md">
                       <Image

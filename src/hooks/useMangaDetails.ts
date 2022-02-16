@@ -16,7 +16,7 @@ const useMangaDetails = (mangaId: number) => {
           relations:manga_relations!original_id(manga:relation_id(*))
       `
         )
-        .eq("ani_id", mangaId)
+        .eq("id", mangaId)
         .single(),
     { refetchOnMount: true }
   );

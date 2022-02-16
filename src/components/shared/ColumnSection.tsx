@@ -31,7 +31,7 @@ const ColumnSection = <T extends "manga" | "anime">({
             className="px-4 odd:bg-background-700"
             type={type}
             data={data}
-            key={data.ani_id}
+            key={data.id}
           />
         ))}
       </div>

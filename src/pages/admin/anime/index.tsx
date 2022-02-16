@@ -65,7 +65,7 @@ const columns: Column<Anime>[] = [
         </Link>
       );
     },
-    accessor: "ani_id",
+    accessor: "id",
   },
 ];
 
@@ -98,7 +98,7 @@ const AdminAnimePage = () => {
             />
 
             <Input
-              {...register("ani_id")}
+              {...register("id")}
               className="px-3 py-2"
               placeholder="Nhập ID"
               label="Anilist ID"

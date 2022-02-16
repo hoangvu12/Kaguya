@@ -4,7 +4,7 @@ import config from "@/config";
 import supabase from "@/lib/supabase";
 
 const info = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { ani_id, source_id, slug } = req.query;
+  const { id, source_id, slug } = req.query;
 
   const { user, error: userError } = await supabase.auth.api.getUserByCookie(
     req
@@ -39,7 +39,7 @@ const info = async (req: NextApiRequest, res: NextApiResponse) => {
     responseType: "stream",
     params: {
       source_id,
-      ani_id,
+      id,
       slug,
     },
   });
