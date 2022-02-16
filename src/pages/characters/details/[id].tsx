@@ -7,7 +7,14 @@ import TextIcon from "@/components/shared/TextIcon";
 import { REVALIDATE_TIME } from "@/constants";
 import dayjs from "@/lib/dayjs";
 import supabase from "@/lib/supabase";
-import { Character, CharacterConnection, VoiceActor } from "@/types";
+import {
+  Anime,
+  Character,
+  CharacterConnection,
+  Manga,
+  VoiceActor,
+  VoiceActorConnection,
+} from "@/types";
 import { isFalsy, numberWithCommas } from "@/utils";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import React, { useMemo } from "react";
@@ -31,9 +38,9 @@ const KeyValue: React.FC<{ property: string; value: string }> = ({
 );
 
 interface AdvancedCharacter extends Character {
-  manga_connections: CharacterConnection<"manga">[];
-  anime_connections: CharacterConnection<"anime">[];
-  voice_actors: VoiceActor[];
+  mangaConnections: CharacterConnection<Manga>[];
+  animeConnections: CharacterConnection<Anime>[];
+  voiceActorConnections: VoiceActorConnection[];
 }
 
 interface DetailsPageProps {
@@ -83,7 +90,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ character }) => {
   return (
     <>
       <Head
-        title={`${character.name} - Kaguya`}
+        title={`${character.name.userPreferred} - Kaguya`}
         image={character.image.large}
       />
 
@@ -93,12 +100,17 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ character }) => {
         <div className="relative px-4 sm:px-12 z-10 bg-background-900 pb-4 mb-8">
           <div className="flex flex-col md:flex-row md:space-x-8">
             <div className="shrink-0 relative left-1/2 -translate-x-1/2 md:static md:left-0 md:-translate-x-0 w-[186px] -mt-20 space-y-6">
-              <PlainCard src={character.image.large} alt={character.name} />
+              <PlainCard
+                src={character.image.large}
+                alt={character.name.userPreferred}
+              />
             </div>
 
             <div className="space-y-8 text-center md:text-left flex flex-col items-center md:items-start py-4 mt-4">
               <div className="flex flex-col md:flex-row items-center gap-4">
-                <h1 className="text-3xl font-semibold">{character.name}</h1>
+                <h1 className="text-3xl font-semibold">
+                  {character.name.userPreferred}
+                </h1>
 
                 <TextIcon
                   iconClassName="text-primary-500"
@@ -124,33 +136,35 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ character }) => {
         </div>
 
         <div className="px-4 sm:px-12 space-y-8">
-          {!!character.voice_actors?.length && (
+          {!!character.voiceActorConnections?.length && (
             <DetailsSection title="Seiyuu">
               <List
                 type="voice_actors"
-                data={character.voice_actors}
+                data={character.voiceActorConnections.map(
+                  (connection) => connection.voiceActor
+                )}
                 onEachCard={(voiceActor) => <VACard voiceActor={voiceActor} />}
               />
             </DetailsSection>
           )}
 
-          {!!character.anime_connections?.length && (
+          {!!character.animeConnections?.length && (
             <DetailsSection title="Anime">
               <List
                 type="anime"
-                data={character.anime_connections.map(
-                  (connection) => connection.anime
+                data={character.animeConnections.map(
+                  (connection) => connection.media
                 )}
               />
             </DetailsSection>
           )}
 
-          {!!character.manga_connections?.length && (
+          {!!character.mangaConnections?.length && (
             <DetailsSection title="Manga">
               <List
                 type="manga"
-                data={character.manga_connections.map(
-                  (connection) => connection.manga
+                data={character.mangaConnections.map(
+                  (connection) => connection.media
                 )}
               />
             </DetailsSection>
@@ -163,13 +177,13 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ character }) => {
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { data, error } = await supabase
-    .from("all_characters")
+    .from("kaguya_characters")
     .select(
       `
         *,
-        voice_actors(*),
-        manga_connections:new_manga_characters!character_id(manga:manga_id(*)),
-        anime_connections:anime_characters!character_id(anime:anime_id(*))
+        voiceActorConnections:kaguya_voice_actor_connections(voiceActor:voiceActorId(*), character:characterId(*)),
+        mangaConnections:kaguya_manga_characters!characterId(media:mediaId(*)),
+        animeConnections:kaguya_anime_characters!characterId(media:mediaId(*))
       `
     )
     .eq("id", Number(params.id))
@@ -191,7 +205,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const { data } = await supabase
-    .from<Character>("all_characters")
+    .from<Character>("kaguya_characters")
     .select("id")
     .order("favourites", { ascending: false })
     .limit(5);
