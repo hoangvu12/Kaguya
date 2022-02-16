@@ -31,7 +31,7 @@ interface HomeProps {
 
 const Home: NextPage<HomeProps> = ({
   trendingAnime,
-  // randomAnime,
+  randomAnime,
   recentlyUpdatedAnime,
   schedulesAnime,
   favouriteAllTime,
@@ -50,8 +50,8 @@ const Home: NextPage<HomeProps> = ({
           <HomeBanner type="anime" data={trendingAnime} />
 
           <div className="space-y-8">
-            {/* <WatchedSection /> */}
-            {/* <RecommendedAnimeSection /> */}
+            <WatchedSection />
+            <RecommendedAnimeSection />
 
             <Section className="flex flex-col md:flex-row items-center md:space-between space-y-4 space-x-0 md:space-y-0 md:space-x-4">
               <ColumnSection
@@ -91,7 +91,7 @@ const Home: NextPage<HomeProps> = ({
                 title="Xem gì hôm nay?"
                 className="w-full md:w-[80%] md:!pr-0"
               >
-                {/* <ShouldWatch type="anime" data={randomAnime} /> */}
+                <ShouldWatch type="anime" data={randomAnime} />
               </Section>
 
               <Section title="Thể loại" className="w-full md:w-[20%] md:!pl-0">
@@ -140,11 +140,11 @@ export const getStaticProps: GetStaticProps = async () => {
     .order("episodeUpdatedAt", { ascending: false })
     .limit(15);
 
-  // const { data: randomAnime } = await supabase
-  //   .rpc<Anime>("anime_random")
-  //   .limit(1)
-  //   .not("bannerImage", "is", null)
-  //   .single();
+  const { data: randomAnime } = await supabase
+    .rpc<Anime>("anime_random")
+    .limit(1)
+    .not("bannerImage", "is", null)
+    .single();
 
   const { data: popularSeason } = await supabase
     .from<Anime>("kaguya_anime")
@@ -186,7 +186,7 @@ export const getStaticProps: GetStaticProps = async () => {
     props: {
       trendingAnime,
       recentlyUpdatedAnime,
-      // randomAnime,
+      randomAnime,
       schedulesAnime,
       popularSeason,
       popularAllTime,

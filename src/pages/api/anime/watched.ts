@@ -1,4 +1,5 @@
 import supabase from "@/lib/supabaseAdmin";
+import { Watched } from "@/types";
 import { isFalsy } from "@/utils";
 import { NextApiHandler } from "next";
 
@@ -10,9 +11,9 @@ const handler: NextApiHandler = async (req, res) => {
   }
 
   try {
-    const { anime_id, episode_id, watched_time = 0 } = req.body;
+    const { media_id, episode_id, watched_time = 0 } = req.body;
 
-    if (isFalsy(anime_id) || isFalsy(episode_id)) {
+    if (isFalsy(media_id) || isFalsy(episode_id)) {
       res.json({ success: false });
 
       return;
@@ -23,51 +24,23 @@ const handler: NextApiHandler = async (req, res) => {
     );
 
     if (userError) {
-      res.json({ success: false, error: userError.message });
-
-      return;
+      throw userError;
     }
 
-    const { data: isWatched, error: watchedError } = await supabase
-      .from("watched")
-      .select("id")
-      .eq("user_id", user.id)
-      .eq("anime_id", anime_id);
+    const { error: upsertError } = await supabase
+      .from<Watched>("kaguya_watched")
+      .upsert(
+        {
+          mediaId: media_id,
+          episodeId: episode_id,
+          userId: user.id,
+          watchedTime: watched_time,
+        },
+        { returning: "minimal" }
+      );
 
-    if (watchedError) {
-      res.json({ success: false, error: watchedError.message });
-
-      return;
-    }
-
-    if (isWatched?.length) {
-      const { error: updateError } = await supabase
-        .from("watched")
-        .update({
-          anime_id,
-          episode_id,
-          watched_time,
-        })
-        .match({ user_id: user.id, anime_id });
-
-      if (updateError) {
-        res.json({ success: false, error: updateError.message });
-
-        return;
-      }
-    } else {
-      const { error } = await supabase
-        .from("watched")
-        .upsert(
-          { user_id: user.id, anime_id, episode_id, watched_time },
-          { ignoreDuplicates: false }
-        );
-
-      if (error) {
-        res.json({ success: false, error: error.message });
-
-        return;
-      }
+    if (upsertError) {
+      throw upsertError;
     }
 
     res.json({ success: true });

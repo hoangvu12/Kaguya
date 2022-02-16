@@ -33,6 +33,7 @@ export type Episode = {
   sourceMediaId: number;
   source: Source;
   slug: string;
+  thumbnailImage?: string;
 };
 
 export type Chapter = {

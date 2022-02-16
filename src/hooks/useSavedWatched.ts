@@ -16,10 +16,10 @@ const useSavedWatched = (animeId: number) => {
     ["watched", animeId],
     () =>
       supabase
-        .from<Watched>("watched")
-        .select("episode_id, watched_time")
-        .eq("anime_id", animeId)
-        .eq("user_id", user.id)
+        .from<Watched>("kaguya_watched")
+        .select("episode:episodeId(*), watchedTime")
+        .eq("mediaId", animeId)
+        .eq("userId", user.id)
         .limit(1)
         .single(),
     {
