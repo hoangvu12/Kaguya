@@ -14,7 +14,7 @@ interface SortSelectorProps<T> {
 const SortSelector = <T extends "anime" | "manga">(
   props: SortSelectorProps<T>
 ) => {
-  const { onChange, defaultValue = "average_score", type } = props;
+  const { onChange, defaultValue = "averageScore", type } = props;
   const [activeItem, setActiveItem] = useState(defaultValue);
 
   const SORTS = useMemo(

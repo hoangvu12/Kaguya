@@ -6,7 +6,8 @@ import Head from "@/components/shared/Head";
 import Select from "@/components/shared/Select";
 import { TYPES } from "@/constants";
 import useDevice from "@/hooks/useDevice";
-import { Anime, Format, Genre } from "@/types";
+import { Anime, MediaGenre } from "@/types";
+import { MediaFormat } from "@/anilist";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 
@@ -70,9 +71,9 @@ const BrowsePage = ({ query: baseQuery }) => {
   } = baseQuery;
 
   const query = {
-    format: format as Format,
+    format: format as MediaFormat,
     keyword: keyword as string,
-    genres: convertQueryToArray<Genre>(genres),
+    genres: convertQueryToArray<MediaGenre>(genres),
     tags: convertQueryToArray<string>(tags),
     countries: convertQueryToArray<string>(countries),
     season: season as string,

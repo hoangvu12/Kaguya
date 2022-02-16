@@ -155,12 +155,12 @@ const HomeBanner = <T extends "anime" | "manga">({
                           </h1>
 
                           <div className="flex flex-wrap items-center mt-4 text-lg gap-x-8">
-                            {slide.average_score && (
+                            {slide.averageScore && (
                               <TextIcon
                                 LeftIcon={MdTagFaces}
                                 iconClassName="text-green-300"
                               >
-                                <p>{slide.average_score}%</p>
+                                <p>{slide.averageScore}%</p>
                               </TextIcon>
                             )}
                             <TextIcon

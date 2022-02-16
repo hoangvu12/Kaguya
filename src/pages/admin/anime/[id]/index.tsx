@@ -37,7 +37,7 @@ const AdminAnimeDetails = () => {
       <Section title="Thông tin">
         <div className="relative !mb-8 flex space-y-4 md:flex-row flex-col md:space-y-0 md:space-x-4 bg-background-900 p-4 md:p-8">
           <div className="w-40 shrink-0">
-            <PlainCard src={data.cover_image.extra_large} alt={title} />
+            <PlainCard src={data.coverImage.extraLarge} alt={title} />
           </div>
 
           <div className="space-y-4 self-end">
@@ -45,12 +45,12 @@ const AdminAnimeDetails = () => {
               <p className="text-3xl">{title}</p>
               <p className="text-lg line-clamp-5">{data.description}</p>
               <div className="flex flex-wrap items-center mt-4 text-lg gap-x-8">
-                {data.average_score && (
+                {data.averageScore && (
                   <TextIcon
                     LeftIcon={MdTagFaces}
                     iconClassName="text-green-300"
                   >
-                    <p>{data.average_score}%</p>
+                    <p>{data.averageScore}%</p>
                   </TextIcon>
                 )}
                 <TextIcon LeftIcon={AiFillHeart} iconClassName="text-red-400">
@@ -65,8 +65,8 @@ const AdminAnimeDetails = () => {
             </div>
 
             <div className="flex space-x-8 overflow-x-auto md:scroll-bar snap-x md:space-x-16">
-              <InfoItem title="Quốc gia" value={data.country_of_origin} />
-              <InfoItem title="Số tập" value={data.total_episodes} />
+              <InfoItem title="Quốc gia" value={data.countryOfOrigin} />
+              <InfoItem title="Số tập" value={data.totalEpisodes} />
 
               {data.duration && (
                 <InfoItem title="Thời lượng" value={`${data.duration} phút`} />
@@ -78,7 +78,7 @@ const AdminAnimeDetails = () => {
               />
               <InfoItem
                 title="Giới hạn tuổi"
-                value={data.is_adult ? "18+" : ""}
+                value={data.isAdult ? "18+" : ""}
               />
             </div>
           </div>
@@ -110,7 +110,7 @@ const AdminAnimeDetails = () => {
             <DetailsSection title="Anime liên quan">
               <List
                 type="anime"
-                data={data.relations.map((relation) => relation.anime)}
+                data={data.relations.map((relation) => relation.media)}
               />
             </DetailsSection>
           )}
@@ -120,7 +120,7 @@ const AdminAnimeDetails = () => {
               <List
                 type="anime"
                 data={data.recommendations.map(
-                  (recommendation) => recommendation.anime
+                  (recommendation) => recommendation.media
                 )}
               />
             </DetailsSection>
