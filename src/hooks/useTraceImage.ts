@@ -47,7 +47,7 @@ const composeData = (
 ): TraceImageResponse => {
   const newResult = traceData.result
     .map((traceResult) => {
-      const anime = supabaseData.find((a) => a.ani_id === traceResult.anilist);
+      const anime = supabaseData.find((a) => a.id === traceResult.anilist);
 
       if (!anime) return null;
 
@@ -99,9 +99,9 @@ export const useTraceImage = () => {
       const anilistIds = data.result.map((result) => result.anilist);
 
       const { data: supabaseData } = await supabase
-        .from<Anime>("anime")
+        .from<Anime>("kaguya_anime")
         .select("*")
-        .in("ani_id", anilistIds);
+        .in("id", anilistIds);
 
       const newData = composeData(data, supabaseData);
 
