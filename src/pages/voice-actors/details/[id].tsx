@@ -152,11 +152,11 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ voiceActor }) => {
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { data, error } = await supabase
-    .from("voice_actors")
+    .from("kaguya_voice_actors")
     .select(
       `
         *,
-        characters:anime_voice_actors(character:character_id(id, name, image))
+        characters:kaguya_voice_actor_connections(character:characterId(id, name, image))
       `
     )
     .eq("id", Number(params.id))
@@ -178,7 +178,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const { data } = await supabase
-    .from<VoiceActor>("voice_actors")
+    .from<VoiceActor>("kaguya_voice_actors")
     .select("id")
     .order("favourites", { ascending: false })
     .limit(5);
