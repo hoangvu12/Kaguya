@@ -43,7 +43,7 @@ const useBrowse = (options: UseBrowseOptions) => {
         })
         .select(select || "*");
     } else {
-      db = supabase.from("anime").select(select || "*");
+      db = supabase.from("kaguya_anime").select(select || "*");
     }
 
     if (genres?.length) {
