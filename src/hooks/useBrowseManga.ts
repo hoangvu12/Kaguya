@@ -40,7 +40,9 @@ const useBrowse = (options: UseBrowseOptions) => {
         })
         .select(select || "*");
     } else {
-      db = supabase.from("manga").select(select || "*", { count: "exact" });
+      db = supabase
+        .from("kaguya_manga")
+        .select(select || "*", { count: "exact" });
     }
 
     if (genres?.length) {

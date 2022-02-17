@@ -9,7 +9,7 @@ const useBirthdayCharacters = () => {
     ["characters birthday"],
     () => {
       return supabase
-        .from("all_characters")
+        .from("kaguya_characters")
         .select("*")
         .eq("dateOfBirth->day", day.date())
         .eq("dateOfBirth->month", day.month() + 1)
