@@ -132,7 +132,7 @@ const HomeBanner = <T extends "anime" | "manga">({
           slidesPerView={1}
           loop
         >
-          {data.map((slide, index) => {
+          {data.map((slide: Anime | Manga, index) => {
             const title = getTitle(slide);
 
             return (
@@ -141,8 +141,8 @@ const HomeBanner = <T extends "anime" | "manga">({
                   <a>
                     <div className="relative aspect-w-16 aspect-h-9 rounded-md">
                       <Image
-                        src={slide.banner_image}
-                        alt={slide.title}
+                        src={slide.bannerImage}
+                        alt={slide.title.userPreferred}
                         layout="fill"
                         objectFit="cover"
                         className="rounded-md"
