@@ -15,7 +15,9 @@ const WatchedSwiper: React.FC<WatchedSwiperProps> = ({ data, ...props }) => {
       {data.map(({ media, episode }, index) => {
         return (
           <SwiperSlide key={index}>
-            <Link href={`/anime/watch/${media.id}/${episode.sourceEpisodeId}`}>
+            <Link
+              href={`/anime/watch/${media.id}/${episode.sourceId}/${episode.sourceEpisodeId}`}
+            >
               <a>
                 <EpisodeCard
                   episode={{

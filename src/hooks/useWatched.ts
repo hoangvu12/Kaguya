@@ -12,7 +12,7 @@ const useWatched = () => {
       return supabase
         .from<Watched>("kaguya_watched")
         .select(
-          "media:mediaId(id, title, vietnameseTitle, bannerImage, coverImage), episode:kaguya_episodes!episodeId(id, name)"
+          "media:mediaId(id, title, vietnameseTitle, bannerImage, coverImage), episode:kaguya_episodes!episodeId(sourceEpisodeId, name, sourceId)"
         )
         .eq("userId", user.id)
         .order("updated_at", { ascending: false })
