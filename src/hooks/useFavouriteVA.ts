@@ -6,7 +6,7 @@ const useFavouriteVA = () => {
     ["voice-actors favourites"],
     () => {
       return supabase
-        .from("voice_actors")
+        .from("kaguya_voice_actors")
         .select("*")
         .limit(30)
         .order("favourites", { ascending: false });
