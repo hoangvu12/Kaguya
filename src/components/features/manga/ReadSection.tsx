@@ -7,8 +7,6 @@ import Section from "@/components/shared/Section";
 const ReadSection = () => {
   const { data, isLoading, isError } = useRead();
 
-  console.log(data);
-
   if (isLoading) {
     return <ListSwiperSkeleton />;
   }
