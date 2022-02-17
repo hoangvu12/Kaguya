@@ -100,7 +100,16 @@ const TracePage = () => {
             <TracePanel data={traceResult} image={image} />
           </React.Fragment>
         ) : isLoading ? (
-          <div className="relative py-8">
+          <div className="relative w-full md:w-1/3 flex justify-center items-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={image.dataURL}
+              alt="searched image"
+              className="w-full object-fit blur-[2px] transition duration-300"
+            />
+
+            <div className="absolute inset-0 bg-black/30"></div>
+
             <Loading />
           </div>
         ) : (
