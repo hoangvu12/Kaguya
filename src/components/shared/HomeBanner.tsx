@@ -132,7 +132,7 @@ const HomeBanner = <T extends "anime" | "manga">({
           slidesPerView={1}
           loop
         >
-          {data.map((slide: Anime | Manga, index) => {
+          {data.map((slide: Anime | Manga, index: number) => {
             const title = getTitle(slide);
 
             return (
@@ -140,13 +140,15 @@ const HomeBanner = <T extends "anime" | "manga">({
                 <Link href={getRedirectUrl(slide.id)}>
                   <a>
                     <div className="relative aspect-w-16 aspect-h-9 rounded-md">
-                      <Image
-                        src={slide.bannerImage}
-                        alt={slide.title.userPreferred}
-                        layout="fill"
-                        objectFit="cover"
-                        className="rounded-md"
-                      />
+                      {slide.bannerImage && (
+                        <Image
+                          src={slide.bannerImage}
+                          alt={title}
+                          layout="fill"
+                          objectFit="cover"
+                          className="rounded-md"
+                        />
+                      )}
 
                       <div className="absolute fixed-0 bg-gradient-to-b from-transparent via-black/60 to-black/80 flex items-end">
                         <div className="p-4">
