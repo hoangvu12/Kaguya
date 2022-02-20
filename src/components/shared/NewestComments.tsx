@@ -78,7 +78,10 @@ const NewestComments = <T extends "anime" | "manga">(
                   />
 
                   <Link href={redirectUrl}>
-                    <a className="font-semibold line-clamp-1 text-sm block text-primary-300 hover:text-primary-400 transition duration-300">
+                    <a
+                      className="font-semibold line-clamp-1 text-sm block text-primary-300 hover:text-primary-400 transition duration-300"
+                      title={getTitle(source)}
+                    >
                       {getTitle(source)}
                     </a>
                   </Link>
