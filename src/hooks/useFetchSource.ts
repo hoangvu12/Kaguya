@@ -19,23 +19,29 @@ export const useFetchSource = (
 ) => {
   const queryClient = useQueryClient();
 
-  const fetchSource = (episodeId: number, sourceId: string) =>
+  const fetchSource = (episode: Episode) =>
     axios
-      .get<ReturnSuccessType>(
-        `/api/anime/source?episode_id=${episodeId}&source_id=${sourceId}`
-      )
+      .get<ReturnSuccessType>(`/api/anime/source`, {
+        params: {
+          episode_id: episode.sourceEpisodeId,
+          source_media_id: episode.sourceMediaId,
+          source_id: episode.sourceId,
+        },
+      })
       .then(({ data }) => data);
 
+  const getQueryKey = (episode: Episode) =>
+    `source-${episode.sourceId}-${episode.sourceEpisodeId}`;
+
   return useQuery<ReturnSuccessType, AxiosError<ReturnFailType>>(
-    `source-${currentEpisode.sourceEpisodeId}`,
-    () => fetchSource(currentEpisode.sourceEpisodeId, currentEpisode.sourceId),
+    getQueryKey(currentEpisode),
+    () => fetchSource(currentEpisode),
     {
       onSuccess: () => {
         if (!nextEpisode?.sourceEpisodeId) return;
 
-        queryClient.prefetchQuery(
-          `source-${nextEpisode?.sourceEpisodeId}`,
-          () => fetchSource(nextEpisode.sourceEpisodeId, nextEpisode.sourceId)
+        queryClient.prefetchQuery(getQueryKey(nextEpisode), () =>
+          fetchSource(nextEpisode)
         );
       },
     }
