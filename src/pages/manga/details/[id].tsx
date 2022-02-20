@@ -166,33 +166,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
             )}
 
             <DetailsSection title="Bình luận">
-              <CommentsSection
-                query={{
-                  queryFn: (from, to) =>
-                    supabase
-                      .from<Comment>("comments")
-                      .select(
-                        `
-                        *,
-                        user:user_id(*),
-                        reply_comments!original_id(
-                          comment:reply_id(
-                            *,
-                            user:user_id(*),
-                            reactions:comment_reactions(*)
-                          )
-                        ),
-                        reactions:comment_reactions(*)
-                        `
-                      )
-                      .eq("manga_id", manga.id)
-                      .is("is_reply", false)
-                      .order("created_at", { ascending: true })
-                      .range(from, to),
-                  queryKey: ["comments", manga.id],
-                }}
-                manga_id={manga.id}
-              />
+              <CommentsSection manga_id={manga.id} />
             </DetailsSection>
           </div>
         </div>

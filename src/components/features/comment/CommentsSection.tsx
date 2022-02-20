@@ -10,12 +10,9 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { QueryKey, useQueryClient } from "react-query";
 import CommentComponent from "@/components/features/comment/Comment";
 import InView from "@/components/shared/InView";
+import supabase from "@/lib/supabase";
 
 interface CommentsSectionProps {
-  query: {
-    queryKey: QueryKey;
-    queryFn: SupabaseInfiniteQueriesFunction<Comment>;
-  };
   anime_id?: number;
   manga_id?: number;
 }
@@ -28,16 +25,52 @@ const CommentsSection: React.FC<CommentsSectionProps> = (props) => {
     anime_id: props.anime_id,
     manga_id: props.manga_id,
   });
-  const { data, isLoading, hasNextPage, fetchNextPage } =
-    useSupaInfiniteQuery<Comment>(props.query.queryKey, props.query.queryFn, {
-      onSuccess: (data) => {
-        const comments = data.pages.map((page) => page.data).flat();
 
-        comments.forEach((comment) => {
-          queryClient.setQueryData(["comment", comment.id], comment);
-        });
+  const { data, isLoading, hasNextPage, fetchNextPage } =
+    useSupaInfiniteQuery<Comment>(
+      ["comments", props.anime_id ? props.anime_id : props.manga_id],
+      (from, to) => {
+        let db = supabase
+          .from<Comment>("comments")
+          .select(
+            `
+              *,
+              user:user_id(*),
+              reply_comments!original_id(
+                comment:reply_id(
+                  *,
+                  user:user_id(*),
+                  reactions:comment_reactions(*)
+                )
+              ),
+              reactions:comment_reactions(*)
+            `
+          )
+
+          .is("is_reply", false)
+          .order("created_at", { ascending: true })
+          .range(from, to);
+
+        if (props.anime_id) {
+          db = db.eq("anime_id", props.anime_id);
+        }
+
+        if (props.manga_id) {
+          db = db.eq("manga_id", props.manga_id);
+        }
+
+        return db;
       },
-    });
+      {
+        onSuccess: (data) => {
+          const comments = data.pages.map((page) => page.data).flat();
+
+          comments.forEach((comment) => {
+            queryClient.setQueryData(["comment", comment.id], comment);
+          });
+        },
+      }
+    );
 
   const handleInputSubmit = (text: string) => {
     createCommentMutation.mutate(text);
