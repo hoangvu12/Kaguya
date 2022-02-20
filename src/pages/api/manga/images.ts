@@ -4,12 +4,20 @@ import axios from "axios";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 const images = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { source_media_id, chapter_id, source_id } = req.query;
+  if (!Object.keys(req.query).length) {
+    res.status(400).json({
+      success: false,
+      error: "No id provided",
+      errorMessage: "Something went wrong",
+    });
+
+    return;
+  }
 
   try {
-    const { data } = await axios.get(
-      `${config.nodeServerUrl}/images?source_media_id=${source_media_id}&source_id=${source_id}&chapter_id=${chapter_id}`
-    );
+    const { data } = await axios.get(`${config.nodeServerUrl}/images`, {
+      params: req.query,
+    });
 
     res.setHeader(
       "Cache-Control",

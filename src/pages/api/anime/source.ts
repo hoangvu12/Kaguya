@@ -4,9 +4,7 @@ import axios from "axios";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const {
-    query: { episode_id, source_id },
-  } = req;
+  const { query } = req;
 
   try {
     if (!config.nodeServerUrl) {
@@ -19,7 +17,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       return;
     }
 
-    if (!episode_id) {
+    if (!Object.keys(query).length) {
       res.status(400).json({
         success: false,
         error: "No id provided",
@@ -30,7 +28,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     const { data }: any = await axios.get(`${config.nodeServerUrl}/source`, {
-      params: { episode_id, source_id },
+      params: query,
     });
 
     res.setHeader(
