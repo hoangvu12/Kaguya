@@ -1,4 +1,3 @@
-import EpisodeSelector from "@/components/features/anime/EpisodeSelector";
 import Video from "@/components/features/anime/Player";
 import EpisodesButton from "@/components/features/anime/Player/EpisodesButton";
 import MobileEpisodesButton from "@/components/features/anime/Player/MobileEpisodesButton";
@@ -18,7 +17,6 @@ import useSavedWatched from "@/hooks/useSavedWatched";
 import useSaveWatched from "@/hooks/useSaveWatched";
 import supabase from "@/lib/supabase";
 import { Anime } from "@/types";
-import { parseNumbersFromString } from "@/utils";
 import { getTitle, sortMediaUnit } from "@/utils/data";
 import Storage from "@/utils/storage";
 import classNames from "classnames";
@@ -29,7 +27,7 @@ import React, {
   useEffect,
   useMemo,
   useRef,
-  useState,
+  useState
 } from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import { BsArrowLeft } from "react-icons/bs";
@@ -351,9 +349,10 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
                     />
 
                     <div>
-                      <EpisodeSelector
+                      <SourceEpisodeSelector
                         episodes={sortedEpisodes}
                         activeEpisode={currentEpisode}
+                        episodeLinkProps={{ shallow: true, replace: true }}
                       />
                     </div>
                   </div>
