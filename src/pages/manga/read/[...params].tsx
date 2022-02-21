@@ -61,16 +61,13 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
   } = useSavedRead(Number(mangaId));
 
   const currentChapter = useMemo(
-    () =>
-      chapters.find((chapter) => chapter.sourceChapterId === Number(chapterId)),
+    () => chapters.find((chapter) => chapter.sourceChapterId === chapterId),
     [chapters, chapterId]
   );
 
   const currentChapterIndex = useMemo(
     () =>
-      chapters.findIndex(
-        (chapter) => chapter.sourceChapterId === Number(chapterId)
-      ),
+      chapters.findIndex((chapter) => chapter.sourceChapterId === chapterId),
     [chapters, chapterId]
   );
 

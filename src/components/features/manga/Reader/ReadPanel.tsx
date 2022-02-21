@@ -194,8 +194,7 @@ const ReadPanel: React.FC<ReadPanelProps> = ({ children }) => {
                 onChange={(e) => {
                   const sourceChapterId = e.target.value;
                   const chapter = chapters.find(
-                    (chapter) =>
-                      chapter.sourceChapterId === Number(sourceChapterId)
+                    (chapter) => chapter.sourceChapterId === sourceChapterId
                   );
 
                   setChapter(chapter);

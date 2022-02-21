@@ -27,7 +27,7 @@ import React, {
   useEffect,
   useMemo,
   useRef,
-  useState
+  useState,
 } from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import { BsArrowLeft } from "react-icons/bs";
@@ -113,16 +113,14 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
 
   const currentEpisode = useMemo(
     () =>
-      sourceEpisodes.find(
-        (episode) => episode.sourceEpisodeId === Number(episodeId)
-      ),
+      sourceEpisodes.find((episode) => episode.sourceEpisodeId === episodeId),
     [sourceEpisodes, episodeId]
   );
 
   const currentEpisodeIndex = useMemo(
     () =>
       sourceEpisodes.findIndex(
-        (episode) => episode.sourceEpisodeId === Number(episodeId)
+        (episode) => episode.sourceEpisodeId === episodeId
       ),
     [episodeId, sourceEpisodes]
   );
@@ -133,7 +131,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   );
 
   const handleNavigateEpisode = useCallback(
-    (episodeId: number) => () => {
+    (episodeId: string) => () => {
       router.replace(`/anime/watch/${animeId}/${sourceId}/${episodeId}`, null, {
         shallow: true,
       });
@@ -207,13 +205,17 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
       navigator.mediaSession.setActionHandler("previoustrack", function () {
         if (currentEpisodeIndex === 0) return;
 
-        handleNavigateEpisode(Number(currentEpisodeIndex) - 1)();
+        const previousEpisode = sourceEpisodes[currentEpisodeIndex - 1];
+
+        handleNavigateEpisode(previousEpisode.sourceEpisodeId)();
       });
 
       navigator.mediaSession.setActionHandler("nexttrack", function () {
         if (currentEpisodeIndex === sourceEpisodes.length - 1) return;
 
-        handleNavigateEpisode(Number(currentEpisodeIndex) + 1)();
+        const nextEpisode = sourceEpisodes[currentEpisodeIndex + 1];
+
+        handleNavigateEpisode(nextEpisode.sourceEpisodeId)();
       });
     };
 
@@ -222,7 +224,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
     return () => {
       videoEl.removeEventListener("canplay", handleNavigator);
     };
-  }, [currentEpisodeIndex, handleNavigateEpisode, sourceEpisodes.length]);
+  }, [currentEpisodeIndex, handleNavigateEpisode, sourceEpisodes]);
 
   const title = useMemo(() => getTitle(anime), [anime]);
 

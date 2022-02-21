@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "dev:ts": "yarn dev && yarn ts:watch",
+    "ts": "tsc --noEmit --incremental",
+    "ts:watch": "yarn ts --watch"
   },
   "dependencies": {
     "@popperjs/core": "^2.10.2",

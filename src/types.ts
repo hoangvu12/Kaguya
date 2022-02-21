@@ -23,8 +23,8 @@ export type Episode = {
   name: string;
   mediaId: number;
   sourceId: string;
-  sourceEpisodeId: number;
-  sourceMediaId: number;
+  sourceEpisodeId: string;
+  sourceMediaId: string;
   source: Source;
   slug: string;
   thumbnailImage?: string;
@@ -34,8 +34,8 @@ export type Chapter = {
   name: string;
   mediaId: number;
   sourceId: string;
-  sourceChapterId: number;
-  sourceMediaId: number;
+  sourceChapterId: string;
+  sourceMediaId: string;
   source: Source;
   slug: string;
 };
