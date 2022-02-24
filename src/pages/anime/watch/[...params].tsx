@@ -139,7 +139,10 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
     [animeId, router, sourceId]
   );
 
-  const { data, isLoading } = useFetchSource(currentEpisode, nextEpisode);
+  const { data, isLoading, isError, error } = useFetchSource(
+    currentEpisode,
+    nextEpisode
+  );
 
   // Show watched overlay
   useEffect(() => {
@@ -290,18 +293,33 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
         image={anime.bannerImage}
       />
 
-      <Video
-        ref={videoRef}
-        src={isLoading ? blankVideo : data.sources}
-        className="object-contain w-full h-full"
-        autoPlay
-        overlaySlot={
-          <BsArrowLeft
-            className="absolute w-10 h-10 transition duration-300 cursor-pointer top-10 left-10 hover:text-gray-200"
-            onClick={router.back}
-          />
-        }
-      />
+      {isError ? (
+        <div className="w-full h-full flex flex-col items-center justify-center space-y-8">
+          <div className="space-y-4">
+            <p className="text-4xl font-semibold">｡゜(｀Д´)゜｡</p>
+            <p className="text-xl">
+              Đã có lỗi xảy ra ({error?.response?.data?.error})
+            </p>
+          </div>
+
+          <Button primary onClick={router.back}>
+            <p>Trở về trang trước</p>
+          </Button>
+        </div>
+      ) : (
+        <Video
+          ref={videoRef}
+          src={isLoading ? blankVideo : data.sources}
+          className="object-contain w-full h-full"
+          autoPlay
+          overlaySlot={
+            <BsArrowLeft
+              className="absolute w-10 h-10 transition duration-300 cursor-pointer top-10 left-10 hover:text-gray-200"
+              onClick={router.back}
+            />
+          }
+        />
+      )}
 
       {isLoading && (
         <Portal selector=".video-wrapper">
