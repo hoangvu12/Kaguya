@@ -77,24 +77,28 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
               )}
             </div>
 
-            <div className="flex flex-col items-center justify-between py-4 mt-4 text-center md:text-left md:items-start md:-mt-16">
-              <Link href={`/anime/watch/${anime.id}`}>
-                <a>
-                  <Button primary LeftIcon={BsFillPlayFill} className="mb-8">
-                    <p>Xem ngay</p>
-                  </Button>
-                </a>
-              </Link>
+            <div className="flex flex-col items-center justify-between py-4 mt-4 text-center md:text-left md:items-start md:-mt-16 space-y-4">
+              <div className="flex flex-col md:items-center space-y-4">
+                <Link href={`/anime/watch/${anime.id}`}>
+                  <a>
+                    <Button primary LeftIcon={BsFillPlayFill} className="mb-4">
+                      <p>Xem ngay</p>
+                    </Button>
+                  </a>
+                </Link>
 
-              <p className="mb-2 text-3xl font-semibold">{title}</p>
+                <p className="mb-2 text-3xl font-semibold">{title}</p>
 
-              <DotList>
-                {anime.genres.map((genre) => (
-                  <span key={genre}>{convert(genre, "genre")}</span>
-                ))}
-              </DotList>
+                <DotList>
+                  {anime.genres.map((genre) => (
+                    <span key={genre}>{convert(genre, "genre")}</span>
+                  ))}
+                </DotList>
 
-              <p className="mt-4 mb-8 text-gray-300">{anime.description}</p>
+                <p className="mt-4 mb-8 text-gray-300">
+                  {anime.description || "Đang cập nhật..."}
+                </p>
+              </div>
 
               <div className="flex space-x-8 overflow-x-auto snap-x snap-mandatory md:space-x-16">
                 <InfoItem title="Quốc gia" value={anime.countryOfOrigin} />
