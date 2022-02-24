@@ -14,7 +14,7 @@ import SourceStatus from "@/components/shared/SourceStatus";
 import { REVALIDATE_TIME } from "@/constants";
 import { useUser } from "@/contexts/AuthContext";
 import supabase from "@/lib/supabase";
-import { Comment, Manga } from "@/types";
+import { Manga } from "@/types";
 import { numberWithCommas } from "@/utils";
 import { convert, getTitle } from "@/utils/data";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";

@@ -19,7 +19,10 @@ const ChapterSelector: React.FC<ChapterSelectorProps> = ({ manga }) => {
   const [activeSource, setActiveSource] = useState(chapters[0].source.name);
 
   const sourceChapters = useMemo(
-    () => chapters.filter((chapter) => chapter.source.name === activeSource),
+    () =>
+      chapters
+        .filter((chapter) => chapter.source.name === activeSource)
+        .reverse(),
     [activeSource, chapters]
   );
 
