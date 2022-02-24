@@ -37,42 +37,40 @@ const ReadImage: React.FC<ReadImageProps> = ({
   // I have to use img instead of Next/Image because I want to image calculate the height itself
   return (
     <React.Fragment>
-      <AnimatePresence>
-        {!loaded && (
-          <motion.div
-            animate="animate"
-            initial="initial"
-            exit="exit"
-            variants={{
-              animate: { opacity: 1 },
-              initial: { opacity: 0 },
-              exit: { opacity: 0 },
-            }}
-            className="flex items-center justify-center w-full h-60 text-gray-500"
-          >
-            <BsFillImageFill className="w-8 h-8 animate-pulse" />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {!loaded && (
+        <div className="flex items-center justify-center w-full h-60 text-gray-500">
+          <BsFillImageFill className="w-8 h-8 animate-pulse" />
+        </div>
+      )}
 
-      {/* eslint-disable-next-line */}
-      <img
-        ref={ref}
-        className={classNames(
-          fitMode === "auto" && "w-auto h-auto",
-          fitMode === "width" && "w-full h-auto",
-          fitMode === "height" && "w-auto h-screen",
-          className
-        )}
-        alt="Đọc truyện tại Kaguya"
-        src={`/api/proxy?url=${encodeURIComponent(src)}`}
-        onLoad={(e) => {
-          setLoaded(true);
-
-          onLoad?.(e);
+      <motion.div
+        animate={loaded ? "animate" : "initial"}
+        initial="initial"
+        exit="exit"
+        variants={{
+          animate: { opacity: 1, display: "block" },
+          initial: { opacity: 0, display: "none" },
         }}
-        {...props}
-      />
+      >
+        {/* eslint-disable-next-line */}
+        <img
+          ref={ref}
+          className={classNames(
+            fitMode === "auto" && "w-auto h-auto",
+            fitMode === "width" && "w-full h-auto",
+            fitMode === "height" && "w-auto h-screen",
+            className
+          )}
+          alt="Đọc truyện tại Kaguya"
+          src={`/api/proxy?url=${encodeURIComponent(src)}`}
+          onLoad={(e) => {
+            setLoaded(true);
+
+            onLoad?.(e);
+          }}
+          {...props}
+        />
+      </motion.div>
     </React.Fragment>
   );
 };
