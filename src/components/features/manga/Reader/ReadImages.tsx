@@ -122,7 +122,7 @@ const ReadImages: React.FC<ReadImagesProps> = ({
   return (
     <div className="w-full h-full flex flex-col justify-center items-center">
       {direction === "vertical" ? (
-        <div className="h-full">
+        <div className="w-full h-full">
           {images.map((image, index) => (
             <div className="image-container mx-auto" key={index}>
               <ReadImage
