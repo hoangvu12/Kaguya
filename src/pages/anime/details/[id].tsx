@@ -78,7 +78,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
             </div>
 
             <div className="flex flex-col items-center justify-between py-4 mt-4 text-center md:text-left md:items-start md:-mt-16 space-y-4">
-              <div className="flex flex-col md:items-center space-y-4">
+              <div className="flex flex-col md:items-start items-center space-y-4">
                 <Link href={`/anime/watch/${anime.id}`}>
                   <a>
                     <Button primary LeftIcon={BsFillPlayFill} className="mb-4">

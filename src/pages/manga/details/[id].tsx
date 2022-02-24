@@ -56,7 +56,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
             </div>
 
             <div className="justify-between text-center md:text-left flex flex-col items-center md:items-start py-4 mt-4 md:-mt-16 space-y-4">
-              <div className="flex flex-col md:items-center space-y-4">
+              <div className="flex flex-col md:items-start items-center space-y-4">
                 <Link href={`/manga/read/${manga.id}`}>
                   <a>
                     <Button primary LeftIcon={BsFillPlayFill} className="mb-4">
