@@ -87,7 +87,10 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
     [chapters, savedReadData, isSavedDataError]
   );
 
-  const { data } = useFetchImages(currentChapter, nextChapter);
+  const { data, isError, error, isLoading } = useFetchImages(
+    currentChapter,
+    nextChapter
+  );
 
   const handleChapterNavigate = useCallback(
     (chapter: Chapter) => {
@@ -165,18 +168,33 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
             image={manga.bannerImage || manga.coverImage.extraLarge}
           />
 
-          <ReadPanel>
-            {({ isSidebarOpen }) =>
-              data?.images?.length ? (
-                <ReadImages
-                  isSidebarOpen={isSidebarOpen}
-                  images={data.images}
-                />
-              ) : (
-                <Loading />
-              )
-            }
-          </ReadPanel>
+          {isError ? (
+            <div className="w-full h-full flex flex-col items-center justify-center space-y-8">
+              <div className="space-y-4">
+                <p className="text-4xl font-semibold">｡゜(｀Д´)゜｡</p>
+                <p className="text-xl">
+                  Đã có lỗi xảy ra ({error?.response?.data?.error})
+                </p>
+              </div>
+
+              <Button primary onClick={router.back}>
+                <p>Trở về trang trước</p>
+              </Button>
+            </div>
+          ) : (
+            <ReadPanel>
+              {({ isSidebarOpen }) =>
+                !isLoading ? (
+                  <ReadImages
+                    isSidebarOpen={isSidebarOpen}
+                    images={data.images}
+                  />
+                ) : (
+                  <Loading />
+                )
+              }
+            </ReadPanel>
+          )}
 
           {showReadOverlay && !declinedReread && (
             <Portal>
