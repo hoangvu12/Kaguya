@@ -7,17 +7,17 @@ export interface HlsPlayerProps
   extends Omit<React.VideoHTMLAttributes<HTMLVideoElement>, "src"> {
   src: VideoSource[];
   autoPlay?: boolean;
+  hlsConfig?: Hls.Config;
 }
 
-const config = {
+const DEFAULT_HLS_CONFIG = {
   enableWorker: false,
-  xhrSetup: (xhr: any, url: string) => {
-    xhr.open("GET", `/api/proxy?url=${url}`, true);
-  },
 };
 
 const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
-  ({ src, autoPlay, ...props }, ref) => {
+  ({ src, autoPlay, hlsConfig, ...props }, ref) => {
+    const config = { ...DEFAULT_HLS_CONFIG, ...hlsConfig };
+
     const myRef = useRef<HTMLVideoElement>(null);
     const hls = useRef(new Hls(config));
     const { state, setState } = useVideoState();
@@ -120,6 +120,7 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
           _hls.destroy();
         }
       };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [autoPlay, setState, src]);
 
     useEffect(() => {
