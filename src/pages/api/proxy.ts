@@ -1,15 +1,19 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import axios from "axios";
 import config from "@/config";
 import { serialize } from "@/utils";
+import axios from "axios";
+import https from "https";
+
+import type { NextApiRequest, NextApiResponse } from "next";
 
 const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
   const requestUrl = `${config.nodeServerUrl}/proxy?${serialize(req.query)}`;
 
+  const { host, ...headers } = req.headers;
+
   const response: any = await axios.get(requestUrl, {
     responseType: "stream",
     // @ts-ignore
-    headers: req.headers,
+    headers,
     validateStatus: () => true,
     maxRedirects: 0,
   });

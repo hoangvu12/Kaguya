@@ -6,6 +6,7 @@ import HeadlessSwiper, {
 import { useReadInfo } from "@/contexts/ReadContext";
 import { useReadSettings } from "@/contexts/ReadSettingsContext";
 import useDevice from "@/hooks/useDevice";
+import { ImageSource } from "@/types";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 import React, {
@@ -26,7 +27,7 @@ import "swiper/swiper.min.css";
 import type SwiperClass from "swiper/types/swiper-class";
 
 interface ReadImagesProps {
-  images: string[];
+  images: ImageSource[];
   isSidebarOpen?: boolean;
 }
 
@@ -130,7 +131,7 @@ const ReadImages: React.FC<ReadImagesProps> = ({
                   setActiveImageIndex(index);
                 }}
                 className="mx-auto"
-                src={image}
+                image={image}
                 data-index={index}
               />
             </div>
@@ -150,7 +151,7 @@ const ReadImages: React.FC<ReadImagesProps> = ({
       ) : (
         <React.Fragment>
           <BrowserView className="w-full h-full">
-            <ReadImage className="mx-auto" src={images[activeImageIndex]} />
+            <ReadImage className="mx-auto" image={images[activeImageIndex]} />
           </BrowserView>
 
           <MobileView className="w-full h-full">
@@ -164,9 +165,9 @@ const ReadImages: React.FC<ReadImagesProps> = ({
               {images.map((image) => (
                 <SwiperSlide
                   className="w-full h-full flex items-center"
-                  key={image}
+                  key={image.image}
                 >
-                  <ReadImage src={image} />
+                  <ReadImage image={image} />
                 </SwiperSlide>
               ))}
             </HeadlessSwiper>

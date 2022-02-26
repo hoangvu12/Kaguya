@@ -1,22 +1,28 @@
+import { useReadInfo } from "@/contexts/ReadContext";
 import { useReadSettings } from "@/contexts/ReadSettingsContext";
 import useIntersectionObserver from "@/hooks/useIntersectionObserver";
+import { ImageSource } from "@/types";
+import { serialize } from "@/utils";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { BsFillImageFill } from "react-icons/bs";
 
-interface ReadImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+interface ReadImageProps
+  extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src"> {
   onVisible?: () => void;
+  image: ImageSource;
 }
 
 const ReadImage: React.FC<ReadImageProps> = ({
-  src,
+  image,
   className,
   onLoad,
   onVisible,
   ...props
 }) => {
   const [loaded, setLoaded] = useState(false);
+  const { currentChapter } = useReadInfo();
   const { fitMode } = useReadSettings();
   const ref = useRef<HTMLImageElement>(null);
 
@@ -33,6 +39,16 @@ const ReadImage: React.FC<ReadImageProps> = ({
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entry?.isIntersecting]);
+
+  const src = useMemo(
+    () =>
+      image.useProxy
+        ? `/api/proxy?url=${encodeURIComponent(image.image)}&source_id=${
+            currentChapter.sourceId
+          } `
+        : image.image,
+    [currentChapter.sourceId, image.image, image.useProxy]
+  );
 
   // I have to use img instead of Next/Image because I want to image calculate the height itself
   return (
@@ -62,7 +78,7 @@ const ReadImage: React.FC<ReadImageProps> = ({
             className
           )}
           alt="Đọc truyện tại Kaguya"
-          src={`/api/proxy?url=${encodeURIComponent(src)}`}
+          src={src}
           onLoad={(e) => {
             setLoaded(true);
 
