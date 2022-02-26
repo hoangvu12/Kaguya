@@ -266,6 +266,11 @@ export type VideoSource = {
   useProxy?: boolean;
 };
 
+export type ImageSource = {
+  image: string;
+  useProxy?: boolean;
+};
+
 export type CallbackSetter<T> = (handler: T) => void;
 
 export type Noop = () => void;

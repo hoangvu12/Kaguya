@@ -1,10 +1,10 @@
-import { Chapter } from "@/types";
+import { Chapter, ImageSource } from "@/types";
 import axios, { AxiosError } from "axios";
 import { useQuery, useQueryClient } from "react-query";
 
 interface ReturnSuccessType {
   success: true;
-  images: string[];
+  images: ImageSource[];
 }
 
 interface ReturnFailType {
