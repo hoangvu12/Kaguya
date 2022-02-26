@@ -1,5 +1,7 @@
 import DesktopControls from "@/components/features/anime/Player/DesktopControls";
-import HlsPlayer from "@/components/features/anime/Player/HlsPlayer";
+import HlsPlayer, {
+  HlsPlayerProps,
+} from "@/components/features/anime/Player/HlsPlayer";
 import MobileControls from "@/components/features/anime/Player/MobileControls";
 import Overlay from "@/components/features/anime/Player/Overlay";
 import ClientOnly from "@/components/shared/ClientOnly";
@@ -24,8 +26,7 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { AiFillFastBackward, AiFillFastForward } from "react-icons/ai";
 
 const noop = () => {};
-interface VideoProps
-  extends Omit<React.VideoHTMLAttributes<HTMLVideoElement>, "src"> {
+interface VideoProps extends HlsPlayerProps {
   src: VideoSource[];
   overlaySlot?: React.ReactNode;
 }

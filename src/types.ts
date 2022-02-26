@@ -263,6 +263,7 @@ export interface Comment {
 export type VideoSource = {
   file: string;
   label: string;
+  useProxy?: boolean;
 };
 
 export type CallbackSetter<T> = (handler: T) => void;

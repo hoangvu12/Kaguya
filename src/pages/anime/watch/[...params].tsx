@@ -16,7 +16,7 @@ import { useFetchSource } from "@/hooks/useFetchSource";
 import useSavedWatched from "@/hooks/useSavedWatched";
 import useSaveWatched from "@/hooks/useSaveWatched";
 import supabase from "@/lib/supabase";
-import { Anime } from "@/types";
+import { Anime, VideoSource } from "@/types";
 import { getTitle, sortMediaUnit } from "@/utils/data";
 import Storage from "@/utils/storage";
 import classNames from "classnames";
@@ -31,8 +31,6 @@ import React, {
 } from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import { BsArrowLeft } from "react-icons/bs";
-
-const noop = () => {};
 
 interface WatchPageProps {
   anime: Anime;
@@ -318,6 +316,15 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
               onClick={router.back}
             />
           }
+          hlsConfig={{
+            xhrSetup: (xhr: any, url: string) => {
+              xhr.open(
+                "GET",
+                `/api/proxy?url=${url}&source_id=${currentEpisode.sourceId}`,
+                true
+              );
+            },
+          }}
         />
       )}
 
