@@ -1,7 +1,6 @@
 import config from "@/config";
 import { serialize } from "@/utils";
 import axios from "axios";
-import https from "https";
 
 import type { NextApiRequest, NextApiResponse } from "next";
 
