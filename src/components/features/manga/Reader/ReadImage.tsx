@@ -31,6 +31,10 @@ const ReadImage: React.FC<ReadImageProps> = ({
   });
 
   useEffect(() => {
+    setLoaded(false);
+  }, [image]);
+
+  useEffect(() => {
     if (!entry?.isIntersecting) return;
     if (!ref.current) return;
     if (!ref.current.complete) return;
