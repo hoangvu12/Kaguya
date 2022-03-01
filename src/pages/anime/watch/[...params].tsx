@@ -318,11 +318,16 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
           }
           hlsConfig={{
             xhrSetup: (xhr: any, url: string) => {
-              xhr.open(
-                "GET",
-                `/api/proxy?url=${url}&source_id=${currentEpisode.sourceId}`,
-                true
-              );
+              const useProxy = data?.sources.find(
+                (source) => source.file === url
+              )?.useProxy;
+
+
+              const requestUrl = useProxy
+                ? `/api/proxy?url=${url}&source_id=${currentEpisode.sourceId}`
+                : url;
+
+              xhr.open("GET", requestUrl, true);
             },
           }}
         />

@@ -1,5 +1,6 @@
 import { useVideoState } from "@/contexts/VideoStateContext";
 import { VideoSource } from "@/types";
+import { parseNumbersFromString } from "@/utils";
 import Hls from "hls.js";
 import React, { MutableRefObject, useEffect, useRef } from "react";
 
@@ -21,14 +22,6 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
     const myRef = useRef<HTMLVideoElement>(null);
     const hls = useRef(new Hls(config));
     const { state, setState } = useVideoState();
-
-    useEffect(() => {
-      if (!hls?.current?.levels) return;
-
-      hls.current.currentLevel = hls.current.levels
-        .sort((a, b) => b.bitrate - a.bitrate)
-        .findIndex((level) => level.height === state?.currentQuality);
-    }, [state?.currentQuality]);
 
     useEffect(() => {
       let _hls = hls.current;
@@ -61,25 +54,22 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
                 );
             }
 
-            const levels = _hls.levels
-              .filter((level) => level.height)
+            const levels: string[] = _hls.levels
               .sort((a, b) => b.height - a.height)
+              .filter((level) => level.height)
               .map((level) => `${level.height}p`);
 
             setState((prev) => ({
               ...prev,
-              qualities: levels.length
-                ? [
-                    // @ts-ignore
-                    ...new Set<number>(levels),
-                  ]
-                : [],
+              qualities: levels,
               currentQuality: levels[0],
             }));
           });
         });
 
         _hls.on(Hls.Events.ERROR, function (event, data) {
+          console.log("ERROR:", data);
+
           if (data.fatal) {
             switch (data.type) {
               case Hls.ErrorTypes.NETWORK_ERROR:
@@ -87,6 +77,7 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
                 break;
               case Hls.ErrorTypes.MEDIA_ERROR:
                 _hls.recoverMediaError();
+
                 break;
               default:
                 _initPlayer();
@@ -102,7 +93,13 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
         const notDuplicatedQualities = [
           // @ts-ignore
           ...new Set<string>(
-            src.filter((src) => src.label).map((src) => src.label)
+            src
+              .filter((src) => src.label)
+              .map((src) => src.label)
+              .sort(
+                (a, b) =>
+                  parseNumbersFromString(b)[0] - parseNumbersFromString(a)[0]
+              )
           ),
         ];
 
@@ -125,13 +122,26 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
 
     useEffect(() => {
       const videoRef = myRef.current;
-      const quality = state?.currentQuality;
-      const qualitySource = src.find((source) => source.label === quality);
+
+      if (!videoRef) return;
+      if (!state?.qualities.length) return;
+
+      const currentQuality = state?.currentQuality;
+
+      if (src[0].file.includes("m3u8") && hls?.current?.levels?.length) {
+        hls.current.currentLevel = hls.current.levels.findIndex(
+          (level) => level.height === Number(currentQuality.replace("p", ""))
+        );
+
+        return;
+      }
+
+      const qualitySource = src.find(
+        (source) => source.label === currentQuality
+      );
       const beforeChangeTime = videoRef.currentTime;
 
       if (!qualitySource) return;
-
-      if (!videoRef || qualitySource?.file.includes("m3u8")) return;
 
       const handleQualityChange = () => {
         videoRef.currentTime = beforeChangeTime;
