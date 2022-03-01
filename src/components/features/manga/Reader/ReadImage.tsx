@@ -88,6 +88,9 @@ const ReadImage: React.FC<ReadImageProps> = ({
 
             onLoad?.(e);
           }}
+          onError={() => {
+            setLoaded(true);
+          }}
           {...props}
         />
       </motion.div>
