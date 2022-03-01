@@ -40,7 +40,7 @@ const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({
   });
 
   const realActiveTabIndex = useMemo(
-    () => (activeTabIndex > chunks.length ? 0 : activeTabIndex),
+    () => (activeTabIndex > chunks.length - 1 ? 0 : activeTabIndex),
     [activeTabIndex, chunks.length]
   );
 
