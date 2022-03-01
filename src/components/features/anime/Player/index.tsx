@@ -37,6 +37,7 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
     const [refHolder, setRefHolder] = useState<HTMLVideoElement>(null);
     const [showControls, setShowControls] = useState(true);
     const [isBuffering, setIsBuffering] = useState(false);
+    const [isError, setIsError] = useState(false);
     const timeout = useRef<NodeJS.Timeout>(null);
     const { isMobile } = useDevice();
 
@@ -127,14 +128,28 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
         setIsBuffering(false);
       };
 
+      const handleError = () => {
+        console.log("player error");
+
+        setIsError(true);
+      };
+
+      const handleCanPlay = () => {
+        setIsError(false);
+      };
+
       element.addEventListener("waiting", handleWaiting);
       element.addEventListener("playing", handlePlaying);
       element.addEventListener("play", handlePlaying);
+      element.addEventListener("error", handleError);
+      element.addEventListener("canplay", handleCanPlay);
 
       return () => {
         element.removeEventListener("waiting", handleWaiting);
         element.removeEventListener("playing", handlePlaying);
         element.removeEventListener("play", handlePlaying);
+        element.removeEventListener("error", handleError);
+        element.removeEventListener("canplay", handleCanPlay);
       };
     }, []);
 
@@ -192,6 +207,17 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
               <AiFillFastBackward className="w-12 h-12" />
               <p className="rounded-full text-xl">-10 giây</p>
             </div>
+
+            {isError && (
+              <div className="absolute inset-0 w-full h-full flex flex-col items-center justify-center space-y-8">
+                <div className="space-y-4">
+                  <p className="text-4xl font-semibold">｡゜(｀Д´)゜｡</p>
+                  <p className="text-xl">
+                    Đã có lỗi xảy ra ({myRef.current?.error?.message})
+                  </p>
+                </div>
+              </div>
+            )}
 
             <div
               className="forward-indicator bg-white/20 absolute right-0 w-[45vw] h-full flex flex-col items-center justify-center transition duration-300 opacity-0"
