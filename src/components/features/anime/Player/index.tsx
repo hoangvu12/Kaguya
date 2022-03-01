@@ -128,8 +128,8 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
         setIsBuffering(false);
       };
 
-      const handleError = () => {
-        console.log("player error");
+      const handleError = (e) => {
+        console.log("player error", e);
 
         setIsError(true);
       };

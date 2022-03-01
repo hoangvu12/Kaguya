@@ -128,7 +128,9 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
 
       const currentQuality = state?.currentQuality;
 
-      if (src[0].file.includes("m3u8") && hls?.current?.levels?.length) {
+      if (src[0].file.includes("m3u8")) {
+        if (!hls?.current?.levels?.length) return;
+
         hls.current.currentLevel = hls.current.levels.findIndex(
           (level) => level.height === Number(currentQuality.replace("p", ""))
         );
