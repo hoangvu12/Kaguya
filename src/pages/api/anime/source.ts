@@ -31,11 +31,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       params: query,
     });
 
-    res.setHeader(
-      "Cache-Control",
-      `public, s-maxage=3600, stale-while-revalidate=${REVALIDATE_TIME}`
-    );
-
     res.status(200).json({ success: true, sources: data.sources });
   } catch (err) {
     res.status(500).json({
