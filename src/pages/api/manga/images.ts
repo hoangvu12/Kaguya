@@ -19,11 +19,6 @@ const images = async (req: NextApiRequest, res: NextApiResponse) => {
       params: req.query,
     });
 
-    res.setHeader(
-      "Cache-Control",
-      `public, s-maxage=3600, stale-while-revalidate=${REVALIDATE_TIME}`
-    );
-
     res.status(200).json(data);
   } catch (err) {
     res.status(500).json({
