@@ -16,7 +16,7 @@ import { useFetchSource } from "@/hooks/useFetchSource";
 import useSavedWatched from "@/hooks/useSavedWatched";
 import useSaveWatched from "@/hooks/useSaveWatched";
 import supabase from "@/lib/supabase";
-import { Anime, VideoSource } from "@/types";
+import { Anime } from "@/types";
 import { getTitle, sortMediaUnit } from "@/utils/data";
 import Storage from "@/utils/storage";
 import classNames from "classnames";
@@ -316,20 +316,19 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
               onClick={router.back}
             />
           }
-          hlsConfig={{
-            xhrSetup: (xhr: any, url: string) => {
-              const useProxy = data?.sources.find(
-                (source) => source.file === url
-              )?.useProxy;
+          // hlsConfig={{
+          //   xhrSetup: (xhr: any, url: string) => {
+          //     const useProxy = data?.sources.find(
+          //       (source) => source.file === url
+          //     )?.useProxy;
 
+          //     const requestUrl = useProxy
+          //       ? `/api/proxy?url=${url}&source_id=${currentEpisode.sourceId}`
+          //       : url;
 
-              const requestUrl = useProxy
-                ? `/api/proxy?url=${url}&source_id=${currentEpisode.sourceId}`
-                : url;
-
-              xhr.open("GET", requestUrl, true);
-            },
-          }}
+          //     xhr.open("GET", requestUrl, true);
+          //   },
+          // }}
         />
       )}
 

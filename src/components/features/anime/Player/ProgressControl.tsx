@@ -20,13 +20,21 @@ const ProgressControl = () => {
   useEffect(() => {
     // https://stackoverflow.com/questions/5029519/html5-video-percentage-loaded
 
-    videoEl.addEventListener("progress", function () {
-      const buffer = this.buffered;
+    const handleProgressBuffer = () => {
+      if (!videoEl) return;
+
+      const buffer = videoEl.buffered;
 
       if (!buffer.length) return;
 
       setBuffer(buffer.end(buffer.length - 1));
-    });
+    };
+
+    videoEl.addEventListener("progress", handleProgressBuffer);
+
+    return () => {
+      videoEl.removeEventListener("progress", handleProgressBuffer);
+    };
   }, [videoEl]);
 
   return (

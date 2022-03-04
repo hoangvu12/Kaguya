@@ -25,4 +25,4 @@ const MobileControlsIcon: React.FC<MobileControlsIconProps> = ({
   );
 };
 
-export default MobileControlsIcon;
+export default React.memo(MobileControlsIcon);

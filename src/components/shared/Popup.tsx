@@ -74,26 +74,35 @@ const Popup: React.FC<PopupProps> = (props) => {
     [showArrow, arrowElement]
   );
 
-  const { styles, attributes } = usePopper(referenceElement, popperElement, {
-    modifiers: [
-      ...arrowModifier,
-      {
-        name: "offset",
-        options: {
-          offset,
+  const popperOptions = useMemo(
+    () => ({
+      modifiers: [
+        ...arrowModifier,
+        {
+          name: "offset",
+          options: {
+            offset,
+          },
         },
-      },
-      {
-        name: "preventOverflow",
-        options: {
-          altAxis: true,
-          padding: 10,
+        {
+          name: "preventOverflow",
+          options: {
+            altAxis: true,
+            padding: 10,
+          },
         },
-      },
-    ],
-    placement,
-    ...options,
-  });
+      ],
+      placement,
+      ...options,
+    }),
+    [arrowModifier, offset, options, placement]
+  );
+
+  const { styles, attributes } = usePopper(
+    referenceElement,
+    popperElement,
+    popperOptions
+  );
 
   const handleMouseEnter = useCallback(() => {
     if (disabled || isMobile) return;
