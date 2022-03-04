@@ -114,16 +114,13 @@ export const getStaticProps: GetStaticProps = async () => {
   const firstDayOfWeek = dayjs().startOf("week");
   const lastDayOfWeek = dayjs().endOf("week");
 
-  const { data: schedulesAnime } = await supabase
+  const { data: schedulesAnime, error } = await supabase
     .from<AiringSchedule>("kaguya_airing_schedules")
     .select(
       "*, media:mediaId(coverImage, genres, averageScore, favourites, title, vietnameseTitle, id)"
     )
     .lte("airingAt", lastDayOfWeek.unix())
-    .gte("airingAt", firstDayOfWeek.unix())
-    .limit(1, {
-      foreignTable: "anime",
-    });
+    .gte("airingAt", firstDayOfWeek.unix());
 
   const { data: trendingAnime } = await supabase
     .from<Anime>("kaguya_anime")
