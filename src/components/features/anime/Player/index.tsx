@@ -57,12 +57,24 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
       }
 
       const target = e.target as HTMLDivElement;
+      const videoOverlay = document.querySelector(".video-overlay");
 
-      if (target.closest(".video-overlay") && isMobile) {
-        setShowControls(false);
-      } else {
+      if (!videoOverlay) {
         startControlsCycle();
+
+        return;
       }
+
+      const isChild = videoOverlay.contains(target);
+      const shouldCloseControls = !isChild || target.isEqualNode(videoOverlay);
+
+      if (shouldCloseControls && isMobile) {
+        setShowControls(false);
+
+        return;
+      }
+
+      startControlsCycle();
     };
 
     const startControlsCycle = useCallback(() => {
@@ -186,11 +198,11 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
               transition={{ ease: "linear", duration: 0.2 }}
             >
               <ClientOnly>
-                <BrowserView>
+                <BrowserView renderWithFragment>
                   <DesktopControls />
                 </BrowserView>
 
-                <MobileView>
+                <MobileView renderWithFragment>
                   <MobileControls />
                 </MobileView>
               </ClientOnly>

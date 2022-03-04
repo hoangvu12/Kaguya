@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import Popup from "@/components/shared/Popup";
 import ControlsIcon from "@/components/features/anime/Player/ControlsIcon";
 import { AiOutlineFastForward } from "react-icons/ai";
@@ -10,9 +10,10 @@ import { SKIP_TIME } from "@/constants";
 const SkipButton = () => {
   const { videoEl } = useVideo();
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     videoEl.currentTime = videoEl.currentTime + SKIP_TIME;
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [videoEl?.src]);
 
   return (
     <React.Fragment>
