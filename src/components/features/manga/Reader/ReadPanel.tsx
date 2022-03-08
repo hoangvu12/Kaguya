@@ -129,7 +129,7 @@ const ReadPanel: React.FC<ReadPanelProps> = ({ children }) => {
         )}
         transition={{ ease: transition, duration: 0.6 }}
       >
-        <div className="flex flex-col w-full h-full p-4 space-y-2">
+        <div className="flex flex-col h-full w-full p-4 space-y-2">
           {/* Leave | Open/Close */}
           <div className="flex w-full items-center justify-between">
             <CircleButton
@@ -282,7 +282,7 @@ const ReadPanel: React.FC<ReadPanelProps> = ({ children }) => {
           </div>
 
           {/* Desktop chapter selector */}
-          <BrowserView className="h-full space-y-2 overflow-y-hidden">
+          <BrowserView className="grow space-y-2">
             <Input
               LeftIcon={AiOutlineSearch}
               className="w-full h-6 !bg-background-700"
@@ -294,7 +294,7 @@ const ReadPanel: React.FC<ReadPanelProps> = ({ children }) => {
               }
             />
 
-            <div className="flex space-x-2 w-full px-2 !my-4">
+            <div className="flex space-x-2 w-full px-2">
               {Object.keys(sources).map((source) => (
                 <div
                   className={classNames(
@@ -310,8 +310,10 @@ const ReadPanel: React.FC<ReadPanelProps> = ({ children }) => {
                 </div>
               ))}
             </div>
+          </BrowserView>
 
-            <ul className="h-full space-y-2 bg-background-900 p-2 overflow-y-auto">
+          <BrowserView renderWithFragment>
+            <ul className="h-full overflow-auto space-y-2 bg-background-900 p-2">
               {filteredChapters.map((chapter) => (
                 <li
                   className="relative p-2 cursor-pointer hover:bg-white/20 transition duration-300"
