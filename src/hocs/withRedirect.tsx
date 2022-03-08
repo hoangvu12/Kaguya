@@ -31,7 +31,9 @@ const withRedirect = <K,>(
       const { url, as, options } = redirect;
 
       router.replace(url, as, options);
-    }, [redirect, router]);
+
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return <WrappedComponent {...props} />;
   };
