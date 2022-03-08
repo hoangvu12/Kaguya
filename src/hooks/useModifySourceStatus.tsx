@@ -15,22 +15,19 @@ const useModifySourceStatus = <T extends "anime" | "manga">(
   type: T,
   source: T extends "anime" ? Anime : Manga
 ) => {
-  const tableName = type === "anime" ? "watch_status" : "read_status";
+  const tableName =
+    type === "anime" ? "kaguya_watch_status" : "kaguya_read_status";
   const queryKey = [tableName, source.id];
   const queryClient = useQueryClient();
   const user = useUser();
 
   return useMutation<any, PostgrestError, StatusInput<T>, any>(
     async (status) => {
-      const defaultUpsertValue = {
+      const upsertValue = {
         status,
-        user_id: user.id,
+        userId: user.id,
+        mediaId: source.id,
       };
-
-      const upsertValue =
-        type === "anime"
-          ? { ...defaultUpsertValue, anime_id: source.id }
-          : { ...defaultUpsertValue, manga_id: source.id };
 
       const { data, error } = await supabase
         .from(tableName)
