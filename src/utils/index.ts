@@ -256,3 +256,25 @@ export const groupBy = <T, K extends keyof any>(
 
     return previous;
   }, {} as Record<K, T[]>);
+
+// https://gist.github.com/bluzky/b8c205c98ff3318907b30c3e0da4bf3f
+export const vietnameseSlug = (str: string) => {
+  const from =
+    "àáãảạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệđùúủũụưừứửữựòóỏõọôồốổỗộơờớởỡợìíỉĩịäëïîöüûñçýỳỹỵỷ";
+  const to =
+    "aaaaaaaaaaaaaaaaaeeeeeeeeeeeduuuuuuuuuuuoooooooooooooooooiiiiiaeiiouuncyyyyy";
+
+  let newStr = str;
+
+  for (let i = 0, l = from.length; i < l; i++) {
+    newStr = newStr.replace(RegExp(from[i], "gi"), to[i]);
+  }
+
+  newStr = newStr
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\-]/g, "-")
+    .replace(/-+/g, "-");
+
+  return newStr;
+};
