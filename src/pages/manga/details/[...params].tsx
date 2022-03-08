@@ -13,9 +13,10 @@ import PlainCard from "@/components/shared/PlainCard";
 import SourceStatus from "@/components/shared/SourceStatus";
 import { REVALIDATE_TIME } from "@/constants";
 import { useUser } from "@/contexts/AuthContext";
+import withRedirect from "@/hocs/withRedirect";
 import supabase from "@/lib/supabase";
 import { Manga } from "@/types";
-import { numberWithCommas } from "@/utils";
+import { numberWithCommas, vietnameseSlug } from "@/utils";
 import { convert, getTitle } from "@/utils/data";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Link from "next/link";
@@ -179,7 +180,9 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps = async ({
+  params: { params },
+}) => {
   const { data, error } = await supabase
     .from("kaguya_manga")
     .select(
@@ -191,7 +194,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         chapters:kaguya_chapters!mediaId(*, source:kaguya_sources(*))
       `
     )
-    .eq("id", Number(params.id))
+    .eq("id", Number(params[0]))
     .single();
 
   if (error) {
@@ -216,10 +219,23 @@ export const getStaticPaths: GetStaticPaths = async () => {
     .limit(20);
 
   const paths = data.map((manga) => ({
-    params: { id: manga.id.toString() },
+    params: { params: [manga.id.toString()] },
   }));
 
   return { paths, fallback: "blocking" };
 };
 
-export default DetailsPage;
+export default withRedirect(DetailsPage, (router, props) => {
+  const { params } = router.query;
+  const [id, slug] = params as string[];
+  const title = getTitle(props.manga);
+
+  if (slug) return null;
+
+  return {
+    url: `/manga/details/${id}/${vietnameseSlug(title)}`,
+    options: {
+      shallow: true,
+    },
+  };
+});
