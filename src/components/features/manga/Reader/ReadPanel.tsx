@@ -80,7 +80,7 @@ const ReadPanel: React.FC<ReadPanelProps> = ({ children }) => {
     );
   }, [filterText, sourceChapters]);
 
-  const sources = groupBy(filteredChapters, (data) => data.source.name);
+  const sources = groupBy(chapters, (data) => data.source.name);
 
   const handleSidebarState = (isOpen: boolean) => () =>
     setIsSidebarOpen(isOpen);
