@@ -213,7 +213,6 @@ export interface Anime extends Media<Anime> {
 export interface Manga extends Media<Manga> {
   totalChapters: number;
   chapterUpdatedAt: Date;
-  chapters: Chapter[];
   sourceConnections: MangaSourceConnection[];
 }
 export interface Section<T> {
