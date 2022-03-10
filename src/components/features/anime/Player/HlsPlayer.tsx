@@ -111,6 +111,7 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
       }
 
       myRef.current.autoplay = autoPlay;
+      myRef.current.src = src[0].file;
 
       return () => {
         if (_hls != null) {

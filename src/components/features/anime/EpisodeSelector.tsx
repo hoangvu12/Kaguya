@@ -84,7 +84,7 @@ const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({
       <div className="mt-10 grid xl:grid-cols-8 lg:grid-cols-7 md:grid-cols-6 sm:grid-cols-5 grid-cols-4 gap-4">
         {chunks[realActiveTabIndex].map((episode) => (
           <Link
-            href={`/anime/watch/${episode.mediaId}/${episode.sourceId}/${episode.sourceEpisodeId}`}
+            href={`/anime/watch/${episode.sourceConnection.mediaId}/${episode.sourceId}/${episode.sourceEpisodeId}`}
             key={episode.sourceEpisodeId}
             shallow
             {...episodeLinkProps}

@@ -14,6 +14,22 @@ import {
 
 export type MediaGenre = typeof GENRES[number]["value"];
 
+export type SourceConnection = {
+  id: string;
+  sourceId: string;
+  sourceMediaId: string;
+  mediaId: string;
+  source: Source;
+};
+
+export interface AnimeSourceConnection extends SourceConnection {
+  episodes: Episode[];
+}
+
+export interface MangaSourceConnection extends SourceConnection {
+  chapters: Chapter[];
+}
+
 export type Source = {
   id: string;
   name: string;
@@ -21,7 +37,8 @@ export type Source = {
 
 export type Episode = {
   name: string;
-  mediaId: number;
+  sourceConnectionId?: string;
+  sourceConnection?: AnimeSourceConnection;
   sourceId: string;
   sourceEpisodeId: string;
   sourceMediaId: string;
@@ -32,7 +49,8 @@ export type Episode = {
 
 export type Chapter = {
   name: string;
-  mediaId: number;
+  sourceConnectionId?: string;
+  sourceConnection?: MangaSourceConnection;
   sourceId: string;
   sourceChapterId: string;
   sourceMediaId: string;
@@ -181,7 +199,7 @@ export interface Media<T extends Anime | Manga> {
 }
 
 export interface Anime extends Media<Anime> {
-  episodes: Episode[];
+  sourceConnections: AnimeSourceConnection[];
   season: string;
   seasonYear: number;
   totalEpisodes: number;
@@ -196,6 +214,7 @@ export interface Manga extends Media<Manga> {
   totalChapters: number;
   chapterUpdatedAt: Date;
   chapters: Chapter[];
+  sourceConnections: MangaSourceConnection[];
 }
 export interface Section<T> {
   title: string;

@@ -37,12 +37,19 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
 
   const sortedEpisodes = useMemo(
     () =>
-      anime.episodes.sort((a, b) => {
-        const aNumber = parseNumbersFromString(a.name, 9999)?.[0];
-        const bNumber = parseNumbersFromString(b.name, 9999)?.[0];
+      anime.sourceConnections
+        .flatMap((connection) =>
+          connection.episodes.map((episode) => ({
+            ...episode,
+            sourceConnection: connection,
+          }))
+        )
+        .sort((a, b) => {
+          const aNumber = parseNumbersFromString(a.name, 9999)?.[0];
+          const bNumber = parseNumbersFromString(b.name, 9999)?.[0];
 
-        return aNumber - bNumber;
-      }),
+          return aNumber - bNumber;
+        }),
     [anime]
   );
 
@@ -249,7 +256,7 @@ export const getStaticProps: GetStaticProps = async ({
         characters:kaguya_anime_characters!mediaId(*, character:characterId(*)),
         recommendations:kaguya_anime_recommendations!originalId(media:recommendationId(*)),
         relations:kaguya_anime_relations!originalId(media:relationId(*)),
-        episodes:kaguya_episodes!mediaId(*, source:kaguya_sources(id, name))
+        sourceConnections:kaguya_anime_source!mediaId(*, episodes:kaguya_episodes(*, source:kaguya_sources(id, name)))
       `
     )
     .eq("id", Number(params[0]))
