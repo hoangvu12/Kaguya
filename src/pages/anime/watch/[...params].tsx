@@ -71,10 +71,18 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
 
   const { params } = router.query;
 
-  const sortedEpisodes = useMemo(
-    () => sortMediaUnit(anime.episodes),
-    [anime.episodes]
+  const episodes = useMemo(
+    () =>
+      anime.sourceConnections.flatMap((connection) =>
+        connection.episodes.map((episode) => ({
+          ...episode,
+          sourceConnection: connection,
+        }))
+      ),
+    [anime.sourceConnections]
   );
+
+  const sortedEpisodes = useMemo(() => sortMediaUnit(episodes), [episodes]);
 
   const [
     animeId,
@@ -105,8 +113,8 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   );
 
   const sourceEpisodes = useMemo(
-    () => anime.episodes.filter((episode) => episode.sourceId === sourceId),
-    [anime.episodes, sourceId]
+    () => episodes.filter((episode) => episode.sourceId === sourceId),
+    [episodes, sourceId]
   );
 
   const currentEpisode = useMemo(
@@ -293,7 +301,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
 
       {isError ? (
         <div className="w-full h-full flex flex-col items-center justify-center space-y-8">
-          <div className="space-y-4">
+          <div className="space-y-4 text-center">
             <p className="text-4xl font-semibold">｡゜(｀Д´)゜｡</p>
             <p className="text-xl">
               Đã có lỗi xảy ra ({error?.response?.data?.error})
@@ -316,19 +324,19 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
               onClick={router.back}
             />
           }
-          // hlsConfig={{
-          //   xhrSetup: (xhr: any, url: string) => {
-          //     const useProxy = data?.sources.find(
-          //       (source) => source.file === url
-          //     )?.useProxy;
+          hlsConfig={{
+            xhrSetup: (xhr: any, url: string) => {
+              const useProxy = data?.sources.find(
+                (source) => source.file === url
+              )?.useProxy;
 
-          //     const requestUrl = useProxy
-          //       ? `/api/proxy?url=${url}&source_id=${currentEpisode.sourceId}`
-          //       : url;
+              const requestUrl = useProxy
+                ? `/api/proxy?url=${url}&source_id=${currentEpisode.sourceId}`
+                : url;
 
-          //     xhr.open("GET", requestUrl, true);
-          //   },
-          // }}
+              xhr.open("GET", requestUrl, true);
+            },
+          }}
         />
       )}
 
@@ -472,8 +480,7 @@ export const getStaticProps: GetStaticProps = async ({
         description,
         bannerImage,
         coverImage,
-        episodes:kaguya_episodes!mediaId(*, source:kaguya_sources(id, name))
-      `
+        sourceConnections:kaguya_anime_source!mediaId(*, episodes:kaguya_episodes(*, source:kaguya_sources(id, name)))`
     )
     .eq("id", Number(params[0]))
     .single();

@@ -43,7 +43,7 @@ const Overlay: React.FC<OverlayProps & HTMLMotionProps<"div">> = ({
             </MobileView>
           </ClientOnly>
 
-          {props.children}
+          <div className="absolute z-50">{props.children}</div>
         </motion.div>
       )}
     </AnimatePresence>
