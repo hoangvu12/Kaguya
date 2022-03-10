@@ -45,7 +45,13 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
 
   const title = useMemo(() => getTitle(manga), [manga]);
 
-  const chapters = useMemo(() => sortMediaUnit(manga.chapters), [manga]);
+  const chapters = useMemo(
+    () =>
+      sortMediaUnit(
+        manga.sourceConnections.flatMap((connection) => connection.chapters)
+      ),
+    [manga]
+  );
 
   const { params } = router.query;
   const [
@@ -259,7 +265,7 @@ export const getStaticProps: GetStaticProps = async ({
     .select(
       `
         title,
-        chapters:kaguya_chapters!mediaId(*, source:kaguya_sources(*)),
+        sourceConnections:kaguya_manga_source!mediaId(*, chapters:kaguya_chapters(*, source:kaguya_sources(id, name))),
         bannerImage,
         coverImage,
         vietnameseTitle

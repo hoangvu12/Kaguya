@@ -15,7 +15,13 @@ interface ChapterSelectorProps {
 
 const ChapterSelector: React.FC<ChapterSelectorProps> = ({ manga }) => {
   const [isChapterExpanded, setIsChapterExpanded] = useState(false);
-  const chapters = useMemo(() => sortMediaUnit(manga.chapters), [manga]);
+  const chapters = useMemo(
+    () =>
+      sortMediaUnit(
+        manga.sourceConnections.flatMap((connection) => connection.chapters)
+      ),
+    [manga]
+  );
   const [activeSource, setActiveSource] = useState(chapters[0].source.name);
 
   const sourceChapters = useMemo(
