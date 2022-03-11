@@ -67,7 +67,9 @@ const ReadPanel: React.FC<ReadPanelProps> = ({ children }) => {
     useReadInfo();
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const [activeSource, setActiveSource] = useState(chapters[0].source.name);
+  const [activeSource, setActiveSource] = useState(
+    currentChapter?.source?.name || chapters[0]?.source?.name
+  );
 
   const sourceChapters = useMemo(
     () => chapters.filter((chapter) => chapter.source.name === activeSource),
@@ -107,7 +109,7 @@ const ReadPanel: React.FC<ReadPanelProps> = ({ children }) => {
   const title = useMemo(() => getTitle(manga), [manga]);
 
   const handleChangeChapterIndex = (index: number) => () => {
-    setChapter(chapters[index]);
+    setChapter(sourceChapters[index]);
   };
 
   // Scroll container to top when change chapter
@@ -193,7 +195,7 @@ const ReadPanel: React.FC<ReadPanelProps> = ({ children }) => {
                 value={currentChapter.sourceChapterId}
                 onChange={(e) => {
                   const sourceChapterId = e.target.value;
-                  const chapter = chapters.find(
+                  const chapter = sourceChapters.find(
                     (chapter) => chapter.sourceChapterId === sourceChapterId
                   );
 
@@ -225,7 +227,7 @@ const ReadPanel: React.FC<ReadPanelProps> = ({ children }) => {
               LeftIcon={BiChevronRight}
               iconClassName="w-8 h-8"
               secondary
-              disabled={currentChapterIndex === chapters.length - 1}
+              disabled={currentChapterIndex === sourceChapters.length - 1}
               onClick={handleChangeChapterIndex(currentChapterIndex + 1)}
               shortcutKey="]"
             />

@@ -66,20 +66,28 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
     isError: isSavedDataError,
   } = useSavedRead(Number(mangaId));
 
+  const sourceChapters = useMemo(
+    () => chapters.filter((chapter) => chapter.sourceId === sourceId),
+    [chapters, sourceId]
+  );
+
   const currentChapter = useMemo(
-    () => chapters.find((chapter) => chapter.sourceChapterId === chapterId),
-    [chapters, chapterId]
+    () =>
+      sourceChapters.find((chapter) => chapter.sourceChapterId === chapterId),
+    [sourceChapters, chapterId]
   );
 
   const currentChapterIndex = useMemo(
     () =>
-      chapters.findIndex((chapter) => chapter.sourceChapterId === chapterId),
-    [chapters, chapterId]
+      sourceChapters.findIndex(
+        (chapter) => chapter.sourceChapterId === chapterId
+      ),
+    [sourceChapters, chapterId]
   );
 
   const nextChapter = useMemo(
-    () => chapters[Number(currentChapterIndex) + 1],
-    [chapters, currentChapterIndex]
+    () => sourceChapters[Number(currentChapterIndex) + 1],
+    [currentChapterIndex, sourceChapters]
   );
 
   const readChapter = useMemo(
@@ -88,7 +96,9 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
         ? null
         : chapters.find(
             (chapter) =>
-              chapter.sourceChapterId === savedReadData?.chapter.sourceChapterId
+              chapter.sourceChapterId ===
+                savedReadData?.chapter.sourceChapterId &&
+              chapter.sourceId === savedReadData?.chapter.sourceId
           ),
     [chapters, savedReadData, isSavedDataError]
   );
@@ -238,7 +248,8 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
                       const chapter = chapters.find(
                         (chapter) =>
                           chapter.sourceChapterId ===
-                          readChapter.sourceChapterId
+                            readChapter.sourceChapterId &&
+                          chapter.sourceId === readChapter.sourceId
                       );
 
                       handleChapterNavigate(chapter);
