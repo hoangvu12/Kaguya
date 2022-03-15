@@ -44,6 +44,7 @@
     "react-tabs": "^3.2.3",
     "react-time-seek-slider": "^1.1.0",
     "react-toastify": "^8.1.0",
+    "react-youtube": "^7.14.0",
     "screenfull": "^5.1.0",
     "swiper": "6"
   },
