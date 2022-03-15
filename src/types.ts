@@ -208,6 +208,7 @@ export interface Anime extends Media<Anime> {
   airingSchedules: AiringSchedule[];
   episodeUpdatedAt: Date;
   duration: number;
+  trailer?: string;
 }
 
 export interface Manga extends Media<Manga> {
