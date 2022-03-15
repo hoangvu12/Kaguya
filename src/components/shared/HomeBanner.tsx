@@ -10,7 +10,13 @@ import { convert, getTitle } from "@/utils/data";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import { AiFillHeart, AiFillPlayCircle } from "react-icons/ai";
 import { BsFillVolumeMuteFill, BsFillVolumeUpFill } from "react-icons/bs";
@@ -132,6 +138,7 @@ const DesktopHomeBanner = <T extends "anime" | "manga">({
   const [player, setPlayer] =
     useState<ReturnType<YouTube["getInternalPlayer"]>>();
   const [isMuted, setIsMuted] = useState(true);
+  const isRanOnce = useRef(false);
 
   const activeSlide = useMemo(() => data[index], [data, index]);
 
@@ -167,6 +174,10 @@ const DesktopHomeBanner = <T extends "anime" | "manga">({
 
   const title = useMemo(() => getTitle(activeSlide), [activeSlide]);
 
+  useEffect(() => {
+    setShowTrailer(false);
+  }, [activeSlide]);
+
   return (
     <React.Fragment>
       <div className="group relative w-full h-[450px] overflow-hidden">
@@ -195,14 +206,26 @@ const DesktopHomeBanner = <T extends "anime" | "manga">({
               videoId={(activeSlide as Anime).trailer}
               onReady={({ target }) => {
                 setPlayer(target);
-                setShowTrailer(true);
-                setIsMuted(true);
               }}
-              onPlay={() => {
+              onPlay={({ target }) => {
                 setShowTrailer(true);
+
+                if (!isRanOnce.current) {
+                  setIsMuted(true);
+                } else if (!isMuted) {
+                  setIsMuted(false);
+
+                  target.unMute();
+                }
+
+                isRanOnce.current = true;
               }}
-              onEnd={() => setShowTrailer(false)}
-              onError={() => setShowTrailer(false)}
+              onEnd={() => {
+                setShowTrailer(false);
+              }}
+              onError={() => {
+                setShowTrailer(false);
+              }}
               containerClassName={classNames(
                 "relative w-full overflow-hidden aspect-w-16 aspect-h-9 h-[300%] -top-[100%]",
                 !showTrailer && "hidden"
@@ -214,7 +237,7 @@ const DesktopHomeBanner = <T extends "anime" | "manga">({
                   modestbranding: 1,
                   controls: 0,
                   mute: 1,
-                  origin: window.location.origin,
+                  origin: "https://kaguya.live",
                 },
               }}
             />
