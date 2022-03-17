@@ -1,11 +1,12 @@
 import classNames from "classnames";
 import React from "react";
 
-interface IconProps {
+export interface IconProps {
   className?: string;
 }
 
-interface TextIconProps {
+export interface TextIconProps
+  extends Omit<React.HTMLProps<HTMLDivElement>, "as"> {
   LeftIcon?: React.ComponentType<IconProps>;
   RightIcon?: React.ComponentType<IconProps>;
   iconClassName?: string;
@@ -20,6 +21,7 @@ const TextIcon: React.FC<TextIconProps> = ({
   as: Component = "div",
   children,
   className,
+  ...props
 }) => {
   const iconClass =
     !iconClassName?.includes("w-") || !iconClassName?.includes("h-")
@@ -27,7 +29,10 @@ const TextIcon: React.FC<TextIconProps> = ({
       : iconClassName;
 
   return (
-    <Component className={classNames("flex items-center space-x-1", className)}>
+    <Component
+      className={classNames("flex items-center space-x-1", className)}
+      {...props}
+    >
       {LeftIcon && <LeftIcon className={iconClass} />}
       {children}
       {RightIcon && <RightIcon className={iconClass} />}

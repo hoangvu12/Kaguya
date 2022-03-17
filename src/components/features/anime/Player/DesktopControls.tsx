@@ -1,5 +1,5 @@
 import ControlsIcon from "@/components/features/anime/Player/ControlsIcon";
-import QualitiesSelector from "@/components/features/anime/Player/QualitiesSelector";
+import QualitiesSelector from "@/components/features/anime/Player/QualitySelector";
 import ShortcutsPanel from "@/components/features/anime/Player/ShortcutsPanel";
 import SkipButton from "@/components/features/anime/Player/SkipButton";
 import ForwardIcon from "@/components/icons/ForwardIcon";
@@ -11,6 +11,7 @@ import dynamic from "next/dynamic";
 import React, { useCallback } from "react";
 import { AiOutlineLoading3Quarters, AiOutlinePause } from "react-icons/ai";
 import screenfull from "screenfull";
+import Settings from "./Settings";
 
 const ProgressControl = dynamic(
   () => import("@/components/features/anime/Player/ProgressControl"),
@@ -99,7 +100,7 @@ const NonStateControls: React.FC = () => {
 
   return (
     <div className="right-controls flex items-center space-x-6">
-      <QualitiesSelector />
+      <Settings />
       <ShortcutsPanel />
       <SkipButton />
 

@@ -1,4 +1,3 @@
-import QualitiesSelector from "@/components/features/anime/Player/QualitiesSelector";
 import ClientOnly from "@/components/shared/ClientOnly";
 import classNames from "classnames";
 import { AnimatePresence, HTMLMotionProps, motion } from "framer-motion";
@@ -6,6 +5,7 @@ import React from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import DesktopOverlay from "./DesktopOverlay";
 import MobileOverlay from "./MobileOverlay";
+import Settings from "./Settings";
 
 const variants = { show: { opacity: 1 }, hide: { opacity: 0 } };
 
@@ -38,7 +38,7 @@ const Overlay: React.FC<OverlayProps & HTMLMotionProps<"div">> = ({
               <MobileOverlay />
 
               <div className="absolute top-10 right-10">
-                <QualitiesSelector />
+                <Settings />
               </div>
             </MobileView>
           </ClientOnly>
