@@ -7,7 +7,6 @@ import React, { MutableRefObject, useEffect, useRef } from "react";
 export interface HlsPlayerProps
   extends Omit<React.VideoHTMLAttributes<HTMLVideoElement>, "src"> {
   src: VideoSource[];
-  autoPlay?: boolean;
   hlsConfig?: Hls.Config;
 }
 
@@ -16,7 +15,7 @@ const DEFAULT_HLS_CONFIG = {
 };
 
 const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
-  ({ src, autoPlay, hlsConfig, ...props }, ref) => {
+  ({ src, hlsConfig, ...props }, ref) => {
     const config = { ...DEFAULT_HLS_CONFIG, ...hlsConfig };
 
     const myRef = useRef<HTMLVideoElement>(null);
@@ -44,15 +43,13 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
           _hls.loadSource(src[0].file);
 
           _hls.on(Hls.Events.MANIFEST_PARSED, () => {
-            if (autoPlay) {
-              myRef?.current
-                ?.play()
-                .catch(() =>
-                  console.log(
-                    "Unable to autoplay prior to user interaction with the dom."
-                  )
-                );
-            }
+            myRef?.current
+              ?.play()
+              .catch(() =>
+                console.log(
+                  "Unable to autoplay prior to user interaction with the dom."
+                )
+              );
 
             const levels: string[] = _hls.levels
               .sort((a, b) => b.height - a.height)
@@ -108,10 +105,9 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
           qualities: src.length ? notDuplicatedQualities : [],
           currentQuality: src[0].label,
         }));
-      }
 
-      myRef.current.autoplay = autoPlay;
-      myRef.current.src = src[0].file;
+        myRef.current.src = src[0].file;
+      }
 
       return () => {
         if (_hls != null) {
@@ -119,7 +115,7 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
         }
       };
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [autoPlay, setState, src]);
+    }, [setState, src]);
 
     useEffect(() => {
       const videoRef = myRef.current;
