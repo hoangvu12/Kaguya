@@ -5,7 +5,6 @@ import { FiSettings } from "react-icons/fi";
 import ControlsIcon from "./ControlsIcon";
 import PlaySpeedSelector from "./PlaySpeedSelector";
 import QualitySelector from "./QualitySelector";
-import { BrowserView, MobileView } from "react-device-detect";
 
 const Settings = () => {
   return (
@@ -26,21 +25,5 @@ const Settings = () => {
     </Popup>
   );
 };
-
-// const MobileSettings = () => {
-//     return (
-
-//     )
-// }
-
-// const Settings = () => {
-//   return (
-//     <React.Fragment>
-//         <BrowserView renderWithFragment>
-//             <DesktopSettings/>
-//         </BrowserView>
-//     </React.Fragment>
-//   );
-// };
 
 export default Settings;
