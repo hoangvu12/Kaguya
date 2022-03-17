@@ -26,7 +26,10 @@ const Overlay: React.FC<OverlayProps & HTMLMotionProps<"div">> = ({
           initial="hide"
           animate="show"
           exit="hide"
-          className={classNames("absolute inset-0 w-full z-30", className)}
+          className={classNames(
+            "video-overlay absolute inset-0 w-full z-30",
+            className
+          )}
           {...props}
         >
           <ClientOnly>

@@ -38,7 +38,7 @@ const MobileOverlay = () => {
       initial="hide"
       animate="show"
       exit="hide"
-      className="video-overlay w-full h-full flex items-center justify-center bg-black/70"
+      className="mobile-video-overlay w-full h-full flex items-center justify-center bg-black/70"
     >
       <div className="flex items-center justify-between w-2/3">
         <ControlsIcon

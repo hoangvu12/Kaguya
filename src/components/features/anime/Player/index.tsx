@@ -65,8 +65,9 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
         return;
       }
 
-      const isChild = videoOverlay.contains(target);
-      const shouldCloseControls = !isChild || target.isEqualNode(videoOverlay);
+      const shouldCloseControls =
+        target.classList.contains("video-overlay") ||
+        target.classList.contains("mobile-video-overlay");
 
       if (shouldCloseControls && isMobile) {
         setShowControls(false);
