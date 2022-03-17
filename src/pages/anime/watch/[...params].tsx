@@ -317,7 +317,6 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
           ref={videoRef}
           src={isLoading ? blankVideo : data.sources}
           className="object-contain w-full h-full"
-          autoPlay
           overlaySlot={
             <BsArrowLeft
               className="absolute w-10 h-10 transition duration-300 cursor-pointer top-10 left-10 hover:text-gray-200"
