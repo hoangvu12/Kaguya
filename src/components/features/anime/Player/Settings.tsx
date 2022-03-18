@@ -5,6 +5,7 @@ import { FiSettings } from "react-icons/fi";
 import ControlsIcon from "./ControlsIcon";
 import PlaySpeedSelector from "./PlaySpeedSelector";
 import QualitySelector from "./QualitySelector";
+import SubtitleSelector from "./SubtitleSelector";
 
 const Settings = () => {
   return (
@@ -18,9 +19,10 @@ const Settings = () => {
       type="click"
       className="w-96"
     >
-      <NestedMenu>
+      <NestedMenu className="max-h-[25rem]">
         <PlaySpeedSelector />
         <QualitySelector />
+        <SubtitleSelector />
       </NestedMenu>
     </Popup>
   );

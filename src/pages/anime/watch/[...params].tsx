@@ -318,6 +318,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
         <Video
           ref={videoRef}
           src={isLoading ? blankVideo : data.sources}
+          subtitles={isLoading ? [] : data.subtitles}
           className="object-contain w-full h-full"
           overlaySlot={
             <BsArrowLeft

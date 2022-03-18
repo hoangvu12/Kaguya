@@ -1,11 +1,12 @@
 import config from "@/config";
-import { Episode, VideoSource } from "@/types";
+import { Episode, Subtitle, VideoSource } from "@/types";
 import axios, { AxiosError } from "axios";
 import { useQuery, useQueryClient } from "react-query";
 
 interface ReturnSuccessType {
   success: true;
   sources: VideoSource[];
+  subtitles?: Subtitle[];
 }
 
 interface ReturnFailType {

@@ -1,14 +1,18 @@
+import { Subtitle } from "@/types";
 import {
   createContext,
   Dispatch,
   SetStateAction,
   useContext,
+  useEffect,
   useState,
 } from "react";
 
 export interface VideoState {
   qualities?: string[];
   currentQuality?: string;
+  currentSubtitle?: string;
+  subtitles?: Subtitle[];
 }
 
 interface ContextProps {
@@ -18,10 +22,16 @@ interface ContextProps {
 
 interface ProviderProps {
   defaultQualities?: string[];
+  subtitles?: Subtitle[];
 }
 
 const defaultValue = {
-  state: { qualities: [], currentQuality: "" },
+  state: {
+    qualities: [],
+    currentQuality: "",
+    subtitles: [],
+    currentSubtitle: "vi",
+  },
   setState: () => {},
 } as ContextProps;
 
@@ -30,14 +40,24 @@ const VideoContext = createContext<ContextProps>(defaultValue);
 export const VideoStateProvider: React.FC<ProviderProps> = ({
   children,
   defaultQualities,
+  subtitles,
 }) => {
   const [state, setState] = useState<VideoState>(() => {
-    if (defaultQualities.length) {
-      defaultValue.state.qualities = defaultQualities;
-    }
+    defaultValue.state.qualities = defaultQualities;
+    defaultValue.state.currentQuality = defaultQualities[0];
+    defaultValue.state.subtitles = subtitles;
 
     return defaultValue.state;
   });
+
+  useEffect(() => {
+    setState((prev) => ({
+      ...prev,
+      currentSubtitle: "vi",
+      qualities: defaultQualities,
+      subtitles,
+    }));
+  }, [defaultQualities, subtitles]);
 
   return (
     <VideoContext.Provider value={{ state, setState }}>
