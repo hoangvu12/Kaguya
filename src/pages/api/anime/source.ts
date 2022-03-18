@@ -31,7 +31,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       params: query,
     });
 
-    res.status(200).json({ success: true, sources: data.sources });
+    res
+      .status(200)
+      .json({
+        success: true,
+        sources: data.sources,
+        subtitles: data.subtitles,
+      });
   } catch (err) {
     res.status(500).json({
       success: false,

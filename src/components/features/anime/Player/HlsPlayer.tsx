@@ -1,5 +1,5 @@
 import { useVideoState } from "@/contexts/VideoStateContext";
-import { VideoSource } from "@/types";
+import { Subtitle, VideoSource } from "@/types";
 import { parseNumbersFromString } from "@/utils";
 import type Hls from "hls.js";
 import { buildAbsoluteURL } from "url-toolkit";
@@ -16,14 +16,20 @@ export interface HlsPlayerProps
   extends Omit<React.VideoHTMLAttributes<HTMLVideoElement>, "src"> {
   src: VideoSource[];
   hlsConfig?: Partial<Hls["config"]>;
+  subtitles?: Subtitle[];
 }
 
 const DEFAULT_HLS_CONFIG: Partial<Hls["config"]> = {
   enableWorker: false,
 };
 
+// API made by https://github.com/napthedev
+const convertSRTToVTT = (src: string) => {
+  return `https://srt-to-vtt.vercel.app?url=${encodeURIComponent(src)}`;
+};
+
 const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
-  ({ src, hlsConfig, ...props }, ref) => {
+  ({ src, hlsConfig, subtitles, ...props }, ref) => {
     const config = useMemo(
       () => ({ ...DEFAULT_HLS_CONFIG, ...hlsConfig }),
       [hlsConfig]
@@ -94,7 +100,9 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
                   const href = new URL(fragment.baseurl);
                   const targetUrl = href.searchParams.get("url");
 
-                  const url = buildAbsoluteURL(targetUrl, fragment.relurl);
+                  const url = buildAbsoluteURL(targetUrl, fragment.relurl, {
+                    alwaysNormalize: true,
+                  });
 
                   href.searchParams.set("url", url);
 
@@ -155,6 +163,24 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
     );
 
     useEffect(() => {
+      if (!myRef.current) return;
+
+      subtitles.forEach((subtitle) => {
+        const textTrack = myRef.current.textTracks.getTrackById(subtitle.lang);
+
+        textTrack.mode = "disabled";
+      });
+
+      const textTrack = myRef.current.textTracks.getTrackById(
+        state.currentSubtitle
+      );
+
+      if (!textTrack) return;
+
+      textTrack.mode = "showing";
+    }, [state.currentSubtitle, subtitles]);
+
+    useEffect(() => {
       let _hls = hls.current;
 
       initPlayer(src[0]);
@@ -189,10 +215,11 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
         return;
       }
 
-      const qualitySource = src.find(
-        (source) => source.label === currentQuality
-      );
       const beforeChangeTime = videoRef.currentTime;
+
+      const qualitySource = src.find(
+        (source) => source.label === state.currentQuality
+      );
 
       if (!qualitySource) return;
 
@@ -210,7 +237,8 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
         videoRef.removeEventListener("canplay", handleQualityChange);
       };
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [state]);
+    }, [state?.currentQuality]);
+
     return (
       <video
         className="hls-player"
@@ -223,8 +251,25 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
           }
         }}
         autoPlay
+        crossOrigin="anonymous"
         {...props}
-      />
+      >
+        {subtitles.map((subtitle) => (
+          <track
+            id={subtitle.lang}
+            kind="subtitles"
+            label={subtitle.language}
+            srcLang={subtitle.lang}
+            src={
+              subtitle.useVTTCompile
+                ? convertSRTToVTT(subtitle.file)
+                : subtitle.file
+            }
+            key={subtitle.lang}
+            default={subtitle.lang === "vi"}
+          />
+        ))}
+      </video>
     );
   }
 );

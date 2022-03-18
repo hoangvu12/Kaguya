@@ -279,6 +279,13 @@ export interface Comment {
   reactions?: Reaction[];
 }
 
+export type Subtitle = {
+  file: string;
+  lang: string;
+  language: string;
+  useVTTCompile?: boolean;
+};
+
 export type VideoSource = {
   file: string;
   label?: string;

@@ -45,7 +45,7 @@ const NestedMenu = ({
       }}
     >
       <div
-        className={classNames("relative overflow-hidden", className)}
+        className={classNames("relative overflow-y-auto", className)}
         {...props}
       >
         {state.activeMenu !== "base" && (

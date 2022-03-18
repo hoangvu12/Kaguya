@@ -179,7 +179,10 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
 
     return (
       <VideoContextProvider el={refHolder}>
-        <VideoStateProvider defaultQualities={defaultQualities}>
+        <VideoStateProvider
+          defaultQualities={defaultQualities}
+          subtitles={props.subtitles}
+        >
           <motion.div
             className={classNames("video-wrapper relative overflow-hidden")}
             onMouseMove={isMobile ? noop : handleKeepControls}
