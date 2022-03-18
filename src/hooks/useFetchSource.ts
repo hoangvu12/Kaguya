@@ -1,3 +1,4 @@
+import config from "@/config";
 import { Episode, VideoSource } from "@/types";
 import axios, { AxiosError } from "axios";
 import { useQuery, useQueryClient } from "react-query";
@@ -15,8 +16,8 @@ interface ReturnFailType {
 
 const convertSources = (sources: VideoSource[], sourceId: string) =>
   sources.map((source) => {
-    if (source.useProxy) {
-      source.file = `/api/proxy?url=${encodeURIComponent(
+    if (source.useProxy && !source.file.includes("m3u8")) {
+      source.file = `${config.nodeServerUrl}?url=${encodeURIComponent(
         source.file
       )}&source_id=${sourceId}`;
     }

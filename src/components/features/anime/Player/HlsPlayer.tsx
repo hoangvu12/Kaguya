@@ -1,92 +1,40 @@
 import { useVideoState } from "@/contexts/VideoStateContext";
 import { VideoSource } from "@/types";
 import { parseNumbersFromString } from "@/utils";
-import Hls from "hls.js";
-import React, { MutableRefObject, useEffect, useRef } from "react";
+import type Hls from "hls.js";
+import { buildAbsoluteURL } from "url-toolkit";
+import React, {
+  MutableRefObject,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from "react";
+import webConfig from "@/config";
 
 export interface HlsPlayerProps
   extends Omit<React.VideoHTMLAttributes<HTMLVideoElement>, "src"> {
   src: VideoSource[];
-  hlsConfig?: Hls.Config;
+  hlsConfig?: Partial<Hls["config"]>;
 }
 
-const DEFAULT_HLS_CONFIG = {
+const DEFAULT_HLS_CONFIG: Partial<Hls["config"]> = {
   enableWorker: false,
 };
 
 const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
   ({ src, hlsConfig, ...props }, ref) => {
-    const config = { ...DEFAULT_HLS_CONFIG, ...hlsConfig };
+    const config = useMemo(
+      () => ({ ...DEFAULT_HLS_CONFIG, ...hlsConfig }),
+      [hlsConfig]
+    );
 
     const myRef = useRef<HTMLVideoElement>(null);
-    const hls = useRef(new Hls(config));
+    const hls = useRef<Hls>(null);
     const { state, setState } = useVideoState();
 
-    useEffect(() => {
-      let _hls = hls.current;
-
-      function _initPlayer() {
-        if (_hls != null) {
-          _hls.destroy();
-
-          const newHls = new Hls(config);
-
-          hls.current = newHls;
-          _hls = newHls;
-        }
-
-        if (myRef.current != null) {
-          _hls.attachMedia(myRef.current);
-        }
-
-        _hls.on(Hls.Events.MEDIA_ATTACHED, () => {
-          _hls.loadSource(src[0].file);
-
-          _hls.on(Hls.Events.MANIFEST_PARSED, () => {
-            myRef?.current
-              ?.play()
-              .catch(() =>
-                console.log(
-                  "Unable to autoplay prior to user interaction with the dom."
-                )
-              );
-
-            const levels: string[] = _hls.levels
-              .sort((a, b) => b.height - a.height)
-              .filter((level) => level.height)
-              .map((level) => `${level.height}p`);
-
-            setState((prev) => ({
-              ...prev,
-              qualities: levels,
-              currentQuality: levels[0],
-            }));
-          });
-        });
-
-        _hls.on(Hls.Events.ERROR, function (event, data) {
-          console.log("ERROR:", data);
-
-          if (data.fatal) {
-            switch (data.type) {
-              case Hls.ErrorTypes.NETWORK_ERROR:
-                _hls.startLoad();
-                break;
-              case Hls.ErrorTypes.MEDIA_ERROR:
-                _hls.recoverMediaError();
-
-                break;
-              default:
-                _initPlayer();
-                break;
-            }
-          }
-        });
-      }
-
-      if (Hls.isSupported() && src[0].file.includes("m3u8")) {
-        _initPlayer();
-      } else {
+    const initQuality = useCallback(
+      (source: VideoSource) => {
         const notDuplicatedQualities = [
           // @ts-ignore
           ...new Set<string>(
@@ -102,11 +50,117 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
 
         setState((prev) => ({
           ...prev,
-          qualities: src.length ? notDuplicatedQualities : [],
-          currentQuality: src[0].label,
+          qualities: notDuplicatedQualities.length
+            ? notDuplicatedQualities
+            : [],
+          currentQuality: source.label,
         }));
+      },
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [src]
+    );
 
-        myRef.current.src = src[0].file;
+    const initPlayer = useCallback(
+      async (source: VideoSource) => {
+        const { default: Hls } = await import("hls.js");
+        let _hls = new Hls(config);
+
+        function _initHlsPlayer() {
+          if (_hls != null) {
+            _hls.destroy();
+
+            const newHls = new Hls(config);
+
+            hls.current = newHls;
+            _hls = newHls;
+          }
+
+          if (myRef.current != null) {
+            _hls.attachMedia(myRef.current);
+          }
+
+          _hls.on(Hls.Events.MEDIA_ATTACHED, () => {
+            _hls.loadSource(source.file);
+
+            _hls.on(Hls.Events.MANIFEST_PARSED, (_, data) => {
+              data.levels.forEach((level) => {
+                level.details.fragments.forEach((fragment) => {
+                  if (
+                    !fragment.baseurl.includes(webConfig.nodeServerUrl) ||
+                    fragment.relurl.includes("http")
+                  )
+                    return;
+
+                  const href = new URL(fragment.baseurl);
+                  const targetUrl = href.searchParams.get("url");
+
+                  const url = buildAbsoluteURL(targetUrl, fragment.relurl);
+
+                  href.searchParams.set("url", url);
+
+                  fragment.url = href.toString();
+                });
+              });
+
+              myRef?.current
+                ?.play()
+                .catch(() =>
+                  console.log(
+                    "Unable to autoplay prior to user interaction with the dom."
+                  )
+                );
+
+              if (src.length > 1) {
+                return;
+              }
+
+              const levels: string[] = _hls.levels
+                .sort((a, b) => b.height - a.height)
+                .filter((level) => level.height)
+                .map((level) => `${level.height}p`);
+
+              setState((prev) => ({
+                ...prev,
+                qualities: levels,
+                currentQuality: levels[0],
+              }));
+            });
+          });
+
+          _hls.on(Hls.Events.ERROR, function (event, data) {
+            console.log("ERROR:", data);
+
+            if (data.fatal) {
+              switch (data.type) {
+                case Hls.ErrorTypes.NETWORK_ERROR:
+                  _hls.startLoad();
+                  break;
+                case Hls.ErrorTypes.MEDIA_ERROR:
+                  _hls.recoverMediaError();
+
+                  break;
+              }
+            }
+          });
+        }
+
+        if (Hls.isSupported() && src[0].file.includes("m3u8")) {
+          _initHlsPlayer();
+        } else {
+          myRef.current.src = src[0].file;
+        }
+      },
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [src]
+    );
+
+    useEffect(() => {
+      let _hls = hls.current;
+
+      initPlayer(src[0]);
+
+      if (!src[0].file.includes("m3u8") || src.length > 1) {
+        initQuality(src[0]);
       }
 
       return () => {
@@ -115,7 +169,7 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
         }
       };
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [setState, src]);
+    }, [src]);
 
     useEffect(() => {
       const videoRef = myRef.current;
@@ -125,7 +179,7 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
 
       const currentQuality = state?.currentQuality;
 
-      if (src[0].file.includes("m3u8")) {
+      if (src[0].file.includes("m3u8") && src.length === 1) {
         if (!hls?.current?.levels?.length) return;
 
         hls.current.currentLevel = hls.current.levels.findIndex(
@@ -146,20 +200,17 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
         videoRef.currentTime = beforeChangeTime;
       };
 
-      // If sources includes playing source (before change to new source)
-      // that mean user changing quality.
-      if (src.some((source) => source.file === videoRef.currentSrc)) {
-        videoRef.addEventListener("canplay", handleQualityChange, {
-          once: true,
-        });
-      }
+      videoRef.addEventListener("canplay", handleQualityChange, {
+        once: true,
+      });
 
-      videoRef.src = qualitySource?.file;
+      initPlayer(qualitySource);
 
       return () => {
         videoRef.removeEventListener("canplay", handleQualityChange);
       };
-    }, [state, src]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [state]);
     return (
       <video
         className="hls-player"
@@ -171,6 +222,7 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
             (ref as MutableRefObject<HTMLVideoElement>).current = node;
           }
         }}
+        autoPlay
         {...props}
       />
     );
