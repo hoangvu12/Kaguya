@@ -281,7 +281,7 @@ export interface Comment {
 
 export type VideoSource = {
   file: string;
-  label: string;
+  label?: string;
   useProxy?: boolean;
 };
 

@@ -9,6 +9,7 @@ import ClientOnly from "@/components/shared/ClientOnly";
 import Head from "@/components/shared/Head";
 import Loading from "@/components/shared/Loading";
 import Portal from "@/components/shared/Portal";
+import config from "@/config";
 import { REVALIDATE_TIME } from "@/constants";
 import useDevice from "@/hooks/useDevice";
 import useEventListener from "@/hooks/useEventListener";
@@ -39,9 +40,10 @@ interface WatchPageProps {
 const blankVideo = [
   {
     file: "https://cdn.plyr.io/static/blank.mp4",
-    label: "720p",
   },
 ];
+
+let origin = "";
 
 const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -329,8 +331,10 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
                 (source) => source.file === url
               )?.useProxy;
 
+              const encodedUrl = encodeURIComponent(url);
+
               const requestUrl = useProxy
-                ? `/api/proxy?url=${url}&source_id=${currentEpisode.sourceId}`
+                ? `${config.nodeServerUrl}/proxy?url=${encodedUrl}&source_id=${currentEpisode.sourceId}`
                 : url;
 
               xhr.open("GET", requestUrl, true);

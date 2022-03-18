@@ -1,13 +1,17 @@
 import { GA_TRACKING_ID } from "@/lib/gtag";
 import Document, { Html, Head, Main, NextScript } from "next/document";
 // eslint-disable-next-line @next/next/no-script-in-document
-import Script from "next/script";
 
 class MyDocument extends Document {
   public render() {
     return (
       <Html>
         <Head>
+          <meta
+            httpEquiv="Content-Security-Policy"
+            content="upgrade-insecure-requests"
+          />
+
           <script
             async
             src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}

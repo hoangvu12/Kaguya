@@ -21,7 +21,7 @@ interface ProviderProps {
 }
 
 const defaultValue = {
-  state: { qualities: [], currentQuality: "NONE" },
+  state: { qualities: [], currentQuality: "" },
   setState: () => {},
 } as ContextProps;
 
