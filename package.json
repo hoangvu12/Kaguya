@@ -12,6 +12,7 @@
     "ts:watch": "yarn ts --watch"
   },
   "dependencies": {
+    "@plussub/srt-vtt-parser": "^1.1.0",
     "@popperjs/core": "^2.10.2",
     "@supabase/supabase-js": "^1.29.1",
     "@tailwindcss/aspect-ratio": "^0.4.0",

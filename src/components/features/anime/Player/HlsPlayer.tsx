@@ -16,20 +16,14 @@ export interface HlsPlayerProps
   extends Omit<React.VideoHTMLAttributes<HTMLVideoElement>, "src"> {
   src: VideoSource[];
   hlsConfig?: Partial<Hls["config"]>;
-  subtitles?: Subtitle[];
 }
 
 const DEFAULT_HLS_CONFIG: Partial<Hls["config"]> = {
   enableWorker: false,
 };
 
-// API made by https://github.com/napthedev
-const convertSRTToVTT = (src: string) => {
-  return `https://srt-to-vtt.vercel.app?url=${encodeURIComponent(src)}`;
-};
-
 const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
-  ({ src, hlsConfig, subtitles, ...props }, ref) => {
+  ({ src, hlsConfig, ...props }, ref) => {
     const config = useMemo(
       () => ({ ...DEFAULT_HLS_CONFIG, ...hlsConfig }),
       [hlsConfig]
@@ -163,24 +157,6 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
     );
 
     useEffect(() => {
-      if (!myRef.current) return;
-
-      subtitles.forEach((subtitle) => {
-        const textTrack = myRef.current.textTracks.getTrackById(subtitle.lang);
-
-        textTrack.mode = "disabled";
-      });
-
-      const textTrack = myRef.current.textTracks.getTrackById(
-        state.currentSubtitle
-      );
-
-      if (!textTrack) return;
-
-      textTrack.mode = "showing";
-    }, [state.currentSubtitle, subtitles]);
-
-    useEffect(() => {
       let _hls = hls.current;
 
       initPlayer(src[0]);
@@ -253,23 +229,7 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
         autoPlay
         crossOrigin="anonymous"
         {...props}
-      >
-        {subtitles.map((subtitle) => (
-          <track
-            id={subtitle.lang}
-            kind="subtitles"
-            label={subtitle.language}
-            srcLang={subtitle.lang}
-            src={
-              subtitle.useVTTCompile
-                ? convertSRTToVTT(subtitle.file)
-                : subtitle.file
-            }
-            key={subtitle.lang}
-            default={subtitle.lang === "vi"}
-          />
-        ))}
-      </video>
+      ></video>
     );
   }
 );

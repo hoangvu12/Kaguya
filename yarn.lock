@@ -1106,6 +1106,11 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@plussub/srt-vtt-parser@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@plussub/srt-vtt-parser/-/srt-vtt-parser-1.1.0.tgz#5a5d2103c130177a3cde515cd4b75097737f1a21"
+  integrity sha512-wDhuvXmTC6E9lxbwX/ashWpvFTH2v5MRT6LqTlGC6+fmragETMzcCubaEiVWWiNVT+HexKe2F6s421OFmfrjiw==
+
 "@popperjs/core@^2.10.2":
   version "2.11.2"
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.2.tgz#830beaec4b4091a9e9398ac50f865ddea52186b9"

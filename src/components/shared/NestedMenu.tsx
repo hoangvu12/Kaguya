@@ -161,11 +161,18 @@ const SubMenu: React.FC<SubMenuProps> = ({
     }));
   };
 
-  if (React.Children.count(children) === 0) {
+  const resolvedChildren:
+    | React.ReactElement<any, string | React.JSXElementConstructor<any>>
+    | React.ReactPortal =
+    React.isValidElement(children) && children.type === React.Fragment
+      ? children.props.children
+      : children;
+
+  if (React.Children.count(resolvedChildren) === 0) {
     return null;
   }
 
-  const childrenWithMenuKey = React.Children.map(children, (child) => {
+  const childrenWithMenuKey = React.Children.map(resolvedChildren, (child) => {
     if (!React.isValidElement(child)) return;
 
     return React.cloneElement(child, {

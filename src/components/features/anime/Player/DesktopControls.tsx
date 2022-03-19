@@ -12,6 +12,7 @@ import React, { useCallback } from "react";
 import { AiOutlineLoading3Quarters, AiOutlinePause } from "react-icons/ai";
 import screenfull from "screenfull";
 import Settings from "./Settings";
+import SubtitleButton from "./SubtitleButton";
 
 const ProgressControl = dynamic(
   () => import("@/components/features/anime/Player/ProgressControl"),
@@ -100,6 +101,7 @@ const NonStateControls: React.FC = () => {
 
   return (
     <div className="right-controls flex items-center space-x-6">
+      <SubtitleButton />
       <Settings />
       <ShortcutsPanel />
       <SkipButton />
