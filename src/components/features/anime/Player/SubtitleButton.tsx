@@ -15,7 +15,7 @@ const SubtitleButton = () => {
   };
 
   return (
-    state.subtitles?.length && (
+    !!state.subtitles?.length && (
       <ButtonTooltip
         reference={
           <ControlsIcon

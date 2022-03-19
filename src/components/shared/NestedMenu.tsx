@@ -203,7 +203,10 @@ const SubMenu: React.FC<SubMenuProps> = ({
       onClick={handleSetMenu}
       slot={
         <div className="space-x-2 flex items-center absolute right-2 top-1/2 -translate-y-1/2">
+          {activeItem?.title && (
+
           <p className="text-gray-200 line-clamp-1">{activeItem.title}</p>
+          )}
 
           <MdKeyboardArrowRight className="w-6 h-6" />
         </div>
