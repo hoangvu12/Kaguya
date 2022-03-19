@@ -1,10 +1,10 @@
+import config from "@/config";
 import { useReadInfo } from "@/contexts/ReadContext";
 import { useReadSettings } from "@/contexts/ReadSettingsContext";
 import useIntersectionObserver from "@/hooks/useIntersectionObserver";
 import { ImageSource } from "@/types";
-import { serialize } from "@/utils";
 import classNames from "classnames";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { BsFillImageFill } from "react-icons/bs";
 
@@ -47,11 +47,12 @@ const ReadImage: React.FC<ReadImageProps> = ({
   const src = useMemo(
     () =>
       image.useProxy
-        ? `/api/proxy?url=${encodeURIComponent(image.image)}&source_id=${
-            currentChapter.sourceId
-          } `
+        ? `${config.nodeServerUrl}/proxy?url=${encodeURIComponent(
+            image.image
+          )}&source_id=${currentChapter.sourceId}`
         : image.image,
-    [currentChapter.sourceId, image.image, image.useProxy]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [image.image]
   );
 
   // I have to use img instead of Next/Image because I want to image calculate the height itself
