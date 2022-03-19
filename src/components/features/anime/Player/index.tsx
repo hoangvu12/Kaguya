@@ -179,6 +179,18 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
       [props.src]
     );
 
+    const playerRef = useCallback(
+      (node) => {
+        myRef.current = node;
+        if (typeof ref === "function") {
+          ref(node);
+        } else if (ref) {
+          (ref as MutableRefObject<HTMLVideoElement>).current = node;
+        }
+      },
+      [ref]
+    );
+
     return (
       <VideoContextProvider el={refHolder}>
         <VideoStateProvider
@@ -247,17 +259,7 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
             </div>
 
             <div className="w-full h-screen">
-              <HlsPlayer
-                ref={(node) => {
-                  myRef.current = node;
-                  if (typeof ref === "function") {
-                    ref(node);
-                  } else if (ref) {
-                    (ref as MutableRefObject<HTMLVideoElement>).current = node;
-                  }
-                }}
-                {...props}
-              />
+              <HlsPlayer ref={playerRef} {...props} />
             </div>
           </motion.div>
         </VideoStateProvider>

@@ -6,7 +6,6 @@ export interface VideoState {
   ended: boolean;
   paused: boolean;
   volume: number;
-  seeking: boolean;
   buffering: boolean;
 }
 
@@ -27,21 +26,20 @@ export const VideoContextProvider: React.FC<{ el: HTMLVideoElement }> = ({
     ended: false,
     paused: true,
     volume: 1,
-    seeking: false,
     buffering: false,
   });
 
   useEffect(() => {
     if (!videoEl) return;
 
-    videoEl.onwaiting = () => {
+    const handleWaiting = () => {
       setState((prev) => ({
         ...prev,
         buffering: true,
       }));
     };
 
-    videoEl.onloadeddata = () => {
+    const handleloadeddata = () => {
       setState((prev) => ({
         ...prev,
         currentTime: videoEl.currentTime,
@@ -49,7 +47,7 @@ export const VideoContextProvider: React.FC<{ el: HTMLVideoElement }> = ({
       }));
     };
 
-    videoEl.onplay = () => {
+    const handlePlay = () => {
       setState((prev) => ({
         ...prev,
         paused: false,
@@ -57,14 +55,14 @@ export const VideoContextProvider: React.FC<{ el: HTMLVideoElement }> = ({
       }));
     };
 
-    videoEl.onpause = () => {
+    const handlePause = () => {
       setState((prev) => ({
         ...prev,
         paused: true,
       }));
     };
 
-    videoEl.ontimeupdate = () => {
+    const handleTimeupdate = () => {
       setState((prev) => ({
         ...prev,
         currentTime: videoEl.currentTime,
@@ -73,26 +71,30 @@ export const VideoContextProvider: React.FC<{ el: HTMLVideoElement }> = ({
       }));
     };
 
-    videoEl.onseeking = () => {
-      setState((prev) => ({
-        ...prev,
-        seeking: true,
-      }));
-    };
-
-    videoEl.onseeked = () => {
-      setState((prev) => ({
-        ...prev,
-        seeking: false,
-      }));
-    };
-
-    videoEl.onended = () => {
+    const handleEnded = () => {
       setState((prev) => ({ ...prev, ended: true }));
     };
 
-    videoEl.onvolumechange = () => {
+    const handleVolumeChange = () => {
       setState((prev) => ({ ...prev, volume: videoEl.volume }));
+    };
+
+    videoEl.addEventListener("waiting", handleWaiting);
+    videoEl.addEventListener("loadeddata", handleloadeddata);
+    videoEl.addEventListener("play", handlePlay);
+    videoEl.addEventListener("pause", handlePause);
+    videoEl.addEventListener("timeupdate", handleTimeupdate);
+    videoEl.addEventListener("ended", handleEnded);
+    videoEl.addEventListener("volumechange", handleVolumeChange);
+
+    return () => {
+      videoEl.removeEventListener("waiting", handleWaiting);
+      videoEl.removeEventListener("loadeddata", handleloadeddata);
+      videoEl.removeEventListener("play", handlePlay);
+      videoEl.removeEventListener("pause", handlePause);
+      videoEl.removeEventListener("timeupdate", handleTimeupdate);
+      videoEl.removeEventListener("ended", handleEnded);
+      videoEl.removeEventListener("volumechange", handleVolumeChange);
     };
   }, [videoEl]);
 

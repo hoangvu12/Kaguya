@@ -215,25 +215,30 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state?.currentQuality]);
 
+    const playerRef = useCallback(
+      (node) => {
+        myRef.current = node;
+        if (typeof ref === "function") {
+          ref(node);
+        } else if (ref) {
+          (ref as MutableRefObject<HTMLVideoElement>).current = node;
+        }
+      },
+      [ref]
+    );
+
     return (
       <video
         className="hls-player"
-        ref={(node) => {
-          myRef.current = node;
-          if (typeof ref === "function") {
-            ref(node);
-          } else if (ref) {
-            (ref as MutableRefObject<HTMLVideoElement>).current = node;
-          }
-        }}
+        ref={playerRef}
         autoPlay
         crossOrigin="anonymous"
         {...props}
-      ></video>
+      />
     );
   }
 );
 
 ReactHlsPlayer.displayName = "ReactHlsPlayer";
 
-export default ReactHlsPlayer;
+export default React.memo(ReactHlsPlayer) as typeof ReactHlsPlayer;

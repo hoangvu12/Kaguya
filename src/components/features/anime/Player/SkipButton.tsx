@@ -13,7 +13,7 @@ const SkipButton = () => {
   const handleClick = useCallback(() => {
     videoEl.currentTime = videoEl.currentTime + SKIP_TIME;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [videoEl?.src]);
+  }, [videoEl?.currentTime]);
 
   return (
     <React.Fragment>
@@ -41,4 +41,4 @@ const SkipButton = () => {
   );
 };
 
-export default SkipButton;
+export default React.memo(SkipButton);
