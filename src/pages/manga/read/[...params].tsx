@@ -1,4 +1,4 @@
-import ReadImages from "@/components/features/manga/Reader/ReadImages";
+import ReadContainer from "@/components/features/manga/Reader/ReadContainer";
 import Button from "@/components/shared/Button";
 import Head from "@/components/shared/Head";
 import Loading from "@/components/shared/Loading";
@@ -174,6 +174,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
         chapters,
         setChapter: handleChapterNavigate,
         sourceId,
+        images: data?.images,
       }}
     >
       <ReadSettingsContextProvider>
@@ -199,16 +200,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
             </div>
           ) : (
             <ReadPanel>
-              {({ isSidebarOpen }) =>
-                !isLoading ? (
-                  <ReadImages
-                    isSidebarOpen={isSidebarOpen}
-                    images={data.images}
-                  />
-                ) : (
-                  <Loading />
-                )
-              }
+              {!isLoading ? <ReadContainer /> : <Loading />}
             </ReadPanel>
           )}
 
