@@ -1,4 +1,3 @@
-import Video from "@/components/features/anime/Player";
 import EpisodesButton from "@/components/features/anime/Player/EpisodesButton";
 import MobileEpisodesButton from "@/components/features/anime/Player/MobileEpisodesButton";
 import MobileNextEpisode from "@/components/features/anime/Player/MobileNextEpisode";
@@ -32,6 +31,7 @@ import React, {
 } from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import { BsArrowLeft } from "react-icons/bs";
+import Video from "@/components/features/anime/Player";
 
 interface WatchPageProps {
   anime: Anime;
@@ -42,8 +42,6 @@ const blankVideo = [
     file: "https://cdn.plyr.io/static/blank.mp4",
   },
 ];
-
-let origin = "";
 
 const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -206,40 +204,6 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   }, [animeId, currentEpisode]);
 
   useEffect(() => {
-    if (!navigator?.mediaSession) return;
-
-    const videoEl = videoRef.current;
-
-    if (!videoEl) return;
-
-    const handleNavigator = () => {
-      navigator.mediaSession.setActionHandler("previoustrack", function () {
-        if (currentEpisodeIndex === 0) return;
-
-        const previousEpisode = sourceEpisodes[currentEpisodeIndex - 1];
-
-        handleNavigateEpisode(previousEpisode.sourceEpisodeId)();
-      });
-
-      navigator.mediaSession.setActionHandler("nexttrack", function () {
-        if (currentEpisodeIndex === sourceEpisodes.length - 1) return;
-
-        const nextEpisode = sourceEpisodes[currentEpisodeIndex + 1];
-
-        handleNavigateEpisode(nextEpisode.sourceEpisodeId)();
-      });
-    };
-
-    videoEl.addEventListener("canplay", handleNavigator, { once: true });
-
-    return () => {
-      videoEl.removeEventListener("canplay", handleNavigator);
-    };
-  }, [currentEpisodeIndex, handleNavigateEpisode, sourceEpisodes]);
-
-  const title = useMemo(() => getTitle(anime), [anime]);
-
-  useEffect(() => {
     const videoEl = videoRef.current;
 
     if (!videoEl) return;
@@ -259,39 +223,40 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
     return () => {
       videoEl.removeEventListener("canplay", handleVideoPlay);
     };
-  }, [
-    currentEpisode?.sourceEpisodeId,
-    isSavedDataLoading,
-    watchedEpisode?.sourceEpisodeId,
-    watchedEpisodeData,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watchedEpisode?.sourceEpisodeId]);
 
-  useEffect(() => {
-    const videoEl = videoRef.current;
+  const title = useMemo(() => getTitle(anime), [anime]);
 
-    if (!videoEl) return;
+  const overlaySlot = useMemo(
+    () => (
+      <BsArrowLeft
+        className="absolute w-10 h-10 transition duration-300 cursor-pointer top-10 left-10 hover:text-gray-200"
+        onClick={router.back}
+      />
+    ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
-    const storage = new Storage("watched");
+  const hlsConfig = useMemo(
+    () => ({
+      xhrSetup: (xhr: any, url: string) => {
+        const useProxy = data?.sources.find(
+          (source) => source.file === url
+        )?.useProxy;
 
-    const handleTimeUpdate = () => {
-      storage.update(
-        { anime_id: Number(animeId) },
-        {
-          anime_id: Number(animeId),
-          anime,
-          sourceEpisodeId: currentEpisode.sourceEpisodeId,
-          episode: currentEpisode,
-          watched_time: videoEl.currentTime,
-        }
-      );
-    };
+        const encodedUrl = encodeURIComponent(url);
 
-    videoEl.addEventListener("timeupdate", handleTimeUpdate);
+        const requestUrl = useProxy
+          ? `${config.nodeServerUrl}/proxy?url=${encodedUrl}&source_id=${currentEpisode.sourceId}`
+          : url;
 
-    return () => {
-      videoEl.removeEventListener("timeupdate", handleTimeUpdate);
-    };
-  }, [anime, animeId, currentEpisode, videoRef]);
+        xhr.open("GET", requestUrl, true);
+      },
+    }),
+    [currentEpisode.sourceId, data?.sources]
+  );
 
   return (
     <div className="relative w-full h-screen">
@@ -320,27 +285,8 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
           src={isLoading ? blankVideo : data.sources}
           subtitles={isLoading ? [] : data.subtitles}
           className="object-contain w-full h-full"
-          overlaySlot={
-            <BsArrowLeft
-              className="absolute w-10 h-10 transition duration-300 cursor-pointer top-10 left-10 hover:text-gray-200"
-              onClick={router.back}
-            />
-          }
-          hlsConfig={{
-            xhrSetup: (xhr: any, url: string) => {
-              const useProxy = data?.sources.find(
-                (source) => source.file === url
-              )?.useProxy;
-
-              const encodedUrl = encodeURIComponent(url);
-
-              const requestUrl = useProxy
-                ? `${config.nodeServerUrl}/proxy?url=${encodedUrl}&source_id=${currentEpisode.sourceId}`
-                : url;
-
-              xhr.open("GET", requestUrl, true);
-            },
-          }}
+          overlaySlot={overlaySlot}
+          hlsConfig={hlsConfig}
         />
       )}
 
