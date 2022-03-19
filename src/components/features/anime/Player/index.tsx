@@ -10,7 +10,7 @@ import { VideoStateProvider } from "@/contexts/VideoStateContext";
 import useDevice from "@/hooks/useDevice";
 import useHandleTap from "@/hooks/useHandleTap";
 import useVideoShortcut from "@/hooks/useVideoShortcut";
-import { VideoSource } from "@/types";
+import { Subtitle, VideoSource } from "@/types";
 import classNames from "classnames";
 import { motion, TapHandlers } from "framer-motion";
 import React, {
@@ -24,11 +24,13 @@ import React, {
 import { BrowserView, MobileView } from "react-device-detect";
 import { useHotkeys } from "react-hotkeys-hook";
 import { AiFillFastBackward, AiFillFastForward } from "react-icons/ai";
+import VideoSubtitle from "./Subtitle";
 
 const noop = () => {};
 interface VideoProps extends HlsPlayerProps {
   src: VideoSource[];
   overlaySlot?: React.ReactNode;
+  subtitles?: Subtitle[];
 }
 
 const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
@@ -212,9 +214,10 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
               </ClientOnly>
             </motion.div>
 
-            <Overlay showControls={showControls || isBuffering}>
+            <Overlay showControls={isBuffering || showControls}>
               {overlaySlot}
             </Overlay>
+            <VideoSubtitle showControls={isBuffering || showControls} />
 
             <div
               className="backward-indicator bg-white/20 absolute left-0 w-[45vw] h-full flex flex-col items-center justify-center transition duration-300 opacity-0"

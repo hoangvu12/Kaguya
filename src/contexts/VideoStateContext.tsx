@@ -13,6 +13,7 @@ export interface VideoState {
   currentQuality?: string;
   currentSubtitle?: string;
   subtitles?: Subtitle[];
+  isSubtitleEnabled?: boolean;
 }
 
 interface ContextProps {
@@ -31,6 +32,7 @@ const defaultValue = {
     currentQuality: "",
     subtitles: [],
     currentSubtitle: "vi",
+    isSubtitleEnabled: true,
   },
   setState: () => {},
 } as ContextProps;
