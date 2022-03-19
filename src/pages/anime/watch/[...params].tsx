@@ -16,7 +16,7 @@ import { useFetchSource } from "@/hooks/useFetchSource";
 import useSavedWatched from "@/hooks/useSavedWatched";
 import useSaveWatched from "@/hooks/useSaveWatched";
 import supabase from "@/lib/supabase";
-import { Anime } from "@/types";
+import { Anime, Episode } from "@/types";
 import { getTitle, sortMediaUnit } from "@/utils/data";
 import Storage from "@/utils/storage";
 import classNames from "classnames";
@@ -137,12 +137,18 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   );
 
   const handleNavigateEpisode = useCallback(
-    (episodeId: string) => () => {
-      router.replace(`/anime/watch/${animeId}/${sourceId}/${episodeId}`, null, {
-        shallow: true,
-      });
+    (episode: Episode) => () => {
+      if (!episode) return;
+
+      router.replace(
+        `/anime/watch/${animeId}/${episode.sourceId}/${episode.sourceEpisodeId}`,
+        null,
+        {
+          shallow: true,
+        }
+      );
     },
-    [animeId, router, sourceId]
+    [animeId, router]
   );
 
   const { data, isLoading, isError, error } = useFetchSource(
@@ -304,9 +310,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
         <BrowserView>
           <Portal selector=".right-controls-slot">
             {currentEpisodeIndex < sourceEpisodes.length - 1 && (
-              <NextEpisodeButton
-                onClick={handleNavigateEpisode(nextEpisode.sourceEpisodeId)}
-              />
+              <NextEpisodeButton onClick={handleNavigateEpisode(nextEpisode)} />
             )}
 
             <EpisodesButton>
@@ -350,9 +354,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
             </MobileEpisodesButton>
 
             {currentEpisodeIndex < sourceEpisodes.length - 1 && (
-              <MobileNextEpisode
-                onClick={handleNavigateEpisode(nextEpisode.sourceEpisodeId)}
-              />
+              <MobileNextEpisode onClick={handleNavigateEpisode(nextEpisode)} />
             )}
           </Portal>
         </MobileView>
@@ -403,9 +405,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
                 <p>Không</p>
               </Button>
               <Button
-                onClick={handleNavigateEpisode(
-                  watchedEpisodeData?.episode?.sourceEpisodeId
-                )}
+                onClick={handleNavigateEpisode(watchedEpisodeData?.episode)}
                 primary
               >
                 <p>Xem</p>
