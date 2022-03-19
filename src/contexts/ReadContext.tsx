@@ -1,4 +1,4 @@
-import { Chapter, Manga } from "@/types";
+import { Chapter, ImageSource, Manga } from "@/types";
 import React from "react";
 
 interface ContextProps {
@@ -8,6 +8,7 @@ interface ContextProps {
   currentChapterIndex: number;
   setChapter: (chapter: Chapter) => void;
   sourceId: string;
+  images: ImageSource[];
 }
 
 interface ReactContextProviderProps {
