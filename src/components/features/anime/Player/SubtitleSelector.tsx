@@ -18,7 +18,7 @@ const SubtitleSelector = () => {
   };
 
   return (
-    state.subtitles?.length && (
+    !!state.subtitles?.length && (
       <NestedMenu.SubMenu
         title="Phụ đề"
         Icon={MdOutlineSubtitles}
