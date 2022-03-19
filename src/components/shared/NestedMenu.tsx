@@ -182,6 +182,14 @@ const SubMenu: React.FC<SubMenuProps> = ({
     });
   });
 
+  const itemProps = React.Children.map(resolvedChildren, (child) => {
+    if (!React.isValidElement(child)) return;
+
+    return child.props as ItemProps;
+  });
+
+  const activeItem = itemProps?.find((item) => item?.itemKey === activeItemKey);
+
   return isActive ? (
     <ul className={classNames("space-y-2", className)} {...props}>
       {childrenWithMenuKey}
@@ -194,7 +202,11 @@ const SubMenu: React.FC<SubMenuProps> = ({
       ActiveIcon={Icon}
       onClick={handleSetMenu}
       slot={
-        <MdKeyboardArrowRight className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6" />
+        <div className="space-x-2 flex items-center absolute right-2 top-1/2 -translate-y-1/2">
+          <p className="text-gray-200 line-clamp-1">{activeItem.title}</p>
+
+          <MdKeyboardArrowRight className="w-6 h-6" />
+        </div>
       }
     />
   ) : null;
