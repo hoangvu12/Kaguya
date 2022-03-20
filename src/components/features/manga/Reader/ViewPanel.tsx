@@ -58,7 +58,7 @@ const ViewPanel: React.FC = ({ children }) => {
       ref={containerRef}
       className="content-container relative w-full flex flex-col items-center justify-center bg-background-900 overflow-y-auto"
     >
-      <BrowserView>
+      <BrowserView className="relative z-50">
         {!isSidebarOpen && (
           <motion.div
             animate={{ opacity: 1 }}
@@ -98,12 +98,7 @@ const ViewPanel: React.FC = ({ children }) => {
         )}
       </BrowserView>
 
-      <div
-        className="h-full"
-        style={{ width: isMobile ? "100%" : `${zoom * 100}%` }}
-      >
-        {children}
-      </div>
+      <div className="relative z-40 h-full w-full">{children}</div>
     </motion.div>
   );
 };
