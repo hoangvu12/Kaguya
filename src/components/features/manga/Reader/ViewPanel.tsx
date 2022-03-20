@@ -5,9 +5,10 @@ import { useReadPanel } from "@/contexts/ReadPanelContext";
 import { useReadSettings } from "@/contexts/ReadSettingsContext";
 import { motion } from "framer-motion";
 import React, { useEffect, useRef } from "react";
-import { isMobile, BrowserView } from "react-device-detect";
+import { BrowserView, isMobile } from "react-device-detect";
 import { AiOutlineZoomIn, AiOutlineZoomOut } from "react-icons/ai";
 import { BiChevronRight } from "react-icons/bi";
+import ImageNavigator from "./ImageNavigator";
 
 const noop = () => {};
 
@@ -56,7 +57,7 @@ const ViewPanel: React.FC = ({ children }) => {
     <motion.div
       onClick={isMobile ? handleMobileClick : noop}
       ref={containerRef}
-      className="content-container relative w-full flex flex-col items-center justify-center bg-background-900 overflow-y-auto"
+      className="content-container relative w-full flex flex-col items-center justify-center bg-background-900"
     >
       <BrowserView className="relative z-50">
         {!isSidebarOpen && (
@@ -98,7 +99,11 @@ const ViewPanel: React.FC = ({ children }) => {
         )}
       </BrowserView>
 
-      <div className="relative z-40 h-full w-full">{children}</div>
+      <ImageNavigator />
+
+      <div className="relative z-30 h-full w-full overflow-y-auto">
+        {children}
+      </div>
     </motion.div>
   );
 };

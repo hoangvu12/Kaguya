@@ -9,22 +9,22 @@ interface ContextProps {
   setState: React.Dispatch<React.SetStateAction<State>>;
 }
 
-const ReadContainerContext = React.createContext<ContextProps>(null);
+const ViewPanelContext = React.createContext<ContextProps>(null);
 
 const defaultState: State = {
   activeImageIndex: 0,
 };
 
-export const ReadContainerContextProvider: React.FC = ({ children }) => {
+export const ViewPanelContextProvider: React.FC = ({ children }) => {
   const [state, setState] = useState<State>(defaultState);
 
   return (
-    <ReadContainerContext.Provider value={{ state, setState }}>
+    <ViewPanelContext.Provider value={{ state, setState }}>
       {children}
-    </ReadContainerContext.Provider>
+    </ViewPanelContext.Provider>
   );
 };
 
-export const useReadContainer = () => {
-  return React.useContext(ReadContainerContext);
+export const useViewPanel = () => {
+  return React.useContext(ViewPanelContext);
 };

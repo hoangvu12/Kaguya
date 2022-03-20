@@ -1,12 +1,12 @@
-import { useReadContainer } from "@/contexts/ReadContainerContext";
 import { useReadInfo } from "@/contexts/ReadContext";
+import { useReadPanel } from "@/contexts/ReadPanelContext";
 import { useReadSettings } from "@/contexts/ReadSettingsContext";
 import React, { useEffect } from "react";
 import ReadImage from "./ReadImage";
 
 const VerticalContainer: React.FC = () => {
   const { currentChapterIndex, chapters, setChapter, images } = useReadInfo();
-  const { state, setState } = useReadContainer();
+  const { state, setState } = useReadPanel();
   const { direction } = useReadSettings();
 
   const handleImageVisible = (index: number) => () => {

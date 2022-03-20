@@ -1,8 +1,9 @@
 import HeadlessSwiper, {
   SwiperSlide,
 } from "@/components/shared/HeadlessSwiper";
-import { useReadContainer } from "@/contexts/ReadContainerContext";
+import { useViewPanel } from "@/contexts/ReadContainerContext";
 import { useReadInfo } from "@/contexts/ReadContext";
+import { useReadPanel } from "@/contexts/ReadPanelContext";
 import { useReadSettings } from "@/contexts/ReadSettingsContext";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { BrowserView, MobileView } from "react-device-detect";
@@ -12,7 +13,7 @@ import type SwiperClass from "swiper/types/swiper-class";
 import ReadImage from "./ReadImage";
 
 const HorizontalContainer: React.FC = () => {
-  const { state, setState } = useReadContainer();
+  const { state, setState } = useReadPanel();
   const swiperRef = useRef<SwiperClass>();
   const { direction } = useReadSettings();
   const { images } = useReadInfo();
