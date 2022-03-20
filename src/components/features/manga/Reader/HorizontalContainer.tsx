@@ -55,7 +55,11 @@ const HorizontalContainer: React.FC = () => {
   return (
     <React.Fragment>
       <BrowserView className="w-full h-full">
-        <ReadImage className="mx-auto" image={activeImage} />
+        <ReadImage
+          className="mx-auto"
+          image={activeImage}
+          loadingClassName="!h-full"
+        />
       </BrowserView>
 
       <MobileView className="w-full h-full">

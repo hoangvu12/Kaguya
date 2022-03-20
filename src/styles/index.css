@@ -12,10 +12,6 @@ main {
   @apply overflow-x-hidden;
 }
 
-.logo {
-  font-family: "Fira Mono", Arial, sans-serif;
-}
-
 .banner__overlay--down {
   background-image: linear-gradient(
     to bottom,
@@ -34,28 +30,8 @@ main {
 }
 
 @layer utilities {
-  .scroll-bar::-webkit-scrollbar {
-    width: 5px;
-  }
-
-  .scroll-bar::-webkit-scrollbar-thumb {
-    background: #888;
-  }
-
   .snap-x > * {
     flex-shrink: 0;
-  }
-
-  .snap-none {
-    scroll-snap-type: none;
-  }
-
-  .grid-cols-18 {
-    grid-template-columns: repeat(18, minmax(0, 1fr));
-  }
-
-  .col-span-16 {
-    grid-column: span 16 / span 16;
   }
 }
 
@@ -282,44 +258,10 @@ div.jsoneditor-value.jsoneditor-invalid {
   color: white !important;
 }
 
-.ui-time-seek-slider {
-  width: 100%;
+::-webkit-scrollbar {
+  @apply w-2 bg-white/10;
 }
 
-.fadeIn {
-  animation: fadeIn 0.3s;
-}
-
-.fadeOut {
-  animation: fadeOut 0.3s;
-}
-
-@keyframes fadeIn {
-  1% {
-    opacity: 0;
-    visibility: hidden;
-  }
-  2% {
-    opacity: 0;
-    visibility: visible;
-  }
-  100% {
-    opacity: 1;
-    visibility: visible;
-  }
-}
-
-@keyframes fadeOut {
-  1% {
-    opacity: 1;
-    visibility: visible;
-  }
-  99% {
-    opacity: 0;
-    visibility: visible;
-  }
-  100% {
-    opacity: 0;
-    visibility: hidden;
-  }
+::-webkit-scrollbar-thumb {
+  @apply bg-zinc-500 rounded-md;
 }

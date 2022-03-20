@@ -6,8 +6,7 @@ import { useReadSettings } from "@/contexts/ReadSettingsContext";
 import useDevice from "@/hooks/useDevice";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
-import React, { useCallback } from "react";
-import { useHotkeys } from "react-hotkeys-hook";
+import React, { useCallback, useEffect } from "react";
 import {
   HiOutlineArrowNarrowLeft,
   HiOutlineArrowNarrowRight,
@@ -43,17 +42,41 @@ const ImageNavigator = () => {
     setState((prev) => ({ ...prev, activeImageIndex: newIndex }));
   }, [direction, activeImageIndex, images.length, setState]);
 
-  useHotkeys("right", direction === "ltr" ? nextImage : previousImage, [
-    images,
-    activeImageIndex,
-    direction,
-  ]);
+  const handleLeft = useCallback(() => {
+    if (direction === "ltr") {
+      previousImage();
+    } else {
+      nextImage();
+    }
+  }, [direction, nextImage, previousImage]);
 
-  useHotkeys("left", direction === "ltr" ? previousImage : nextImage, [
-    images,
-    activeImageIndex,
-    direction,
-  ]);
+  const handleRight = useCallback(() => {
+    if (direction === "ltr") {
+      nextImage();
+    } else {
+      previousImage();
+    }
+  }, [direction, nextImage, previousImage]);
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      const allowedKeys = ["ArrowLeft", "ArrowRight"];
+
+      if (!allowedKeys.includes(e.key)) return;
+
+      if (e.key === "ArrowLeft") {
+        handleLeft();
+      } else if (e.key === "ArrowRight") {
+        handleRight();
+      }
+    };
+
+    window.addEventListener("keydown", handleKey);
+
+    return () => {
+      window.removeEventListener("keydown", handleKey);
+    };
+  }, [handleLeft, handleRight]);
 
   return (
     <AnimatePresence initial={!isMobile}>
@@ -100,4 +123,4 @@ const ImageNavigator = () => {
   );
 };
 
-export default ImageNavigator;
+export default React.memo(ImageNavigator);

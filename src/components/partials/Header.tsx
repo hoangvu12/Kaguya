@@ -6,7 +6,6 @@ import NavItem from "@/components/shared/NavItem";
 import { DISCORD_URL, FACEBOOK_URL } from "@/constants";
 import { useUser } from "@/contexts/AuthContext";
 import classNames from "classnames";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
@@ -94,16 +93,7 @@ const Header = () => {
       </Drawer>
 
       <div className="relative h-2/3 w-10 mr-8">
-        <NavItem href="/">
-          {() => (
-            <Image
-              src="/logo.png"
-              layout="fill"
-              objectFit="contain"
-              alt="logo"
-            />
-          )}
-        </NavItem>
+        <NavItem href="/">{() => <Logo className="!w-full !h-full" />}</NavItem>
       </div>
 
       <div className="hidden sm:flex items-center space-x-6 font-semibold text-typography-secondary">
