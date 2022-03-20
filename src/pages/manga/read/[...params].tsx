@@ -11,7 +11,6 @@ import useSavedRead from "@/hooks/useSavedRead";
 import useSaveRead from "@/hooks/useSaveRead";
 import supabase from "@/lib/supabase";
 import { Chapter, Manga } from "@/types";
-import { parseNumbersFromString } from "@/utils";
 import { getTitle, sortMediaUnit } from "@/utils/data";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import dynamic from "next/dynamic";
@@ -23,7 +22,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { useHotkeys } from "react-hotkeys-hook";
 
 const ReadPanel = dynamic(
   () => import("@/components/features/manga/Reader/ReadPanel"),

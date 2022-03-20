@@ -1,15 +1,14 @@
-import { useReadContainer } from "@/contexts/ReadContainerContext";
 import { useReadInfo } from "@/contexts/ReadContext";
+import { useReadPanel } from "@/contexts/ReadPanelContext";
 import { useReadSettings } from "@/contexts/ReadSettingsContext";
 import React, { useCallback, useEffect } from "react";
 import ButtonNavigator from "./ButtonNavigator";
-import ClickNavigator from "./ClickNavigator";
 
 const ImageNavigator = () => {
   const {
     state: { activeImageIndex },
     setState,
-  } = useReadContainer();
+  } = useReadPanel();
   const { direction } = useReadSettings();
   const { images } = useReadInfo();
 
@@ -20,7 +19,7 @@ const ImageNavigator = () => {
       activeImageIndex === images.length - 1 ? 0 : activeImageIndex + 1;
 
     setState((prev) => ({ ...prev, activeImageIndex: newIndex }));
-  }, [direction, activeImageIndex, images.length, setState]);
+  }, [direction, activeImageIndex, images?.length, setState]);
 
   const previousImage = useCallback(() => {
     if (direction === "vertical") return;
@@ -29,7 +28,7 @@ const ImageNavigator = () => {
       activeImageIndex === 0 ? images.length - 1 : activeImageIndex - 1;
 
     setState((prev) => ({ ...prev, activeImageIndex: newIndex }));
-  }, [direction, activeImageIndex, images.length, setState]);
+  }, [direction, activeImageIndex, images?.length, setState]);
 
   const handleLeft = useCallback(() => {
     if (direction === "ltr") {
@@ -67,9 +66,31 @@ const ImageNavigator = () => {
     };
   }, [handleLeft, handleRight]);
 
+  useEffect(() => {
+    const container = document.querySelector(".content-container");
+
+    if (!container) return;
+
+    const handleClick = (e: MouseEvent) => {
+      const widthPercent = 25;
+      const width = (window.innerWidth * widthPercent) / 100;
+
+      if (e.clientX < width) {
+        handleLeft();
+      } else if (e.clientX > window.innerWidth - width) {
+        handleRight();
+      }
+    };
+
+    container.addEventListener("click", handleClick);
+
+    return () => {
+      container.removeEventListener("click", handleClick);
+    };
+  }, [handleLeft, handleRight]);
+
   return (
     <React.Fragment>
-      <ClickNavigator onLeft={handleLeft} onRight={handleRight} />
       <ButtonNavigator onLeft={handleLeft} onRight={handleRight} />
     </React.Fragment>
   );

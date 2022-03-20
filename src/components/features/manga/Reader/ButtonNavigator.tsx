@@ -1,5 +1,5 @@
 import Button from "@/components/shared/Button";
-import { useReadContainer } from "@/contexts/ReadContainerContext";
+import { useViewPanel } from "@/contexts/ReadContainerContext";
 import { useReadInfo } from "@/contexts/ReadContext";
 import { useReadPanel } from "@/contexts/ReadPanelContext";
 import { useReadSettings } from "@/contexts/ReadSettingsContext";
@@ -24,11 +24,9 @@ const ButtonNavigator: React.FC<ButtonNavigatorProps> = ({
   const { isMobile } = useDevice();
   const { images } = useReadInfo();
   const {
-    state: { isSidebarOpen },
+    state: { isSidebarOpen, activeImageIndex },
   } = useReadPanel();
-  const {
-    state: { activeImageIndex },
-  } = useReadContainer();
+
   const { direction } = useReadSettings();
 
   return (
@@ -40,7 +38,7 @@ const ButtonNavigator: React.FC<ButtonNavigatorProps> = ({
           initial={{ opacity: 0 }}
           exit={{ opacity: 0 }}
           className={classNames(
-            "w-11/12 md:w-4/6 z-50 flex items-center justify-between bottom-5 rounded-md p-2 bg-background-800 fixed"
+            "w-11/12 md:w-4/6 z-50 flex items-center justify-between bottom-5 rounded-md p-2 bg-background-800 absolute"
           )}
         >
           <Button
@@ -56,7 +54,7 @@ const ButtonNavigator: React.FC<ButtonNavigatorProps> = ({
           </Button>
 
           <p>
-            {activeImageIndex + 1} / {images.length}
+            {activeImageIndex + 1} / {images?.length || 0}
           </p>
 
           <Button

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 interface State {
   isSidebarOpen: boolean;
+  activeImageIndex: number;
 }
 
 interface ContextProviderValue {
@@ -13,6 +14,7 @@ const ReadPanelContext = React.createContext<ContextProviderValue>(null);
 
 const defaultState: State = {
   isSidebarOpen: true,
+  activeImageIndex: 0,
 };
 
 export const ReadPanelContextProvider: React.FC = ({ children }) => {
