@@ -6,7 +6,7 @@ import { sortMediaUnit } from "@/utils/data";
 import classNames from "classnames";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 
 interface ChapterSelectorProps {
@@ -32,7 +32,20 @@ const ChapterSelector: React.FC<ChapterSelectorProps> = ({ manga }) => {
     [activeSource, chapters]
   );
 
-  const sources = groupBy(chapters, (data) => data.source.name);
+  const sources = useMemo(
+    () => groupBy(chapters, (data) => data.source.name),
+    [chapters]
+  );
+
+  useEffect(() => {
+    const sourceKeys = Object.keys(sources);
+
+    if (!sourceKeys?.length) return;
+
+    if (!sourceKeys.includes(activeSource)) {
+      setActiveSource(sourceKeys[0]);
+    }
+  }, [activeSource, sources]);
 
   return (
     <React.Fragment>
