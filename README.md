@@ -50,5 +50,6 @@ The official website is [kaguya.live](https://kaguya.live)
 
 ## Sources
 
-- Video player design is heavily inspired by Netflix
+- Video player design is heavily inspired by (Netflix)[https://netflix.com]
+- Reader is heavily inspired by [danke.moe](https://danke.moe)
 - Info from [Anilist](anilist.co)
