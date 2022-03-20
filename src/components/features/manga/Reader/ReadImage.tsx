@@ -12,11 +12,13 @@ interface ReadImageProps
   extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src"> {
   onVisible?: () => void;
   image: ImageSource;
+  loadingClassName?: string;
 }
 
 const ReadImage: React.FC<ReadImageProps> = ({
   image,
   className,
+  loadingClassName,
   onLoad,
   onVisible,
   ...props
@@ -59,8 +61,15 @@ const ReadImage: React.FC<ReadImageProps> = ({
   return (
     <React.Fragment>
       {!loaded && (
-        <div className="flex items-center justify-center w-full h-60 text-gray-500">
+        <div
+          className={classNames(
+            "flex flex-col gap-2 items-center justify-center w-full h-60 text-gray-500",
+            loadingClassName
+          )}
+        >
           <BsFillImageFill className="w-8 h-8 animate-pulse" />
+
+          <p>Vui lòng chờ...</p>
         </div>
       )}
 
