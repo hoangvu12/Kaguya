@@ -34,7 +34,7 @@ export const useFetchSource = (
 
   const fetchSource = (episode: Episode) =>
     axios
-      .get<ReturnSuccessType>(`/api/anime/source`, {
+      .get<ReturnSuccessType>(`${config.nodeServerUrl}/source`, {
         params: {
           episode_id: episode.sourceEpisodeId,
           source_media_id: episode.sourceMediaId,
