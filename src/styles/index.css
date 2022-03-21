@@ -265,3 +265,7 @@ div.jsoneditor-value.jsoneditor-invalid {
 ::-webkit-scrollbar-thumb {
   @apply bg-zinc-500 rounded-md;
 }
+
+.ui-time-seek-slider {
+  width: 100%;
+}
