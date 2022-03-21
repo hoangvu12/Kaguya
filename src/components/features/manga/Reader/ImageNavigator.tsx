@@ -1,6 +1,7 @@
 import { useReadInfo } from "@/contexts/ReadContext";
 import { useReadPanel } from "@/contexts/ReadPanelContext";
 import { useReadSettings } from "@/contexts/ReadSettingsContext";
+import useDevice from "@/hooks/useDevice";
 import React, { useCallback, useEffect } from "react";
 import ButtonNavigator from "./ButtonNavigator";
 
@@ -11,6 +12,7 @@ const ImageNavigator = () => {
   } = useReadPanel();
   const { direction } = useReadSettings();
   const { images } = useReadInfo();
+  const { isMobile } = useDevice();
 
   const nextImage = useCallback(() => {
     if (direction === "vertical") return;
@@ -67,6 +69,8 @@ const ImageNavigator = () => {
   }, [handleLeft, handleRight]);
 
   useEffect(() => {
+    if (isMobile || direction === "vertical") return;
+
     const container = document.querySelector(".content-container");
 
     if (!container) return;
@@ -87,13 +91,9 @@ const ImageNavigator = () => {
     return () => {
       container.removeEventListener("click", handleClick);
     };
-  }, [handleLeft, handleRight]);
+  }, [direction, handleLeft, handleRight, isMobile]);
 
-  return (
-    <React.Fragment>
-      <ButtonNavigator onLeft={handleLeft} onRight={handleRight} />
-    </React.Fragment>
-  );
+  return <ButtonNavigator onLeft={handleLeft} onRight={handleRight} />;
 };
 
 export default React.memo(ImageNavigator);
