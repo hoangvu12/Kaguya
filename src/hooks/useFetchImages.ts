@@ -1,3 +1,4 @@
+import config from "@/config";
 import { Chapter, ImageSource } from "@/types";
 import axios, { AxiosError } from "axios";
 import { useQuery, useQueryClient } from "react-query";
@@ -18,7 +19,7 @@ const useFetchImages = (currentChapter: Chapter, nextChapter?: Chapter) => {
 
   const fetchImages = (chapter: Chapter) =>
     axios
-      .get<ReturnSuccessType>(`/api/manga/images`, {
+      .get<ReturnSuccessType>(`${config.nodeServerUrl}/images`, {
         params: {
           source_media_id: chapter.sourceMediaId,
           chapter_id: chapter.sourceChapterId,
