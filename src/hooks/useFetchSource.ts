@@ -18,7 +18,7 @@ interface ReturnFailType {
 const convertSources = (sources: VideoSource[], sourceId: string) =>
   sources.map((source) => {
     if (source.useProxy && !source.file.includes("m3u8")) {
-      source.file = `${config.nodeServerUrl}?url=${encodeURIComponent(
+      source.file = `${config.proxyServerUrl}?url=${encodeURIComponent(
         source.file
       )}&source_id=${sourceId}`;
     }

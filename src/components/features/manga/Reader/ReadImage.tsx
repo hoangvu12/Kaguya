@@ -49,7 +49,7 @@ const ReadImage: React.FC<ReadImageProps> = ({
   const src = useMemo(
     () =>
       image.useProxy
-        ? `${config.nodeServerUrl}/proxy?url=${encodeURIComponent(
+        ? `${config.proxyServerUrl}?url=${encodeURIComponent(
             image.image
           )}&source_id=${currentChapter.sourceId}`
         : image.image,

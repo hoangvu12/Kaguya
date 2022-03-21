@@ -255,7 +255,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
         const encodedUrl = encodeURIComponent(url);
 
         const requestUrl = useProxy
-          ? `${config.nodeServerUrl}/proxy?url=${encodedUrl}&source_id=${currentEpisode.sourceId}`
+          ? `${config.proxyServerUrl}?url=${encodedUrl}&source_id=${currentEpisode.sourceId}`
           : url;
 
         xhr.open("GET", requestUrl, true);

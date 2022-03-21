@@ -3,6 +3,7 @@ const config = {
   adminSupabaseKey: process.env.ADMIN_SUPABASE_KEY,
   supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
   nodeServerUrl: process.env.NEXT_PUBLIC_NODE_SERVER_URL,
+  proxyServerUrl: process.env.NEXT_PUBLIC_PROXY_SERVER_URL,
   webPushPublicKey: process.env.NEXT_PUBLIC_WEB_PUSH,
 };
 
