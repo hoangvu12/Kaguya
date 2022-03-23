@@ -1,25 +1,14 @@
-import { useUser } from "@/contexts/AuthContext";
-import React from "react";
+import Avatar from "@/components/shared/Avatar";
+import Button from "@/components/shared/Button";
 import Popup from "@/components/shared/Popup";
 import TextIcon from "@/components/shared/TextIcon";
-import { HiOutlineLogout } from "react-icons/hi";
-import Button from "@/components/shared/Button";
+import { useUser } from "@/contexts/AuthContext";
 import supabase from "@/lib/supabase";
-import Avatar from "@/components/shared/Avatar";
-import useSyncUser from "@/hooks/useSyncUser";
-import { MdOutlineManageAccounts } from "react-icons/md";
-import { useRouter } from "next/router";
-import Link from "next/link";
-
-const roles = {
-  user: "Người dùng",
-  admin: "Admin",
-};
+import React from "react";
+import { HiOutlineLogout } from "react-icons/hi";
 
 const HeaderProfile = () => {
-  const router = useRouter();
   const user = useUser();
-  const { data: syncUser } = useSyncUser();
 
   if (!user) return null;
 
@@ -36,25 +25,11 @@ const HeaderProfile = () => {
 
         <div>
           <p className="font-semibold">{user.user_metadata.name}</p>
-          <p className="text-gray-300">
-            {roles[syncUser?.auth_role || "user"]}
-          </p>
+          <p className="text-gray-300">Người dùng</p>
         </div>
       </div>
 
       <div className="space-y-2">
-        {syncUser?.auth_role === "admin" && (
-          <Link href="/admin">
-            <a>
-              <Button className="w-full !bg-transparent hover:!bg-white/20">
-                <TextIcon LeftIcon={MdOutlineManageAccounts}>
-                  <p>Admin dashboard</p>
-                </TextIcon>
-              </Button>
-            </a>
-          </Link>
-        )}
-
         <Button
           className="w-full !bg-transparent hover:!bg-white/20"
           onClick={() => {
