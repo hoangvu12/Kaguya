@@ -1,6 +1,6 @@
 {
-  "name": "Kaguya",
-  "version": "0.1.0",
+  "name": "kaguya",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -27,7 +27,6 @@
     "emoji-mart": "npm:emoji-mart-virtualized",
     "framer-motion": "^4.1.17",
     "hls.js": "^1.1.5",
-    "jsoneditor": "^9.5.11",
     "next": "^12.0.9",
     "next-pwa": "^5.4.4",
     "nookies": "^2.5.2",
@@ -43,7 +42,6 @@
     "react-popper": "^2.2.5",
     "react-query": "^3.27.0",
     "react-select": "^5.2.1",
-    "react-table": "^7.7.0",
     "react-tabs": "^3.2.3",
     "react-time-seek-slider": "^1.1.0",
     "react-toastify": "^8.1.0",
