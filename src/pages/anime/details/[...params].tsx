@@ -1,6 +1,7 @@
 import SourceEpisodeSelector from "@/components/features/anime/SourceEpisodeSelector";
 import CommentsSection from "@/components/features/comment/CommentsSection";
 import Button from "@/components/shared/Button";
+import Card from "@/components/shared/Card";
 import CharacterConnectionCard from "@/components/shared/CharacterConnectionCard";
 import DetailsBanner from "@/components/shared/DetailsBanner";
 import DetailsSection from "@/components/shared/DetailsSection";
@@ -216,21 +217,21 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
 
             {!!anime?.relations?.length && (
               <DetailsSection title="Anime liên quan">
-                <List
-                  type="anime"
-                  data={anime.relations.map((relation) => relation.media)}
-                />
+                <List data={anime.relations.map((relation) => relation.media)}>
+                  {(anime) => <Card type="anime" data={anime} />}
+                </List>
               </DetailsSection>
             )}
 
             {!!anime?.recommendations?.length && (
               <DetailsSection title="Anime hay khác">
                 <List
-                  type="anime"
                   data={anime.recommendations.map(
                     (recommendation) => recommendation.media
                   )}
-                />
+                >
+                  {(anime) => <Card type="anime" data={anime} />}
+                </List>
               </DetailsSection>
             )}
 

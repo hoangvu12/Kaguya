@@ -1,4 +1,5 @@
 import AdvancedSettings from "@/components/shared/AdvancedSettings";
+import Card from "@/components/shared/Card";
 import FormSelect from "@/components/shared/FormSelect";
 import GenresFormSelect from "@/components/shared/GenresFormSelect";
 import Input from "@/components/shared/Input";
@@ -254,7 +255,9 @@ const BrowseList: React.FC<BrowseListProps> = ({
       <div className="mt-8">
         {!isLoading && query ? (
           <React.Fragment>
-            <List type="anime" data={totalData} />
+            <List data={totalData}>
+              {(data) => <Card data={data} type="anime" />}
+            </List>
 
             {isFetchingNextPage && !isError && (
               <div className="mt-4">

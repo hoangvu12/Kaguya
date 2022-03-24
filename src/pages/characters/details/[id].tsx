@@ -1,4 +1,5 @@
 import VACard from "@/components/features/va/VACard";
+import Card from "@/components/shared/Card";
 import DetailsSection from "@/components/shared/DetailsSection";
 import Head from "@/components/shared/Head";
 import List from "@/components/shared/List";
@@ -139,34 +140,36 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ character }) => {
           {!!character.voiceActorConnections?.length && (
             <DetailsSection title="Seiyuu">
               <List
-                type="voice_actors"
                 data={character.voiceActorConnections.map(
                   (connection) => connection.voiceActor
                 )}
-                onEachCard={(voiceActor) => <VACard voiceActor={voiceActor} />}
-              />
+              >
+                {(voiceActor) => <VACard voiceActor={voiceActor} />}
+              </List>
             </DetailsSection>
           )}
 
           {!!character.animeConnections?.length && (
             <DetailsSection title="Anime">
               <List
-                type="anime"
                 data={character.animeConnections.map(
                   (connection) => connection.media
                 )}
-              />
+              >
+                {(anime) => <Card type="anime" data={anime} />}
+              </List>
             </DetailsSection>
           )}
 
           {!!character.mangaConnections?.length && (
             <DetailsSection title="Manga">
               <List
-                type="manga"
                 data={character.mangaConnections.map(
                   (connection) => connection.media
                 )}
-              />
+              >
+                {(manga) => <Card type="manga" data={manga} />}
+              </List>
             </DetailsSection>
           )}
         </div>

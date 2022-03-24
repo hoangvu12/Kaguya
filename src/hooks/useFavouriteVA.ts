@@ -1,4 +1,5 @@
 import supabase from "@/lib/supabase";
+import { VoiceActor } from "@/types";
 import { useSupabaseQuery } from "@/utils/supabase";
 
 const useFavouriteVA = () => {
@@ -6,7 +7,7 @@ const useFavouriteVA = () => {
     ["voice-actors favourites"],
     () => {
       return supabase
-        .from("kaguya_voice_actors")
+        .from<VoiceActor>("kaguya_voice_actors")
         .select("*")
         .limit(30)
         .order("favourites", { ascending: false });

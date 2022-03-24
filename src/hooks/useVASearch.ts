@@ -1,10 +1,11 @@
 import supabase from "@/lib/supabase";
+import { VoiceActor } from "@/types";
 import { useSupaInfiniteQuery } from "@/utils/supabase";
 
 const useVASearch = (keyword: string) => {
   return useSupaInfiniteQuery(["va", keyword], (from, to) =>
     supabase
-      .rpc("voice_actors_search", {
+      .rpc<VoiceActor>("voice_actors_search", {
         keyword,
       })
       .select("*")
