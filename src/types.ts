@@ -194,8 +194,8 @@ export interface Media<T extends Anime | Manga> {
   averageScore: number;
   description: string;
   vietnameseTitle?: string;
-  updated_at?: Date;
-  created_at?: Date;
+  updated_at?: string;
+  created_at?: string;
 }
 
 export interface Anime extends Media<Anime> {
@@ -206,14 +206,14 @@ export interface Anime extends Media<Anime> {
   studios: StudioConnection[];
   voiceActors: VoiceActorConnection[];
   airingSchedules: AiringSchedule[];
-  episodeUpdatedAt: Date;
+  episodeUpdatedAt: string;
   duration: number;
   trailer?: string;
 }
 
 export interface Manga extends Media<Manga> {
   totalChapters: number;
-  chapterUpdatedAt: Date;
+  chapterUpdatedAt: string;
   sourceConnections: MangaSourceConnection[];
 }
 export interface Section<T> {
@@ -234,8 +234,8 @@ export interface Watched {
   episodeId: string;
   mediaId?: number;
   userId: string;
-  updated_at?: Date;
-  created_at?: Date;
+  updated_at?: string;
+  created_at?: string;
   watchedTime?: number;
 }
 
@@ -245,13 +245,13 @@ export interface Read {
   chapterId?: string;
   chapter: Chapter;
   userId: string;
-  updated_at?: Date;
-  created_at?: Date;
+  updated_at?: string;
+  created_at?: string;
 }
 
 export interface Reaction {
-  updated_at?: Date;
-  created_at?: Date;
+  updated_at?: string;
+  created_at?: string;
   id: number;
   emoji: string;
   user_id?: string;
@@ -263,8 +263,8 @@ export interface ReplyComment {
   comment: Comment;
 }
 export interface Comment {
-  updated_at?: Date;
-  created_at?: Date;
+  updated_at?: string;
+  created_at?: string;
   user_id?: string;
   user?: User;
   anime?: Anime;
@@ -283,7 +283,6 @@ export type Subtitle = {
   file: string;
   lang: string;
   language: string;
-  useVTTCompile?: boolean;
 };
 
 export type VideoSource = {
@@ -295,6 +294,18 @@ export type VideoSource = {
 export type ImageSource = {
   image: string;
   useProxy?: boolean;
+};
+
+export type Room = {
+  id: number;
+  hostUser: User;
+  hostUserId: string;
+  mediaId: number;
+  media: Media<Anime>;
+  viewersCount: number;
+  created_at?: string;
+  episode: Episode;
+  episodeId: string;
 };
 
 export type CallbackSetter<T> = (handler: T) => void;

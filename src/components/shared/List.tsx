@@ -1,40 +1,39 @@
-import Card from "@/components/shared/Card";
-import { Anime, Character, Manga, VoiceActor } from "@/types";
+import { ArrayElement } from "@/utils/types";
 import classNames from "classnames";
-import React from "react";
+import React, { useMemo } from "react";
 
-type Data<T> = T extends "anime"
-  ? Anime
-  : T extends "characters"
-  ? Character
-  : T extends "voice_actors"
-  ? VoiceActor
-  : Manga;
-interface ListProps<T> {
-  data: Data<T>[];
-  type: T;
-  onEachCard?: (data: Data<T>) => React.ReactNode;
+interface ListProps<T extends any[]>
+  extends React.HTMLAttributes<HTMLDivElement> {
+  data: T;
+  children: (data: ArrayElement<T>) => React.ReactNode;
 }
 
-const List = <T extends "anime" | "manga" | "characters" | "voice_actors">({
+const defaultClassName =
+  "sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6";
+
+const List = <T extends any[]>({
   data,
-  type,
-  // @ts-ignore
-  onEachCard,
+  children,
+  className = "",
+  ...props
 }: ListProps<T>) => {
+  const validClassName = useMemo(
+    () => (className.includes("grid-cols") ? className : defaultClassName),
+    [className]
+  );
+
   return (
     <div
       className={classNames(
-        data.length
-          ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4"
-          : "text-center"
+        data.length ? "grid gap-4" : "text-center",
+        validClassName
       )}
+      {...props}
     >
       {data.length ? (
         data.map((item, index) => (
           <div className="col-span-1" key={index}>
-            {/* @ts-ignore */}
-            {onEachCard ? onEachCard(item) : <Card data={item} type={type} />}
+            {children(item)}
           </div>
         ))
       ) : (
