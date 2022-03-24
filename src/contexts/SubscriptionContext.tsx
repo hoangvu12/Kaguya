@@ -1,5 +1,6 @@
 import config from "@/config";
 import useCreateSubscription from "@/hooks/useCreateSubscription";
+import { urlBase64ToUint8Array } from "@/utils";
 import {
   createContext,
   Dispatch,
@@ -33,7 +34,7 @@ export const SubscriptionContextProvider: React.FC = ({ children }) => {
       if (!subscription) {
         subscription = await registration.pushManager.subscribe({
           userVisibleOnly: true,
-          applicationServerKey: config.webPushPublicKey,
+          applicationServerKey: urlBase64ToUint8Array(config.webPushPublicKey),
         });
       }
 
