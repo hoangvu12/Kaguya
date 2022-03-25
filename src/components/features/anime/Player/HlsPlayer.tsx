@@ -63,11 +63,12 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
 
     const initPlayer = useCallback(
       async (source: VideoSource) => {
-        const { default: Hls } = await import("hls.js");
-        let _hls = new Hls(config);
+        async function _initHlsPlayer() {
+          const { default: Hls } = await import("hls.js");
 
-        function _initHlsPlayer() {
-          if (_hls != null) {
+          let _hls: Hls;
+
+          if (hls.current != null) {
             _hls.destroy();
 
             const newHls = new Hls(config);
@@ -147,10 +148,10 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
           });
         }
 
-        if (Hls.isSupported() && src[0].file.includes("m3u8")) {
-          _initHlsPlayer();
+        if (source.file.includes("m3u8")) {
+          await _initHlsPlayer();
         } else {
-          myRef.current.src = src[0].file;
+          myRef.current.src = source.file;
         }
       },
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -228,7 +229,15 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
       [ref]
     );
 
-    return <video className="hls-player" ref={playerRef} autoPlay {...props} />;
+    return (
+      <video
+        className={classNames("hls-player", className)}
+        ref={playerRef}
+        autoPlay
+        preload="metadata"
+        {...props}
+      />
+    );
   }
 );
 
