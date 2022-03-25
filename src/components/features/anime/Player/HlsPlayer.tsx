@@ -114,9 +114,9 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
                   )
                 );
 
-              if (src.length > 1) {
-                return;
-              }
+              if (src.length > 1) return;
+
+              if (_hls.levels?.length) return;
 
               const levels: string[] = _hls.levels
                 .sort((a, b) => b.height - a.height)
