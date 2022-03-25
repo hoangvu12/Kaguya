@@ -13,7 +13,7 @@ interface EmojiTextProps extends Omit<Props, "onChange" | "html" | "ref"> {
 
 const emptyFn = () => {};
 
-const textToEmojiHTML = (text: string) => {
+export const textToEmojiHTML = (text: string) => {
   const regex = /:((?!image\/gif)[^\s-]\w{1,}.*?):/g;
 
   return text
@@ -26,6 +26,12 @@ const textToEmojiHTML = (text: string) => {
       return emoji || match;
     })
     .replace(/\n/g, "<br />");
+};
+
+export const isEmojiOnly = (text: string) => {
+  const emojiText = textToEmojiHTML(text);
+
+  return emojiText.startsWith("<img");
 };
 
 const EmojiText = React.forwardRef<

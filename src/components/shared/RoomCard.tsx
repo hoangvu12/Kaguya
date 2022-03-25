@@ -16,7 +16,7 @@ interface RoomCardProps {
 
 const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
   return (
-    <Link href={`/anime/wwf/${room.id}`}>
+    <Link href={`/wwf/${room.id}`}>
       <a>
         <div className="w-full h-full space-y-2">
           <div className="relative aspect-w-16 aspect-h-9">
@@ -41,7 +41,7 @@ const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
                 className="absolute right-2 top-2 px-2 py-0.5 rounded-md bg-black/80 font-medium"
                 iconClassName="w-4 h-4"
               >
-                <p>{room.viewersCount}</p>
+                <p>{room.users?.length || 0}</p>
               </TextIcon>
 
               <p className="absolute right-2 bottom-2 rounded-md bg-black/80 px-2 py-0.5">
@@ -51,7 +51,7 @@ const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
           </div>
 
           <div className="flex items-center gap-2">
-            <Avatar src={room.hostUser.user_metadata.avatar_url} />
+            <Avatar src={room.hostUser?.user_metadata?.avatar_url} />
 
             <div>
               <h3
@@ -63,7 +63,7 @@ const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
 
               <DotList className="text-sm w-full">
                 <span className="font-medium text-gray-200">
-                  {room.hostUser.user_metadata.name}
+                  {room.hostUser?.user_metadata?.name}
                 </span>
                 <span className="text-gray-300">
                   {dayjs(new Date(room.created_at)).fromNow()}
