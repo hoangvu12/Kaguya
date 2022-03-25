@@ -99,24 +99,25 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
       const widthPercent = 45;
       const width = (window.innerWidth * widthPercent) / 100;
 
+      const toggleIndicator = (indicator: Element) => {
+        const toggle = () => {
+          indicator.classList.toggle("opacity-0");
+          indicator.classList.toggle("z-50");
+        };
+
+        setTimeout(toggle, 350);
+
+        toggle();
+      };
+
       if (info.point.x < width) {
         myRef.current.currentTime = myRef.current.currentTime - 10;
-        backwardIndicator.classList.toggle("opacity-0");
-        backwardIndicator.classList.toggle("z-50");
 
-        setTimeout(() => {
-          backwardIndicator.classList.toggle("opacity-0");
-          backwardIndicator.classList.toggle("z-50");
-        }, 350);
-      } else {
+        toggleIndicator(backwardIndicator);
+      } else if (info.point.x > window.innerWidth - width) {
         myRef.current.currentTime = myRef.current.currentTime + 10;
-        forwardIndicator.classList.toggle("opacity-0");
-        forwardIndicator.classList.toggle("z-50");
 
-        setTimeout(() => {
-          forwardIndicator.classList.toggle("opacity-0");
-          forwardIndicator.classList.toggle("z-50");
-        }, 350);
+        toggleIndicator(forwardIndicator);
       }
     };
 
