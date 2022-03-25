@@ -11,6 +11,7 @@ import React, {
   useRef,
 } from "react";
 import webConfig from "@/config";
+import classNames from "classnames";
 
 export interface HlsPlayerProps
   extends Omit<React.VideoHTMLAttributes<HTMLVideoElement>, "src"> {
@@ -23,7 +24,7 @@ const DEFAULT_HLS_CONFIG: Partial<Hls["config"]> = {
 };
 
 const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
-  ({ src, hlsConfig, ...props }, ref) => {
+  ({ src, hlsConfig, className, ...props }, ref) => {
     const config = useMemo(
       () => ({ ...DEFAULT_HLS_CONFIG, ...hlsConfig }),
       [hlsConfig]
@@ -228,7 +229,15 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
       [ref]
     );
 
-    return <video className="hls-player" ref={playerRef} autoPlay {...props} />;
+    return (
+      <video
+        className={classNames("hls-player", className)}
+        ref={playerRef}
+        autoPlay
+        preload="metadata"
+        {...props}
+      />
+    );
   }
 );
 
