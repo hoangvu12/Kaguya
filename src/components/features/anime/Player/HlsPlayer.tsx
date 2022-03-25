@@ -227,15 +227,7 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
       [ref]
     );
 
-    return (
-      <video
-        className="hls-player"
-        ref={playerRef}
-        autoPlay
-        crossOrigin="anonymous"
-        {...props}
-      />
-    );
+    return <video className="hls-player" ref={playerRef} autoPlay {...props} />;
   }
 );
 
