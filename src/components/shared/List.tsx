@@ -6,15 +6,17 @@ interface ListProps<T extends any[]>
   extends React.HTMLAttributes<HTMLDivElement> {
   data: T;
   children: (data: ArrayElement<T>) => React.ReactNode;
+  noListMessage?: React.ReactNode;
 }
 
 const defaultClassName =
-  "sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6";
+  "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6";
 
 const List = <T extends any[]>({
   data,
   children,
   className = "",
+  noListMessage = "Không có dữ liệu.",
   ...props
 }: ListProps<T>) => {
   const validClassName = useMemo(
@@ -37,7 +39,7 @@ const List = <T extends any[]>({
           </div>
         ))
       ) : (
-        <p className="text-2xl">Không có dữ liệu.</p>
+        <p className="text-2xl">{noListMessage}</p>
       )}
     </div>
   );

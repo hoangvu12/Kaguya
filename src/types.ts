@@ -302,10 +302,27 @@ export type Room = {
   hostUserId: string;
   mediaId: number;
   media: Media<Anime>;
-  viewersCount: number;
   created_at?: string;
   episode: Episode;
   episodeId: string;
+  users: User[];
+};
+
+export type Chat = {
+  body?: string;
+  user: User;
+  type: "event" | "message";
+  eventType?: string;
+};
+
+export type ChatMessage = {
+  body: string;
+  user: User;
+};
+
+export type ChatEvent = {
+  user: User;
+  eventType: string;
 };
 
 export type CallbackSetter<T> = (handler: T) => void;

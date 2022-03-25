@@ -1,7 +1,11 @@
+import Head from "@/components/shared/Head";
 import List from "@/components/shared/List";
 import RoomCard from "@/components/shared/RoomCard";
 import Section from "@/components/shared/Section";
+import ListSkeleton from "@/components/skeletons/ListSkeleton";
+import RoomListSkeleton from "@/components/skeletons/RoomListSkeleton";
 import { useUser } from "@/contexts/AuthContext";
+import useRooms from "@/hooks/useRooms";
 import { Room } from "@/types";
 import React from "react";
 
@@ -95,29 +99,27 @@ const media = {
 };
 
 const WatchWithFriendPage = () => {
-  const user = useUser();
-  const room = {
-    id: 1,
-    media,
-    hostUser: user,
-    hostUserId: user?.id,
-    mediaId: media?.id,
-    viewersCount: 1,
-    created_at: "2022-02-14T10:42:40.335648+00:00",
-    episode: {
-      name: "Tập 10",
-    },
-    episodeId: 2,
-  };
+  const { data, isLoading } = useRooms();
 
   return (
     <Section className="py-20">
-      <List
-        className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 !gap-x-4 !gap-y-8"
-        data={[room, room, room, room, room, room, room, room]}
-      >
-        {(room) => <RoomCard room={room} />}
-      </List>
+      <Head title="Xem cùng bạn bè - Kaguya" />
+
+      <h1 className="text-4xl font-semibold text-center md:text-left mb-8">
+        Phòng đang hoạt động
+      </h1>
+
+      {isLoading ? (
+        <RoomListSkeleton />
+      ) : (
+        <List
+          className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 !gap-x-4 !gap-y-8"
+          data={data}
+          noListMessage="Không có phòng nào đang hoạt động"
+        >
+          {(room) => <RoomCard room={room} />}
+        </List>
+      )}
     </Section>
   );
 };

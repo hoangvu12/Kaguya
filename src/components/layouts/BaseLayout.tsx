@@ -2,14 +2,23 @@ import React from "react";
 import Footer from "@/components/partials/Footer";
 import Header from "@/components/partials/Header";
 
-const BaseLayout: React.FC = ({ children }) => {
+interface BaseLayoutProps {
+  showHeader?: boolean;
+  showFooter?: boolean;
+}
+
+const BaseLayout: React.FC<BaseLayoutProps> = ({
+  children,
+  showFooter = true,
+  showHeader = true,
+}) => {
   return (
     <main>
-      <Header />
+      {showHeader && <Header />}
 
       <div className="app">{children}</div>
 
-      <Footer />
+      {showFooter && <Footer />}
     </main>
   );
 };

@@ -46,7 +46,7 @@ export const VideoStateProvider: React.FC<ProviderProps> = ({
 }) => {
   const [state, setState] = useState<VideoState>(() => {
     defaultValue.state.qualities = defaultQualities;
-    defaultValue.state.currentQuality = defaultQualities[0];
+    defaultValue.state.currentQuality = defaultQualities[0] || "";
     defaultValue.state.subtitles = subtitles;
 
     return defaultValue.state;

@@ -101,12 +101,12 @@ const NonStateControls: React.FC = () => {
 
   return (
     <div className="right-controls flex items-center space-x-6">
+      <div className="right-controls-slot flex items-center space-x-6"></div>
+
       <SubtitleButton />
       <Settings />
       <ShortcutsPanel />
       <SkipButton />
-
-      <div className="right-controls-slot flex items-center space-x-6"></div>
 
       <ControlsIcon Icon={FullscreenIcon} onClick={handleToggleFullscreen} />
     </div>
