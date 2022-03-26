@@ -23,7 +23,7 @@ const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
         <div className="w-full h-full space-y-4">
           <div className="relative aspect-w-16 aspect-h-9">
             <Image
-              src={room.media.bannerImage}
+              src={room.media.bannerImage || room.media.coverImage.extraLarge}
               alt={mediaTitle}
               layout="fill"
               objectFit="cover"
