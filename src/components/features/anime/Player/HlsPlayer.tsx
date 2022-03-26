@@ -66,16 +66,12 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
         async function _initHlsPlayer() {
           const { default: Hls } = await import("hls.js");
 
-          let _hls: Hls;
-
-          if (hls.current != null) {
-            _hls.destroy();
-
-            const newHls = new Hls(config);
-
-            hls.current = newHls;
-            _hls = newHls;
+          if (hls.current !== null) {
+            hls.current.destroy();
           }
+
+          let _hls: Hls = new Hls(config);
+          hls.current = _hls;
 
           if (myRef.current != null) {
             _hls.attachMedia(myRef.current);
@@ -86,6 +82,8 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
 
             _hls.on(Hls.Events.MANIFEST_PARSED, (_, data) => {
               data.levels.forEach((level) => {
+                if (!level?.details?.fragments?.length) return;
+
                 level.details.fragments.forEach((fragment) => {
                   if (
                     !fragment.baseurl.includes(webConfig.nodeServerUrl) ||
@@ -115,7 +113,6 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
                 );
 
               if (src.length > 1) return;
-
               if (!_hls.levels?.length) return;
 
               const levels: string[] = _hls.levels
@@ -180,6 +177,7 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
 
       if (!videoRef) return;
       if (!state?.qualities.length) return;
+      if (!hls.current?.levels) return;
 
       const currentQuality = state?.currentQuality;
 
