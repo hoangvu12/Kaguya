@@ -51,6 +51,7 @@ const DesktopCustomControls: React.FC<DesktopCustomControlsProps> = ({
           <div className="w-[70vw] overflow-hidden">
             <SourceEpisodeSelector
               episodes={episodes}
+              activeEpisode={currentEpisode}
               onEachEpisode={(episode) => (
                 <button
                   key={episode.sourceEpisodeId}

@@ -58,6 +58,7 @@ const MobileCustomControls: React.FC<MobileCustomControlsProps> = ({
                 <div>
                   <SourceEpisodeSelector
                     episodes={episodes}
+                    activeEpisode={room.episode}
                     onEachEpisode={(episode) => (
                       <button
                         key={episode.sourceEpisodeId}
