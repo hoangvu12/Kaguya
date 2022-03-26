@@ -50,7 +50,7 @@ const RoomPlayer = () => {
   );
 
   return (
-    <div className="aspect-w-16 aspect-h-7">
+    <div className="aspect-w-16 md:aspect-h-7 aspect-h-9">
       <div>
         <Player
           ref={playerRef}

@@ -101,6 +101,8 @@ const media = {
 const WatchWithFriendPage = () => {
   const { data, isLoading } = useRooms();
 
+  console.log(data);
+
   return (
     <Section className="py-20">
       <Head title="Xem cùng bạn bè - Kaguya" />

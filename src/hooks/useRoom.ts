@@ -4,7 +4,7 @@ import { useSupabaseSingleQuery } from "@/utils/supabase";
 import { useMemo } from "react";
 import { toast } from "react-toastify";
 
-const useRoom = (roomId: number) => {
+const useRoom = (roomId: number, initialData: Room) => {
   const queryKey = useMemo(() => ["room", roomId], [roomId]);
 
   return useSupabaseSingleQuery(
@@ -37,6 +37,8 @@ const useRoom = (roomId: number) => {
       onError: (error) => {
         toast.error(error.message);
       },
+      initialData,
+      enabled: false,
     }
   );
 };

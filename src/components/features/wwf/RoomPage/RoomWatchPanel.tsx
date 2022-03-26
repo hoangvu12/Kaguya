@@ -4,23 +4,32 @@ import DotList from "@/components/shared/DotList";
 import PlainCard from "@/components/shared/PlainCard";
 import TextIcon from "@/components/shared/TextIcon";
 import { useRoomInfo } from "@/contexts/RoomContext";
+import { useRoomState } from "@/contexts/RoomStateContext";
+import useDevice from "@/hooks/useDevice";
 import { numberWithCommas } from "@/utils";
 import { convert, getTitle } from "@/utils/data";
+import classNames from "classnames";
 import dayjs from "dayjs";
 import Link from "next/link";
 import React, { useMemo } from "react";
+import { MobileView } from "react-device-detect";
 import { AiOutlineUser } from "react-icons/ai";
+import { MdOutlineChatBubbleOutline } from "react-icons/md";
 import RoomPlayer from "./RoomPlayer";
 
 const RoomWatchPanel = () => {
   const { room } = useRoomInfo();
+  const { state, setState } = useRoomState();
+  const { isMobile } = useDevice();
 
-  const mediaTitle = useMemo(() => getTitle(room.media), [room.media]);
+  const mediaTitle = useMemo(() => getTitle(room?.media), [room?.media]);
 
   return (
     <div
-      style={{ width: "75%" }}
-      className="h-full bg-background-900 overflow-y-auto"
+      className={classNames(
+        `w-full md:w-[75%] bg-background-900 overflow-y-auto`,
+        isMobile && state.isChatBarOpen ? "h-[50%]" : "h-full"
+      )}
     >
       <RoomPlayer />
 
@@ -54,15 +63,27 @@ const RoomWatchPanel = () => {
           </TextIcon>
         </div>
 
-        <div className="w-full flex mt-8 bg-background-800">
-          <div className="w-[150px]">
+        <MobileView className="py-4 bg-background-800 mt-8 flex justify-center w-full">
+          <Button
+            LeftIcon={MdOutlineChatBubbleOutline}
+            secondary
+            onClick={() => {
+              setState((prev) => ({ ...prev, isChatBarOpen: true }));
+            }}
+          >
+            <p>Mở trò chuyện</p>
+          </Button>
+        </MobileView>
+
+        <div className="w-full text-center md:text-left flex flex-col md:flex-row mt-8 bg-background-800">
+          <div className="pt-4 md:pt-0 w-[150px] shrink-0 mx-auto md:mx-0">
             <PlainCard
               src={room.media.coverImage.extraLarge}
               alt={mediaTitle}
             />
           </div>
 
-          <div className="p-8">
+          <div className="p-4 md:p-8">
             <Link href={`/anime/details/${room.media.id}`}>
               <a>
                 <h1 className="text-2xl font-semibold hover:text-primary-300 transition duration-300">
@@ -82,7 +103,7 @@ const RoomWatchPanel = () => {
             </p>
 
             <Link href={`/anime/details/${room.media.id}`}>
-              <a className="flex">
+              <a className="flex justify-center md:justify-start">
                 <Button primary className="w-[max-content] mt-8">
                   <p>Tìm hiểu thêm</p>
                 </Button>
