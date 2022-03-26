@@ -13,7 +13,22 @@ const useRoom = (roomId: number) => {
       supabase
         .from<Room>("kaguya_rooms")
         .select(
-          "*, media:mediaId(*), episode:episodeId(*), users:kaguya_room_users(id), hostUser:hostUserId(*)"
+          `
+            *,
+            media:mediaId(
+              *,
+              sourceConnections:kaguya_anime_source!mediaId(
+                *,
+                episodes:kaguya_episodes(
+                  *,
+                  source:kaguya_sources(id, name)
+                )
+              )
+            ),
+            episode:episodeId(*),
+            users:kaguya_room_users(id),
+            hostUser:hostUserId(*)
+          `
         )
         .eq("id", roomId)
         .limit(1)

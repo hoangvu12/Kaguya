@@ -1,8 +1,7 @@
-import React, { useMemo, useState } from "react";
-import { Episode } from "@/types";
-import { groupBy } from "@/utils";
 import ArrowSwiper, { SwiperSlide } from "@/components/shared/ArrowSwiper";
+import { groupBy } from "@/utils";
 import classNames from "classnames";
+import React, { useMemo, useState } from "react";
 import EpisodeSelector, { EpisodeSelectorProps } from "./EpisodeSelector";
 
 const SourceEpisodeSelector: React.FC<EpisodeSelectorProps> = ({

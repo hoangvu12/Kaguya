@@ -301,7 +301,7 @@ export type Room = {
   hostUser: User;
   hostUserId: string;
   mediaId: number;
-  media: Media<Anime>;
+  media: Anime;
   created_at?: string;
   episode: Episode;
   episodeId: string;
