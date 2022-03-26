@@ -2,7 +2,7 @@ import dayjs from "@/lib/dayjs";
 import { Room } from "@/types";
 import { getTitle } from "@/utils/data";
 import Link from "next/link";
-import React from "react";
+import React, { useMemo } from "react";
 import { AiFillEye } from "react-icons/ai";
 import { GoPrimitiveDot } from "react-icons/go";
 import Avatar from "./Avatar";
@@ -15,14 +15,16 @@ interface RoomCardProps {
 }
 
 const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
+  const mediaTitle = useMemo(() => getTitle(room.media), [room.media]);
+
   return (
     <Link href={`/wwf/${room.id}`}>
       <a>
-        <div className="w-full h-full space-y-2">
+        <div className="w-full h-full space-y-4">
           <div className="relative aspect-w-16 aspect-h-9">
             <Image
               src={room.media.bannerImage}
-              alt={getTitle(room.media)}
+              alt={mediaTitle}
               layout="fill"
               objectFit="cover"
             />
@@ -50,22 +52,37 @@ const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Avatar src={room.hostUser?.user_metadata?.avatar_url} />
+          <div className="flex gap-2">
+            <Avatar
+              className="shrink-0"
+              src={room.hostUser?.user_metadata?.avatar_url}
+            />
 
             <div>
-              <h3
-                className="font-medium line-clamp-2"
-                title={getTitle(room.media)}
-              >
-                {getTitle(room.media)}
-              </h3>
+              {!room.title ? (
+                <h3 className="font-semibold line-clamp-2" title={mediaTitle}>
+                  {mediaTitle}
+                </h3>
+              ) : (
+                <h3 className="font-semibold line-clamp-2" title={room.title}>
+                  {room.title}
+                </h3>
+              )}
+
+              {room.title && (
+                <h4
+                  className="text-gray-300 text-sm line-clamp-1"
+                  title={mediaTitle}
+                >
+                  {mediaTitle}
+                </h4>
+              )}
 
               <DotList className="text-sm w-full">
-                <span className="font-medium text-gray-200">
+                <span className="font-medium text-gray-300">
                   {room.hostUser?.user_metadata?.name}
                 </span>
-                <span className="text-gray-300">
+                <span className="text-gray-400">
                   {dayjs(new Date(room.created_at)).fromNow()}
                 </span>
               </DotList>
