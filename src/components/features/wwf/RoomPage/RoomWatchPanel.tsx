@@ -1,19 +1,13 @@
-import React from "react";
-import Player from "@/components/features/anime/Player";
-import { useRoomInfo } from "@/contexts/RoomContext";
 import Avatar from "@/components/shared/Avatar";
-import { getTitle } from "@/utils/data";
-import dayjs from "dayjs";
 import DotList from "@/components/shared/DotList";
 import TextIcon from "@/components/shared/TextIcon";
-import { AiOutlineUser } from "react-icons/ai";
+import { useRoomInfo } from "@/contexts/RoomContext";
 import { numberWithCommas } from "@/utils";
-
-const blankVideo = [
-  {
-    file: "https://cdn.plyr.io/static/blank.mp4",
-  },
-];
+import { getTitle } from "@/utils/data";
+import dayjs from "dayjs";
+import React from "react";
+import { AiOutlineUser } from "react-icons/ai";
+import RoomPlayer from "./RoomPlayer";
 
 const RoomWatchPanel = () => {
   const { room } = useRoomInfo();
@@ -23,11 +17,7 @@ const RoomWatchPanel = () => {
       style={{ width: "75%" }}
       className="h-full bg-background-900 overflow-y-auto"
     >
-      <div className="aspect-w-16 aspect-h-7">
-        <div>
-          <Player src={blankVideo} className="object-contain" />
-        </div>
-      </div>
+      <RoomPlayer />
 
       <div className="px-4 py-6 w-full flex items-center justify-between">
         <div className="flex gap-2">

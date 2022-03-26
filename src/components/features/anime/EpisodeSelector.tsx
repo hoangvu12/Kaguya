@@ -14,15 +14,38 @@ export interface EpisodeSelectorProps {
   activeEpisode?: Episode;
   chunkSwiperProps?: SwiperProps;
   episodeLinkProps?: Omit<LinkProps, "href">;
+  onEachEpisode?: (episode: Episode) => React.ReactNode;
 }
 
-const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({
-  episodes,
-  activeEpisode,
-  chunkSwiperProps,
-  episodeLinkProps,
-}) => {
+const EpisodeSelector: React.FC<EpisodeSelectorProps> = (props) => {
   const { isMobile } = useDevice();
+
+  const {
+    episodes,
+    activeEpisode,
+    chunkSwiperProps,
+    episodeLinkProps,
+    onEachEpisode = (episode) => (
+      <Link
+        href={`/anime/watch/${episode.sourceConnection.mediaId}/${episode.sourceId}/${episode.sourceEpisodeId}`}
+        key={episode.sourceEpisodeId}
+        shallow
+        {...episodeLinkProps}
+      >
+        <a
+          className={classNames(
+            "rounded-md bg-background-800 col-span-1 aspect-w-2 aspect-h-1 group",
+            episode.sourceEpisodeId === activeEpisode?.sourceEpisodeId &&
+              "text-primary-300"
+          )}
+        >
+          <div className="flex items-center justify-center w-full h-full group-hover:bg-white/10 rounded-md transition duration-300">
+            <p>{episode.name}</p>
+          </div>
+        </a>
+      </Link>
+    ),
+  } = props;
 
   const chunks = useMemo(
     () => chunk(episodes, isMobile ? 6 : 18),
@@ -82,26 +105,7 @@ const EpisodeSelector: React.FC<EpisodeSelectorProps> = ({
       </ArrowSwiper>
 
       <div className="mt-10 grid xl:grid-cols-8 lg:grid-cols-7 md:grid-cols-6 sm:grid-cols-5 grid-cols-4 gap-4">
-        {chunks[realActiveTabIndex].map((episode) => (
-          <Link
-            href={`/anime/watch/${episode.sourceConnection.mediaId}/${episode.sourceId}/${episode.sourceEpisodeId}`}
-            key={episode.sourceEpisodeId}
-            shallow
-            {...episodeLinkProps}
-          >
-            <a
-              className={classNames(
-                "rounded-md bg-background-800 col-span-1 aspect-w-2 aspect-h-1 group",
-                episode.sourceEpisodeId === activeEpisode?.sourceEpisodeId &&
-                  "text-primary-300"
-              )}
-            >
-              <div className="flex items-center justify-center w-full h-full group-hover:bg-white/10 rounded-md transition duration-300">
-                <p>{episode.name}</p>
-              </div>
-            </a>
-          </Link>
-        ))}
+        {chunks[realActiveTabIndex].map(onEachEpisode)}
       </div>
     </React.Fragment>
   );

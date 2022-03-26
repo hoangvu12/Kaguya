@@ -2,6 +2,7 @@ import config from "@/config";
 import { Episode, Subtitle, VideoSource } from "@/types";
 import axios, { AxiosError } from "axios";
 import { useQuery, useQueryClient } from "react-query";
+import { toast } from "react-toastify";
 
 interface ReturnSuccessType {
   success: true;
@@ -60,6 +61,9 @@ export const useFetchSource = (
         queryClient.prefetchQuery(getQueryKey(nextEpisode), () =>
           fetchSource(nextEpisode)
         );
+      },
+      onError: (error) => {
+        toast.error(error.message);
       },
     }
   );
