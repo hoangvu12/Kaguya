@@ -1,4 +1,5 @@
 import supabase from "@/lib/supabase";
+import { Character } from "@/types";
 import { useSupabaseQuery } from "@/utils/supabase";
 
 const useFavouriteCharacters = () => {
@@ -6,7 +7,7 @@ const useFavouriteCharacters = () => {
     ["characters favourites"],
     () => {
       return supabase
-        .from("kaguya_characters")
+        .from<Character>("kaguya_characters")
         .select("*")
         .limit(30)
         .order("favourites", { ascending: false });

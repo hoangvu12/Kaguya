@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import React from "react";
 import { useHotkeys } from "react-hotkeys-hook";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 export interface BaseButtonProps
   extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onClick"> {
@@ -13,6 +14,7 @@ export interface BaseButtonProps
     event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null
   ) => void;
   shortcutKey?: string;
+  isLoading?: boolean;
 }
 
 const BaseButton = React.forwardRef<HTMLButtonElement, BaseButtonProps>(
@@ -28,6 +30,7 @@ const BaseButton = React.forwardRef<HTMLButtonElement, BaseButtonProps>(
       children,
       onClick,
       shortcutKey,
+      isLoading,
       ...rest
     } = props;
 
@@ -59,7 +62,7 @@ const BaseButton = React.forwardRef<HTMLButtonElement, BaseButtonProps>(
       <button
         className={classNames(
           "transition duration-300",
-          disabled && "text-gray-500 cursor-not-allowed",
+          (isLoading || disabled) && "text-gray-300 cursor-not-allowed",
           className,
           buttonClassName
         )}
@@ -71,7 +74,13 @@ const BaseButton = React.forwardRef<HTMLButtonElement, BaseButtonProps>(
         ref={ref}
         {...rest}
       >
-        {LeftIcon && <LeftIcon className={iconClass} />}
+        {isLoading ? (
+          <AiOutlineLoading3Quarters
+            className={classNames(iconClass, "animate-spin")}
+          />
+        ) : (
+          LeftIcon && <LeftIcon className={iconClass} />
+        )}
         {children}
         {RightIcon && <RightIcon className={iconClass} />}
       </button>

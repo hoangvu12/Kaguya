@@ -85,7 +85,7 @@ export const useCreateComment = (options: UseCreateCommentOptions) => {
             manga_id: options.manga_id,
             id: Math.floor(Math.random() * 1000000),
             user,
-            created_at: new Date(),
+            created_at: new Date().toString(),
           });
 
           return queryClient.setQueryData<QueryData>(queryKey, data);
@@ -106,7 +106,7 @@ export const useCreateComment = (options: UseCreateCommentOptions) => {
             is_reply: true,
             id: Math.floor(Math.random() * 1000000),
             user,
-            created_at: new Date(),
+            created_at: new Date().toString(),
           },
         });
 

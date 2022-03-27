@@ -266,6 +266,10 @@ div.jsoneditor-value.jsoneditor-invalid {
   @apply bg-zinc-500 rounded-md;
 }
 
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 .ui-time-seek-slider {
   width: 100%;
 }

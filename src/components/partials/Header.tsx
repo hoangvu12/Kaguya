@@ -26,6 +26,10 @@ const routes = [
     title: "Tìm Anime bằng ảnh",
     href: "/trace",
   },
+  {
+    title: "Xem cùng bạn bè",
+    href: "/wwf",
+  },
 ];
 
 const Header = () => {

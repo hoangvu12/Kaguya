@@ -1,5 +1,4 @@
 import CharacterCard from "@/components/shared/CharacterCard";
-import DetailsSection from "@/components/shared/DetailsSection";
 import Head from "@/components/shared/Head";
 import List from "@/components/shared/List";
 import PlainCard from "@/components/shared/PlainCard";
@@ -8,7 +7,7 @@ import TextIcon from "@/components/shared/TextIcon";
 import { REVALIDATE_TIME } from "@/constants";
 import dayjs from "@/lib/dayjs";
 import supabase from "@/lib/supabase";
-import { Character, CharacterConnection, VoiceActor } from "@/types";
+import { Character, VoiceActor } from "@/types";
 import { arePropertiesFalsy, formatDate, numberWithCommas } from "@/utils";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import React, { useMemo } from "react";
@@ -139,11 +138,9 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ voiceActor }) => {
         </div>
 
         <Section title="Nhân vật">
-          <List
-            type="characters"
-            data={voiceActor.characters.map(({ character }) => character)}
-            onEachCard={(character) => <CharacterCard character={character} />}
-          />
+          <List data={voiceActor.characters.map(({ character }) => character)}>
+            {(character) => <CharacterCard character={character} />}
+          </List>
         </Section>
       </div>
     </>

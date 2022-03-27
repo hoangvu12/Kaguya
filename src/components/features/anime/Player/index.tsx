@@ -199,7 +199,9 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
           subtitles={props.subtitles}
         >
           <motion.div
-            className={classNames("video-wrapper relative overflow-hidden")}
+            className={classNames(
+              "video-wrapper w-full h-full relative overflow-hidden bg-black"
+            )}
             onMouseMove={isMobile ? noop : handleKeepControls}
             onTouchMove={handleTouchMove}
             onTap={handleTap}
@@ -259,7 +261,7 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
               <p className="rounded-full text-xl">+10 giây</p>
             </div>
 
-            <div className="w-full h-screen">
+            <div className="w-full h-full">
               <HlsPlayer ref={playerRef} {...props} />
             </div>
           </motion.div>

@@ -1,6 +1,7 @@
 import CommentsSection from "@/components/features/comment/CommentsSection";
 import ChapterSelector from "@/components/features/manga/ChapterSelector";
 import Button from "@/components/shared/Button";
+import Card from "@/components/shared/Card";
 import CharacterConnectionCard from "@/components/shared/CharacterConnectionCard";
 import DetailsBanner from "@/components/shared/DetailsBanner";
 import DetailsSection from "@/components/shared/DetailsSection";
@@ -152,10 +153,9 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
 
             {!!manga?.relations?.length && (
               <DetailsSection title="Manga liên quan">
-                <List
-                  data={manga.relations.map((relation) => relation.media)}
-                  type="manga"
-                />
+                <List data={manga.relations.map((relation) => relation.media)}>
+                  {(manga) => <Card type="manga" data={manga} />}
+                </List>
               </DetailsSection>
             )}
 
@@ -165,8 +165,9 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
                   data={manga.recommendations.map(
                     (recommendation) => recommendation.media
                   )}
-                  type="manga"
-                />
+                >
+                  {(manga) => <Card type="manga" data={manga} />}
+                </List>
               </DetailsSection>
             )}
 

@@ -66,13 +66,9 @@ const BrowseList: React.FC<BrowseListProps> = ({ defaultQuery }) => {
         {keyword ? (
           !searchIsLoading ? (
             <React.Fragment>
-              <List
-                type="characters"
-                data={totalData}
-                onEachCard={(character) => (
-                  <CharacterCard character={character} />
-                )}
-              />
+              <List data={totalData}>
+                {(character) => <CharacterCard character={character} />}
+              </List>
 
               {isFetchingNextPage && !searchIsError && (
                 <div className="mt-4">
@@ -99,13 +95,9 @@ const BrowseList: React.FC<BrowseListProps> = ({ defaultQuery }) => {
               {birthdayIsLoading ? (
                 <ListSkeleton />
               ) : (
-                <List
-                  type="characters"
-                  data={birthdayCharacters}
-                  onEachCard={(character) => (
-                    <CharacterCard character={character} />
-                  )}
-                />
+                <List data={birthdayCharacters}>
+                  {(character) => <CharacterCard character={character} />}
+                </List>
               )}
             </div>
 
@@ -115,13 +107,9 @@ const BrowseList: React.FC<BrowseListProps> = ({ defaultQuery }) => {
               {favouritesIsLoading ? (
                 <ListSkeleton />
               ) : (
-                <List
-                  type="characters"
-                  data={favouritesCharacters}
-                  onEachCard={(character) => (
-                    <CharacterCard character={character} />
-                  )}
-                />
+                <List data={favouritesCharacters}>
+                  {(character) => <CharacterCard character={character} />}
+                </List>
               )}
             </div>
           </div>
