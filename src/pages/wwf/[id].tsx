@@ -52,8 +52,6 @@ const RoomPage: NextPage<RoomPageProps> = ({ query, room }) => {
     };
   }, [query.id, queryClient, user]);
 
-  if (isLoading || !socket) return <div>...loading</div>;
-
   return (
     <React.Fragment>
       <Head
@@ -62,14 +60,18 @@ const RoomPage: NextPage<RoomPageProps> = ({ query, room }) => {
         image={data.media.bannerImage || data.media.coverImage.extraLarge}
       />
 
-      <RoomContextProvider value={{ room: data, socket }}>
-        <RoomStateContextProvider>
-          <div className="pt-20 h-screen flex flex-col md:flex-row overflow-y-hidden">
-            <RoomWatchPanel />
-            <ChatBar />
-          </div>
-        </RoomStateContextProvider>
-      </RoomContextProvider>
+      {!isLoading && socket ? (
+        <RoomContextProvider value={{ room: data, socket }}>
+          <RoomStateContextProvider>
+            <div className="pt-20 h-screen flex flex-col md:flex-row overflow-y-hidden">
+              <RoomWatchPanel />
+              <ChatBar />
+            </div>
+          </RoomStateContextProvider>
+        </RoomContextProvider>
+      ) : (
+        <div>...loading</div>
+      )}
     </React.Fragment>
   );
 };
