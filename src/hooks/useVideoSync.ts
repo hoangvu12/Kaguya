@@ -58,13 +58,19 @@ const useVideoSync = () => {
 
     if (!player) return;
 
-    socket.emit("getCurrentTime");
-    socket.on("currentTime", (currentTime: number) => {
-      player.currentTime = currentTime;
-    });
+    const handleCanPlay = () => {
+      socket.on("currentTime", (currentTime: number) => {
+        player.currentTime = currentTime;
+      });
+      
+      socket.emit("getCurrentTime");
+    };
+
+    player.addEventListener("canplay", handleCanPlay, { once: true });
 
     return () => {
       socket.off("currentTime");
+      player.removeEventListener("canplay", handleCanPlay);
     };
   }, [socket]);
 
