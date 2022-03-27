@@ -14,8 +14,6 @@ const typeMessages = {
 };
 
 const EventMessage: React.FC<EventMessageProps> = ({ event }) => {
-  console.log(event);
-
   return (
     <p className="text-center italic text-gray-400 text-xs">
       <strong>{event.user?.user_metadata?.name || "Một người khách"} </strong>
