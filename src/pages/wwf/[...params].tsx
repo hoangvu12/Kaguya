@@ -6,9 +6,11 @@ import config from "@/config";
 import { useUser } from "@/contexts/AuthContext";
 import { RoomContextProvider } from "@/contexts/RoomContext";
 import { RoomStateContextProvider } from "@/contexts/RoomStateContext";
+import withRedirect from "@/hocs/withRedirect";
 import useRoom from "@/hooks/useRoom";
 import supabase from "@/lib/supabase";
 import { Room } from "@/types";
+import { vietnameseSlug } from "@/utils";
 import { getTitle } from "@/utils/data";
 import { GetServerSideProps, NextPage } from "next";
 import { ParsedUrlQuery } from "querystring";
@@ -17,13 +19,12 @@ import { useQueryClient } from "react-query";
 import { io, Socket } from "socket.io-client";
 
 interface RoomPageProps {
-  query: ParsedUrlQuery;
   room: Room;
 }
 
-const RoomPage: NextPage<RoomPageProps> = ({ query, room }) => {
+const RoomPage: NextPage<RoomPageProps> = ({ room }) => {
   const [socket, setSocket] = useState<Socket>();
-  const { data, isLoading } = useRoom(Number(query.id), room);
+  const { data } = useRoom(room.id, room);
   const queryClient = useQueryClient();
   const user = useUser();
 
@@ -37,10 +38,10 @@ const RoomPage: NextPage<RoomPageProps> = ({ query, room }) => {
       path: `${pathname}/socket.io`,
     });
 
-    socket.emit("join", query.id, user);
+    socket.emit("join", room.id, user);
 
     socket.on("invalidate", () => {
-      queryClient.invalidateQueries(["room", Number(query.id)], {
+      queryClient.invalidateQueries(["room", room.id], {
         refetchInactive: true,
       });
     });
@@ -50,7 +51,7 @@ const RoomPage: NextPage<RoomPageProps> = ({ query, room }) => {
     return () => {
       socket?.disconnect();
     };
-  }, [query.id, queryClient, user]);
+  }, [queryClient, room.id, user]);
 
   return (
     <React.Fragment>
@@ -60,7 +61,7 @@ const RoomPage: NextPage<RoomPageProps> = ({ query, room }) => {
         image={data.media.bannerImage || data.media.coverImage.extraLarge}
       />
 
-      {!isLoading && socket ? (
+      {socket ? (
         <RoomContextProvider value={{ room: data, socket }}>
           <RoomStateContextProvider>
             <div className="pt-20 h-screen flex flex-col md:flex-row overflow-y-hidden">
@@ -81,9 +82,9 @@ RoomPage.getLayout = (children) => (
   <BaseLayout showFooter={false}>{children}</BaseLayout>
 );
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const { id } = query;
-
+export const getServerSideProps: GetServerSideProps = async ({
+  params: { params },
+}) => {
   const { data, error } = await supabase
     .from<Room>("kaguya_rooms")
     .select(
@@ -104,7 +105,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       hostUser:hostUserId(*)
     `
     )
-    .eq("id", Number(id))
+    .eq("id", Number(params[0]))
     .limit(1)
     .single();
 
@@ -116,10 +117,22 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
   return {
     props: {
-      query,
       room: data,
     },
   };
 };
 
-export default RoomPage;
+export default withRedirect(RoomPage, (router, props) => {
+  const { params } = router.query;
+  const [id, slug] = params as string[];
+  const title = getTitle(props.room.media);
+
+  if (slug) return null;
+
+  return {
+    url: `/wwf/${id}/${vietnameseSlug(title)}`,
+    options: {
+      shallow: true,
+    },
+  };
+});
