@@ -26,7 +26,7 @@ const ChooseAnimePage = () => {
     if (isFetchingNextPage || !hasNextPage) return;
 
     fetchNextPage();
-  }, []);
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   const handleInputChange = debounce(
     (e: React.ChangeEvent<HTMLInputElement>) => setKeyword(e.target.value),
