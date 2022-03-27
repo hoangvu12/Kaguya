@@ -18,6 +18,7 @@ interface AnimeCardProps<T> {
   className?: string;
   containerEndSlot?: React.ReactNode;
   imageEndSlot?: React.ReactNode;
+  redirectUrl?: string;
 }
 
 const imageVariants: Variants = {
@@ -49,24 +50,24 @@ const slotVariants: Variants = {
   exit: { opacity: 1 },
 };
 
-const Card = <T extends "anime" | "manga">({
-  data,
-  className,
-  type,
-  containerEndSlot,
-  imageEndSlot,
-}: AnimeCardProps<T>) => {
+const Card = <T extends "anime" | "manga">(props: AnimeCardProps<T>) => {
+  const {
+    data,
+    className,
+    type,
+    containerEndSlot,
+    imageEndSlot,
+    redirectUrl = type === "anime"
+      ? `/anime/details/${data.id}`
+      : `/manga/details/${data.id}`,
+  } = props;
+
   const { isDesktop } = useDevice();
 
   const primaryColor =
     data.coverImage?.color && isColorVisible(data.coverImage.color, "#3a3939")
       ? data.coverImage.color
       : "white";
-
-  const redirectUrl =
-    type === "anime"
-      ? `/anime/details/${data.id}`
-      : `/manga/details/${data.id}`;
 
   const title = useMemo(() => getTitle(data), [data]);
 
