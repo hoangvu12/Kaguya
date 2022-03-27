@@ -55,6 +55,7 @@ const RoomPlayer = () => {
         <Player
           ref={playerRef}
           src={isLoading ? blankVideo : data.sources}
+          subtitles={data?.subtitles || []}
           className="object-contain w-full h-full"
         />
       </div>
