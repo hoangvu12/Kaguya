@@ -7,7 +7,7 @@ import {
   SEASONS,
   STATUS,
 } from "@/constants";
-import { Anime, Chapter, Episode, Manga } from "@/types";
+import { Anime, Chapter, Episode, Manga, Media } from "@/types";
 import { parseNumbersFromString } from ".";
 
 const constants = {
@@ -38,7 +38,7 @@ export const convert = (
   return constant[index].label;
 };
 
-export const getTitle = <T extends Anime | Manga>(data: T) => {
+export const getTitle = <T extends Media<Anime> | Media<Manga>>(data: T) => {
   const title =
     typeof data?.title === "string" ? data?.title : data?.title.userPreferred;
 

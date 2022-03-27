@@ -19,12 +19,24 @@ interface CommentInputProps {
   placeholder?: string;
   defaultHTML?: string;
   onEnter?: (text: string) => void;
+  needLoginMessage?: React.ReactNode;
+  showAvatar?: boolean;
 }
 
 const CommentInput: React.FC<CommentInputProps> = ({
   placeholder = "Bày tỏ suy nghĩ của bạn.",
   defaultHTML = "",
   onEnter,
+  needLoginMessage = (
+    <p className="text-gray-300">
+      Bạn phải{" "}
+      <Link href="/login">
+        <a className="text-primary-300 hover:underline">đăng nhập</a>
+      </Link>{" "}
+      dể bình luận.
+    </p>
+  ),
+  showAvatar = true,
 }) => {
   const user = useUser();
   const [html, setHTML] = useState(defaultHTML);
@@ -166,7 +178,9 @@ const CommentInput: React.FC<CommentInputProps> = ({
     <ClientOnly>
       {user ? (
         <div className="flex w-full space-x-2">
-          <Avatar className="shrink-0" src={user.user_metadata.avatar_url} />
+          {showAvatar && (
+            <Avatar className="shrink-0" src={user.user_metadata.avatar_url} />
+          )}
 
           <div className="relative flex-1">
             <div className="relative bg-background-900">
@@ -210,13 +224,7 @@ const CommentInput: React.FC<CommentInputProps> = ({
         </div>
       ) : (
         <div className="flex items-center p-3 rounded bg-background-900">
-          <p className="text-gray-300">
-            Bạn phải{" "}
-            <Link href="/login">
-              <a className="text-primary-300 hover:underline">đăng nhập</a>
-            </Link>{" "}
-            dể bình luận.
-          </p>
+          {needLoginMessage}
         </div>
       )}
     </ClientOnly>

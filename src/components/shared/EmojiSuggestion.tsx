@@ -39,7 +39,11 @@ const EmojiSuggestion: React.FC<EmojiSuggestionProps> = ({
 
   return !!emojis?.length && show ? (
     <React.Fragment>
-      <div className={classNames("p-4", className)} {...props} ref={ref}>
+      <div
+        className={classNames("p-4 overflow-x-auto no-scrollbar", className)}
+        {...props}
+        ref={ref}
+      >
         {emojis.map((emoji) => (
           <button
             onClick={() => {
