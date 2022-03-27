@@ -177,7 +177,6 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
 
       if (!videoRef) return;
       if (!state?.qualities.length) return;
-      if (!hls.current?.levels) return;
 
       const currentQuality = state?.currentQuality;
 
