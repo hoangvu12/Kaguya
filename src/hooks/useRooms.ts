@@ -18,11 +18,15 @@ const useRooms = () => {
           hostUser:hostUserId(*)
         `
         )
-        .eq("visibility", "public"),
+        .eq("visibility", "public")
+        .order("created_at", { ascending: false }),
     {
       onError: (error) => {
         toast.error(error.message);
       },
+      refetchOnMount: true,
+      refetchOnWindowFocus: true,
+      refetchOnReconnect: true,
     }
   );
 };
