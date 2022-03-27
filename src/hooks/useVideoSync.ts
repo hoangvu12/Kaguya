@@ -54,6 +54,21 @@ const useVideoSync = () => {
   const isHost = useMemo(() => user?.id === room.hostUser.id, [user, room]);
 
   useEffect(() => {
+    const player = playerRef.current;
+
+    if (!player) return;
+
+    socket.emit("getCurrentTime");
+    socket.on("currentTime", (currentTime: number) => {
+      player.currentTime = currentTime;
+    });
+
+    return () => {
+      socket.off("currentTime");
+    };
+  }, [socket]);
+
+  useEffect(() => {
     async function timeSync() {
       for (let i = 0; i < TIME_SYNC_CYCLES; i++) {
         await sleep(1000);
@@ -113,10 +128,6 @@ const useVideoSync = () => {
     const videoStateHandlers = {
       play: () => {
         player.play().catch(() => {
-          toast.error(
-            "Trình duyệt không hỗ trợ tự động phát video. Vui lòng bấm vào nút phát"
-          );
-
           isPlaying.current = false;
         });
 
@@ -197,10 +208,6 @@ const useVideoSync = () => {
         isPlaying.current = true;
       })
       .catch(() => {
-        toast.error(
-          "Trình duyệt không hỗ trợ tự động phát video. Vui lòng bấm vào nút phát"
-        );
-
         isPlaying.current = false;
       });
 

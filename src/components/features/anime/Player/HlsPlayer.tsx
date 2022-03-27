@@ -12,6 +12,7 @@ import React, {
 } from "react";
 import webConfig from "@/config";
 import classNames from "classnames";
+import { toast } from "react-toastify";
 
 export interface HlsPlayerProps
   extends Omit<React.VideoHTMLAttributes<HTMLVideoElement>, "src"> {
@@ -107,8 +108,8 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
               myRef?.current
                 ?.play()
                 .catch(() =>
-                  console.log(
-                    "Unable to autoplay prior to user interaction with the dom."
+                  toast.error(
+                    "Trình duyệt không hỗ trợ tự động phát video. Vui lòng bấm vào nút phát để bắt đàu video."
                   )
                 );
 
