@@ -1,3 +1,4 @@
+import Button from "@/components/shared/Button";
 import Head from "@/components/shared/Head";
 import List from "@/components/shared/List";
 import RoomCard from "@/components/shared/RoomCard";
@@ -7,7 +8,9 @@ import RoomListSkeleton from "@/components/skeletons/RoomListSkeleton";
 import { useUser } from "@/contexts/AuthContext";
 import useRooms from "@/hooks/useRooms";
 import { Room } from "@/types";
+import Link from "next/link";
 import React from "react";
+import { AiOutlinePlus } from "react-icons/ai";
 
 const media = {
   id: 16498,
@@ -101,15 +104,23 @@ const media = {
 const WatchWithFriendPage = () => {
   const { data, isLoading } = useRooms();
 
-  console.log(data);
-
   return (
     <Section className="py-20">
       <Head title="Xem cùng bạn bè - Kaguya" />
 
-      <h1 className="text-4xl font-semibold text-center md:text-left mb-8">
-        Phòng đang hoạt động
-      </h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-4xl font-semibold text-center md:text-left mb-8">
+          Phòng đang hoạt động
+        </h1>
+
+        <Link href="/wwf/create">
+          <a>
+            <Button primary LeftIcon={AiOutlinePlus}>
+              <p>Tạo phòng</p>
+            </Button>
+          </a>
+        </Link>
+      </div>
 
       {isLoading ? (
         <RoomListSkeleton />

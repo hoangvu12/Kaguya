@@ -307,6 +307,7 @@ export type Room = {
   episodeId: string;
   users: User[];
   title?: string;
+  visibility: "public" | "private";
 };
 
 export type Chat = {

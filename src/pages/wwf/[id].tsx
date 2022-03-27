@@ -31,7 +31,11 @@ const RoomPage: NextPage<RoomPageProps> = ({ query, room }) => {
   const mediaTitle = useMemo(() => getTitle(data.media), [data.media]);
 
   useEffect(() => {
-    const socket = io(config.socketServerUrl);
+    const { pathname, origin } = new URL(config.socketServerUrl);
+
+    const socket = io(origin, {
+      path: `${pathname}/socket.io`,
+    });
 
     socket.emit("join", query.id, user);
 
@@ -76,7 +80,7 @@ RoomPage.getLayout = (children) => (
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const { id } = query;
 
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from<Room>("kaguya_rooms")
     .select(
       `
@@ -99,6 +103,12 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     .eq("id", Number(id))
     .limit(1)
     .single();
+
+  if (error) {
+    return {
+      notFound: true,
+    };
+  }
 
   return {
     props: {

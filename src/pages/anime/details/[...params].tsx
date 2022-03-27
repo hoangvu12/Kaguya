@@ -92,13 +92,23 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
 
             <div className="flex flex-col items-center justify-between py-4 mt-4 text-center md:text-left md:items-start md:-mt-16 space-y-4">
               <div className="flex flex-col md:items-start items-center space-y-4">
-                <Link href={`/anime/watch/${anime.id}`}>
-                  <a>
-                    <Button primary LeftIcon={BsFillPlayFill} className="mb-4">
-                      <p>Xem ngay</p>
-                    </Button>
-                  </a>
-                </Link>
+                <div className="flex items-center flex-wrap gap-2 mb-4">
+                  <Link href={`/anime/watch/${anime.id}`}>
+                    <a>
+                      <Button primary LeftIcon={BsFillPlayFill}>
+                        <p>Xem ngay</p>
+                      </Button>
+                    </a>
+                  </Link>
+
+                  <Link href={`/wwf/create/${anime.id}`}>
+                    <a>
+                      <Button className="text-black" LeftIcon={BsFillPlayFill}>
+                        <p>Xem cùng bạn bè</p>
+                      </Button>
+                    </a>
+                  </Link>
+                </div>
 
                 <p className="mb-2 text-3xl font-semibold">{title}</p>
 
