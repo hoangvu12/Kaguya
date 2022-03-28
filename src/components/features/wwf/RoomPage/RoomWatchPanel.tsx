@@ -27,7 +27,7 @@ const RoomWatchPanel = () => {
   return (
     <div
       className={classNames(
-        `w-full md:w-[75%] bg-background-900 overflow-y-auto`,
+        `w-full md:w-[75%] bg-background-900 overflow-y-auto no-scrollbar`,
         isMobile && state.isChatBarOpen ? "h-[50%]" : "h-full"
       )}
     >
