@@ -122,6 +122,11 @@ export const getServerSideProps: GetServerSideProps = async ({
   };
 };
 
+// @ts-ignore
+RoomPage.getLayout = (children) => (
+  <BaseLayout showFooter={false}>{children}</BaseLayout>
+);
+
 export default withRedirect(RoomPage, (router, props) => {
   const { params } = router.query;
   const [id, slug] = params as string[];
