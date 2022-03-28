@@ -101,14 +101,6 @@ const RoomWatchPanel = () => {
             <p className="mt-4 line-clamp-4 text-gray-300">
               {room.media.description}
             </p>
-
-            <Link href={`/anime/details/${room.media.id}`}>
-              <a className="flex justify-center md:justify-start">
-                <Button primary className="w-[max-content] mt-8">
-                  <p>Tìm hiểu thêm</p>
-                </Button>
-              </a>
-            </Link>
           </div>
         </div>
       </div>
