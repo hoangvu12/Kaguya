@@ -16,8 +16,8 @@ const WatchWithFriendPage = () => {
     <Section className="py-20">
       <Head title="Xem cùng bạn bè - Kaguya" />
 
-      <div className="flex items-center justify-between">
-        <h1 className="text-4xl font-semibold text-center md:text-left mb-8">
+      <div className="flex flex-col md:flex-row items-center md:justify-between mb-8 gap-4">
+        <h1 className="text-4xl font-semibold text-center md:text-left">
           Phòng đang hoạt động
         </h1>
 
