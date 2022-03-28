@@ -20,7 +20,7 @@ const ChooseAnimePage = () => {
     isFetchingNextPage,
     hasNextPage,
     isError,
-  } = useBrowseAnime({ keyword, sort: "favourites" });
+  } = useBrowseAnime({ keyword, sort: "episodeUpdatedAt" });
 
   const handleFetch = useCallback(() => {
     if (isFetchingNextPage || !hasNextPage) return;
