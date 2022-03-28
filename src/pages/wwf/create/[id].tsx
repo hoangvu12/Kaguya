@@ -127,8 +127,8 @@ const CreateRoomPage: NextPage<CreateRoomPageProps> = ({ media }) => {
                 containerClassName="w-full md:w-1/3"
               />
 
-              <div>
-                <p className="mb-2 font-semibold">Hiển thị</p>
+              <div className="space-y-2">
+                <p className="font-semibold">Hiển thị</p>
 
                 <Select
                   options={visibilityModes}
@@ -150,6 +150,12 @@ const CreateRoomPage: NextPage<CreateRoomPageProps> = ({ media }) => {
                     }),
                   }}
                 />
+
+                {visibility === "private" && (
+                  <p className="italic text-sm text-gray-400">
+                    Chỉ những người có link mới có thể truy cập phòng này
+                  </p>
+                )}
               </div>
             </div>
             <div className="overflow-hidden">
