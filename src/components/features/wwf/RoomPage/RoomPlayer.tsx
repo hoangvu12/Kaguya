@@ -1,5 +1,6 @@
 import CircleButton from "@/components/shared/CircleButton";
 import ClientOnly from "@/components/shared/ClientOnly";
+import config from "@/config";
 import { useUser } from "@/contexts/AuthContext";
 import { useRoomInfo } from "@/contexts/RoomContext";
 import { useFetchSource } from "@/hooks/useFetchSource";
@@ -85,6 +86,25 @@ const RoomPlayer = () => {
     setShowPlaybox(false);
   }, [playerRef]);
 
+  const hlsConfig = useMemo(
+    () => ({
+      xhrSetup: (xhr: any, url: string) => {
+        const useProxy = data?.sources.find(
+          (source) => source.file === url
+        )?.useProxy;
+
+        const encodedUrl = encodeURIComponent(url);
+
+        const requestUrl = useProxy
+          ? `${config.proxyServerUrl}/?url=${encodedUrl}&source_id=${room.episode.sourceId}`
+          : url;
+
+        xhr.open("GET", requestUrl, true);
+      },
+    }),
+    [room.episode.sourceId, data?.sources]
+  );
+
   return (
     <div className="relative aspect-w-16 md:aspect-h-7 aspect-h-9">
       <div>
@@ -93,6 +113,7 @@ const RoomPlayer = () => {
           src={isLoading ? blankVideo : data.sources}
           subtitles={data?.subtitles || []}
           className="object-contain w-full h-full"
+          hlsConfig={hlsConfig}
         />
       </div>
 
