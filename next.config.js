@@ -1,4 +1,5 @@
 const withPWA = require("next-pwa");
+const cachingStrategies = require("./cacheStrategies");
 
 module.exports = withPWA({
   images: {
@@ -19,5 +20,6 @@ module.exports = withPWA({
       /middleware-runtime\.js$/,
     ],
     disable: process.env.NODE_ENV === "development",
+    runtimeCaching: cachingStrategies,
   },
 });
