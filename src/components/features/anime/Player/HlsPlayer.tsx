@@ -1,8 +1,9 @@
+import webConfig from "@/config";
 import { useVideoState } from "@/contexts/VideoStateContext";
-import { Subtitle, VideoSource } from "@/types";
-import { parseNumbersFromString } from "@/utils";
+import { VideoSource } from "@/types";
+import { parseNumberFromString } from "@/utils";
+import classNames from "classnames";
 import type Hls from "hls.js";
-import { buildAbsoluteURL } from "url-toolkit";
 import React, {
   MutableRefObject,
   useCallback,
@@ -10,9 +11,8 @@ import React, {
   useMemo,
   useRef,
 } from "react";
-import webConfig from "@/config";
-import classNames from "classnames";
 import { toast } from "react-toastify";
+import { buildAbsoluteURL } from "url-toolkit";
 
 export interface HlsPlayerProps
   extends Omit<React.VideoHTMLAttributes<HTMLVideoElement>, "src"> {
@@ -36,26 +36,21 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
     const { state, setState } = useVideoState();
 
     const initQuality = useCallback(
-      (source: VideoSource) => {
-        const notDuplicatedQualities = [
+      () => {
+        const sortedQualities = src
+          .filter((src) => src.label)
+          .map((src) => src.label)
+          .sort((a, b) => parseNumberFromString(b) - parseNumberFromString(a));
+
+        const notDuplicatedQualities: string[] = [
           // @ts-ignore
-          ...new Set<string>(
-            src
-              .filter((src) => src.label)
-              .map((src) => src.label)
-              .sort(
-                (a, b) =>
-                  parseNumbersFromString(b)[0] - parseNumbersFromString(a)[0]
-              )
-          ),
+          ...new Set<string>(sortedQualities),
         ];
 
         setState((prev) => ({
           ...prev,
-          qualities: notDuplicatedQualities.length
-            ? notDuplicatedQualities
-            : [],
-          currentQuality: source.label,
+          qualities: notDuplicatedQualities,
+          currentQuality: sortedQualities[0],
         }));
       },
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -82,6 +77,7 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
             _hls.loadSource(source.file);
 
             _hls.on(Hls.Events.MANIFEST_PARSED, (_, data) => {
+              // Handle replacing fragment's url.
               data.levels.forEach((level) => {
                 if (!level?.details?.fragments?.length) return;
 
@@ -130,7 +126,7 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
           });
 
           _hls.on(Hls.Events.ERROR, function (event, data) {
-            console.log("ERROR:", data);
+            console.log("ERROR:", event, data);
 
             if (data.fatal) {
               switch (data.type) {
@@ -147,7 +143,7 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
         }
 
         if (source.file.includes("m3u8")) {
-          await _initHlsPlayer();
+          _initHlsPlayer();
         } else {
           myRef.current.src = source.file;
         }
@@ -161,12 +157,14 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
 
       initPlayer(src[0]);
 
+      // If the sources have multiple m3u8 urls, then we have to handle quality ourself (because hls.js only handle quality with playlist url).
+      // Same with the sources that have multiple mp4 urls.
       if (!src[0].file.includes("m3u8") || src.length > 1) {
-        initQuality(src[0]);
+        initQuality();
       }
 
       return () => {
-        if (_hls != null) {
+        if (_hls !== null) {
           _hls.destroy();
         }
       };
@@ -179,11 +177,12 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
       if (!videoRef) return;
       if (!state?.qualities.length) return;
 
-      const currentQuality = state?.currentQuality;
-
+      // If the sources contain only one m3u8 url, then it maybe is a playlist.
       if (src[0].file.includes("m3u8") && src.length === 1) {
+        // Check if the playlist gave us qualities.
         if (!hls?.current?.levels?.length) return;
 
+        // Handle changing quality.
         hls.current.currentLevel = hls.current.levels.findIndex(
           (level) => level.height === Number(currentQuality.replace("p", ""))
         );
@@ -191,6 +190,7 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
         return;
       }
 
+      const currentQuality = state?.currentQuality;
       const beforeChangeTime = videoRef.currentTime;
 
       const qualitySource = src.find(
