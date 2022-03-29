@@ -83,7 +83,7 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
 
                 level.details.fragments.forEach((fragment) => {
                   if (
-                    !fragment.baseurl.includes(webConfig.nodeServerUrl) ||
+                    !fragment.baseurl.includes(webConfig.proxyServerUrl) ||
                     fragment.relurl.includes("http")
                   )
                     return;
