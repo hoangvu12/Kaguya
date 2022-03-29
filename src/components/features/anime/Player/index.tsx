@@ -11,6 +11,7 @@ import useDevice from "@/hooks/useDevice";
 import useHandleTap from "@/hooks/useHandleTap";
 import useVideoShortcut from "@/hooks/useVideoShortcut";
 import { Subtitle, VideoSource } from "@/types";
+import { parseNumberFromString } from "@/utils";
 import classNames from "classnames";
 import { motion, TapHandlers } from "framer-motion";
 import React, {
@@ -176,7 +177,10 @@ const Video = React.forwardRef<HTMLVideoElement, VideoProps>(
     });
 
     const defaultQualities = useMemo(
-      () => props.src.map((source) => source.label),
+      () =>
+        props.src
+          .map((source) => source.label)
+          .sort((b, a) => parseNumberFromString(b) - parseNumberFromString(a)),
       [props.src]
     );
 
