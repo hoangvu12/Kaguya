@@ -56,7 +56,6 @@ const ViewPanel: React.FC = ({ children }) => {
   return (
     <motion.div
       onClick={isMobile ? handleMobileClick : noop}
-      ref={containerRef}
       className="content-container relative w-full flex flex-col items-center justify-center bg-background-900"
     >
       <BrowserView className="relative z-50">
@@ -101,7 +100,10 @@ const ViewPanel: React.FC = ({ children }) => {
 
       <ImageNavigator />
 
-      <div className="relative z-30 h-full w-full overflow-y-auto">
+      <div
+        className="relative z-30 h-full w-full overflow-y-auto"
+        ref={containerRef}
+      >
         {children}
       </div>
     </motion.div>
