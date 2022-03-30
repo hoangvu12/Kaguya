@@ -177,6 +177,8 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
       if (!videoRef) return;
       if (!state?.qualities.length) return;
 
+      const currentQuality = state?.currentQuality;
+
       // If the sources contain only one m3u8 url, then it maybe is a playlist.
       if (src[0].file.includes("m3u8") && src.length === 1) {
         // Check if the playlist gave us qualities.
@@ -190,7 +192,6 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
         return;
       }
 
-      const currentQuality = state?.currentQuality;
       const beforeChangeTime = videoRef.currentTime;
 
       const qualitySource = src.find(
