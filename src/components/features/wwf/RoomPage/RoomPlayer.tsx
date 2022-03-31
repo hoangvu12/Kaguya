@@ -86,23 +86,17 @@ const RoomPlayer = () => {
     setShowPlaybox(false);
   }, [playerRef]);
 
-  const hlsConfig = useMemo(
-    () => ({
-      xhrSetup: (xhr: any, url: string) => {
-        const useProxy = data?.sources.find(
-          (source) => source.file === url
-        )?.useProxy;
+  const proxyBuilder = useCallback(
+    (url: string) => {
+      if (url.includes(config.proxyServerUrl)) return url;
 
-        const encodedUrl = encodeURIComponent(url);
+      const encodedUrl = encodeURIComponent(url);
 
-        const requestUrl = useProxy
-          ? `${config.proxyServerUrl}/?url=${encodedUrl}&source_id=${room.episode.sourceId}`
-          : url;
+      const requestUrl = `${config.proxyServerUrl}/?url=${encodedUrl}&source_id=${room.episode.sourceId}`;
 
-        xhr.open("GET", requestUrl, true);
-      },
-    }),
-    [room.episode.sourceId, data?.sources]
+      return requestUrl;
+    },
+    [room.episode.sourceId]
   );
 
   return (
@@ -113,7 +107,7 @@ const RoomPlayer = () => {
           src={isLoading ? blankVideo : data.sources}
           subtitles={data?.subtitles || []}
           className="object-contain w-full h-full"
-          hlsConfig={hlsConfig}
+          proxyBuilder={proxyBuilder}
         />
       </div>
 
