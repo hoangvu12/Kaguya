@@ -245,23 +245,17 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
     []
   );
 
-  const hlsConfig = useMemo(
-    () => ({
-      xhrSetup: (xhr: any, url: string) => {
-        const useProxy = data?.sources.find(
-          (source) => source.file === url
-        )?.useProxy;
+  const proxyBuilder = useCallback(
+    (url: string) => {
+      if (url.includes(config.proxyServerUrl)) return url;
 
-        const encodedUrl = encodeURIComponent(url);
+      const encodedUrl = encodeURIComponent(url);
 
-        const requestUrl = useProxy
-          ? `${config.proxyServerUrl}/?url=${encodedUrl}&source_id=${currentEpisode.sourceId}`
-          : url;
+      const requestUrl = `${config.proxyServerUrl}/?url=${encodedUrl}&source_id=${currentEpisode.sourceId}`;
 
-        xhr.open("GET", requestUrl, true);
-      },
-    }),
-    [currentEpisode.sourceId, data?.sources]
+      return requestUrl;
+    },
+    [currentEpisode.sourceId]
   );
 
   return (
@@ -292,7 +286,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
           subtitles={isLoading ? [] : data.subtitles}
           className="object-contain w-full h-full"
           overlaySlot={overlaySlot}
-          hlsConfig={hlsConfig}
+          proxyBuilder={proxyBuilder}
         />
       )}
 

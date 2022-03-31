@@ -4,6 +4,7 @@ import { VideoSource } from "@/types";
 import { parseNumberFromString } from "@/utils";
 import classNames from "classnames";
 import type Hls from "hls.js";
+import type { Fragment } from "hls.js";
 import React, {
   MutableRefObject,
   useCallback,
@@ -18,14 +19,37 @@ export interface HlsPlayerProps
   extends Omit<React.VideoHTMLAttributes<HTMLVideoElement>, "src"> {
   src: VideoSource[];
   hlsConfig?: Partial<Hls["config"]>;
+  proxyBuilder?: (url: string, source: VideoSource) => string;
 }
 
 const DEFAULT_HLS_CONFIG: Partial<Hls["config"]> = {
   enableWorker: false,
 };
 
+const handleFragmentProxy = (fragment: Fragment) => {
+  if (
+    !fragment.baseurl.includes(webConfig.proxyServerUrl) ||
+    fragment.relurl.includes("http")
+  )
+    return;
+
+  const href = new URL(fragment.baseurl);
+  const targetUrl = href.searchParams.get("url");
+
+  const url = buildAbsoluteURL(targetUrl, fragment.relurl, {
+    alwaysNormalize: true,
+  });
+
+  href.searchParams.set("url", url);
+
+  fragment.url = href.toString();
+};
+
 const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
-  ({ src, hlsConfig, className, ...props }, ref) => {
+  (
+    { src, hlsConfig, className, proxyBuilder = (url) => url, ...props },
+    ref
+  ) => {
     const config = useMemo(
       () => ({ ...DEFAULT_HLS_CONFIG, ...hlsConfig }),
       [hlsConfig]
@@ -66,7 +90,20 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
             hls.current.destroy();
           }
 
-          let _hls: Hls = new Hls(config);
+          let _hls: Hls = new Hls({
+            xhrSetup: (xhr, url) => {
+              let requestUrl = "";
+
+              if (!source.useProxy) {
+                requestUrl = url;
+              } else {
+                requestUrl = proxyBuilder(url, source);
+              }
+
+              xhr.open("GET", requestUrl, true);
+            },
+            ...config,
+          });
           hls.current = _hls;
 
           if (myRef.current != null) {
@@ -77,30 +114,6 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
             _hls.loadSource(source.file);
 
             _hls.on(Hls.Events.MANIFEST_PARSED, (_, data) => {
-              // Handle replacing fragment's url.
-              data.levels.forEach((level) => {
-                if (!level?.details?.fragments?.length) return;
-
-                level.details.fragments.forEach((fragment) => {
-                  if (
-                    !fragment.baseurl.includes(webConfig.proxyServerUrl) ||
-                    fragment.relurl.includes("http")
-                  )
-                    return;
-
-                  const href = new URL(fragment.baseurl);
-                  const targetUrl = href.searchParams.get("url");
-
-                  const url = buildAbsoluteURL(targetUrl, fragment.relurl, {
-                    alwaysNormalize: true,
-                  });
-
-                  href.searchParams.set("url", url);
-
-                  fragment.url = href.toString();
-                });
-              });
-
               myRef?.current
                 ?.play()
                 .catch(() =>
@@ -122,6 +135,10 @@ const ReactHlsPlayer = React.forwardRef<HTMLVideoElement, HlsPlayerProps>(
                 qualities: levels,
                 currentQuality: levels[0],
               }));
+            });
+
+            _hls.on(Hls.Events.FRAG_LOADING, (_, { frag }) => {
+              handleFragmentProxy(frag);
             });
           });
 
