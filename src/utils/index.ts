@@ -178,34 +178,17 @@ export const base64ToUint8Array = (base64: string) => {
   return outputArray;
 };
 
-// https://stackoverflow.com/questions/2920150/insert-text-at-cursor-in-a-content-editable-div
-export const insertTextAtCursor = (text: string) => {
-  const selection = window.getSelection();
-  const range = selection.getRangeAt(0);
-  const node = document.createTextNode(text);
+// https://stackoverflow.com/questions/1064089/inserting-a-text-where-cursor-is-using-javascript-jquery
+export const insertTextAtCursor = (input: HTMLInputElement, text: string) => {
+  const { selectionStart, selectionEnd, value } = input;
 
-  range.deleteContents();
-  range.insertNode(node);
+  const beforeStr = value.substring(0, selectionStart);
+  const afterStr = value.substring(selectionEnd, value.length);
+  const newSelection = selectionStart + text.length;
 
-  // selection.removeAllRanges();
-  selection.addRange(range);
-};
-
-// https://stackoverflow.com/questions/6023307/dealing-with-line-breaks-on-contenteditable-div
-export const insertBreaklineAtCursor = () => {
-  const selection = window.getSelection();
-  const range = selection.getRangeAt(0);
-  const br = document.createElement("br");
-  const textNode = document.createTextNode("\u00a0");
-
-  range.deleteContents();
-  range.insertNode(br);
-  range.collapse(false);
-  range.insertNode(textNode);
-  range.selectNodeContents(textNode);
-
-  selection.removeAllRanges();
-  selection.addRange(range);
+  input.value = `${beforeStr}${text}${afterStr}`;
+  input.selectionStart = newSelection;
+  input.selectionEnd = newSelection;
 };
 
 export const arePropertiesFalsy = (obj: any) =>
@@ -284,23 +267,6 @@ export const vietnameseSlug = (str: string) => {
     .replace(/-+/g, "-");
 
   return newStr;
-};
-
-// https://gist.github.com/Klerith/80abd742d726dd587f4bd5d6a0ab26b6
-export const urlBase64ToUint8Array = (base64String: string) => {
-  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding)
-    .replace(/\-/g, "+")
-    .replace(/_/g, "/");
-
-  const rawData = window.atob(base64);
-  const outputArray = new Uint8Array(rawData.length);
-
-  for (var i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i);
-  }
-
-  return outputArray;
 };
 
 export const sleep = (ms: number) =>
