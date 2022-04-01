@@ -1,6 +1,6 @@
 import React from "react";
 
-interface EmojiTextProps {
+interface EmojiTextProps extends React.HTMLAttributes<HTMLParagraphElement> {
   text: string;
 }
 

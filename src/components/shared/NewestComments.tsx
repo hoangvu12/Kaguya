@@ -73,7 +73,6 @@ const NewestComments = <T extends "anime" | "manga">(
                   </div>
 
                   <EmojiText
-                    disabled
                     className="text-ellipsis overflow-hidden"
                     text={comment.body}
                   />
