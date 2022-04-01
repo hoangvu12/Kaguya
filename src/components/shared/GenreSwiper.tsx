@@ -66,7 +66,7 @@ const GenresSelector: React.FC<GenresSelectorProps> = ({
                 />
 
                 <div className="h-full w-full flex items-center justify-center absolute inset-0 bg-black/60">
-                  <p className="uppercase text-xl font-bold tracking-widest text-gray-300 group-hover:text-white transition duration-300">
+                  <p className="text-center uppercase text-xl font-bold tracking-widest text-gray-300 group-hover:text-white transition duration-300">
                     {genre.value}
                   </p>
                 </div>
