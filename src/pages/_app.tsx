@@ -1,10 +1,11 @@
 import BaseLayout from "@/components/layouts/BaseLayout";
 import { AuthContextProvider } from "@/contexts/AuthContext";
 import { SubscriptionContextProvider } from "@/contexts/SubscriptionContext";
-import { pageview } from "@/lib/gtag";
+import { GA_TRACKING_ID, pageview } from "@/lib/gtag";
 import "@/styles/index.css";
 import { AppProps } from "next/app";
 import Router, { useRouter } from "next/router";
+import Script from "next/script";
 import NProgress from "nprogress";
 import React, { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -48,6 +49,22 @@ function App({ Component, pageProps }: AppProps) {
 
   return (
     <React.Fragment>
+      <Script
+        strategy="afterInteractive"
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
+      />
+
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_TRACKING_ID}', {
+              page_path: window.location.pathname,
+            });
+        `}
+      </Script>
+
       <ToastContainer
         position="bottom-left"
         autoClose={5000}
