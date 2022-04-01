@@ -1,12 +1,25 @@
-import { customEmojis } from "@/utils/emoji";
 import { Placement } from "@popperjs/core";
-import { Picker, PickerProps } from "emoji-mart";
-import "emoji-mart/css/emoji-mart.css";
+import type { IEmojiPickerProps } from "emoji-picker-react";
 import React, { useState } from "react";
 import { usePopper } from "react-popper";
 import Portal from "@/components/shared/Portal";
+import dynamic from "next/dynamic";
 
-interface EmojiPickerProps extends PickerProps {
+const Picker = dynamic(() => import("emoji-picker-react"), { ssr: false });
+
+const groupNames = {
+  smileys_people: "Cảm xúc",
+  animals_nature: "Động vật và thiên nhiên",
+  food_drink: "Thức ăn",
+  travel_places: "Du lịch",
+  activities: "Hoạt động",
+  objects: "Vật thể",
+  symbols: "Biểu tượng",
+  flags: "Cờ",
+  recently_used: "Gần đây",
+};
+
+interface EmojiPickerProps extends IEmojiPickerProps {
   reference: React.ReactNode;
   buttonClassName?: string;
   placement?: Placement;
@@ -64,45 +77,7 @@ const EmojiPicker: React.FC<EmojiPickerProps> = ({
             style={styles.popper}
             {...attributes.popper}
           >
-            <Picker
-              {...props}
-              showSkinTones={false}
-              set="facebook"
-              custom={customEmojis}
-              emoji="grinning"
-              color="#EF4444"
-              title="Kaguya"
-              i18n={{
-                search: "Tìm kiếm",
-                notfound: "Không tìm thấy biểu cảm.",
-                categories: {
-                  search: "Kết quả tìm kiếm",
-                  recent: "Dùng gần đây",
-                  people: "Con người",
-                  nature: "Tự nhiên",
-                  foods: "Đồ ăn và nước uống",
-                  activity: "Hoạt động",
-                  places: "Du lịch",
-                  objects: "Đối tượng",
-                  symbols: "Biểu tượng",
-                  flags: "Cờ",
-                  custom: "Kaguya",
-                },
-              }}
-              theme="dark"
-              include={[
-                "recent",
-                "custom",
-                "people",
-                "nature",
-                "foods",
-                "activity",
-                "places",
-                "objects",
-                "symbols",
-                "flags",
-              ]}
-            />
+            <Picker {...props} groupNames={groupNames} />
           </div>
         </Portal>
       )}

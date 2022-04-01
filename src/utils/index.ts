@@ -187,7 +187,7 @@ export const insertTextAtCursor = (text: string) => {
   range.deleteContents();
   range.insertNode(node);
 
-  selection.removeAllRanges();
+  // selection.removeAllRanges();
   selection.addRange(range);
 };
 
