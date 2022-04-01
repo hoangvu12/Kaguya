@@ -59,7 +59,6 @@ const BannerSwiper: React.FC<BannerSwiperProps> = ({ data, ...props }) => {
                 animate={isActive ? "enter" : "exit"}
               >
                 <PlainCard
-                  priority
                   src={anime.coverImage.extraLarge}
                   alt={title}
                 />
