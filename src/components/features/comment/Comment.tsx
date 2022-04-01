@@ -1,3 +1,12 @@
+import CommentAction, {
+  CommentActionType,
+} from "@/components/features/comment/CommentAction";
+import CommentInput from "@/components/features/comment/CommentInput";
+import EditingComment from "@/components/features/comment/EditingComment";
+import Avatar from "@/components/shared/Avatar";
+import DotList from "@/components/shared/DotList";
+import EmojiPicker from "@/components/shared/EmojiPicker";
+import EmojiText from "@/components/shared/EmojiText";
 import { useUser } from "@/contexts/AuthContext";
 import useComment from "@/hooks/useComment";
 import { useCreateComment } from "@/hooks/useCreateComment";
@@ -7,17 +16,8 @@ import useReactComment from "@/hooks/useReactComment";
 import dayjs from "@/lib/dayjs";
 import { Comment as CommentType } from "@/types";
 import { getMostOccuringEmojis } from "@/utils/emoji";
-import { EmojiData } from "emoji-mart";
-import React, { useState } from "react";
-import CommentAction, {
-  CommentActionType,
-} from "@/components/features/comment/CommentAction";
-import EditingComment from "@/components/features/comment/EditingComment";
-import CommentInput from "@/components/features/comment/CommentInput";
-import Avatar from "@/components/shared/Avatar";
-import DotList from "@/components/shared/DotList";
-import EmojiPicker from "@/components/shared/EmojiPicker";
-import EmojiText from "@/components/shared/EmojiText";
+import { IEmojiData } from "emoji-picker-react";
+import React, { useCallback, useMemo, useState } from "react";
 
 interface CommentProps {
   comment: CommentType;
@@ -46,44 +46,60 @@ const Comment: React.FC<CommentProps> = ({
   });
   const [isEditing, setIsEditing] = useState(false);
 
-  const handleReplyClick = () => {
-    setShowReplyInput(!showReplyInput);
-  };
+  const handleReplyClick = useCallback(() => {
+    setShowReplyInput((prev) => !prev);
+  }, []);
 
-  const handleReactEmojiSelect = (emoji: EmojiData) => {
-    setHasReacted(true);
+  const handleReactEmojiSelect = useCallback(
+    (_: any, emoji: IEmojiData) => {
+      setHasReacted(true);
 
-    reactMutation.mutate({ emoji: emoji.colons, type: "REACT" });
-  };
+      reactMutation.mutate({ emoji: emoji.emoji, type: "REACT" });
+    },
+    [reactMutation]
+  );
 
-  const handleUnReact = () => {
+  const handleUnReact = useCallback(() => {
     setHasReacted(false);
 
     reactMutation.mutate({ emoji: "", type: "UNREACT" });
-  };
+  }, [reactMutation]);
 
-  const handleActionSelect = (type: CommentActionType) => {
-    if (type === "DELETE") {
-      deleteMutation.mutate();
-    } else if (type === "EDIT") {
-      setIsEditing(true);
-    }
-  };
+  const handleActionSelect = useCallback(
+    (type: CommentActionType) => {
+      if (type === "DELETE") {
+        deleteMutation.mutate();
+      } else if (type === "EDIT") {
+        setIsEditing(true);
+      }
+    },
+    [deleteMutation, setIsEditing]
+  );
 
-  const handleEditSave = (text: string) => {
-    setIsEditing(false);
+  const handleEditSave = useCallback(
+    (text: string) => {
+      setIsEditing(false);
 
-    editMutation.mutate(text);
-  };
+      editMutation.mutate(text);
+    },
+    [editMutation]
+  );
 
-  const handleReply = (text: string) => {
-    createMutation.mutate(text);
-  };
+  const handleReply = useCallback(
+    (text: string) => {
+      createMutation.mutate(text);
+    },
+    [createMutation]
+  );
 
-  const mostUsedEmojis = getMostOccuringEmojis(
-    comment?.reactions?.length
-      ? comment?.reactions.map((reaction) => reaction.emoji)
-      : []
+  const mostUsedEmojis = useMemo(
+    () =>
+      getMostOccuringEmojis(
+        comment?.reactions?.length
+          ? comment?.reactions.map((reaction) => reaction.emoji)
+          : []
+      ),
+    [comment?.reactions]
   );
 
   return comment.user ? (
@@ -109,13 +125,17 @@ const Comment: React.FC<CommentProps> = ({
               <EmojiText text={comment.body} disabled className="break-words" />
 
               {!!comment.reactions?.length && (
-                <EmojiText
-                  disabled
-                  text={`<p class="-space-x-1.5 inline">${mostUsedEmojis
-                    .slice(0, 2)
-                    .join("")}</p> ${comment.reactions.length}`}
-                  className="absolute -bottom-3 px-2 rounded-full reactions -right-3 bg-background-800"
-                />
+                <div className="flex gap-2 absolute -bottom-3 px-2 rounded-full reactions bg-background-800 -right-3">
+                  <ul className="flex items-center">
+                    {mostUsedEmojis.map((emoji) => (
+                      <li className="-space-x-1.5" key={emoji}>
+                        {emoji}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <p>{comment.reactions.length}</p>
+                </div>
               )}
             </div>
 
@@ -131,7 +151,9 @@ const Comment: React.FC<CommentProps> = ({
                   <p className="text-sm text-gray-300 hover:underline">Thích</p>
                 }
                 placement="top"
-                onSelect={handleReactEmojiSelect}
+                onEmojiClick={handleReactEmojiSelect}
+                disableAutoFocus
+                disableSearchBar
               />
             ) : (
               <button

@@ -1,8 +1,5 @@
 import Avatar from "@/components/shared/Avatar";
-import EmojiText, {
-  isEmojiOnly,
-  textToEmojiHTML,
-} from "@/components/shared/EmojiText";
+import EmojiText from "@/components/shared/EmojiText";
 import { useUser } from "@/contexts/AuthContext";
 import { ChatMessage } from "@/types";
 import classNames from "classnames";
@@ -19,8 +16,6 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
     () => user?.id === message.user.id,
     [message.user.id, user?.id]
   );
-
-  const isEmoji = useMemo(() => isEmojiOnly(message.body), [message.body]);
 
   return (
     <div
@@ -43,20 +38,14 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
           </p>
         )}
 
-        {isEmoji ? (
-          <div
-            dangerouslySetInnerHTML={{ __html: textToEmojiHTML(message.body) }}
-          ></div>
-        ) : (
-          <EmojiText
-            className={classNames(
-              "rounded-md p-2 bg-background-500 max-w-max",
-              isUserMessage ? "ml-auto" : "mr-auto"
-            )}
-            text={message.body}
-            disabled
-          />
-        )}
+        <EmojiText
+          className={classNames(
+            "rounded-md p-2 bg-background-500 max-w-max",
+            isUserMessage ? "ml-auto" : "mr-auto"
+          )}
+          text={message.body}
+          disabled
+        />
       </div>
     </div>
   );

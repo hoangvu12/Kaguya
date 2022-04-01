@@ -1,4 +1,3 @@
-import { emojiToHTMLImage } from "@/utils/emoji";
 import React from "react";
 import ContentEditable, {
   ContentEditableEvent,
@@ -11,41 +10,13 @@ interface EmojiTextProps extends Omit<Props, "onChange" | "html" | "ref"> {
   onChange?: (text: ContentEditableEvent) => void;
 }
 
-const emptyFn = () => {};
-
-export const textToEmojiHTML = (text: string) => {
-  const regex = /:((?!image\/gif)[^\s-]\w{1,}.*?):/g;
-
-  return text
-    .replace(regex, (match) => {
-      // Transparent image source, check @/utils/emoji.ts
-      if (match.includes(":image/gif;base64")) return match;
-
-      const emoji = emojiToHTMLImage(match);
-
-      return emoji || match;
-    })
-    .replace(/\n/g, "<br />");
-};
-
-export const isEmojiOnly = (text: string) => {
-  const emojiText = textToEmojiHTML(text);
-
-  return emojiText.startsWith("<img");
-};
+const noop = () => {};
 
 const EmojiText = React.forwardRef<
   ContentEditable & HTMLDivElement,
   EmojiTextProps
 >(({ text, ...props }, ref) => {
-  return (
-    <ContentEditable
-      onChange={emptyFn}
-      html={textToEmojiHTML(text)}
-      ref={ref}
-      {...props}
-    />
-  );
+  return <ContentEditable onChange={noop} html={text} ref={ref} {...props} />;
 });
 
 EmojiText.displayName = "EmojiText";
