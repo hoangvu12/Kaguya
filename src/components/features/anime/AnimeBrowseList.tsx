@@ -9,7 +9,7 @@ import SortSelector from "@/components/shared/SortSelector";
 import ListSkeleton from "@/components/skeletons/ListSkeleton";
 import { COUNTRIES, FORMATS, SEASONS, SEASON_YEARS, STATUS } from "@/constants";
 import useBrowse, { UseBrowseOptions } from "@/hooks/useBrowseAnime";
-import { debounce } from "debounce";
+import { debounce } from "@/utils";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useMemo } from "react";
 import { MobileView } from "react-device-detect";

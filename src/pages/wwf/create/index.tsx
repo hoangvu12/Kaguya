@@ -6,7 +6,7 @@ import List from "@/components/shared/List";
 import Section from "@/components/shared/Section";
 import ListSkeleton from "@/components/skeletons/ListSkeleton";
 import useBrowseAnime from "@/hooks/useBrowseAnime";
-import { debounce } from "debounce";
+import { debounce } from "@/utils";
 import React, { useCallback, useMemo, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 

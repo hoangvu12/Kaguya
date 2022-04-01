@@ -6,7 +6,7 @@ import useBirthdayVA from "@/hooks/useBirthdayVA";
 import { UseBrowseOptions } from "@/hooks/useBrowseAnime";
 import useFavouriteVA from "@/hooks/useFavouriteVA";
 import useVASearch from "@/hooks/useVASearch";
-import { debounce } from "debounce";
+import { debounce } from "@/utils";
 import React, { useMemo, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import VACard from "./VACard";

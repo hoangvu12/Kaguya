@@ -7,7 +7,7 @@ import useBirthdayCharacters from "@/hooks/useBirthdayCharacters";
 import { UseBrowseOptions } from "@/hooks/useBrowseAnime";
 import useCharacterSearch from "@/hooks/useCharacterSearch";
 import useFavouriteCharacters from "@/hooks/useFavouriteCharacters";
-import { debounce } from "debounce";
+import { debounce } from "@/utils";
 import React, { useMemo, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 
