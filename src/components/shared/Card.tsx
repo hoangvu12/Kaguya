@@ -98,41 +98,43 @@ const Card = <T extends "anime" | "manga">(props: AnimeCardProps<T>) => {
               {imageEndSlot}
             </motion.div>
 
-            <motion.div className="absolute bottom-0 flex flex-col items-center justify-end px-2 py-4 text-center">
-              <motion.div variants={infoVariants} className="mt-2 !mb-1">
-                <DotList>
-                  {data.genres?.map((genre) => (
-                    <span
-                      className="text-sm font-semibold"
-                      style={{
-                        color: primaryColor,
-                      }}
-                      key={genre}
+            {isDesktop && (
+              <motion.div className="absolute bottom-0 flex flex-col items-center justify-end px-2 py-4 text-center">
+                <motion.div variants={infoVariants} className="mt-2 !mb-1">
+                  <DotList>
+                    {data.genres?.map((genre) => (
+                      <span
+                        className="text-sm font-semibold"
+                        style={{
+                          color: primaryColor,
+                        }}
+                        key={genre}
+                      >
+                        {convert(genre, "genre")}
+                      </span>
+                    ))}
+                  </DotList>
+                </motion.div>
+
+                <motion.div
+                  variants={infoVariants}
+                  className="flex items-center space-x-2"
+                >
+                  {data.averageScore && (
+                    <TextIcon
+                      LeftIcon={MdTagFaces}
+                      iconClassName="text-green-300"
                     >
-                      {convert(genre, "genre")}
-                    </span>
-                  ))}
-                </DotList>
-              </motion.div>
+                      <p>{data.averageScore}%</p>
+                    </TextIcon>
+                  )}
 
-              <motion.div
-                variants={infoVariants}
-                className="flex items-center space-x-2"
-              >
-                {data.averageScore && (
-                  <TextIcon
-                    LeftIcon={MdTagFaces}
-                    iconClassName="text-green-300"
-                  >
-                    <p>{data.averageScore}%</p>
+                  <TextIcon LeftIcon={AiFillHeart} iconClassName="text-red-400">
+                    <p>{numberWithCommas(data.favourites)}</p>
                   </TextIcon>
-                )}
-
-                <TextIcon LeftIcon={AiFillHeart} iconClassName="text-red-400">
-                  <p>{numberWithCommas(data.favourites)}</p>
-                </TextIcon>
+                </motion.div>
               </motion.div>
-            </motion.div>
+            )}
           </div>
 
           <motion.div transition={{ duration: 0.1 }} variants={slotVariants}>
