@@ -10,8 +10,10 @@ import NewestComments from "@/components/shared/NewestComments";
 import Section from "@/components/shared/Section";
 import ShouldWatch from "@/components/shared/ShouldWatch";
 import { REVALIDATE_TIME } from "@/constants";
+import useDevice from "@/hooks/useDevice";
 import supabase from "@/lib/supabase";
 import { Manga } from "@/types";
+import classNames from "classnames";
 import { GetStaticProps, NextPage } from "next";
 import React from "react";
 
@@ -30,6 +32,8 @@ const Home: NextPage<HomeProps> = ({
   favouriteManga,
   popularManga,
 }) => {
+  const { isDesktop } = useDevice();
+
   return (
     <React.Fragment>
       <Head />
@@ -63,14 +67,19 @@ const Home: NextPage<HomeProps> = ({
               <CardSwiper type="manga" data={recentlyUpdatedManga} />
             </Section>
 
-            <div className="flex flex-col md:flex-row gap-8">
+            <div
+              className={classNames(
+                "flex gap-8",
+                isDesktop ? "flex-row" : "flex-col"
+              )}
+            >
+              {" "}
               <Section
                 title="Đọc gì hôm nay?"
                 className="w-full md:w-[80%] md:!pr-0"
               >
                 <ShouldWatch type="manga" data={randomManga} />
               </Section>
-
               <Section title="Thể loại" className="w-full md:w-[20%] md:!pl-0">
                 <GenreSwiper className="md:h-[500px]" />
               </Section>

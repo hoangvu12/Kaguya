@@ -11,10 +11,12 @@ import NewestComments from "@/components/shared/NewestComments";
 import Section from "@/components/shared/Section";
 import ShouldWatch from "@/components/shared/ShouldWatch";
 import { REVALIDATE_TIME } from "@/constants";
+import useDevice from "@/hooks/useDevice";
 import dayjs from "@/lib/dayjs";
 import supabase from "@/lib/supabase";
 import { AiringSchedule, Anime } from "@/types";
 import { getSeason } from "@/utils";
+import classNames from "classnames";
 import { GetStaticProps, NextPage } from "next";
 import React, { useMemo } from "react";
 
@@ -40,6 +42,7 @@ const Home: NextPage<HomeProps> = ({
   popularSeason,
 }) => {
   const currentSeason = useMemo(getSeason, []);
+  const { isDesktop } = useDevice();
 
   return (
     <React.Fragment>
@@ -86,7 +89,12 @@ const Home: NextPage<HomeProps> = ({
               <CardSwiper type="anime" data={recentlyUpdatedAnime} />
             </Section>
 
-            <div className="flex flex-col md:flex-row gap-8">
+            <div
+              className={classNames(
+                "flex gap-8",
+                isDesktop ? "flex-row" : "flex-col"
+              )}
+            >
               <Section
                 title="Xem gì hôm nay?"
                 className="w-full md:w-[80%] md:!pr-0"
