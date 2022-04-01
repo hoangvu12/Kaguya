@@ -122,7 +122,7 @@ const Comment: React.FC<CommentProps> = ({
                 </span>
               </DotList>
 
-              <EmojiText text={comment.body} disabled className="break-words" />
+              <EmojiText text={comment.body} className="break-words" />
 
               {!!comment.reactions?.length && (
                 <div className="flex gap-2 absolute -bottom-3 px-2 rounded-full reactions bg-background-800 -right-3">

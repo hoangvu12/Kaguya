@@ -44,7 +44,6 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
             isUserMessage ? "ml-auto" : "mr-auto"
           )}
           text={message.body}
-          disabled
         />
       </div>
     </div>
