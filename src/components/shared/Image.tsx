@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from "react";
 import NextImage, { ImageProps as NextImageProps } from "next/image";
 import { motion } from "framer-motion";
-import useDimensions from "react-cool-dimensions";
 
 const variants = {
   hidden: {
@@ -21,7 +20,6 @@ const Image: React.FC<ImageProps> = ({ onLoadingComplete, ...props }) => {
   const { containerClassName } = props;
 
   const [isLoaded, setIsLoaded] = useState(false);
-  const { observe, width } = useDimensions();
 
   const handleLoadingComplete: NextImageProps["onLoadingComplete"] =
     useCallback(
@@ -39,13 +37,8 @@ const Image: React.FC<ImageProps> = ({ onLoadingComplete, ...props }) => {
       variants={variants}
       animate={isLoaded ? "visible" : "hidden"}
       className={containerClassName}
-      ref={observe}
     >
-      <NextImage
-        onLoadingComplete={handleLoadingComplete}
-        sizes={width ? `${width}px` : "100vw"}
-        {...props}
-      />
+      <NextImage onLoadingComplete={handleLoadingComplete} {...props} />
     </motion.div>
   );
 };
