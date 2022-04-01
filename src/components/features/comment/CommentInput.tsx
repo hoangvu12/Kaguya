@@ -2,21 +2,21 @@ import Avatar from "@/components/shared/Avatar";
 import CircleButton from "@/components/shared/CircleButton";
 import ClientOnly from "@/components/shared/ClientOnly";
 import EmojiPicker from "@/components/shared/EmojiPicker";
-import EmojiText from "@/components/shared/EmojiText";
+import Input from "@/components/shared/Input";
 import { useUser } from "@/contexts/AuthContext";
 import useDevice from "@/hooks/useDevice";
-import { insertBreaklineAtCursor, insertTextAtCursor } from "@/utils";
+import { insertTextAtCursor } from "@/utils";
 import classNames from "classnames";
 import { IEmojiData } from "emoji-picker-react";
 import Link from "next/link";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import ContentEditable, { ContentEditableEvent } from "react-contenteditable";
 import { BsEmojiSmile } from "react-icons/bs";
 import { RiSendPlaneFill, RiSendPlaneLine } from "react-icons/ri";
 
+const noop = () => {};
 interface CommentInputProps {
   placeholder?: string;
-  defaultHTML?: string;
+  defaultText?: string;
   onEnter?: (text: string) => void;
   needLoginMessage?: React.ReactNode;
   showAvatar?: boolean;
@@ -24,7 +24,7 @@ interface CommentInputProps {
 
 const CommentInput: React.FC<CommentInputProps> = ({
   placeholder = "Bày tỏ suy nghĩ của bạn.",
-  defaultHTML = "",
+  defaultText = "",
   onEnter,
   needLoginMessage = (
     <p className="text-gray-300">
@@ -38,89 +38,54 @@ const CommentInput: React.FC<CommentInputProps> = ({
   showAvatar = true,
 }) => {
   const user = useUser();
-  const [html, setHTML] = useState(defaultHTML);
-  const inputRef = useRef<ContentEditable & HTMLDivElement>();
-  const text = useRef("");
+  const [text, setText] = useState(defaultText);
+  const inputRef = useRef<HTMLInputElement>();
   const { isDesktop } = useDevice();
 
-  const handleChange = useCallback((event: ContentEditableEvent) => {
-    setHTML(event.target.value);
+  const handleChange = useCallback((event) => {
+    const target = event.target as HTMLInputElement;
+
+    setText(target.value);
   }, []);
 
   const handleEmojiSelect = useCallback((_: any, emojiData: IEmojiData) => {
-    insertTextAtCursor(emojiData.emoji);
+    insertTextAtCursor(inputRef.current, emojiData.emoji);
   }, []);
 
   const handleSubmit = useCallback(() => {
-    if (text.current) {
-      onEnter?.(text.current);
+    if (text) {
+      onEnter?.(text);
+      setText("");
     }
-
-    setHTML("");
-  }, [onEnter]);
-
-  useEffect(() => {
-    const tempEl = document.createElement("div");
-
-    tempEl.innerHTML = html;
-
-    let rawText = "";
-
-    tempEl.childNodes.forEach((node) => {
-      if (node.nodeType === 3) {
-        rawText += node.textContent;
-
-        return;
-      }
-
-      if (node.nodeName === "BR") {
-        rawText += "\n";
-      }
-    });
-
-    text.current = rawText;
-  }, [html]);
+  }, [onEnter, text]);
 
   useEffect(() => {
     if (!inputRef.current) return;
 
-    const element = inputRef.current.getEl() as HTMLDivElement;
+    const element = inputRef.current;
 
     if (!element) return;
 
     const handleDesktopKeydown = (event: KeyboardEvent) => {
-      if (event.key === "Enter") {
+      if (!event.shiftKey && !event.ctrlKey && event.key === "Enter") {
         event.preventDefault();
 
-        if (event.shiftKey) {
-          insertBreaklineAtCursor();
-        } else {
-          handleSubmit();
-        }
-      }
-    };
-
-    const handleMobileKeydown = (event: KeyboardEvent) => {
-      if (event.key === "Enter") {
-        event.preventDefault();
-
-        insertBreaklineAtCursor();
+        handleSubmit();
       }
     };
 
     element.addEventListener(
       "keydown",
-      isDesktop ? handleDesktopKeydown : handleMobileKeydown
+      isDesktop ? handleDesktopKeydown : noop
     );
 
     return () => {
       element.removeEventListener(
         "keydown",
-        isDesktop ? handleDesktopKeydown : handleMobileKeydown
+        isDesktop ? handleDesktopKeydown : noop
       );
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inputRef.current]);
+  }, [handleSubmit, isDesktop]);
 
   return (
     <ClientOnly>
@@ -132,17 +97,12 @@ const CommentInput: React.FC<CommentInputProps> = ({
 
           <div className="relative flex-1">
             <div className="relative bg-background-900">
-              {!html && (
-                <p className="absolute z-0 px-3 text-gray-400 -translate-y-1/2 top-1/2 line-clamp-1">
-                  {placeholder}
-                </p>
-              )}
-
-              <EmojiText
+              <Input
+                value={text}
                 ref={inputRef}
-                text={html}
                 onChange={handleChange}
                 className="whitespace-pre-wrap relative z-10 px-3 py-2 comment-input focus:border-none focus:outline-none"
+                placeholder={placeholder}
               />
             </div>
 
@@ -157,8 +117,8 @@ const CommentInput: React.FC<CommentInputProps> = ({
 
               {!isDesktop && (
                 <CircleButton
-                  className={classNames(html && "text-primary-500")}
-                  LeftIcon={html ? RiSendPlaneFill : RiSendPlaneLine}
+                  className={classNames(text && "text-primary-500")}
+                  LeftIcon={text ? RiSendPlaneFill : RiSendPlaneLine}
                   secondary
                   onClick={handleSubmit}
                 />

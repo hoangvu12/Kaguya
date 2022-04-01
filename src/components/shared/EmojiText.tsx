@@ -1,23 +1,18 @@
 import React from "react";
-import ContentEditable, {
-  ContentEditableEvent,
-  Props,
-} from "react-contenteditable";
 
-interface EmojiTextProps extends Omit<Props, "onChange" | "html" | "ref"> {
+interface EmojiTextProps {
   text: string;
-  html?: string;
-  onChange?: (text: ContentEditableEvent) => void;
 }
 
-const noop = () => {};
-
-const EmojiText = React.forwardRef<
-  ContentEditable & HTMLDivElement,
-  EmojiTextProps
->(({ text, ...props }, ref) => {
-  return <ContentEditable onChange={noop} html={text} ref={ref} {...props} />;
-});
+const EmojiText = React.forwardRef<HTMLParagraphElement, EmojiTextProps>(
+  ({ text, ...props }, ref) => {
+    return (
+      <p className="whitespace-pre-wrap" ref={ref} {...props}>
+        {text}
+      </p>
+    );
+  }
+);
 
 EmojiText.displayName = "EmojiText";
 
