@@ -197,6 +197,7 @@ const DesktopHomeBanner = <T extends "anime" | "manga">({
                 objectFit="cover"
                 objectPosition="50% 35%"
                 alt={title}
+                priority
               />
             </motion.div>
           )}
