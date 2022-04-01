@@ -1,16 +1,13 @@
+import CommentComponent from "@/components/features/comment/Comment";
 import CommentInput from "@/components/features/comment/CommentInput";
+import InView from "@/components/shared/InView";
 import { useCreateComment } from "@/hooks/useCreateComment";
+import supabase from "@/lib/supabase";
 import { Comment } from "@/types";
-import {
-  SupabaseInfiniteQueriesFunction,
-  useSupaInfiniteQuery,
-} from "@/utils/supabase";
+import { useSupaInfiniteQuery } from "@/utils/supabase";
 import React, { useMemo } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { QueryKey, useQueryClient } from "react-query";
-import CommentComponent from "@/components/features/comment/Comment";
-import InView from "@/components/shared/InView";
-import supabase from "@/lib/supabase";
+import { useQueryClient } from "react-query";
 
 interface CommentsSectionProps {
   anime_id?: number;

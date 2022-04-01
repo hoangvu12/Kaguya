@@ -24,7 +24,7 @@ const EditingComment: React.FC<EditingCommentProps> = ({
 
   return (
     <React.Fragment>
-      <CommentInput defaultHTML={comment.body} onEnter={onSave} />
+      <CommentInput defaultText={comment.body} onEnter={onSave} />
       <p className="text-sm text-gray-300">
         Bấm ESC để{" "}
         <button onClick={onLeave} className="text-primary-500 hover:underline">
