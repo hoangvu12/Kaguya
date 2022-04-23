@@ -1,5 +1,6 @@
 import config from "@/config";
 import useCreateSubscription from "@/hooks/useCreateSubscription";
+import useIsSavedSub from "@/hooks/useIsSavedSub";
 import { base64ToUint8Array } from "@/utils";
 import {
   createContext,
@@ -23,15 +24,16 @@ const isDev = process.env.NODE_ENV === "development";
 export const SubscriptionContextProvider: React.FC = ({ children }) => {
   const [sub, setSub] = useState<PushSubscription>(null);
   const user = useUser();
+  const { data: isSavedSub, isLoading } = useIsSavedSub();
   const createSubscription = useCreateSubscription();
 
   useEffect(() => {
-    if (!user || isDev) return;
+    if (!user || isDev || isLoading) return;
 
     navigator.serviceWorker.getRegistration().then(async (registration) => {
       let subscription = await registration.pushManager.getSubscription();
 
-      if (!subscription) {
+      if (!subscription || !isSavedSub) {
         subscription = await registration.pushManager.subscribe({
           userVisibleOnly: true,
           applicationServerKey: base64ToUint8Array(config.webPushPublicKey),
@@ -40,7 +42,7 @@ export const SubscriptionContextProvider: React.FC = ({ children }) => {
 
       setSub(subscription);
     });
-  }, [user]);
+  }, [isLoading, isSavedSub, user]);
 
   useEffect(() => {
     if (!user || !sub || isDev) return;

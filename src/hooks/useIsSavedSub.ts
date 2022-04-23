@@ -3,25 +3,21 @@ import supabase from "@/lib/supabase";
 import { Anime, Manga } from "@/types";
 import { useQuery } from "react-query";
 
-type Source<T> = T extends "anime" ? Anime : Manga;
-
-const useIsSubscribed = <T extends "anime" | "manga">(
-  type: T,
-  source: Source<T>
-) => {
+const useIsSavedSub = () => {
   const user = useUser();
-  const tableName =
-    type === "anime" ? "kaguya_anime_subscribers" : "kaguya_manga_subscribers";
-  const queryKey = ["is_subscribed", user.id, source.id];
 
   return useQuery(
-    queryKey,
+    ["saved_subscription", user?.id],
     async () => {
+      const userAgent = navigator.userAgent;
+
+      if (!userAgent) throw new Error("No user agent");
+
       const { data, error } = await supabase
-        .from(tableName)
+        .from("kaguya_subscriptions")
         .select("userId")
         .eq("userId", user.id)
-        .eq("mediaId", source.id)
+        .eq("userAgent", decodeURIComponent(userAgent))
         .limit(1)
         .single();
 
@@ -33,4 +29,4 @@ const useIsSubscribed = <T extends "anime" | "manga">(
   );
 };
 
-export default useIsSubscribed;
+export default useIsSavedSub;
