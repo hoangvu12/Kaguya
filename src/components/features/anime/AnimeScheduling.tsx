@@ -4,6 +4,7 @@ import DotList from "@/components/shared/DotList";
 import dayjs from "@/lib/dayjs";
 import { AiringSchedule } from "@/types";
 import classNames from "classnames";
+import { useTranslation } from "next-i18next";
 import React, { useMemo } from "react";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 
@@ -14,6 +15,8 @@ interface AnimeSchedulingProps {
 }
 
 const AnimeScheduling: React.FC<AnimeSchedulingProps> = ({ schedules }) => {
+  const { t } = useTranslation("anime_home");
+
   const today = dayjs();
   const todayIndex = today.day();
 
@@ -94,7 +97,7 @@ const AnimeScheduling: React.FC<AnimeSchedulingProps> = ({ schedules }) => {
                                   ? dayjs
                                       .unix(cardWithSchedule.airingAt)
                                       .format("HH:mm")
-                                  : "Đã cập nhật"}
+                                  : t("airing_schedule_passed")}
                               </span>
                             </DotList>
                           </React.Fragment>

@@ -3,6 +3,7 @@ import { AuthContextProvider } from "@/contexts/AuthContext";
 import { SubscriptionContextProvider } from "@/contexts/SubscriptionContext";
 import { GA_TRACKING_ID, pageview } from "@/lib/gtag";
 import "@/styles/index.css";
+import { appWithTranslation } from "next-i18next";
 import { AppProps } from "next/app";
 import Router, { useRouter } from "next/router";
 import Script from "next/script";
@@ -90,4 +91,4 @@ function App({ Component, pageProps }: AppProps) {
   );
 }
 
-export default App;
+export default appWithTranslation(App);

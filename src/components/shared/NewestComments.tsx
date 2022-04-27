@@ -4,6 +4,7 @@ import Swiper, { SwiperSlide } from "@/components/shared/Swiper";
 import useNewestComments from "@/hooks/useNewestComments";
 import dayjs from "@/lib/dayjs";
 import { getTitle } from "@/utils/data";
+import { useTranslation } from "next-i18next";
 import Link from "next/link";
 import React, { PropsWithChildren, useMemo } from "react";
 import CommentsSwiperSkeleton from "../skeletons/CommentsSwiperSkeleton";
@@ -17,6 +18,7 @@ const NewestComments = <T extends "anime" | "manga">(
   props: PropsWithChildren<NewestCommentsProps<T>>
 ) => {
   const { data, isLoading } = useNewestComments(props.type);
+  const { t } = useTranslation("common");
 
   const isAnime = useMemo(() => props.type === "anime", [props.type]);
 
@@ -25,7 +27,7 @@ const NewestComments = <T extends "anime" | "manga">(
   }
 
   return data?.length ? (
-    <Section title="Bình luận gần đây">
+    <Section title={t("recent_comments")}>
       <Swiper
         hideNavigation
         slidesPerGroup={1}

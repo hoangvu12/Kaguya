@@ -18,7 +18,10 @@ import { AiringSchedule, Anime } from "@/types";
 import { getSeason } from "@/utils";
 import classNames from "classnames";
 import { GetStaticProps, NextPage } from "next";
+import { useTranslation } from "next-i18next";
 import React, { useMemo } from "react";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import nextI18NextConfig from "../../next-i18next.config.js";
 
 interface HomeProps {
   trendingAnime: Anime[];
@@ -43,6 +46,7 @@ const Home: NextPage<HomeProps> = ({
 }) => {
   const currentSeason = useMemo(getSeason, []);
   const { isDesktop } = useDevice();
+  const { t } = useTranslation();
 
   return (
     <React.Fragment>
@@ -58,25 +62,25 @@ const Home: NextPage<HomeProps> = ({
 
             <Section className="flex flex-col md:flex-row items-center md:space-between space-y-4 space-x-0 md:space-y-0 md:space-x-4">
               <ColumnSection
-                title="Nổi bật mùa này"
+                title={t("most_popular_season", { ns: "common" })}
                 type="anime"
                 data={popularSeason}
                 viewMoreHref={`/browse?sort=popularity&type=anime&season=${currentSeason.season}&seasonYear=${currentSeason.year}`}
               />
               <ColumnSection
-                title="Nổi bật nhất"
+                title={t("most_popular", { ns: "common" })}
                 type="anime"
                 data={popularAllTime}
                 viewMoreHref="/browse?sort=popularity&type=anime"
               />
               <ColumnSection
-                title="Được yêu thích mùa này"
+                title={t("most_favourite_season", { ns: "common" })}
                 type="anime"
                 data={favouriteSeason}
                 viewMoreHref={`/browse?sort=favourites&type=anime&season=${currentSeason.season}&seasonYear=${currentSeason.year}`}
               />
               <ColumnSection
-                title="Được yêu thích"
+                title={t("most_favourite", { ns: "common" })}
                 type="anime"
                 data={favouriteAllTime}
                 viewMoreHref="/browse?sort=favourites&type=anime"
@@ -85,7 +89,7 @@ const Home: NextPage<HomeProps> = ({
 
             <NewestComments type="anime" />
 
-            <Section title="Mới cập nhật">
+            <Section title={t("newly_added", { ns: "common" })}>
               <CardSwiper type="anime" data={recentlyUpdatedAnime} />
             </Section>
 
@@ -96,18 +100,21 @@ const Home: NextPage<HomeProps> = ({
               )}
             >
               <Section
-                title="Xem gì hôm nay?"
+                title={t("should_watch_today", { ns: "anime_home" })}
                 className="w-full md:w-[80%] md:!pr-0"
               >
                 <ShouldWatch type="anime" data={randomAnime} />
               </Section>
 
-              <Section title="Thể loại" className="w-full md:w-[20%] md:!pl-0">
+              <Section
+                title={t("genres", { ns: "common" })}
+                className="w-full md:w-[20%] md:!pl-0"
+              >
                 <GenreSwiper className="md:h-[500px]" />
               </Section>
             </div>
 
-            <Section title="Lịch phát sóng">
+            <Section title={t("airing_schedule", { ns: "anime_home" })}>
               <AnimeScheduling schedules={schedulesAnime} />
             </Section>
           </div>
@@ -117,7 +124,7 @@ const Home: NextPage<HomeProps> = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const currentSeason = getSeason();
   const firstDayOfWeek = dayjs().startOf("week");
   const lastDayOfWeek = dayjs().endOf("week");
@@ -187,6 +194,12 @@ export const getStaticProps: GetStaticProps = async () => {
     .order("favourites", { ascending: false })
     .limit(5);
 
+  const translations = await serverSideTranslations(
+    locale,
+    ["common", "anime_home"],
+    nextI18NextConfig
+  );
+
   return {
     props: {
       trendingAnime,
@@ -197,6 +210,7 @@ export const getStaticProps: GetStaticProps = async () => {
       popularAllTime,
       favouriteAllTime,
       favouriteSeason,
+      ...translations,
     },
 
     revalidate: REVALIDATE_TIME,
