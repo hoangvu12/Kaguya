@@ -12,6 +12,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { AiFillFacebook, AiOutlineSearch } from "react-icons/ai";
 import { FaDiscord } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
+import LanguageSwitcher from "../shared/LanguageSwitcher";
 
 const routes = [
   {
@@ -33,14 +34,14 @@ const routes = [
 ];
 
 const Header = () => {
-  const [isTop, setIsTop] = useState(false);
+  const [isTop, setIsTop] = useState(true);
   const drawerRef = useRef<DrawerRef>();
   const user = useUser();
   const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsTop(window.scrollY > 0);
+      setIsTop(window.scrollY === 0);
     };
 
     document.addEventListener("scroll", handleScroll);
@@ -54,7 +55,9 @@ const Header = () => {
     <header
       className={classNames(
         "px-4 md:px-12 flex items-center h-16 fixed top w-full z-50 transition duration-500",
-        isTop && "bg-background"
+        !isTop
+          ? "bg-background"
+          : "bg-gradient-to-b from-black/80 via-black/60 to-transparent"
       )}
     >
       <Drawer
@@ -107,7 +110,7 @@ const Header = () => {
               <p
                 className={classNames(
                   "hover:text-white transition duration-300",
-                  isActive && "text-primary-500"
+                  isActive && "text-primary-300"
                 )}
               >
                 {route.title}
@@ -118,12 +121,14 @@ const Header = () => {
       </div>
 
       <div className="flex items-center space-x-4 ml-auto">
+        <LanguageSwitcher />
+
         <NavItem href={searchUrl}>
           {({ isActive }) => (
             <AiOutlineSearch
               className={classNames(
-                "w-7 h-7 font-semibold hover:text-primary-500 transition duration-300",
-                isActive && "text-primary-500"
+                "w-7 h-7 font-semibold hover:text-primary-300 transition duration-300",
+                isActive && "text-primary-300"
               )}
             />
           )}
@@ -153,7 +158,7 @@ const ContactItem: React.FC<{
 }> = ({ Icon, href }) => {
   return (
     <a href={href} target="_blank" rel="noreferrer">
-      <Icon className="w-6 h-6 hover:text-primary-500 transition duration-300" />
+      <Icon className="w-6 h-6 hover:text-primary-300 transition duration-300" />
     </a>
   );
 };
