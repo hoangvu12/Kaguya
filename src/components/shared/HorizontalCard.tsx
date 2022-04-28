@@ -2,6 +2,7 @@ import { Anime, Manga } from "@/types";
 import { convert, getTitle } from "@/utils/data";
 import classNames from "classnames";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import DotList from "./DotList";
 import PlainCard from "./PlainCard";
@@ -25,7 +26,9 @@ const HorizontalCard = <T extends "anime" | "manga">({
     [data.id, type]
   );
 
-  const title = useMemo(() => getTitle(data), [data]);
+  const { locale } = useRouter();
+
+  const title = useMemo(() => getTitle(data, locale), [data, locale]);
 
   return (
     <div

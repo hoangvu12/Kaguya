@@ -3,6 +3,7 @@ import supabase from "@/lib/supabase";
 import { Anime, Manga } from "@/types";
 import { getTitle } from "@/utils/data";
 import { PostgrestError } from "@supabase/supabase-js";
+import { useRouter } from "next/router";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 
@@ -14,6 +15,7 @@ const useUnsubscribe = <T extends "anime" | "manga">(
 ) => {
   const user = useUser();
   const queryClient = useQueryClient();
+  const { locale } = useRouter();
   const tableName =
     type === "anime" ? "kaguya_anime_subscribers" : "kaguya_manga_subscribers";
   const queryKey = ["is_subscribed", user.id, source.id];
@@ -36,7 +38,7 @@ const useUnsubscribe = <T extends "anime" | "manga">(
       onSuccess: () => {
         toast.success(
           <p>
-            Đã tắt thông báo <b>{getTitle(source)}</b>{" "}
+            Đã tắt thông báo <b>{getTitle(source, locale)}</b>{" "}
           </p>
         );
       },

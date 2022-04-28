@@ -2,6 +2,7 @@ import { TraceImageResult } from "@/hooks/useTraceImage";
 import { parseTime } from "@/utils";
 import { getTitle } from "@/utils/data";
 import classNames from "classnames";
+import { useRouter } from "next/router";
 import React from "react";
 
 interface TraceCardProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -15,6 +16,8 @@ const TraceCard: React.FC<TraceCardProps> = ({
   isActive,
   ...props
 }) => {
+  const { locale } = useRouter();
+
   return (
     <div
       className={classNames(
@@ -24,7 +27,7 @@ const TraceCard: React.FC<TraceCardProps> = ({
       )}
       {...props}
     >
-      <p className="text-lg font-semibold">{getTitle(data.anime)}</p>
+      <p className="text-lg font-semibold">{getTitle(data.anime, locale)}</p>
 
       <div className="grid grid-cols-10">
         <div className="col-span-5 flex flex-col justify-between">

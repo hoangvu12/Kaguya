@@ -13,6 +13,7 @@ import { Room } from "@/types";
 import { vietnameseSlug } from "@/utils";
 import { getTitle } from "@/utils/data";
 import { GetServerSideProps, NextPage } from "next";
+import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
 import React, { useEffect, useMemo, useState } from "react";
 import { useQueryClient } from "react-query";
@@ -27,9 +28,13 @@ const RoomPage: NextPage<RoomPageProps> = ({ room }) => {
   const { data } = useRoom(room.id, room);
   const queryClient = useQueryClient();
   const user = useUser();
+  const { locale } = useRouter();
 
   const title = useMemo(() => data.title, [data.title]);
-  const mediaTitle = useMemo(() => getTitle(data.media), [data.media]);
+  const mediaTitle = useMemo(
+    () => getTitle(data.media, locale),
+    [data.media, locale]
+  );
 
   useEffect(() => {
     const { pathname, origin } = new URL(config.socketServerUrl);
@@ -125,7 +130,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 const RoomPageWithRedirect = withRedirect(RoomPage, (router, props) => {
   const { params } = router.query;
   const [id, slug] = params as string[];
-  const title = getTitle(props.room.media);
+  const title = getTitle(props.room.media, router.locale);
 
   if (slug) return null;
 

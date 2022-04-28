@@ -232,7 +232,10 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchedEpisode?.sourceEpisodeId]);
 
-  const title = useMemo(() => getTitle(anime), [anime]);
+  const title = useMemo(
+    () => getTitle(anime, router.locale),
+    [anime, router.locale]
+  );
 
   const overlaySlot = useMemo(
     () => (

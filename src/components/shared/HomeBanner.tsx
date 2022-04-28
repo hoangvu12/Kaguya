@@ -10,6 +10,7 @@ import { convert, getTitle } from "@/utils/data";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, {
   useCallback,
   useEffect,
@@ -57,6 +58,8 @@ const MobileHomeBanner = <T extends "anime" | "manga">({
   data,
   type,
 }: HomeBannerProps<T>) => {
+  const { locale } = useRouter();
+
   const getRedirectUrl = useCallback(
     (id: number) => {
       return type === "anime" ? `/anime/details/${id}` : `/manga/details/${id}`;
@@ -73,7 +76,7 @@ const MobileHomeBanner = <T extends "anime" | "manga">({
       loop
     >
       {data.map((slide: Anime | Manga, index: number) => {
-        const title = getTitle(slide);
+        const title = getTitle(slide, locale);
 
         return (
           <SwiperSlide key={index}>
@@ -139,6 +142,7 @@ const DesktopHomeBanner = <T extends "anime" | "manga">({
     useState<ReturnType<YouTube["getInternalPlayer"]>>();
   const [isMuted, setIsMuted] = useState(true);
   const isRanOnce = useRef(false);
+  const { locale } = useRouter();
 
   const activeSlide = useMemo(() => data[index], [data, index]);
 
@@ -172,7 +176,10 @@ const DesktopHomeBanner = <T extends "anime" | "manga">({
     setIsMuted(false);
   }, [player]);
 
-  const title = useMemo(() => getTitle(activeSlide), [activeSlide]);
+  const title = useMemo(
+    () => getTitle(activeSlide, locale),
+    [activeSlide, locale]
+  );
 
   useEffect(() => {
     setShowTrailer(false);

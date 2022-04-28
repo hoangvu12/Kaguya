@@ -66,7 +66,10 @@ const Sidebar = () => {
     setState((prev) => ({ ...prev, isSidebarOpen: isOpen }));
   };
 
-  const title = useMemo(() => getTitle(manga), [manga]);
+  const title = useMemo(
+    () => getTitle(manga, router.locale),
+    [manga, router.locale]
+  );
 
   const sourceChapters = useMemo(
     () => chapters.filter((chapter) => chapter.source.name === activeSource),
@@ -79,7 +82,10 @@ const Sidebar = () => {
     );
   }, [filterText, sourceChapters]);
 
-  const sources = groupBy(chapters, (data) => data.source.name);
+  const sources = useMemo(
+    () => groupBy(chapters, (data) => data.source.name),
+    [chapters]
+  );
 
   const handleChangeChapterIndex = (index: number) => () => {
     setChapter(sourceChapters[index]);

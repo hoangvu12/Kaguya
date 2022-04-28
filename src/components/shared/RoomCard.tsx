@@ -2,6 +2,7 @@ import dayjs from "@/lib/dayjs";
 import { Room } from "@/types";
 import { getTitle } from "@/utils/data";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { AiFillEye } from "react-icons/ai";
 import { GoPrimitiveDot } from "react-icons/go";
@@ -15,7 +16,12 @@ interface RoomCardProps {
 }
 
 const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
-  const mediaTitle = useMemo(() => getTitle(room.media), [room.media]);
+  const { locale } = useRouter();
+
+  const mediaTitle = useMemo(
+    () => getTitle(room.media, locale),
+    [room.media, locale]
+  );
 
   return (
     <Link href={`/wwf/${room.id}`}>

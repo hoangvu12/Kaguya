@@ -11,6 +11,7 @@ import { convert, getTitle } from "@/utils/data";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { MobileView } from "react-device-detect";
 import { AiOutlineUser } from "react-icons/ai";
@@ -21,8 +22,12 @@ const RoomWatchPanel = () => {
   const { room } = useRoomInfo();
   const { state, setState } = useRoomState();
   const { isMobile } = useDevice();
+  const { locale } = useRouter();
 
-  const mediaTitle = useMemo(() => getTitle(room?.media), [room?.media]);
+  const mediaTitle = useMemo(
+    () => getTitle(room?.media, locale),
+    [room?.media, locale]
+  );
 
   return (
     <div

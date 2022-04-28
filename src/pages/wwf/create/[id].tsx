@@ -15,6 +15,7 @@ import { Anime, Episode } from "@/types";
 import { convert, getTitle, sortMediaUnit } from "@/utils/data";
 import classNames from "classnames";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import { useRouter } from "next/router";
 import React, { useCallback, useMemo, useState } from "react";
 import { MdOutlineTitle } from "react-icons/md";
 
@@ -43,6 +44,7 @@ const CreateRoomPage: NextPage<CreateRoomPageProps> = ({ media }) => {
   const { isMobile } = useDevice();
   const [roomTitle, setRoomTitle] = useState("");
   const [visibility, setVisibility] = useState(visibilityModes[0].value);
+  const { locale } = useRouter();
 
   const { mutate, isLoading } = useCreateRoom();
 
@@ -63,7 +65,7 @@ const CreateRoomPage: NextPage<CreateRoomPageProps> = ({ media }) => {
     sortedEpisodes[0]
   );
 
-  const mediaTitle = useMemo(() => getTitle(media), [media]);
+  const mediaTitle = useMemo(() => getTitle(media, locale), [media, locale]);
 
   const handleInputChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {

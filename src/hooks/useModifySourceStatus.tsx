@@ -4,6 +4,7 @@ import supabase from "@/lib/supabase";
 import { Anime, Manga, SourceStatus } from "@/types";
 import { getTitle } from "@/utils/data";
 import { PostgrestError } from "@supabase/supabase-js";
+import { useRouter } from "next/router";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 
@@ -15,11 +16,13 @@ const useModifySourceStatus = <T extends "anime" | "manga">(
   type: T,
   source: T extends "anime" ? Anime : Manga
 ) => {
+  const { locale } = useRouter();
+  const queryClient = useQueryClient();
+  const user = useUser();
+
   const tableName =
     type === "anime" ? "kaguya_watch_status" : "kaguya_read_status";
   const queryKey = [tableName, source.id];
-  const queryClient = useQueryClient();
-  const user = useUser();
 
   return useMutation<any, PostgrestError, StatusInput<T>, any>(
     async (status) => {
@@ -52,7 +55,7 @@ const useModifySourceStatus = <T extends "anime" | "manga">(
 
         toast.success(
           <p>
-            Đã thêm <b>{getTitle(source)}</b> vào <b>{label}</b>
+            Đã thêm <b>{getTitle(source, locale)}</b> vào <b>{label}</b>
           </p>
         );
       },

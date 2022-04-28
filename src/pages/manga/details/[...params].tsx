@@ -21,6 +21,7 @@ import { numberWithCommas, vietnameseSlug } from "@/utils";
 import { convert, getTitle } from "@/utils/data";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { BsFillPlayFill } from "react-icons/bs";
 
@@ -30,8 +31,9 @@ interface DetailsPageProps {
 
 const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
   const user = useUser();
+  const { locale } = useRouter();
 
-  const title = useMemo(() => getTitle(manga), [manga]);
+  const title = useMemo(() => getTitle(manga, locale), [manga, locale]);
 
   return (
     <>
@@ -229,7 +231,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export default withRedirect(DetailsPage, (router, props) => {
   const { params } = router.query;
   const [id, slug] = params as string[];
-  const title = getTitle(props.manga);
+  const title = getTitle(props.manga, router.locale);
 
   if (slug) return null;
 

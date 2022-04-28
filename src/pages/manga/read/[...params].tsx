@@ -39,10 +39,11 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
   const [showReadOverlay, setShowReadOverlay] = useState(false);
   const [declinedReread, setDeclinedReread] = useState(false);
   const saveReadTimeout = useRef<NodeJS.Timeout>();
+  const { locale } = useRouter();
 
   const saveReadMutation = useSaveRead();
 
-  const title = useMemo(() => getTitle(manga), [manga]);
+  const title = useMemo(() => getTitle(manga, locale), [manga, locale]);
 
   const chapters = useMemo(
     () =>

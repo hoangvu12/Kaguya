@@ -26,6 +26,7 @@ import {
 import { convert, getTitle } from "@/utils/data";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { BsFillPlayFill } from "react-icons/bs";
 
@@ -35,6 +36,7 @@ interface DetailsPageProps {
 
 const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
   const user = useUser();
+  const { locale } = useRouter();
 
   const sortedEpisodes = useMemo(
     () =>
@@ -64,7 +66,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
     [anime.airingSchedules]
   );
 
-  const title = useMemo(() => getTitle(anime), [anime]);
+  const title = useMemo(() => getTitle(anime, locale), [anime, locale]);
 
   return (
     <>
@@ -304,7 +306,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export default withRedirect(DetailsPage, (router, props) => {
   const { params } = router.query;
   const [id, slug] = params as string[];
-  const title = getTitle(props.anime);
+  const title = getTitle(props.anime, router.locale);
 
   if (slug) return null;
 

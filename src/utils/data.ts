@@ -38,7 +38,12 @@ export const convert = (
   return constant[index].label;
 };
 
-export const getTitle = <T extends Media<Anime> | Media<Manga>>(data: T) => {
+export const getTitle = <T extends Media<Anime> | Media<Manga>>(
+  data: T,
+  locale?: string
+) => {
+  if (locale === "en") return data?.title.userPreferred;
+
   const title =
     typeof data?.title === "string" ? data?.title : data?.title.userPreferred;
 

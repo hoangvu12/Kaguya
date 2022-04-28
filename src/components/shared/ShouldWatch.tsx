@@ -6,6 +6,7 @@ import { Anime, Manga } from "@/types";
 import { numberWithCommas } from "@/utils";
 import { convert, getTitle } from "@/utils/data";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { AiFillHeart, AiFillPlayCircle } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
@@ -19,7 +20,8 @@ const ShouldWatch = <T extends "anime" | "manga">({
   data,
   type,
 }: ShouldWatchProps<T>) => {
-  const title = useMemo(() => getTitle(data), [data]);
+  const { locale } = useRouter();
+  const title = useMemo(() => getTitle(data, locale), [data, locale]);
 
   const redirectUrl = useMemo(
     () =>

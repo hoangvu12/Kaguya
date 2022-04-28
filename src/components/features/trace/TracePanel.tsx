@@ -7,6 +7,7 @@ import { TraceImageResponse } from "@/hooks/useTraceImage";
 import { numberWithCommas } from "@/utils";
 import { getTitle, convert } from "@/utils/data";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useCallback, useMemo, useState } from "react";
 import { AiFillHeart } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
@@ -20,12 +21,17 @@ interface TracePanelProps {
 
 const TracePanel: React.FC<TracePanelProps> = ({ data, image }) => {
   const [cardIndex, setCardIndex] = useState(0);
+  const { locale } = useRouter();
 
   const handleCardClick = useCallback((index: number) => {
     setCardIndex(index);
   }, []);
 
   const card = useMemo(() => data.result[cardIndex], [cardIndex, data.result]);
+  const title = useMemo(
+    () => getTitle(card.anime, locale),
+    [card.anime, locale]
+  );
 
   return (
     <div className="w-full flex flex-col md:flex-row gap-8">
@@ -66,14 +72,11 @@ const TracePanel: React.FC<TracePanelProps> = ({ data, image }) => {
         <div className="p-8 space-y-8">
           <div className="text-center md:text-left flex flex-col md:flex-row items-start gap-4">
             <div className="w-[183px] shrink-0 mx-auto md:mx-0">
-              <PlainCard
-                src={card.anime.coverImage.extraLarge}
-                alt={getTitle(card.anime)}
-              />
+              <PlainCard src={card.anime.coverImage.extraLarge} alt={title} />
             </div>
 
             <div className="space-y-4">
-              <h1 className="text-2xl font-semibold">{getTitle(card.anime)}</h1>
+              <h1 className="text-2xl font-semibold">{title}</h1>
 
               <p className="text-gray-300">{card.anime.title.native}</p>
 

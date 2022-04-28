@@ -5,9 +5,10 @@ import useMangaRecommendedList from "@/hooks/useMangaRecommendedList";
 import { Read } from "@/types";
 import { getTitle } from "@/utils/data";
 import React from "react";
+import { useRouter } from "next/router";
 
-const composeData = (data: Read) => {
-  const title = getTitle(data.media);
+const composeData = (data: Read, locale?: string) => {
+  const title = getTitle(data.media, locale);
 
   const recommendations = data.media?.recommendations?.map(
     ({ media }) => media
@@ -21,6 +22,7 @@ const composeData = (data: Read) => {
 
 const RecommendedMangaSection = () => {
   const { data, isError, isLoading } = useMangaRecommendedList();
+  const { locale } = useRouter();
 
   if (isLoading) {
     return <ListSwiperSkeleton />;
@@ -30,7 +32,7 @@ const RecommendedMangaSection = () => {
     return null;
   }
 
-  const composedData = composeData(data);
+  const composedData = composeData(data, locale);
 
   return composedData?.list?.length ? (
     <Section title={`Vì bạn đã đọc "${composedData.title}"`}>

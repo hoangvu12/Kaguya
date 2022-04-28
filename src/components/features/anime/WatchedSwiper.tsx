@@ -3,6 +3,7 @@ import Swiper, { SwiperProps, SwiperSlide } from "@/components/shared/Swiper";
 import { Watched } from "@/types";
 import { getTitle } from "@/utils/data";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 
 interface WatchedSwiperProps extends SwiperProps {
@@ -10,6 +11,8 @@ interface WatchedSwiperProps extends SwiperProps {
 }
 
 const WatchedSwiper: React.FC<WatchedSwiperProps> = ({ data, ...props }) => {
+  const { locale } = useRouter();
+
   return (
     <Swiper speed={500} {...props}>
       {data.map(({ media, episode }, index) => {
@@ -25,7 +28,7 @@ const WatchedSwiper: React.FC<WatchedSwiperProps> = ({ data, ...props }) => {
                     thumbnailImage:
                       media.bannerImage || media.coverImage.extraLarge,
                   }}
-                  title={getTitle(media)}
+                  title={getTitle(media, locale)}
                 />
               </a>
             </Link>
