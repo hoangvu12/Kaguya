@@ -1,20 +1,29 @@
 import { useReadInfo } from "@/contexts/ReadContext";
 import { useReadPanel } from "@/contexts/ReadPanelContext";
 import { useReadSettings } from "@/contexts/ReadSettingsContext";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import ReadImage from "./ReadImage";
 
 const VerticalContainer: React.FC = () => {
-  const { currentChapterIndex, chapters, setChapter, images } = useReadInfo();
+  const { currentChapterIndex, chapters, setChapter, images, currentChapter } =
+    useReadInfo();
   const { state, setState } = useReadPanel();
   const { direction } = useReadSettings();
+
+  const sourceChapters = useMemo(
+    () =>
+      chapters.filter(
+        (chapter) => chapter.sourceId === currentChapter.sourceId
+      ),
+    [chapters, currentChapter]
+  );
 
   const handleImageVisible = (index: number) => () => {
     setState((prev) => ({ ...prev, activeImageIndex: index }));
   };
 
   const handleChangeChapter = (index: number) => () => {
-    setChapter(chapters[index]);
+    setChapter(sourceChapters[index]);
   };
 
   useEffect(() => {
@@ -47,7 +56,7 @@ const VerticalContainer: React.FC = () => {
         </div>
       ))}
 
-      {currentChapterIndex < chapters.length - 1 && (
+      {currentChapterIndex < sourceChapters.length - 1 && (
         <div className="w-full h-60 p-8">
           <button
             onClick={handleChangeChapter(currentChapterIndex + 1)}
