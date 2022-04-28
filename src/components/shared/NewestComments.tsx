@@ -72,7 +72,7 @@ const NewestComments = <T extends "anime" | "manga">(
                       <p className="line-clamp-1">{user?.name}</p>
 
                       <p className="text-gray-300 line-clamp-1">
-                        {dayjs(comment.created_at).fromNow()}
+                        {dayjs(comment.created_at, { locale }).fromNow()}
                       </p>
                     </div>
                   </div>

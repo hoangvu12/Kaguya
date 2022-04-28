@@ -5,10 +5,12 @@ import dayjs from "@/lib/dayjs";
 import { AiringSchedule } from "@/types";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 
-const daysOfWeek = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
+const daysOfWeek_en = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
+const daysOfWeek_vi = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 interface AnimeSchedulingProps {
   schedules: AiringSchedule[];
@@ -16,9 +18,15 @@ interface AnimeSchedulingProps {
 
 const AnimeScheduling: React.FC<AnimeSchedulingProps> = ({ schedules }) => {
   const { t } = useTranslation("anime_home");
+  const { locale } = useRouter();
 
   const today = dayjs();
   const todayIndex = today.day();
+
+  const daysOfWeek = useMemo(
+    () => (locale === "en" ? daysOfWeek_en : daysOfWeek_vi),
+    [locale]
+  );
 
   const chunks = useMemo(
     () =>
@@ -36,7 +44,7 @@ const AnimeScheduling: React.FC<AnimeSchedulingProps> = ({ schedules }) => {
 
         return acc;
       }, {}),
-    [schedules]
+    [daysOfWeek, schedules]
   );
 
   return (

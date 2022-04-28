@@ -17,6 +17,7 @@ import dayjs from "@/lib/dayjs";
 import { Comment as CommentType } from "@/types";
 import { getMostOccuringEmojis } from "@/utils/emoji";
 import { IEmojiData } from "emoji-picker-react";
+import { useRouter } from "next/router";
 import React, { useCallback, useMemo, useState } from "react";
 
 interface CommentProps {
@@ -39,6 +40,7 @@ const Comment: React.FC<CommentProps> = ({
   const deleteMutation = useDeleteComment(comment);
   const editMutation = useEditComment(comment);
   const createMutation = useCreateComment({ type: "reply", comment });
+  const { locale } = useRouter();
 
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [hasReacted, setHasReacted] = useState(() => {
@@ -118,7 +120,7 @@ const Comment: React.FC<CommentProps> = ({
                   {comment.user.user_metadata.name}
                 </span>
                 <span className="text-sm text-gray-300">
-                  {dayjs(comment.created_at).fromNow()}
+                  {dayjs(comment.created_at, { locale }).fromNow()}
                 </span>
               </DotList>
 

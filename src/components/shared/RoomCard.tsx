@@ -89,7 +89,7 @@ const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
                   {room.hostUser?.user_metadata?.name}
                 </span>
                 <span className="text-gray-400">
-                  {dayjs(new Date(room.created_at)).fromNow()}
+                  {dayjs(new Date(room.created_at), { locale }).fromNow()}
                 </span>
               </DotList>
             </div>

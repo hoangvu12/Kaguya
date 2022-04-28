@@ -57,7 +57,7 @@ const RoomWatchPanel = () => {
                 </span>
 
                 <span className="text-sm text-gray-300">
-                  {dayjs(new Date(room.created_at)).fromNow()}
+                  {dayjs(new Date(room.created_at), { locale }).fromNow()}
                 </span>
               </DotList>
             </div>
