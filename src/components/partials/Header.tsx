@@ -6,6 +6,7 @@ import NavItem from "@/components/shared/NavItem";
 import { DISCORD_URL, FACEBOOK_URL } from "@/constants";
 import { useUser } from "@/contexts/AuthContext";
 import classNames from "classnames";
+import { useTranslation } from "next-i18next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
@@ -24,11 +25,11 @@ const routes = [
     href: "/manga",
   },
   {
-    title: "Tìm Anime bằng ảnh",
+    title: "anime_scene_search",
     href: "/trace",
   },
   {
-    title: "Xem cùng bạn bè",
+    title: "watch_with_friends",
     href: "/wwf",
   },
 ];
@@ -38,6 +39,7 @@ const Header = () => {
   const drawerRef = useRef<DrawerRef>();
   const user = useUser();
   const router = useRouter();
+  const { t } = useTranslation("header");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -82,7 +84,7 @@ const Header = () => {
                           : "border-background-900 text-typography-secondary"
                       )}
                     >
-                      {route.title}
+                      {t(route.title)}
                     </p>
                   )}
                 </NavItem>
@@ -113,7 +115,7 @@ const Header = () => {
                   isActive && "text-primary-300"
                 )}
               >
-                {route.title}
+                {t(route.title)}
               </p>
             )}
           </NavItem>
@@ -141,7 +143,7 @@ const Header = () => {
             <Link href="/login">
               <a>
                 <Button primary>
-                  <p>Đăng nhập</p>
+                  <p>{t("login")}</p>
                 </Button>
               </a>
             </Link>

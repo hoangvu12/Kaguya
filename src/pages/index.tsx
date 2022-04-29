@@ -16,13 +16,11 @@ import dayjs from "@/lib/dayjs";
 import supabase from "@/lib/supabase";
 import { AiringSchedule, Anime } from "@/types";
 import { getSeason } from "@/utils";
+import withServerTranslations from "@/hocs/withServerTranslations";
 import classNames from "classnames";
 import { GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import React, { useMemo } from "react";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import nextI18NextConfig from "../../next-i18next.config.js";
-import nextI18nextConfig from "../../next-i18next.config.js";
 
 interface HomeProps {
   trendingAnime: Anime[];
@@ -125,97 +123,93 @@ const Home: NextPage<HomeProps> = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
-  const currentSeason = getSeason();
-  const firstDayOfWeek = dayjs().startOf("week");
-  const lastDayOfWeek = dayjs().endOf("week");
+export const getStaticProps: GetStaticProps = withServerTranslations(
+  async ({ locale }) => {
+    const currentSeason = getSeason();
+    const firstDayOfWeek = dayjs().startOf("week");
+    const lastDayOfWeek = dayjs().endOf("week");
 
-  const { data: schedulesAnime } = await supabase
-    .from<AiringSchedule>("kaguya_airing_schedules")
-    .select(
-      "*, media:mediaId(coverImage, genres, averageScore, favourites, title, vietnameseTitle, id)"
-    )
-    .lte("airingAt", lastDayOfWeek.unix())
-    .gte("airingAt", firstDayOfWeek.unix());
+    const { data: schedulesAnime } = await supabase
+      .from<AiringSchedule>("kaguya_airing_schedules")
+      .select(
+        "*, media:mediaId(coverImage, genres, averageScore, favourites, title, vietnameseTitle, id)"
+      )
+      .lte("airingAt", lastDayOfWeek.unix())
+      .gte("airingAt", firstDayOfWeek.unix());
 
-  const { data: trendingAnime } = await supabase
-    .from<Anime>("kaguya_anime")
-    .select("*")
-    .order("trending", { ascending: false })
-    .not("bannerImage", "is", null)
-    .limit(15);
+    const { data: trendingAnime } = await supabase
+      .from<Anime>("kaguya_anime")
+      .select("*")
+      .order("trending", { ascending: false })
+      .not("bannerImage", "is", null)
+      .limit(15);
 
-  const { data: recentlyUpdatedAnime } = await supabase
-    .from<Anime>("kaguya_anime")
-    .select(
-      "coverImage, genres, averageScore, favourites, title, vietnameseTitle, id"
-    )
-    .order("episodeUpdatedAt", { ascending: false })
-    .limit(15);
+    const { data: recentlyUpdatedAnime } = await supabase
+      .from<Anime>("kaguya_anime")
+      .select(
+        "coverImage, genres, averageScore, favourites, title, vietnameseTitle, id"
+      )
+      .order("episodeUpdatedAt", { ascending: false })
+      .limit(15);
 
-  const { data: randomAnime } = await supabase
-    .rpc<Anime>("anime_random")
-    .limit(1)
-    .not("bannerImage", "is", null)
-    .single();
+    const { data: randomAnime } = await supabase
+      .rpc<Anime>("anime_random")
+      .limit(1)
+      .not("bannerImage", "is", null)
+      .single();
 
-  const { data: popularSeason } = await supabase
-    .from<Anime>("kaguya_anime")
-    .select(
-      "id, coverImage, genres, title, vietnameseTitle, format, season, seasonYear, status"
-    )
-    .order("popularity", { ascending: false })
-    .eq("season", currentSeason.season)
-    .eq("seasonYear", currentSeason.year)
-    .limit(5);
+    const { data: popularSeason } = await supabase
+      .from<Anime>("kaguya_anime")
+      .select(
+        "id, coverImage, genres, title, vietnameseTitle, format, season, seasonYear, status"
+      )
+      .order("popularity", { ascending: false })
+      .eq("season", currentSeason.season)
+      .eq("seasonYear", currentSeason.year)
+      .limit(5);
 
-  const { data: popularAllTime } = await supabase
-    .from<Anime>("kaguya_anime")
-    .select(
-      "id, coverImage, genres, title, vietnameseTitle, format, season, seasonYear, status"
-    )
-    .order("popularity", { ascending: false })
-    .limit(5);
+    const { data: popularAllTime } = await supabase
+      .from<Anime>("kaguya_anime")
+      .select(
+        "id, coverImage, genres, title, vietnameseTitle, format, season, seasonYear, status"
+      )
+      .order("popularity", { ascending: false })
+      .limit(5);
 
-  const { data: favouriteSeason } = await supabase
-    .from<Anime>("kaguya_anime")
-    .select(
-      "id, coverImage, genres, title, vietnameseTitle, format, season, seasonYear, status"
-    )
-    .order("favourites", { ascending: false })
-    .eq("season", currentSeason.season)
-    .eq("seasonYear", currentSeason.year)
-    .limit(5);
+    const { data: favouriteSeason } = await supabase
+      .from<Anime>("kaguya_anime")
+      .select(
+        "id, coverImage, genres, title, vietnameseTitle, format, season, seasonYear, status"
+      )
+      .order("favourites", { ascending: false })
+      .eq("season", currentSeason.season)
+      .eq("seasonYear", currentSeason.year)
+      .limit(5);
 
-  const { data: favouriteAllTime } = await supabase
-    .from<Anime>("kaguya_anime")
-    .select(
-      "id, coverImage, genres, title, vietnameseTitle, format, season, seasonYear, status"
-    )
-    .order("favourites", { ascending: false })
-    .limit(5);
+    const { data: favouriteAllTime } = await supabase
+      .from<Anime>("kaguya_anime")
+      .select(
+        "id, coverImage, genres, title, vietnameseTitle, format, season, seasonYear, status"
+      )
+      .order("favourites", { ascending: false })
+      .limit(5);
 
-  const translations = await serverSideTranslations(
-    locale,
-    ["common", "anime_home"],
-    nextI18nextConfig
-  );
+    return {
+      props: {
+        trendingAnime,
+        recentlyUpdatedAnime,
+        randomAnime,
+        schedulesAnime,
+        popularSeason,
+        popularAllTime,
+        favouriteAllTime,
+        favouriteSeason,
+      },
 
-  return {
-    props: {
-      trendingAnime,
-      recentlyUpdatedAnime,
-      randomAnime,
-      schedulesAnime,
-      popularSeason,
-      popularAllTime,
-      favouriteAllTime,
-      favouriteSeason,
-      ...translations,
-    },
-
-    revalidate: REVALIDATE_TIME,
-  };
-};
+      revalidate: REVALIDATE_TIME,
+    };
+  },
+  ["anime_home"]
+);
 
 export default Home;
