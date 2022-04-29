@@ -22,6 +22,7 @@ import { useTranslation } from "next-i18next";
 import React, { useMemo } from "react";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import nextI18NextConfig from "../../next-i18next.config.js";
+import nextI18nextConfig from "../../next-i18next.config.js";
 
 interface HomeProps {
   trendingAnime: Anime[];
@@ -129,7 +130,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const firstDayOfWeek = dayjs().startOf("week");
   const lastDayOfWeek = dayjs().endOf("week");
 
-  const { data: schedulesAnime, error } = await supabase
+  const { data: schedulesAnime } = await supabase
     .from<AiringSchedule>("kaguya_airing_schedules")
     .select(
       "*, media:mediaId(coverImage, genres, averageScore, favourites, title, vietnameseTitle, id)"
@@ -197,7 +198,7 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   const translations = await serverSideTranslations(
     locale,
     ["common", "anime_home"],
-    nextI18NextConfig
+    nextI18nextConfig
   );
 
   return {

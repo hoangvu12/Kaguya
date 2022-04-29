@@ -4,6 +4,7 @@ import { SubscriptionContextProvider } from "@/contexts/SubscriptionContext";
 import { GA_TRACKING_ID, pageview } from "@/lib/gtag";
 import "@/styles/index.css";
 import { appWithTranslation } from "next-i18next";
+import nextI18nextConfig from "next-i18next.config";
 import { AppProps } from "next/app";
 import Router, { useRouter } from "next/router";
 import Script from "next/script";

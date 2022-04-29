@@ -1,7 +1,7 @@
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import nookies from "nookies";
-import React from "react";
+import React, { useMemo } from "react";
 import { MdOutlineLanguage } from "react-icons/md";
 import Popup from "./Popup";
 
@@ -14,11 +14,12 @@ const locales = [
 ];
 
 const LanguageSwitcher = () => {
-  const { i18n } = useTranslation();
   const router = useRouter();
+  const { i18n, t } = useTranslation();
 
   const handleChangeLanguage = (lang: string) => () => {
-    i18n.changeLanguage(lang);
+    if (router.locale === lang) return;
+
     const { pathname, asPath, query } = router;
 
     router.replace({ pathname, query }, asPath, {
@@ -26,8 +27,15 @@ const LanguageSwitcher = () => {
       shallow: true,
     });
 
+    i18n.changeLanguage(lang);
+
     nookies.set(null, "NEXT_LOCALE", lang, { path: "/" });
   };
+
+  const languages = useMemo(
+    () => Object.keys(i18n.store.data),
+    [i18n.store.data]
+  );
 
   return (
     <Popup
@@ -38,13 +46,14 @@ const LanguageSwitcher = () => {
       }
     >
       <ul className="space-y-1">
-        {locales.map(({ locale, name }) => (
+        {languages.map((lang) => (
           <li
             className="cursor-pointer transition duration-300 hover:text-primary-300"
-            onClick={handleChangeLanguage(locale)}
-            key={locale}
+            onClick={handleChangeLanguage(lang)}
+            key={lang}
+            title={lang}
           >
-            {name}
+            {t("language", { lng: lang })}
           </li>
         ))}
       </ul>
