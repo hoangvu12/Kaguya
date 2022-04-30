@@ -99,7 +99,7 @@ const RoomWatchPanel = () => {
 
             <DotList className="mt-2">
               {room.media.genres.map((genre) => (
-                <span key={genre}>{convert(genre, "genre")}</span>
+                <span key={genre}>{convert(genre, "genre", { locale })}</span>
               ))}
             </DotList>
 

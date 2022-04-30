@@ -116,7 +116,9 @@ const MobileHomeBanner = <T extends "anime" | "manga">({
                         </TextIcon>
                         <DotList>
                           {slide.genres.map((genre) => (
-                            <span key={genre}>{convert(genre, "genre")}</span>
+                            <span key={genre}>
+                              {convert(genre, "genre", { locale })}
+                            </span>
                           ))}
                         </DotList>
                       </div>
@@ -278,7 +280,7 @@ const DesktopHomeBanner = <T extends "anime" | "manga">({
 
             <DotList>
               {activeSlide.genres.map((genre) => (
-                <span key={genre}>{convert(genre, "genre")}</span>
+                <span key={genre}>{convert(genre, "genre", { locale })}</span>
               ))}
             </DotList>
           </div>

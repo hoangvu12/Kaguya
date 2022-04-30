@@ -73,7 +73,9 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
 
                 <DotList>
                   {manga.genres.map((genre) => (
-                    <span key={genre}>{convert(genre, "genre")}</span>
+                    <span key={genre}>
+                      {convert(genre, "genre", { locale })}
+                    </span>
                   ))}
                 </DotList>
 
@@ -87,7 +89,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
 
                 <InfoItem
                   title="Tình trạng"
-                  value={convert(manga.status, "status")}
+                  value={convert(manga.status, "status", { locale })}
                 />
 
                 <InfoItem

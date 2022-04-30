@@ -1,31 +1,76 @@
-import {
-  ANIME_SORTS,
-  CHARACTERS_ROLES,
-  FORMATS,
-  GENRES,
-  MANGA_SORTS,
-  SEASONS,
-  STATUS,
-} from "@/constants";
+import enTranslations from "@/constants/en";
+import viTranslations from "@/constants/vi";
 import { Anime, Chapter, Episode, Manga, Media } from "@/types";
 import { parseNumbersFromString } from ".";
 
-const constants = {
-  season: SEASONS,
-  format: FORMATS,
-  status: STATUS,
-  genre: GENRES,
-  characterRole: CHARACTERS_ROLES,
-  animeSort: ANIME_SORTS,
-  mangaSort: MANGA_SORTS,
+type Translate = { readonly value: string; readonly label: string } & Record<
+  string,
+  any
+>;
+
+type Translation = {
+  SEASONS: Translate[];
+  FORMATS: Translate[];
+  STATUS: Translate[];
+  GENRES: Translate[];
+  CHARACTERS_ROLES: Translate[];
+  ANIME_SORTS: Translate[];
+  MANGA_SORTS: Translate[];
+};
+
+export const getConstantTranslation = (locale: string): Translation => {
+  switch (locale) {
+    case "vi":
+      // @ts-ignore
+      return viTranslations;
+    case "en":
+      // @ts-ignore
+      return enTranslations;
+    default:
+      // @ts-ignore
+      return enTranslations;
+  }
+};
+
+const composeTranslation = (translation: Translation) => {
+  return {
+    season: translation.SEASONS,
+    format: translation.FORMATS,
+    status: translation.STATUS,
+    genre: translation.GENRES,
+    characterRole: translation.CHARACTERS_ROLES,
+    animeSort: translation.ANIME_SORTS,
+    mangaSort: translation.MANGA_SORTS,
+  };
+};
+
+const types = [
+  "season",
+  "format",
+  "status",
+  "genre",
+  "characterRole",
+  "animeSort",
+  "mangaSort",
+] as const;
+
+type ConvertOptions = {
+  reverse?: boolean;
+  locale?: string;
 };
 
 export const convert = (
   text: string,
-  type: keyof typeof constants,
-  reverse: boolean = false
+  type: typeof types[number],
+  options: ConvertOptions = {}
 ) => {
+  const { locale, reverse } = options;
+
+  const constants = composeTranslation(getConstantTranslation(locale));
+
   const constant = constants[type];
+
+  if (!constant) return text;
 
   const index = constant.findIndex(
     (el: typeof constant[number]) => el.value === text || el.label === text

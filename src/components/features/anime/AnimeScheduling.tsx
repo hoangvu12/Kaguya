@@ -9,8 +9,8 @@ import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 
-const daysOfWeek_en = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
-const daysOfWeek_vi = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const daysOfWeek_vi = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
+const daysOfWeek_en = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 interface AnimeSchedulingProps {
   schedules: AiringSchedule[];
@@ -99,7 +99,9 @@ const AnimeScheduling: React.FC<AnimeSchedulingProps> = ({ schedules }) => {
                           <React.Fragment>
                             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60"></div>
                             <DotList className="p-2 absolute bottom-0 w-full">
-                              <span>Tập {cardWithSchedule.episode}</span>
+                              <span>
+                                {t("common:episode")} {cardWithSchedule.episode}
+                              </span>
                               <span>
                                 {!isReleased
                                   ? dayjs

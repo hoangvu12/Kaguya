@@ -57,16 +57,18 @@ const HorizontalCard = <T extends "anime" | "manga">({
 
           {"season" in data && "seasonYear" in data && (
             <span>
-              {convert(data.season, "season")} {data.seasonYear}
+              {convert(data.season, "season", { locale })} {data.seasonYear}
             </span>
           )}
 
-          {data.status && <span>{convert(data.status, "status")}</span>}
+          {data.status && (
+            <span>{convert(data.status, "status", { locale })}</span>
+          )}
         </DotList>
 
         <DotList className="text-sm text-gray-300">
           {data.genres?.map((genre) => (
-            <span key={genre}>{convert(genre, "genre")}</span>
+            <span key={genre}>{convert(genre, "genre", { locale })}</span>
           ))}
         </DotList>
       </div>

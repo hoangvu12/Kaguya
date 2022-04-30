@@ -116,7 +116,9 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
 
                 <DotList>
                   {anime.genres.map((genre) => (
-                    <span key={genre}>{convert(genre, "genre")}</span>
+                    <span key={genre}>
+                      {convert(genre, "genre", { locale })}
+                    </span>
                   ))}
                 </DotList>
 
@@ -138,7 +140,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
 
                 <InfoItem
                   title="Tình trạng"
-                  value={convert(anime.status, "status")}
+                  value={convert(anime.status, "status", { locale })}
                 />
                 <InfoItem
                   title="Giới hạn tuổi"
@@ -164,7 +166,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
             <div className="bg-background-900 rounded-md p-4 space-y-4">
               <InfoItem
                 title="Định dạng"
-                value={convert(anime.format, "format")}
+                value={convert(anime.format, "format", { locale })}
               />
               <InfoItem title="English" value={anime.title.english} />
               <InfoItem title="Native" value={anime.title.native} />
@@ -187,7 +189,9 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
               /> */}
               <InfoItem
                 title="Mùa"
-                value={`${convert(anime.season, "season")} ${anime.seasonYear}`}
+                value={`${convert(anime.season, "season", { locale })} ${
+                  anime.seasonYear
+                }`}
               />
             </div>
 

@@ -1,7 +1,8 @@
 import Popup from "@/components/shared/Popup";
 import TextIcon from "@/components/shared/TextIcon";
-import { ANIME_SORTS, MANGA_SORTS } from "@/constants";
+import useConstantTranslation from "@/hooks/useConstantTranslation";
 import { convert } from "@/utils/data";
+import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { RiArrowUpDownFill } from "react-icons/ri";
 
@@ -16,14 +17,19 @@ const SortSelector = <T extends "anime" | "manga">(
 ) => {
   const { onChange, defaultValue = "averageScore", type } = props;
   const [activeItem, setActiveItem] = useState(defaultValue);
+  const { ANIME_SORTS, MANGA_SORTS } = useConstantTranslation();
+  const { locale } = useRouter();
 
   const SORTS = useMemo(
     () => (type === "anime" ? ANIME_SORTS : MANGA_SORTS),
-    [type]
+    [ANIME_SORTS, MANGA_SORTS, type]
   );
   const placeholder = useMemo(
-    () => convert(activeItem, type === "anime" ? "animeSort" : "mangaSort"),
-    [activeItem, type]
+    () =>
+      convert(activeItem, type === "anime" ? "animeSort" : "mangaSort", {
+        locale,
+      }),
+    [activeItem, locale, type]
   );
 
   const handleClick = useCallback(

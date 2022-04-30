@@ -114,7 +114,7 @@ const TracePanel: React.FC<TracePanelProps> = ({ data, image }) => {
 
                 <InfoItem
                   title="Tình trạng"
-                  value={convert(card.anime.status, "status")}
+                  value={convert(card.anime.status, "status", { locale })}
                 />
 
                 <InfoItem

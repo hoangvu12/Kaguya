@@ -110,7 +110,7 @@ const CreateRoomPage: NextPage<CreateRoomPageProps> = ({ media }) => {
 
           <DotList className="mt-2">
             {media.genres.map((genre) => (
-              <span key={genre}>{convert(genre, "genre")}</span>
+              <span key={genre}>{convert(genre, "genre", { locale })}</span>
             ))}
           </DotList>
 

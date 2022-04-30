@@ -75,7 +75,7 @@ const ShouldWatch = <T extends "anime" | "manga">({
 
               <DotList>
                 {data.genres.map((genre) => (
-                  <span key={genre}>{convert(genre, "genre")}</span>
+                  <span key={genre}>{convert(genre, "genre", { locale })}</span>
                 ))}
               </DotList>
             </div>

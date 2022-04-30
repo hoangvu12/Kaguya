@@ -1,20 +1,21 @@
-import { GENRES } from "@/constants";
-import React from "react";
-import Link from "next/link";
 import Image from "@/components/shared/Image";
 import Swiper, { SwiperProps, SwiperSlide } from "@/components/shared/Swiper";
+import useConstantTranslation from "@/hooks/useConstantTranslation";
 import useDevice from "@/hooks/useDevice";
 import classNames from "classnames";
+import Link from "next/link";
+import React from "react";
 
-interface GenresSelectorProps extends SwiperProps {
+interface GenresSwiperProps extends SwiperProps {
   type?: "anime" | "manga";
 }
 
-const GenresSelector: React.FC<GenresSelectorProps> = ({
+const GenreSwiper: React.FC<GenresSwiperProps> = ({
   type = "anime",
   ...props
 }) => {
   const { isMobile } = useDevice();
+  const { GENRES } = useConstantTranslation();
 
   return (
     <Swiper
@@ -79,4 +80,4 @@ const GenresSelector: React.FC<GenresSelectorProps> = ({
   );
 };
 
-export default React.memo(GenresSelector);
+export default React.memo(GenreSwiper);

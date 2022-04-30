@@ -118,7 +118,7 @@ const Card = <T extends "anime" | "manga">(props: AnimeCardProps<T>) => {
                         }}
                         key={genre}
                       >
-                        {convert(genre, "genre")}
+                        {convert(genre, "genre", { locale: router.locale })}
                       </span>
                     ))}
                   </DotList>
