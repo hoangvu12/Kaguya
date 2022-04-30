@@ -172,7 +172,7 @@ export const TYPES = [
   },
   {
     value: "voice_actors",
-    label: "Seiyuu",
+    label: "Người lồng tiếng",
   },
 ] as const;
 
@@ -235,6 +235,8 @@ const translations = {
   CHARACTERS_ROLES,
   ANIME_SORTS,
   MANGA_SORTS,
+  TYPES,
+  COUNTRIES,
 };
 
 export default translations;

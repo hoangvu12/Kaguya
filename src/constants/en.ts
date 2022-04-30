@@ -8,7 +8,7 @@ export const SEASONS = [
 export const STATUS = [
   { value: "FINISHED", label: "Finished" },
   { value: "RELEASING", label: "Releasing" },
-  { value: "NOT_YET_RELEASED", label: "NOT_YET_RELEASED" },
+  { value: "NOT_YET_RELEASED", label: "Not yet released" },
   { value: "CANCELLED", label: "Cancelled" },
   { value: "HIATUS", label: "Hiatus" },
 ] as const;
@@ -179,7 +179,7 @@ export const TYPES = [
 export const COUNTRIES = [
   {
     value: "JP",
-    label: "JAPAN",
+    label: "Japan",
   },
   {
     value: "CN",
@@ -235,6 +235,8 @@ const translations = {
   CHARACTERS_ROLES,
   ANIME_SORTS,
   MANGA_SORTS,
+  TYPES,
+  COUNTRIES,
 };
 
 export default translations;

@@ -1,13 +1,13 @@
+import { MediaFormat } from "@/anilist";
 import AnimeBrowseList from "@/components/features/anime/AnimeBrowseList";
 import CharacterBrowseList from "@/components/features/characters/CharacterBrowseList";
-import VABrowseList from "@/components/features/va/VABrowseList";
 import MangaBrowseList from "@/components/features/manga/MangaBrowseList";
+import VABrowseList from "@/components/features/va/VABrowseList";
 import Head from "@/components/shared/Head";
 import Select from "@/components/shared/Select";
-import { TYPES } from "@/constants";
-import useDevice from "@/hooks/useDevice";
+import useConstantTranslation from "@/hooks/useConstantTranslation";
 import { Anime, MediaGenre } from "@/types";
-import { MediaFormat } from "@/anilist";
+import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 
@@ -56,7 +56,8 @@ const typeSelectStyles = {
 
 const BrowsePage = ({ query: baseQuery }) => {
   const router = useRouter();
-  const { isMobile } = useDevice();
+  const { t } = useTranslation();
+  const { TYPES } = useConstantTranslation();
 
   const {
     format = undefined,
@@ -97,7 +98,10 @@ const BrowsePage = ({ query: baseQuery }) => {
   };
 
   const BrowseComponent = useMemo(() => components[type], [type]);
-  const chosenType = useMemo(() => TYPES.find((t) => t.value === type), [type]);
+  const chosenType = useMemo(
+    () => TYPES.find((t) => t.value === type),
+    [TYPES, type]
+  );
 
   return (
     <div className="py-20 px-4 md:px-12">
@@ -105,7 +109,7 @@ const BrowsePage = ({ query: baseQuery }) => {
 
       <div className="mb-8 flex items-center space-x-2">
         <p className="text-4xl font-semibold text-center md:text-left">
-          {isMobile ? "Tìm" : "Tìm kiếm"}
+          {t("common:search")}
         </p>
 
         <Select

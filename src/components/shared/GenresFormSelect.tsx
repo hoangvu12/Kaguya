@@ -1,24 +1,10 @@
 import React, { useCallback, useMemo } from "react";
 import Select from "./Select";
-import { GENRES } from "@/constants";
 import TAGS from "@/tags.json";
 import { Props } from "react-select";
 import classNames from "classnames";
-
-const genres = GENRES.map((genre) => ({
-  value: genre.value as string,
-  label: genre.label,
-}));
-
-const tags = TAGS.map((tag) => ({
-  value: tag,
-  label: tag,
-}));
-
-const groups = [
-  { label: "Thể loại", options: genres },
-  { label: "Tags", options: tags },
-] as const;
+import useConstantTranslation from "@/hooks/useConstantTranslation";
+import { useTranslation } from "next-i18next";
 
 const styles = {
   groupHeading: (provided) => {
@@ -43,6 +29,11 @@ interface GenresFormSelectProps
   selectProps?: Omit<Props, "onChange">;
 }
 
+const tags = TAGS.map((tag) => ({
+  value: tag,
+  label: tag,
+}));
+
 const GenresFormSelect: React.FC<GenresFormSelectProps> = ({
   value = [],
   onChange = () => {},
@@ -50,13 +41,28 @@ const GenresFormSelect: React.FC<GenresFormSelectProps> = ({
   className,
   ...props
 }) => {
+  const { GENRES } = useConstantTranslation();
+  const { t } = useTranslation("common");
+
+  const groups = useMemo(() => {
+    const genres = GENRES.map((genre) => ({
+      value: genre.value as string,
+      label: genre.label,
+    }));
+
+    return [
+      { label: t("genres"), options: genres },
+      { label: "Tags", options: tags },
+    ] as const;
+  }, [GENRES, t]);
+
   const selectValue = useMemo(
     () =>
       groups
         .map((group) => group.options)
         .flat()
         .filter((option) => value.includes(option.value)),
-    [value]
+    [groups, value]
   );
 
   const handleSelectChange = useCallback(
@@ -81,19 +87,19 @@ const GenresFormSelect: React.FC<GenresFormSelectProps> = ({
         { type: "GENRES", value: genres },
       ]);
     },
-    [onChange]
+    [groups, onChange]
   );
 
   return (
     <div className={classNames("space-y-2", className)} {...props}>
-      <p className="font-semibold">Thể loại</p>
+      <p className="font-semibold">{t("genres")}</p>
 
       <Select
         value={selectValue}
         onChange={handleSelectChange}
         isMulti
         options={groups}
-        placeholder="Thể loại"
+        placeholder={t("genres")}
         styles={styles}
         {...selectProps}
       />
