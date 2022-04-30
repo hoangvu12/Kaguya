@@ -6,6 +6,7 @@ import { Read } from "@/types";
 import { getTitle } from "@/utils/data";
 import React from "react";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
 
 const composeData = (data: Read, locale?: string) => {
   const title = getTitle(data.media, locale);
@@ -23,6 +24,7 @@ const composeData = (data: Read, locale?: string) => {
 const RecommendedMangaSection = () => {
   const { data, isError, isLoading } = useMangaRecommendedList();
   const { locale } = useRouter();
+  const { t } = useTranslation("manga_home");
 
   if (isLoading) {
     return <ListSwiperSkeleton />;
@@ -35,7 +37,7 @@ const RecommendedMangaSection = () => {
   const composedData = composeData(data, locale);
 
   return composedData?.list?.length ? (
-    <Section title={`Vì bạn đã đọc "${composedData.title}"`}>
+    <Section title={`${t("because_you_read")} "${composedData.title}"`}>
       <CardSwiper data={composedData.list} type="manga" />
     </Section>
   ) : null;

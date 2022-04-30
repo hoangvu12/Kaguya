@@ -15,6 +15,7 @@ import supabase from "@/lib/supabase";
 import { Manga } from "@/types";
 import classNames from "classnames";
 import { GetStaticProps, NextPage } from "next";
+import { useTranslation } from "next-i18next";
 import React from "react";
 
 interface HomeProps {
@@ -33,6 +34,7 @@ const Home: NextPage<HomeProps> = ({
   popularManga,
 }) => {
   const { isDesktop } = useDevice();
+  const { t } = useTranslation();
 
   return (
     <React.Fragment>
@@ -48,13 +50,13 @@ const Home: NextPage<HomeProps> = ({
 
             <Section className="flex flex-col md:flex-row items-center md:space-between space-y-4 space-x-0 md:space-y-0 md:space-x-4">
               <ColumnSection
-                title="Nổi bật nhất"
+                title={t("common:most_popular")}
                 type="manga"
                 data={popularManga}
                 viewMoreHref="/browse?sort=popularity&type=manga"
               />
               <ColumnSection
-                title="Được yêu thích"
+                title={t("common:most_favourite")}
                 type="manga"
                 data={favouriteManga}
                 viewMoreHref="/browse?sort=favourites&type=manga"
@@ -63,7 +65,7 @@ const Home: NextPage<HomeProps> = ({
 
             <NewestComments type="manga" />
 
-            <Section title="Mới cập nhật">
+            <Section title={t("common:newly_added")}>
               <CardSwiper type="manga" data={recentlyUpdatedManga} />
             </Section>
 
@@ -73,14 +75,16 @@ const Home: NextPage<HomeProps> = ({
                 isDesktop ? "flex-row" : "flex-col"
               )}
             >
-              {" "}
               <Section
-                title="Đọc gì hôm nay?"
+                title={t("manga_home:should_read_today")}
                 className="w-full md:w-[80%] md:!pr-0"
               >
                 <ShouldWatch type="manga" data={randomManga} />
               </Section>
-              <Section title="Thể loại" className="w-full md:w-[20%] md:!pl-0">
+              <Section
+                title={t("common:genres")}
+                className="w-full md:w-[20%] md:!pl-0"
+              >
                 <GenreSwiper className="md:h-[500px]" />
               </Section>
             </div>

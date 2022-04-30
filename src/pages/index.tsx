@@ -122,7 +122,7 @@ const Home: NextPage<HomeProps> = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ locale }) => {
+export const getStaticProps: GetStaticProps = async () => {
   const currentSeason = getSeason();
   const firstDayOfWeek = dayjs().startOf("week");
   const lastDayOfWeek = dayjs().endOf("week");
