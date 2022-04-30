@@ -6,7 +6,7 @@ import "@/styles/index.css";
 import { appWithTranslation } from "next-i18next";
 import nextI18nextConfig from "next-i18next.config";
 import { AppProps } from "next/app";
-import Router, { useRouter } from "next/router";
+import Router from "next/router";
 import Script from "next/script";
 import NProgress from "nprogress";
 import React, { useEffect } from "react";
@@ -30,9 +30,7 @@ const queryClient = new QueryClient({
   },
 });
 
-function App({ Component, pageProps }: AppProps) {
-  const router = useRouter();
-
+function App({ Component, pageProps, router }: AppProps) {
   useEffect(() => {
     const handleRouteChange = (url: string) => {
       pageview(url);
@@ -92,4 +90,4 @@ function App({ Component, pageProps }: AppProps) {
   );
 }
 
-export default appWithTranslation(App);
+export default appWithTranslation(App, nextI18nextConfig);
