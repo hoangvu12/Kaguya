@@ -3,13 +3,14 @@ import CircleButton from "@/components/shared/CircleButton";
 import { useRoomInfo } from "@/contexts/RoomContext";
 import { useRoomState } from "@/contexts/RoomStateContext";
 import { Chat as ChatType, ChatEvent, ChatMessage } from "@/types";
-import Link from "next/link";
+import { useTranslation } from "next-i18next";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { BrowserView, MobileView } from "react-device-detect";
+import { MobileView } from "react-device-detect";
 import { AiOutlineClose } from "react-icons/ai";
 import Chat from "./Chat";
 
 const ChatBar = () => {
+  const { t } = useTranslation("wwf");
   const { state, setState } = useRoomState();
   const { socket } = useRoomInfo();
   const [chats, setChats] = useState<ChatType[]>([]);
@@ -54,7 +55,7 @@ const ChatBar = () => {
         </MobileView>
 
         <p className="text-center font-medium py-2 border-b border-gray-600">
-          Trò chuyện
+          {t("chat_bar_heading")}
         </p>
 
         <div className="grow py-4 space-y-2 overflow-y-auto no-scrollbar">
@@ -66,15 +67,9 @@ const ChatBar = () => {
         </div>
 
         <CommentInput
-          placeholder="Nhập tin nhắn"
+          placeholder="Aa"
           needLoginMessage={
-            <p className="text-gray-300">
-              Bạn phải{" "}
-              <Link href="/login">
-                <a className="text-primary-300 hover:underline">đăng nhập</a>
-              </Link>{" "}
-              dể nhắn tin.
-            </p>
+            <p className="text-gray-300">{t("chat_bar_need_login")}</p>
           }
           showAvatar={false}
           onEnter={handleSendMessage}

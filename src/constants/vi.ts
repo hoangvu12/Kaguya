@@ -227,6 +227,25 @@ export const READ_STATUS = [
   },
 ] as const;
 
+export const VISIBILITY_MODES = [
+  {
+    value: "public",
+    label: "Công khai",
+  },
+  {
+    value: "private",
+    label: "Riêng tư",
+  },
+];
+
+const CHAT_EVENT_TYPES = {
+  join: "đã tham gia phòng",
+  leave: "đã rời phòng",
+  play: "đã bắt đầu phát",
+  pause: "đã tạm dừng phát",
+  changeEpisode: "đã chuyển tập",
+};
+
 const translations = {
   SEASONS,
   FORMATS,
@@ -237,6 +256,8 @@ const translations = {
   MANGA_SORTS,
   TYPES,
   COUNTRIES,
+  VISIBILITY_MODES,
+  CHAT_EVENT_TYPES,
 };
 
 export default translations;

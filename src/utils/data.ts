@@ -18,6 +18,8 @@ type Translation = {
   MANGA_SORTS: Translate[];
   TYPES: Translate[];
   COUNTRIES: Translate[];
+  VISIBILITY_MODES: Translate[];
+  CHAT_EVENT_TYPES: Translate[];
 };
 
 export const getConstantTranslation = (locale: string): Translation => {
@@ -45,6 +47,7 @@ const composeTranslation = (translation: Translation) => {
     mangaSort: translation.MANGA_SORTS,
     type: translation.TYPES,
     country: translation.COUNTRIES,
+    visibilityModes: translation.VISIBILITY_MODES,
   };
 };
 
@@ -58,6 +61,7 @@ const types = [
   "mangaSort",
   "type",
   "country",
+  "visibilityModes",
 ] as const;
 
 type ConvertOptions = {

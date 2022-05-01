@@ -227,6 +227,25 @@ export const READ_STATUS = [
   },
 ] as const;
 
+export const VISIBILITY_MODES = [
+  {
+    value: "public",
+    label: "Public",
+  },
+  {
+    value: "private",
+    label: "Private",
+  },
+];
+
+export const CHAT_EVENT_TYPES = {
+  join: "has joined the room",
+  leave: "has left the room",
+  play: "has started video",
+  pause: "has paused video",
+  changeEpisode: "has changed episode",
+};
+
 const translations = {
   SEASONS,
   FORMATS,
@@ -237,6 +256,8 @@ const translations = {
   MANGA_SORTS,
   TYPES,
   COUNTRIES,
+  VISIBILITY_MODES,
+  CHAT_EVENT_TYPES,
 };
 
 export default translations;

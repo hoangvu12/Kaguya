@@ -13,8 +13,8 @@ import { Room } from "@/types";
 import { vietnameseSlug } from "@/utils";
 import { getTitle } from "@/utils/data";
 import { GetServerSideProps, NextPage } from "next";
+import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
-import { ParsedUrlQuery } from "querystring";
 import React, { useEffect, useMemo, useState } from "react";
 import { useQueryClient } from "react-query";
 import { io, Socket } from "socket.io-client";
@@ -29,6 +29,7 @@ const RoomPage: NextPage<RoomPageProps> = ({ room }) => {
   const queryClient = useQueryClient();
   const user = useUser();
   const { locale } = useRouter();
+  const { t } = useTranslation("wwf");
 
   const title = useMemo(() => data.title, [data.title]);
   const mediaTitle = useMemo(
@@ -62,7 +63,10 @@ const RoomPage: NextPage<RoomPageProps> = ({ room }) => {
     <React.Fragment>
       <Head
         title={`${title || mediaTitle} - Kaguya`}
-        description={`Cùng xem ${mediaTitle} với ${data.hostUser.user_metadata.name} tại Kaguya`}
+        description={t("head_description", {
+          mediaTitle,
+          username: data.hostUser.user_metadata.name,
+        })}
         image={data.media.bannerImage || data.media.coverImage.extraLarge}
       />
 

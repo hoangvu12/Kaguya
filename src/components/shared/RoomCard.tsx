@@ -1,6 +1,7 @@
 import dayjs from "@/lib/dayjs";
 import { Room } from "@/types";
 import { getTitle } from "@/utils/data";
+import { useTranslation } from "next-i18next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
@@ -17,6 +18,7 @@ interface RoomCardProps {
 
 const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
   const { locale } = useRouter();
+  const { t } = useTranslation("wwf");
 
   const mediaTitle = useMemo(
     () => getTitle(room.media, locale),
@@ -41,7 +43,7 @@ const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
                 iconClassName="w-4 h-4"
                 className="absolute left-2 top-2 px-2 py-0.5 rounded-md bg-red-500"
               >
-                <p className="font-medium">Trực tiếp</p>
+                <p className="font-medium">{t("live")}</p>
               </TextIcon>
 
               <TextIcon
