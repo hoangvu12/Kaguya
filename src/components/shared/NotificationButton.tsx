@@ -4,6 +4,7 @@ import useIsSubscribed from "@/hooks/useIsSubscribed";
 import useSubscribe from "@/hooks/useSubscribe";
 import useUnsubscribe from "@/hooks/useUnsubscribe";
 import { Anime, Manga } from "@/types";
+import { useTranslation } from "next-i18next";
 import React, { useCallback } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { MdNotificationsActive, MdNotificationsNone } from "react-icons/md";
@@ -22,12 +23,13 @@ const NotificationButton = <T extends "anime" | "manga">(
   const { subscription } = useSubscription();
   const subscribe = useSubscribe(type, source);
   const unsubscribe = useUnsubscribe(type, source);
+  const { t } = useTranslation("notification");
 
   const handleSubscribe = useCallback(
     (type: "SUBSCRIBE" | "UNSUBSCRIBE") => async () => {
       if (type === "SUBSCRIBE") {
         if (!subscription) {
-          toast.error("Bạn phải bật thông báo truoại trước khi đăng ký");
+          toast.error(t("subscription_needed_msg"));
 
           return;
         }
@@ -37,7 +39,7 @@ const NotificationButton = <T extends "anime" | "manga">(
         unsubscribe.mutate(null);
       }
     },
-    [subscribe, subscription, unsubscribe]
+    [subscribe, subscription, t, unsubscribe]
   );
 
   if (isLoading) {

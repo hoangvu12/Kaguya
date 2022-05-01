@@ -8,19 +8,22 @@ type Translate = { readonly value: string; readonly label: string } & Record<
   any
 >;
 
-type Translation = {
-  SEASONS: Translate[];
-  FORMATS: Translate[];
-  STATUS: Translate[];
-  GENRES: Translate[];
-  CHARACTERS_ROLES: Translate[];
-  ANIME_SORTS: Translate[];
-  MANGA_SORTS: Translate[];
-  TYPES: Translate[];
-  COUNTRIES: Translate[];
-  VISIBILITY_MODES: Translate[];
-  CHAT_EVENT_TYPES: Translate[];
-};
+type TranslationKeys = [
+  "SEASONS",
+  "FORMATS",
+  "STATUS",
+  "GENRES",
+  "CHARACTERS_ROLES",
+  "ANIME_SORTS",
+  "MANGA_SORTS",
+  "TYPES",
+  "COUNTRIES",
+  "VISIBILITY_MODES",
+  "CHAT_EVENT_TYPES",
+  "READ_STATUS",
+  "WATCH_STATUS"
+];
+type Translation = Record<TranslationKeys[number], Translate[]>;
 
 export const getConstantTranslation = (locale: string): Translation => {
   switch (locale) {
@@ -47,7 +50,6 @@ const composeTranslation = (translation: Translation) => {
     mangaSort: translation.MANGA_SORTS,
     type: translation.TYPES,
     country: translation.COUNTRIES,
-    visibilityModes: translation.VISIBILITY_MODES,
   };
 };
 
@@ -61,7 +63,6 @@ const types = [
   "mangaSort",
   "type",
   "country",
-  "visibilityModes",
 ] as const;
 
 type ConvertOptions = {

@@ -25,6 +25,7 @@ import {
 } from "@/utils";
 import { convert, getTitle } from "@/utils/data";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import { useTranslation } from "next-i18next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
@@ -37,6 +38,7 @@ interface DetailsPageProps {
 const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
   const user = useUser();
   const { locale } = useRouter();
+  const { t } = useTranslation("anime_details");
 
   const sortedEpisodes = useMemo(
     () =>
@@ -56,7 +58,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
     [anime]
   );
 
-  const nextAiringSchedule = useMemo(
+  const hasNextAiringSchedule = useMemo(
     () =>
       anime.airingSchedules.length
         ? anime.airingSchedules.find((schedule) =>
@@ -65,6 +67,10 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
         : null,
     [anime.airingSchedules]
   );
+
+  const nextAiringScheduleTime = useMemo(() => {
+    return dayjs.unix(hasNextAiringSchedule.airingAt).fromNow();
+  }, [hasNextAiringSchedule.airingAt]);
 
   const title = useMemo(() => getTitle(anime, locale), [anime, locale]);
 
@@ -98,7 +104,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                   <Link href={`/anime/watch/${anime.id}`}>
                     <a>
                       <Button primary LeftIcon={BsFillPlayFill}>
-                        <p>Xem ngay</p>
+                        <p>{t("common:watch_now")}</p>
                       </Button>
                     </a>
                   </Link>
@@ -106,7 +112,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                   <Link href={`/wwf/create/${anime.id}`}>
                     <a>
                       <Button className="text-black" LeftIcon={BsFillPlayFill}>
-                        <p>Xem cùng bạn bè</p>
+                        <p>{t("watch_with_friends")}</p>
                       </Button>
                     </a>
                   </Link>
@@ -123,37 +129,43 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                 </DotList>
 
                 <p className="mt-4 mb-8 text-gray-300">
-                  {anime.description || "Đang cập nhật..."}
+                  {anime.description || t("common:updating") + "..."}
                 </p>
               </div>
 
               <div className="flex space-x-8 overflow-x-auto snap-x snap-mandatory md:space-x-16">
-                <InfoItem title="Quốc gia" value={anime.countryOfOrigin} />
-                <InfoItem title="Số tập" value={anime.totalEpisodes} />
+                <InfoItem
+                  title={t("common:country")}
+                  value={convert(anime.countryOfOrigin, "country", { locale })}
+                />
+                <InfoItem
+                  title={t("common:total_episodes")}
+                  value={anime.totalEpisodes}
+                />
 
                 {anime.duration && (
                   <InfoItem
-                    title="Thời lượng"
-                    value={`${anime.duration} phút`}
+                    title={t("common:duration")}
+                    value={`${anime.duration} ${t("common:minutes")}`}
                   />
                 )}
 
                 <InfoItem
-                  title="Tình trạng"
+                  title={t("common:status")}
                   value={convert(anime.status, "status", { locale })}
                 />
                 <InfoItem
-                  title="Giới hạn tuổi"
+                  title={t("common:age_rated")}
                   value={anime.isAdult ? "18+" : ""}
                 />
 
-                {nextAiringSchedule && (
+                {hasNextAiringSchedule && (
                   <InfoItem
                     className="!text-primary-300"
-                    title="Tập tiếp theo"
-                    value={`Tập ${nextAiringSchedule.episode}: ${dayjs
-                      .unix(nextAiringSchedule.airingAt)
-                      .fromNow()}`}
+                    title={t("next_airing_schedule")}
+                    value={`${t("common:episode")} ${
+                      hasNextAiringSchedule.episode
+                    }: ${nextAiringScheduleTime}`}
                   />
                 )}
               </div>
@@ -165,22 +177,22 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
           <div className="md:col-span-2 xl:h-[max-content] space-y-4">
             <div className="bg-background-900 rounded-md p-4 space-y-4">
               <InfoItem
-                title="Định dạng"
+                title={t("common:format")}
                 value={convert(anime.format, "format", { locale })}
               />
               <InfoItem title="English" value={anime.title.english} />
               <InfoItem title="Native" value={anime.title.native} />
               <InfoItem title="Romanji" value={anime.title.romaji} />
               <InfoItem
-                title="Nổi bật"
+                title={t("common:popular")}
                 value={numberWithCommas(anime.popularity)}
               />
               <InfoItem
-                title="Yêu thích"
+                title={t("common:favourite")}
                 value={numberWithCommas(anime.favourites)}
               />
               <InfoItem
-                title="Xu hướng"
+                title={t("common:trending")}
                 value={numberWithCommas(anime.trending)}
               />
               {/* <InfoItem
@@ -188,7 +200,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                 value={anime.studios.slice(0, 3).join(", ")}
               /> */}
               <InfoItem
-                title="Mùa"
+                title={t("common:season")}
                 value={`${convert(anime.season, "season", { locale })} ${
                   anime.seasonYear
                 }`}
@@ -212,13 +224,16 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
             </div>
           </div>
           <div className="space-y-12 md:col-span-8">
-            <DetailsSection title="Tập phim" className="overflow-hidden">
+            <DetailsSection
+              title={t("episodes_section")}
+              className="overflow-hidden"
+            >
               <SourceEpisodeSelector episodes={sortedEpisodes} />
             </DetailsSection>
 
             {!!anime?.characters?.length && (
               <DetailsSection
-                title="Nhân vật"
+                title={t("characters_section")}
                 className="grid w-full grid-cols-1 gap-4 md:grid-cols-2"
               >
                 {anime.characters.map((character, index) => (
@@ -232,7 +247,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
             )}
 
             {!!anime?.relations?.length && (
-              <DetailsSection title="Anime liên quan">
+              <DetailsSection title={t("relations_section")}>
                 <List data={anime.relations.map((relation) => relation.media)}>
                   {(anime) => <Card type="anime" data={anime} />}
                 </List>
@@ -240,7 +255,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
             )}
 
             {!!anime?.recommendations?.length && (
-              <DetailsSection title="Anime hay khác">
+              <DetailsSection title={t("recommendations_section")}>
                 <List
                   data={anime.recommendations.map(
                     (recommendation) => recommendation.media
@@ -251,7 +266,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
               </DetailsSection>
             )}
 
-            <DetailsSection title="Bình luận">
+            <DetailsSection title={t("comments_section")}>
               <CommentsSection anime_id={anime.id} />
             </DetailsSection>
           </div>

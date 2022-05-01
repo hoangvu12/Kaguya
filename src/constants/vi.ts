@@ -258,6 +258,8 @@ const translations = {
   COUNTRIES,
   VISIBILITY_MODES,
   CHAT_EVENT_TYPES,
+  WATCH_STATUS,
+  READ_STATUS,
 };
 
 export default translations;
