@@ -6,6 +6,7 @@ import TextIcon from "@/components/shared/TextIcon";
 import { TraceImageResponse } from "@/hooks/useTraceImage";
 import { numberWithCommas } from "@/utils";
 import { getTitle, convert } from "@/utils/data";
+import { useTranslation } from "next-i18next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useCallback, useMemo, useState } from "react";
@@ -22,6 +23,7 @@ interface TracePanelProps {
 const TracePanel: React.FC<TracePanelProps> = ({ data, image }) => {
   const [cardIndex, setCardIndex] = useState(0);
   const { locale } = useRouter();
+  const { t } = useTranslation("trace");
 
   const handleCardClick = useCallback((index: number) => {
     setCardIndex(index);
@@ -36,13 +38,15 @@ const TracePanel: React.FC<TracePanelProps> = ({ data, image }) => {
   return (
     <div className="w-full flex flex-col md:flex-row gap-8">
       <div className="w-full md:w-[30%] space-y-4">
-        <div className="bg-background-900 p-4 space-y-2">
-          <span className="text-xl font-semibold">Ảnh của bạn</span>
-          <span className="ml-3 text-sm text-gray-300">
-            Đã tìm {numberWithCommas(data.frameCount)} ảnh.
-          </span>
+        <div className="bg-background-900 p-4">
+          <p className="text-xl font-semibold">{t("your_image")}</p>
+          <p className="text-sm text-gray-300">
+            {t("num_of_found_images", {
+              num: numberWithCommas(data.frameCount),
+            })}
+          </p>
 
-          <div>
+          <div className="mt-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={image.dataURL} alt="Search image" />
           </div>
@@ -102,23 +106,29 @@ const TracePanel: React.FC<TracePanelProps> = ({ data, image }) => {
               </div>
 
               <div className="flex space-x-8 overflow-x-auto snap-x snap-mandatory md:space-x-16">
-                <InfoItem title="Quốc gia" value={card.anime.countryOfOrigin} />
-                <InfoItem title="Số tập" value={card.anime.totalEpisodes} />
+                <InfoItem
+                  title={t("common:country")}
+                  value={card.anime.countryOfOrigin}
+                />
+                <InfoItem
+                  title={t("common:total_episodes")}
+                  value={card.anime.totalEpisodes}
+                />
 
                 {card.anime.duration && (
                   <InfoItem
-                    title="Thời lượng"
-                    value={`${card.anime.duration} phút`}
+                    title={t("common:duration")}
+                    value={`${card.anime.duration} ${t("common:minutes")}`}
                   />
                 )}
 
                 <InfoItem
-                  title="Tình trạng"
+                  title={t("common:status")}
                   value={convert(card.anime.status, "status", { locale })}
                 />
 
                 <InfoItem
-                  title="Giới hạn tuổi"
+                  title={t("common:age_rated")}
                   value={card.anime.isAdult ? "18+" : ""}
                 />
               </div>
@@ -130,7 +140,7 @@ const TracePanel: React.FC<TracePanelProps> = ({ data, image }) => {
               <Link href={`/anime/details/${card.anime.id}`}>
                 <a className="block">
                   <Button primary className="mx-auto md:mx-auto">
-                    <p>Xem ngay</p>
+                    <p>{t("common:watch_now")}</p>
                   </Button>
                 </a>
               </Link>

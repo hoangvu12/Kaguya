@@ -4,6 +4,7 @@ import Input from "@/components/shared/Input";
 import useTraceImage, { TraceImageResponse } from "@/hooks/useTraceImage";
 import { isValidUrl } from "@/utils";
 import classNames from "classnames";
+import { useTranslation } from "next-i18next";
 import React, { useState } from "react";
 import { AiOutlineCloudUpload, AiOutlineSearch } from "react-icons/ai";
 import { MdOutlineDelete, MdOutlineRestartAlt } from "react-icons/md";
@@ -21,6 +22,7 @@ const TraceImageSearch: React.FC<TraceImageSearchProps> = ({
 }) => {
   const [image, setImage] = useState<ImageType>(null);
   const [inputValue, setInputValue] = useState(null);
+  const { t } = useTranslation("trace");
 
   const handleSearch = () => {
     onSearch?.(image);
@@ -35,9 +37,9 @@ const TraceImageSearch: React.FC<TraceImageSearchProps> = ({
     >
       {({ dragProps, onImageUpload, isDragging, imageList, onImageRemove }) => (
         <div className="w-full md:w-[600px] rounded-lg p-8 text-center bg-background-900">
-          <h1 className="text-2xl font-semibold">Tải lên ảnh của bạn</h1>
+          <h1 className="text-2xl font-semibold">{t("upload_image")}</h1>
           <h2 className="text-lg text-gray-300">
-            Hỗ trợ PNG, JPG. (Nên dùng 640 x 360)
+            {t("upload_supported_extensions")}
           </h2>
 
           {imageList[0]?.dataURL ? (
@@ -64,7 +66,7 @@ const TraceImageSearch: React.FC<TraceImageSearchProps> = ({
                   LeftIcon={MdOutlineRestartAlt}
                   onClick={onImageUpload}
                 >
-                  <p>Ảnh khác</p>
+                  <p>{t("upload_another_image")}</p>
                 </Button>
 
                 <Button
@@ -72,7 +74,7 @@ const TraceImageSearch: React.FC<TraceImageSearchProps> = ({
                   LeftIcon={AiOutlineSearch}
                   onClick={handleSearch}
                 >
-                  <p>Tìm kiếm</p>
+                  <p>{t("common:search")}</p>
                 </Button>
               </div>
             </div>
@@ -87,16 +89,14 @@ const TraceImageSearch: React.FC<TraceImageSearchProps> = ({
               <AiOutlineCloudUpload className="text-gray-300 w-24 h-24" />
 
               <p className="text-gray-300">
-                Kéo và thả hoặc{" "}
+                {t("drag_and_drop")} {t("common:or")}{" "}
                 <button
                   className="text-primary-300 hover:underline"
                   onClick={onImageUpload}
                 >
-                  chọn ảnh từ máy
+                  {t("browse_files")}
                 </button>{" "}
               </p>
-
-              <p className="mt-1 text-gray-300">hay</p>
 
               <div className="mt-1 flex items-center space-x-2">
                 <Input
@@ -112,7 +112,7 @@ const TraceImageSearch: React.FC<TraceImageSearchProps> = ({
                   primary
                   onClick={() => {
                     if (!isValidUrl(inputValue)) {
-                      return toast.error("URL không hợp lệ!");
+                      return toast.error(t("invalid_url"));
                     }
 
                     setImage({
@@ -120,7 +120,7 @@ const TraceImageSearch: React.FC<TraceImageSearchProps> = ({
                     });
                   }}
                 >
-                  <p>Tải lên</p>
+                  <p>{t("upload")}</p>
                 </Button>
               </div>
             </div>

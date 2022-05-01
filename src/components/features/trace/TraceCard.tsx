@@ -2,6 +2,7 @@ import { TraceImageResult } from "@/hooks/useTraceImage";
 import { parseTime } from "@/utils";
 import { getTitle } from "@/utils/data";
 import classNames from "classnames";
+import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -17,6 +18,7 @@ const TraceCard: React.FC<TraceCardProps> = ({
   ...props
 }) => {
   const { locale } = useRouter();
+  const { t } = useTranslation("trace");
 
   return (
     <div
@@ -31,13 +33,20 @@ const TraceCard: React.FC<TraceCardProps> = ({
 
       <div className="grid grid-cols-10">
         <div className="col-span-5 flex flex-col justify-between">
-          <p>Tập {data.episode}</p>
+          <p>
+            {t("common:episode")} {data.episode}
+          </p>
 
           <p>
             {parseTime(data.from)} - {parseTime(data.to)}
           </p>
 
-          <p>~{(data.similarity * 100).toFixed(2)}% chính xác</p>
+          {/* <p>~{(data.similarity * 100).toFixed(2)}% chính xác</p> */}
+          <p>
+            {t("percent_similarity", {
+              percent: (data.similarity * 100).toFixed(2),
+            })}
+          </p>
         </div>
         <div className="col-span-5">
           <video
