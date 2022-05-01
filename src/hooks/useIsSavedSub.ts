@@ -17,7 +17,7 @@ const useIsSavedSub = () => {
         .from("kaguya_subscriptions")
         .select("userId")
         .eq("userId", user.id)
-        .eq("userAgent", decodeURIComponent(userAgent))
+        .eq("userAgent", encodeURIComponent(userAgent))
         .limit(1)
         .single();
 
