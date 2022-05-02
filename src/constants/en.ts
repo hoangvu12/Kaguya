@@ -251,6 +251,18 @@ export const GENDERS = {
   female: "Female",
 };
 
+export const EMOJI_GROUP = {
+  smileys_people: "Smileys & People",
+  animals_nature: "Animals & Nature",
+  food_drink: "Food & Drink",
+  travel_places: "Travel & Places",
+  activities: "Activities",
+  objects: "Objects",
+  symbols: "Symbols",
+  flags: "Flags",
+  recently_used: "Recently used",
+};
+
 const translations = {
   SEASONS,
   FORMATS,
@@ -266,6 +278,7 @@ const translations = {
   WATCH_STATUS,
   READ_STATUS,
   GENDERS,
+  EMOJI_GROUP,
 };
 
 export default translations;

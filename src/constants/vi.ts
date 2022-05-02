@@ -251,6 +251,18 @@ export const GENDERS = {
   female: "Nữ",
 };
 
+export const EMOJI_GROUP = {
+  smileys_people: "Cảm xúc",
+  animals_nature: "Động vật và thiên nhiên",
+  food_drink: "Thức ăn",
+  travel_places: "Du lịch",
+  activities: "Hoạt động",
+  objects: "Vật thể",
+  symbols: "Biểu tượng",
+  flags: "Cờ",
+  recently_used: "Gần đây",
+};
+
 const translations = {
   SEASONS,
   FORMATS,
@@ -266,6 +278,7 @@ const translations = {
   WATCH_STATUS,
   READ_STATUS,
   GENDERS,
+  EMOJI_GROUP,
 };
 
 export default translations;

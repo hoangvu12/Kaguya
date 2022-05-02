@@ -22,35 +22,33 @@ type TranslationKeys = [
   "CHAT_EVENT_TYPES",
   "READ_STATUS",
   "WATCH_STATUS",
-  "GENDERS"
+  "GENDERS",
+  "EMOJI_GROUP"
 ];
 type Translation = Record<TranslationKeys[number], Translate[]>;
 
-export const getConstantTranslation = (locale: string): Translation => {
+export const getConstantTranslation = (locale: string) => {
   switch (locale) {
     case "vi":
-      // @ts-ignore
       return viTranslations;
     case "en":
-      // @ts-ignore
       return enTranslations;
     default:
-      // @ts-ignore
       return enTranslations;
   }
 };
 
 const composeTranslation = (translation: Translation) => {
   return {
-    season: translation.SEASONS,
-    format: translation.FORMATS,
-    status: translation.STATUS,
-    genre: translation.GENRES,
-    characterRole: translation.CHARACTERS_ROLES,
-    animeSort: translation.ANIME_SORTS,
-    mangaSort: translation.MANGA_SORTS,
-    type: translation.TYPES,
-    country: translation.COUNTRIES,
+    season: translation.SEASONS as Translate[],
+    format: translation.FORMATS as Translate[],
+    status: translation.STATUS as Translate[],
+    genre: translation.GENRES as Translate[],
+    characterRole: translation.CHARACTERS_ROLES as Translate[],
+    animeSort: translation.ANIME_SORTS as Translate[],
+    mangaSort: translation.MANGA_SORTS as Translate[],
+    type: translation.TYPES as Translate[],
+    country: translation.COUNTRIES as Translate[],
   };
 };
 
@@ -78,6 +76,7 @@ export const convert = (
 ) => {
   const { locale, reverse } = options;
 
+  // @ts-ignore
   const constants = composeTranslation(getConstantTranslation(locale));
 
   const constant = constants[type];

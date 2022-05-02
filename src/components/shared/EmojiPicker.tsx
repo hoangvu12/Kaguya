@@ -4,20 +4,9 @@ import React, { useState } from "react";
 import { usePopper } from "react-popper";
 import Portal from "@/components/shared/Portal";
 import dynamic from "next/dynamic";
+import useConstantTranslation from "@/hooks/useConstantTranslation";
 
 const Picker = dynamic(() => import("emoji-picker-react"), { ssr: false });
-
-const groupNames = {
-  smileys_people: "Cảm xúc",
-  animals_nature: "Động vật và thiên nhiên",
-  food_drink: "Thức ăn",
-  travel_places: "Du lịch",
-  activities: "Hoạt động",
-  objects: "Vật thể",
-  symbols: "Biểu tượng",
-  flags: "Cờ",
-  recently_used: "Gần đây",
-};
 
 interface EmojiPickerProps extends IEmojiPickerProps {
   reference: React.ReactNode;
@@ -32,6 +21,7 @@ const EmojiPicker: React.FC<EmojiPickerProps> = ({
   ...props
 }) => {
   const [showPicker, setShowPicker] = useState(false);
+  const { EMOJI_GROUP } = useConstantTranslation();
   const [referenceElement, setReferenceElement] = useState(null);
   const [popperElement, setPopperElement] = useState(null);
   const { styles, attributes } = usePopper(referenceElement, popperElement, {
@@ -77,7 +67,7 @@ const EmojiPicker: React.FC<EmojiPickerProps> = ({
             style={styles.popper}
             {...attributes.popper}
           >
-            <Picker {...props} groupNames={groupNames} />
+            <Picker {...props} groupNames={EMOJI_GROUP} />
           </div>
         </Portal>
       )}
