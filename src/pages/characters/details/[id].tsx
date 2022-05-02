@@ -6,6 +6,7 @@ import List from "@/components/shared/List";
 import PlainCard from "@/components/shared/PlainCard";
 import TextIcon from "@/components/shared/TextIcon";
 import { REVALIDATE_TIME } from "@/constants";
+import useConstantTranslation from "@/hooks/useConstantTranslation";
 import dayjs from "@/lib/dayjs";
 import supabase from "@/lib/supabase";
 import {
@@ -18,14 +19,10 @@ import {
 } from "@/types";
 import { isFalsy, numberWithCommas } from "@/utils";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import { useTranslation } from "next-i18next";
 import React, { useMemo } from "react";
 import { AiFillHeart } from "react-icons/ai";
 import { BiCake } from "react-icons/bi";
-
-const genders = {
-  male: "Nam",
-  female: "Nữ",
-};
 
 const KeyValue: React.FC<{ property: string; value: string }> = ({
   property,
@@ -49,9 +46,12 @@ interface DetailsPageProps {
 }
 
 const DetailsPage: NextPage<DetailsPageProps> = ({ character }) => {
+  const { t } = useTranslation("character_details");
+  const { GENDERS } = useConstantTranslation();
+
   const gender = useMemo(
-    () => genders[character.gender?.toLowerCase()] || character.gender,
-    [character.gender]
+    () => GENDERS[character.gender?.toLowerCase()] || character.gender,
+    [GENDERS, character.gender]
   );
 
   const birthday = useMemo(() => {
@@ -122,15 +122,15 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ character }) => {
 
                 {isBirthday && (
                   <TextIcon iconClassName="text-primary-300" LeftIcon={BiCake}>
-                    <p>Sinh nhật</p>
+                    <p>{t("is_today_birthday")}</p>
                   </TextIcon>
                 )}
               </div>
 
               <div className="space-y-4">
-                <KeyValue property="Giới tính" value={gender} />
-                <KeyValue property="Ngày sinh" value={birthday} />
-                <KeyValue property="Tuổi" value={character.age} />
+                <KeyValue property={t("gender")} value={gender} />
+                <KeyValue property={t("birthday")} value={birthday} />
+                <KeyValue property={t("age")} value={character.age} />
               </div>
             </div>
           </div>
@@ -138,7 +138,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ character }) => {
 
         <div className="px-4 sm:px-12 space-y-8">
           {!!character.voiceActorConnections?.length && (
-            <DetailsSection title="Seiyuu">
+            <DetailsSection title={t("voice_actors_section")}>
               <List
                 data={character.voiceActorConnections.map(
                   (connection) => connection.voiceActor
@@ -150,7 +150,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ character }) => {
           )}
 
           {!!character.animeConnections?.length && (
-            <DetailsSection title="Anime">
+            <DetailsSection title={t("anime_section")}>
               <List
                 data={character.animeConnections.map(
                   (connection) => connection.media
@@ -162,7 +162,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ character }) => {
           )}
 
           {!!character.mangaConnections?.length && (
-            <DetailsSection title="Manga">
+            <DetailsSection title={t("manga_section")}>
               <List
                 data={character.mangaConnections.map(
                   (connection) => connection.media

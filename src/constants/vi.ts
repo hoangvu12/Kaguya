@@ -246,6 +246,11 @@ const CHAT_EVENT_TYPES = {
   changeEpisode: "đã chuyển tập",
 };
 
+export const GENDERS = {
+  male: "Nam",
+  female: "Nữ",
+};
+
 const translations = {
   SEASONS,
   FORMATS,
@@ -260,6 +265,7 @@ const translations = {
   CHAT_EVENT_TYPES,
   WATCH_STATUS,
   READ_STATUS,
+  GENDERS,
 };
 
 export default translations;

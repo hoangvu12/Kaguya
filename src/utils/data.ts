@@ -21,7 +21,8 @@ type TranslationKeys = [
   "VISIBILITY_MODES",
   "CHAT_EVENT_TYPES",
   "READ_STATUS",
-  "WATCH_STATUS"
+  "WATCH_STATUS",
+  "GENDERS"
 ];
 type Translation = Record<TranslationKeys[number], Translate[]>;
 

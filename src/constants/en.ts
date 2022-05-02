@@ -246,6 +246,11 @@ export const CHAT_EVENT_TYPES = {
   changeEpisode: "has changed episode",
 };
 
+export const GENDERS = {
+  male: "Male",
+  female: "Female",
+};
+
 const translations = {
   SEASONS,
   FORMATS,
@@ -260,6 +265,7 @@ const translations = {
   CHAT_EVENT_TYPES,
   WATCH_STATUS,
   READ_STATUS,
+  GENDERS,
 };
 
 export default translations;
