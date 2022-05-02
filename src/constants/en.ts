@@ -3,7 +3,7 @@ export const SEASONS = [
   { value: "SPRING", label: "Spring" },
   { value: "SUMMER", label: "Summer" },
   { value: "FALL", label: "Fall" },
-] as const;
+];
 
 export const STATUS = [
   { value: "FINISHED", label: "Finished" },
@@ -11,7 +11,7 @@ export const STATUS = [
   { value: "NOT_YET_RELEASED", label: "Not yet released" },
   { value: "CANCELLED", label: "Cancelled" },
   { value: "HIATUS", label: "Hiatus" },
-] as const;
+];
 
 export const FORMATS = [
   { value: "TV", label: "TV" },
@@ -22,7 +22,7 @@ export const FORMATS = [
   { value: "ONA", label: "ONA" },
   { value: "MUSIC", label: "Music" },
   { value: "MANGA", label: "Manga" },
-] as const;
+];
 
 export const ANIME_SORTS = [
   { value: "popularity", label: "Popularity" },
@@ -30,7 +30,7 @@ export const ANIME_SORTS = [
   { value: "favourites", label: "Favourites" },
   { value: "averageScore", label: "Average Score" },
   { value: "episodeUpdatedAt", label: "Latest Episode" },
-] as const;
+];
 
 export const MANGA_SORTS = [
   { value: "popularity", label: "Popularity" },
@@ -38,7 +38,7 @@ export const MANGA_SORTS = [
   { value: "favourites", label: "Favourites" },
   { value: "averageScore", label: "Average Score" },
   { value: "chapterUpdatedAt", label: "Latest Episode" },
-] as const;
+];
 
 export const GENRES = [
   {
@@ -155,7 +155,7 @@ export const GENRES = [
     thumbnail:
       "https://s4.anilist.co/file/anilistcdn/media/anime/banner/100388-CR4PUEz1Nzsl.jpg",
   },
-] as const;
+];
 
 export const TYPES = [
   {
@@ -174,7 +174,7 @@ export const TYPES = [
     value: "voice_actors",
     label: "Voice actors",
   },
-] as const;
+];
 
 export const COUNTRIES = [
   {
@@ -189,13 +189,13 @@ export const COUNTRIES = [
     value: "KR",
     label: "Korea",
   },
-] as const;
+];
 
 export const CHARACTERS_ROLES = [
   { value: "MAIN", label: "Main" },
   { value: "SUPPORTING", label: "Supporting" },
   { value: "BACKGROUND", label: "Background" },
-] as const;
+];
 
 export const WATCH_STATUS = [
   {
@@ -210,7 +210,7 @@ export const WATCH_STATUS = [
     value: "COMPLETED",
     label: "Completed",
   },
-] as const;
+];
 
 export const READ_STATUS = [
   {
@@ -225,7 +225,7 @@ export const READ_STATUS = [
     value: "COMPLETED",
     label: "Completed",
   },
-] as const;
+];
 
 export const VISIBILITY_MODES = [
   {

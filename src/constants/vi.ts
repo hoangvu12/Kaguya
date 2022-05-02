@@ -3,7 +3,7 @@ export const SEASONS = [
   { value: "SPRING", label: "Mùa xuân" },
   { value: "SUMMER", label: "Mùa hạ" },
   { value: "FALL", label: "Mùa thu" },
-] as const;
+];
 
 export const STATUS = [
   { value: "FINISHED", label: "Hoàn thành" },
@@ -11,7 +11,7 @@ export const STATUS = [
   { value: "NOT_YET_RELEASED", label: "Sắp chiếu" },
   { value: "CANCELLED", label: "Đã hủy bỏ" },
   { value: "HIATUS", label: "Tạm hoãn" },
-] as const;
+];
 
 export const FORMATS = [
   { value: "TV", label: "TV" },
@@ -22,7 +22,7 @@ export const FORMATS = [
   { value: "ONA", label: "ONA" },
   { value: "MUSIC", label: "Music" },
   { value: "MANGA", label: "Manga" },
-] as const;
+];
 
 export const ANIME_SORTS = [
   { value: "popularity", label: "Nổi bật" },
@@ -30,7 +30,7 @@ export const ANIME_SORTS = [
   { value: "favourites", label: "Yêu thích" },
   { value: "averageScore", label: "Đánh giá" },
   { value: "episodeUpdatedAt", label: "Mới cập nhật" },
-] as const;
+];
 
 export const MANGA_SORTS = [
   { value: "popularity", label: "Nổi bật" },
@@ -38,7 +38,7 @@ export const MANGA_SORTS = [
   { value: "favourites", label: "Yêu thích" },
   { value: "averageScore", label: "Đánh giá" },
   { value: "chapterUpdatedAt", label: "Mới cập nhật" },
-] as const;
+];
 
 export const GENRES = [
   {
@@ -155,7 +155,7 @@ export const GENRES = [
     thumbnail:
       "https://s4.anilist.co/file/anilistcdn/media/anime/banner/100388-CR4PUEz1Nzsl.jpg",
   },
-] as const;
+];
 
 export const TYPES = [
   {
@@ -174,7 +174,7 @@ export const TYPES = [
     value: "voice_actors",
     label: "Người lồng tiếng",
   },
-] as const;
+];
 
 export const COUNTRIES = [
   {
@@ -189,13 +189,13 @@ export const COUNTRIES = [
     value: "KR",
     label: "Hàn Quốc",
   },
-] as const;
+];
 
 export const CHARACTERS_ROLES = [
   { value: "MAIN", label: "Nhân vật chính" },
   { value: "SUPPORTING", label: "Nhân vật phụ" },
   { value: "BACKGROUND", label: "Nhân vật nền" },
-] as const;
+];
 
 export const WATCH_STATUS = [
   {
@@ -210,7 +210,7 @@ export const WATCH_STATUS = [
     value: "COMPLETED",
     label: "Đã xem",
   },
-] as const;
+];
 
 export const READ_STATUS = [
   {
@@ -225,7 +225,7 @@ export const READ_STATUS = [
     value: "COMPLETED",
     label: "Đã đọc",
   },
-] as const;
+];
 
 export const VISIBILITY_MODES = [
   {

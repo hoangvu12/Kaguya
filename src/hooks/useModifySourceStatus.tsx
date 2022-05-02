@@ -16,7 +16,7 @@ const useModifySourceStatus = <T extends "anime" | "manga">(
 ) => {
   const { WATCH_STATUS, READ_STATUS } = useConstantTranslation();
 
-  type StatusInput<T> = T extends "anime"
+  type StatusInput = T extends "anime"
     ? typeof WATCH_STATUS[number]["value"]
     : typeof READ_STATUS[number]["value"];
 
@@ -30,7 +30,7 @@ const useModifySourceStatus = <T extends "anime" | "manga">(
     type === "anime" ? "kaguya_watch_status" : "kaguya_read_status";
   const queryKey = [tableName, source.id];
 
-  return useMutation<any, PostgrestError, StatusInput<T>, any>(
+  return useMutation<any, PostgrestError, StatusInput, any>(
     async (status) => {
       const upsertValue = {
         status,
@@ -51,7 +51,10 @@ const useModifySourceStatus = <T extends "anime" | "manga">(
       onMutate: (status) => {
         const oldStatus = queryClient.getQueryData<SourceStatus<T>>(queryKey);
 
-        queryClient.setQueryData(queryKey, { ...oldStatus, status });
+        queryClient.setQueryData(queryKey, {
+          ...oldStatus,
+          status,
+        });
       },
       onSuccess: (_, status) => {
         const { label } =

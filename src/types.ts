@@ -330,8 +330,8 @@ export type CallbackSetter<T> = (handler: T) => void;
 
 export type Noop = () => void;
 
-export type WatchStatus = any;
-export type ReadStatus = any;
+export type WatchStatus = "WATCHING" | "COMPLETED" | "PLANNING";
+export type ReadStatus = "READING" | "COMPLETED" | "PLANNING";
 
 export type SourceStatus<T> = (T extends "anime"
   ? {
