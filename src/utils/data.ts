@@ -100,10 +100,7 @@ export const getTitle = <T extends Media<Anime> | Media<Manga>>(
 ) => {
   if (locale === "en") return data?.title.userPreferred;
 
-  const title =
-    typeof data?.title === "string" ? data?.title : data?.title.userPreferred;
-
-  return data?.vietnameseTitle || title;
+  return data?.vietnameseTitle || data?.title.userPreferred;
 };
 
 export const sortMediaUnit = <T extends Chapter | Episode>(data: T[]) => {

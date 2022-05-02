@@ -20,6 +20,7 @@ import { Manga } from "@/types";
 import { numberWithCommas, vietnameseSlug } from "@/utils";
 import { convert, getTitle } from "@/utils/data";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import { useTranslation } from "next-i18next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
@@ -32,6 +33,7 @@ interface DetailsPageProps {
 const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
   const user = useUser();
   const { locale } = useRouter();
+  const { t } = useTranslation("manga_details");
 
   const title = useMemo(() => getTitle(manga, locale), [manga, locale]);
 
@@ -64,7 +66,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
                 <Link href={`/manga/read/${manga.id}`}>
                   <a>
                     <Button primary LeftIcon={BsFillPlayFill} className="mb-4">
-                      <p>Đọc ngay</p>
+                      <p>{t("read_now")}</p>
                     </Button>
                   </a>
                 </Link>
@@ -80,20 +82,28 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
                 </DotList>
 
                 <p className="mt-4 text-gray-300 mb-8">
-                  {manga.description || "Đang cập nhật"}
+                  {manga.description || t("common:updating")}
                 </p>
               </div>
 
               <div className="flex overflow-x-auto md:scroll-bar snap-x space-x-8 md:space-x-16">
-                <InfoItem title="Quốc gia" value={manga.countryOfOrigin} />
+                <InfoItem
+                  title={t("common:country")}
+                  value={manga.countryOfOrigin}
+                />
 
                 <InfoItem
-                  title="Tình trạng"
+                  title={t("common:status")}
                   value={convert(manga.status, "status", { locale })}
                 />
 
                 <InfoItem
-                  title="Giới hạn tuổi"
+                  title={t("total_chapters")}
+                  value={manga.totalChapters}
+                />
+
+                <InfoItem
+                  title={t("common:age_rated")}
                   value={manga.isAdult ? "18+" : ""}
                 />
               </div>
@@ -104,17 +114,25 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
         <div className="space-y-8 md:space-y-0 px-4 md:grid md:grid-cols-10 w-full min-h-screen mt-8 sm:px-12 gap-8">
           <div className="md:col-span-2 h-[max-content] space-y-4">
             <div className="bg-background-900 rounded-md p-4 space-y-4">
+              <InfoItem title="English" value={manga.title.english} />
+              <InfoItem title="Native" value={manga.title.native} />
+              <InfoItem title="Romanji" value={manga.title.romaji} />
               <InfoItem
-                title="Nổi bật"
+                title={t("common:popular")}
                 value={numberWithCommas(manga.popularity)}
               />
               <InfoItem
-                title="Yêu thích"
+                title={t("common:favourite")}
                 value={numberWithCommas(manga.favourites)}
               />
               <InfoItem
-                title="Xu hướng"
+                title={t("common:trending")}
                 value={numberWithCommas(manga.trending)}
+              />
+
+              <InfoItem
+                title={t("common:synonyms")}
+                value={manga.synonyms.join("\n")}
               />
             </div>
 
@@ -136,13 +154,13 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
           </div>
 
           <div className="md:col-span-8 space-y-12">
-            <DetailsSection title="Chapter" className="relative">
+            <DetailsSection title={t("chapters_section")} className="relative">
               <ChapterSelector manga={manga} />
             </DetailsSection>
 
             {!!manga?.characters?.length && (
               <DetailsSection
-                title="Nhân vật"
+                title={t("characters_section")}
                 className="w-full grid md:grid-cols-2 grid-cols-1 gap-4"
               >
                 {manga.characters.map((character, index) => (
@@ -156,7 +174,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
             )}
 
             {!!manga?.relations?.length && (
-              <DetailsSection title="Manga liên quan">
+              <DetailsSection title={t("relations_section")}>
                 <List data={manga.relations.map((relation) => relation.media)}>
                   {(manga) => <Card type="manga" data={manga} />}
                 </List>
@@ -164,7 +182,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
             )}
 
             {!!manga?.recommendations?.length && (
-              <DetailsSection title="Manga hay khác">
+              <DetailsSection title={t("recommendations_section")}>
                 <List
                   data={manga.recommendations.map(
                     (recommendation) => recommendation.media
@@ -175,7 +193,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
               </DetailsSection>
             )}
 
-            <DetailsSection title="Bình luận">
+            <DetailsSection title={t("comments_section")}>
               <CommentsSection manga_id={manga.id} />
             </DetailsSection>
           </div>

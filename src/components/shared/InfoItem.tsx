@@ -11,7 +11,7 @@ const InfoItem: React.FC<InfoItemProps> = ({ title, value, className }) => {
   return value ? (
     <div className={classNames("text-gray-400", className)}>
       <p className="font-semibold">{title}</p>
-      <p>{value}</p>
+      <p className="whitespace-pre-line">{value}</p>
     </div>
   ) : null;
 };
