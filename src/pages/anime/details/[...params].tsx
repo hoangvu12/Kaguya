@@ -291,8 +291,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
   const { data } = await supabase
     .from<Anime>("kaguya_anime")
     .select("id")
-    .order("updated_at", { ascending: false })
-    .limit(20);
+    .order("trending", { ascending: false })
+    .limit(5);
 
   const paths = data.map((anime: Anime) => ({
     params: { params: [anime.id.toString()] },
