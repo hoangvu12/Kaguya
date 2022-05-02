@@ -28,6 +28,7 @@ import {
   CgArrowLeft,
 } from "react-icons/cg";
 import { HiOutlineArrowsExpand } from "react-icons/hi";
+import { useTranslation } from "next-i18next";
 
 const sidebarVariants: Variants = {
   initial: {
@@ -56,6 +57,7 @@ const Sidebar = () => {
   const { manga, currentChapter, chapters, currentChapterIndex, setChapter } =
     useReadInfo();
   const { fitMode, setSetting, direction } = useReadSettings();
+  const { t } = useTranslation("manga_read");
 
   const [filterText, setFilterText] = useState("");
   const [activeSource, setActiveSource] = useState(
@@ -150,7 +152,7 @@ const Sidebar = () => {
           <ButtonTooltip
             tooltip={
               <p>
-                Chapter trước <Kbd className="ml-2">[</Kbd>
+                {t("previous_chapter")} <Kbd className="ml-2">[</Kbd>
               </p>
             }
             LeftIcon={BiChevronLeft}
@@ -192,7 +194,7 @@ const Sidebar = () => {
           <ButtonTooltip
             tooltip={
               <p>
-                Chapter tiếp <Kbd className="ml-2">]</Kbd>
+                {t("next_chapter")} <Kbd className="ml-2">]</Kbd>
               </p>
             }
             LeftIcon={BiChevronRight}
@@ -209,7 +211,7 @@ const Sidebar = () => {
           <ButtonTooltip
             tooltip={
               <p>
-                Chế độ ảnh <Kbd className="ml-2">F</Kbd>
+                {t("fit_mode")} <Kbd className="ml-2">F</Kbd>
               </p>
             }
             LeftIcon={
@@ -232,7 +234,7 @@ const Sidebar = () => {
           <ButtonTooltip
             tooltip={
               <p>
-                Hướng đọc <Kbd className="ml-2">D</Kbd>
+                {t("layout_direction")} <Kbd className="ml-2">D</Kbd>
               </p>
             }
             LeftIcon={
@@ -260,7 +262,7 @@ const Sidebar = () => {
             className="w-full h-6 !bg-background-700"
             containerClassName="!bg-background-700"
             containerInputClassName="!bg-background-700"
-            placeholder="Nhập chapter muốn tìm"
+            placeholder={t("search_chapter_placeholder")}
             onChange={(e) =>
               setFilterText((e.target as HTMLInputElement).value)
             }
@@ -296,7 +298,7 @@ const Sidebar = () => {
 
                 {chapter.sourceChapterId === currentChapter.sourceChapterId && (
                   <p className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-primary-500 rounded-md">
-                    Đang đọc
+                    {t("reading")}
                   </p>
                 )}
               </li>
