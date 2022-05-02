@@ -207,6 +207,10 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                   anime.seasonYear
                 }`}
               />
+              <InfoItem
+                title={t("common:synonyms")}
+                value={anime.synonyms.join("\n")}
+              />
             </div>
 
             <div className="space-y-2 text-gray-400">
