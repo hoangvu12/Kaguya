@@ -4,6 +4,7 @@ import { AiFillFacebook } from "react-icons/ai";
 import { FaDiscord } from "react-icons/fa";
 import Logo from "@/components/shared/Logo";
 import NextLink, { LinkProps } from "next/link";
+import { useTranslation } from "next-i18next";
 
 interface FooterItemProps {
   Icon: React.ComponentType<any>;
@@ -11,6 +12,8 @@ interface FooterItemProps {
 }
 
 const Footer = () => {
+  const { t } = useTranslation("footer");
+
   return (
     <div className="w-full flex flex-col items-center justify-center px-4 md:px-12 py-16 space-y-4">
       <Logo className="!mb-0" />
@@ -22,22 +25,19 @@ const Footer = () => {
 
       <div className="flex items-center space-x-8 text-center">
         <Link href="/tos">
-          <p className="text-lg">Điều khoản dịch vụ</p>
+          <p className="text-lg">{t("term_of_services")}</p>
         </Link>
 
         <Link href="/dmca">
-          <p className="text-lg">DMCA</p>
+          <p className="text-lg">{t("dmca")}</p>
         </Link>
 
         <Link href="/contact">
-          <p className="text-lg">Liên hệ</p>
+          <p className="text-lg">{t("contact")}</p>
         </Link>
       </div>
 
-      <p className="text-sm text-gray-300 text-center">
-        Kaguya không lưu trữ bất kì tệp tin nào trên máy chủ, chúng tôi chỉ liên
-        kết tới những phương tiện truyền thông được lưu trữ bên dịch vụ thứ 3.
-      </p>
+      <p className="text-sm text-gray-300 text-center">{t("disclaimer")}</p>
 
       <p className="text-sm text-gray-300 text-center">© Kaguya.live</p>
     </div>
