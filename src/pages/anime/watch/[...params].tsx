@@ -32,6 +32,7 @@ import React, {
 import { BrowserView, MobileView } from "react-device-detect";
 import { BsArrowLeft } from "react-icons/bs";
 import Video from "@/components/features/anime/Player";
+import { useTranslation } from "next-i18next";
 
 interface WatchPageProps {
   anime: Anime;
@@ -54,6 +55,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   const showInfoTimeout = useRef<NodeJS.Timeout>(null);
   const saveWatchedInterval = useRef<NodeJS.Timer>(null);
   const saveWatchedMutation = useSaveWatched();
+  const { t } = useTranslation("anime_watch");
 
   useEventListener("visibilitychange", () => {
     if (isMobile) return;
@@ -364,7 +366,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
             onMouseMove={() => setShowInfoOverlay(false)}
           >
             <div className="w-11/12 px-40">
-              <p className="mb-2 text-xl text-gray-200">Bạn đang xem</p>
+              <p className="mb-2 text-xl text-gray-200">{t("blur_heading")}</p>
               <p className="mb-8 text-5xl font-semibold">
                 {title} - {currentEpisode.name}
               </p>
@@ -386,12 +388,14 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
 
           <div className="fixed left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 z-50 w-2/3 p-8 rounded-md bg-background-900">
             <h1 className="text-4xl font-bold mb-4">
-              Xem {watchedEpisode.name}
+              {t("rewatch_heading", { episodeName: watchedEpisode.name })}
             </h1>
             <p className="">
-              Hệ thống ghi nhận bạn đã xem {watchedEpisode.name}.
+              {t("rewatch_description", { episodeName: watchedEpisode.name })}
             </p>
-            <p className="mb-4">Bạn có muốn xem {watchedEpisode.name} không?</p>
+            <p className="mb-4">
+              {t("rewatch_question", { episodeName: watchedEpisode.name })}
+            </p>
             <div className="flex items-center justify-end space-x-4">
               <Button
                 onClick={() => {
@@ -399,13 +403,13 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
                 }}
                 className="!bg-transparent hover:!bg-white/20 transition duration-300"
               >
-                <p>Không</p>
+                <p>{t("rewatch_no")}</p>
               </Button>
               <Button
                 onClick={handleNavigateEpisode(watchedEpisodeData?.episode)}
                 primary
               >
-                <p>Xem</p>
+                <p>{t("rewatch_yes")}</p>
               </Button>
             </div>
           </div>
