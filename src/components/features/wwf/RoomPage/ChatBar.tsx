@@ -1,9 +1,10 @@
 import CommentInput from "@/components/features/comment/CommentInput";
 import CircleButton from "@/components/shared/CircleButton";
+import TransLink from "@/components/shared/TransLink";
 import { useRoomInfo } from "@/contexts/RoomContext";
 import { useRoomState } from "@/contexts/RoomStateContext";
 import { Chat as ChatType, ChatEvent, ChatMessage } from "@/types";
-import { useTranslation } from "next-i18next";
+import { Trans, useTranslation } from "next-i18next";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { MobileView } from "react-device-detect";
 import { AiOutlineClose } from "react-icons/ai";
@@ -69,7 +70,18 @@ const ChatBar = () => {
         <CommentInput
           placeholder="Aa"
           needLoginMessage={
-            <p className="text-gray-300">{t("chat_bar_need_login")}</p>
+            <p className="text-gray-300">
+              <Trans i18nKey="wwf:chat_bar_need_login">
+                Bạn phải{" "}
+                <TransLink
+                  href="/login"
+                  className="text-primary-300 hover:underline"
+                >
+                  đăng nhập
+                </TransLink>{" "}
+                dể nhắn tin.
+              </Trans>
+            </p>
           }
           showAvatar={false}
           onEnter={handleSendMessage}
