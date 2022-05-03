@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { AiFillHeart, AiFillPlayCircle } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
+import Description from "./Description";
 
 interface ShouldWatchProps<T> {
   data: T extends "anime" ? Anime : Manga;
@@ -85,9 +86,10 @@ const ShouldWatch = <T extends "anime" | "manga">({
             </div>
           </div>
           <div className="h-full w-full">
-            <p className="text-base text-gray-300 line-clamp-4">
-              {description}
-            </p>
+            <Description
+              description={description}
+              className="text-base text-gray-300 line-clamp-4"
+            />
           </div>
         </div>
       </a>

@@ -1,5 +1,6 @@
 import SourceEpisodeSelector from "@/components/features/anime/SourceEpisodeSelector";
 import Button from "@/components/shared/Button";
+import Description from "@/components/shared/Description";
 import DotList from "@/components/shared/DotList";
 import Head from "@/components/shared/Head";
 import Input from "@/components/shared/Input";
@@ -13,7 +14,7 @@ import useCreateRoom from "@/hooks/useCreateRoom";
 import useDevice from "@/hooks/useDevice";
 import supabase from "@/lib/supabase";
 import { Anime, Episode } from "@/types";
-import { convert, getTitle, sortMediaUnit } from "@/utils/data";
+import { convert, getDescription, getTitle, sortMediaUnit } from "@/utils/data";
 import classNames from "classnames";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
@@ -61,6 +62,10 @@ const CreateRoomPage: NextPage<CreateRoomPageProps> = ({ media }) => {
   );
 
   const mediaTitle = useMemo(() => getTitle(media, locale), [media, locale]);
+  const mediaDescription = useMemo(
+    () => getDescription(media, locale),
+    [media, locale]
+  );
 
   const handleInputChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,7 +110,10 @@ const CreateRoomPage: NextPage<CreateRoomPageProps> = ({ media }) => {
             ))}
           </DotList>
 
-          <p className="mt-4 line-clamp-6 text-gray-300">{media.description}</p>
+          <Description
+            description={mediaDescription || t("common:updating") + "..."}
+            className="mt-4 line-clamp-6 text-gray-300"
+          />
         </div>
         <div className="flex flex-col justify-between md:w-2/3 bg-background-900 p-4 md:p-8 space-y-4">
           <div className="space-y-8">

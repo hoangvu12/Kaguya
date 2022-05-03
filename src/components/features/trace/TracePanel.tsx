@@ -14,6 +14,7 @@ import { AiFillHeart } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
 import { ImageType } from "react-images-uploading";
 import TraceCard from "./TraceCard";
+import Description from "@/components/shared/Description";
 
 interface TracePanelProps {
   data: TraceImageResponse;
@@ -137,7 +138,10 @@ const TracePanel: React.FC<TracePanelProps> = ({ data, image }) => {
                 />
               </div>
 
-              <p className="text-gray-300 line-clamp-5">{description}</p>
+              <Description
+                description={description}
+                className="text-gray-300 line-clamp-5"
+              />
 
               <Link href={`/anime/details/${card.anime.id}`}>
                 <a className="block">

@@ -3,6 +3,7 @@ import ChapterSelector from "@/components/features/manga/ChapterSelector";
 import Button from "@/components/shared/Button";
 import Card from "@/components/shared/Card";
 import CharacterConnectionCard from "@/components/shared/CharacterConnectionCard";
+import Description from "@/components/shared/Description";
 import DetailsBanner from "@/components/shared/DetailsBanner";
 import DetailsSection from "@/components/shared/DetailsSection";
 import DotList from "@/components/shared/DotList";
@@ -85,9 +86,10 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
                   ))}
                 </DotList>
 
-                <p className="mt-4 text-gray-300 mb-8">
-                  {description || "Đang cập nhật"}
-                </p>
+                <Description
+                  description={description || t("common:updating") + "..."}
+                  className="mt-4 text-gray-300 mb-8"
+                />
               </div>
 
               <div className="flex overflow-x-auto md:scroll-bar snap-x space-x-8 md:space-x-16">

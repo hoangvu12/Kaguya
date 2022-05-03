@@ -1,5 +1,6 @@
 import Avatar from "@/components/shared/Avatar";
 import Button from "@/components/shared/Button";
+import Description from "@/components/shared/Description";
 import DotList from "@/components/shared/DotList";
 import PlainCard from "@/components/shared/PlainCard";
 import TextIcon from "@/components/shared/TextIcon";
@@ -108,9 +109,10 @@ const RoomWatchPanel = () => {
               ))}
             </DotList>
 
-            <p className="mt-4 line-clamp-4 text-gray-300">
-              {mediaDescription}
-            </p>
+            <Description
+              description={mediaDescription}
+              className="mt-4 line-clamp-4 text-gray-300"
+            />
           </div>
         </div>
       </div>

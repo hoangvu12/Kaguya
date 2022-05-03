@@ -17,8 +17,7 @@ import useSavedWatched from "@/hooks/useSavedWatched";
 import useSaveWatched from "@/hooks/useSaveWatched";
 import supabase from "@/lib/supabase";
 import { Anime, Episode } from "@/types";
-import { getTitle, sortMediaUnit } from "@/utils/data";
-import Storage from "@/utils/storage";
+import { getDescription, getTitle, sortMediaUnit } from "@/utils/data";
 import classNames from "classnames";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
@@ -33,6 +32,7 @@ import { BrowserView, MobileView } from "react-device-detect";
 import { BsArrowLeft } from "react-icons/bs";
 import Video from "@/components/features/anime/Player";
 import { useTranslation } from "next-i18next";
+import Description from "@/components/shared/Description";
 
 interface WatchPageProps {
   anime: Anime;
@@ -238,6 +238,10 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
     () => getTitle(anime, router.locale),
     [anime, router.locale]
   );
+  const description = useMemo(
+    () => getDescription(anime, router.locale),
+    [anime, router.locale]
+  );
 
   const overlaySlot = useMemo(
     () => (
@@ -370,7 +374,11 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
               <p className="mb-8 text-5xl font-semibold">
                 {title} - {currentEpisode.name}
               </p>
-              <p className="text-lg text-gray-300">{anime.description}</p>
+
+              <Description
+                description={description || t("common:updating") + "..."}
+                className="text-lg text-gray-300"
+              />
             </div>
           </div>
         </Portal>

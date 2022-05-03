@@ -6,7 +6,7 @@ import Swiper, { SwiperProps, SwiperSlide } from "@/components/shared/Swiper";
 import TextIcon from "@/components/shared/TextIcon";
 import { Anime, Manga } from "@/types";
 import { numberWithCommas } from "@/utils";
-import { convert, getTitle } from "@/utils/data";
+import { convert, getDescription, getTitle } from "@/utils/data";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
@@ -23,6 +23,7 @@ import { AiFillHeart, AiFillPlayCircle } from "react-icons/ai";
 import { BsFillVolumeMuteFill, BsFillVolumeUpFill } from "react-icons/bs";
 import { MdTagFaces } from "react-icons/md";
 import YouTube, { YouTubeProps } from "react-youtube";
+import Description from "./Description";
 
 interface HomeBannerProps<T> {
   data: T extends "anime" ? Anime[] : Manga[];
@@ -182,6 +183,10 @@ const DesktopHomeBanner = <T extends "anime" | "manga">({
     () => getTitle(activeSlide, locale),
     [activeSlide, locale]
   );
+  const description = useMemo(
+    () => getDescription(activeSlide, locale),
+    [activeSlide, locale]
+  );
 
   useEffect(() => {
     setShowTrailer(false);
@@ -285,9 +290,10 @@ const DesktopHomeBanner = <T extends "anime" | "manga">({
             </DotList>
           </div>
 
-          <p className="hidden mt-2 text-base md:block text-gray-200 md:line-clamp-5">
-            {activeSlide.description}
-          </p>
+          <Description
+            description={description}
+            className="hidden mt-2 text-base md:block text-gray-200 md:line-clamp-5"
+          />
         </motion.div>
 
         <Link href={getRedirectUrl(activeSlide.id)}>

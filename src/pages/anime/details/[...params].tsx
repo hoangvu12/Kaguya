@@ -3,6 +3,7 @@ import CommentsSection from "@/components/features/comment/CommentsSection";
 import Button from "@/components/shared/Button";
 import Card from "@/components/shared/Card";
 import CharacterConnectionCard from "@/components/shared/CharacterConnectionCard";
+import Description from "@/components/shared/Description";
 import DetailsBanner from "@/components/shared/DetailsBanner";
 import DetailsSection from "@/components/shared/DetailsSection";
 import DotList from "@/components/shared/DotList";
@@ -134,9 +135,10 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                   ))}
                 </DotList>
 
-                <p className="mt-4 mb-8 text-gray-300">
-                  {description || "Đang cập nhật..."}
-                </p>
+                <Description
+                  description={description || t("common:updating") + "..."}
+                  className="mt-4 mb-8 text-gray-300"
+                />
               </div>
 
               <div className="flex space-x-8 overflow-x-auto snap-x snap-mandatory md:space-x-16">
