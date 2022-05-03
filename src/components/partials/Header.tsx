@@ -26,7 +26,7 @@ const routes = [
   },
   {
     title: "anime_scene_search",
-    href: "/trace",
+    href: "/scene-search",
   },
   {
     title: "watch_with_friends",
