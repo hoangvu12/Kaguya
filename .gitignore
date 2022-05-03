@@ -10,6 +10,10 @@ src/data.json
 # testing
 /coverage
 
+# Netlify
+/.netlify/
+
+
 # next.js
 /.next/
 /out/
