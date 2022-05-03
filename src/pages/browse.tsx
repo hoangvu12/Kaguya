@@ -6,7 +6,7 @@ import VABrowseList from "@/components/features/va/VABrowseList";
 import Head from "@/components/shared/Head";
 import Select from "@/components/shared/Select";
 import useConstantTranslation from "@/hooks/useConstantTranslation";
-import { Anime, MediaGenre } from "@/types";
+import { Anime } from "@/types";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
@@ -74,7 +74,7 @@ const BrowsePage = ({ query: baseQuery }) => {
   const query = {
     format: format as MediaFormat,
     keyword: keyword as string,
-    genres: convertQueryToArray<MediaGenre>(genres),
+    genres: convertQueryToArray<string>(genres),
     tags: convertQueryToArray<string>(tags),
     countries: convertQueryToArray<string>(countries),
     season: season as string,

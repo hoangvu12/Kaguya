@@ -1,13 +1,13 @@
 import { MediaFormat } from "@/anilist";
 import supabase from "@/lib/supabase";
 import { MediaStatus } from "@/anilist";
-import { Manga, MediaGenre } from "@/types";
+import { Manga } from "@/types";
 import { useSupaInfiniteQuery } from "@/utils/supabase";
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
 
 export interface UseBrowseOptions {
   keyword?: string;
-  genres?: MediaGenre[];
+  genres?: string[];
   format?: MediaFormat;
   select?: string;
   limit?: number;
