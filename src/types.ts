@@ -36,6 +36,7 @@ export interface MangaSourceConnection extends SourceConnection {
 export type Source = {
   id: string;
   name: string;
+  locales: string[];
 };
 
 export type Episode = {

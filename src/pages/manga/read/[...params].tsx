@@ -275,7 +275,7 @@ export const getStaticProps: GetStaticProps = async ({
     .select(
       `
         title,
-        sourceConnections:kaguya_manga_source!mediaId(*, chapters:kaguya_chapters(*, source:kaguya_sources(id, name))),
+        sourceConnections:kaguya_manga_source!mediaId(*, chapters:kaguya_chapters(*, source:kaguya_sources(id, name, locales))),
         bannerImage,
         coverImage,
         vietnameseTitle

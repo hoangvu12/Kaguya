@@ -1,21 +1,12 @@
-import { useTranslation } from "next-i18next";
+import locales from "@/locales.json";
 import { useRouter } from "next/router";
 import nookies from "nookies";
 import React from "react";
 import { MdOutlineLanguage } from "react-icons/md";
 import Popup from "./Popup";
 
-const locales = [
-  {
-    locale: "vi",
-    name: "Tiếng Việt",
-  },
-  { locale: "en", name: "English" },
-];
-
 const LanguageSwitcher = () => {
   const router = useRouter();
-  const { i18n } = useTranslation();
 
   const handleChangeLanguage = (lang: string) => () => {
     if (router.locale === lang) return;

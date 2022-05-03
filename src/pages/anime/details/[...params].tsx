@@ -1,4 +1,4 @@
-import SourceEpisodeSelector from "@/components/features/anime/SourceEpisodeSelector";
+import LocaleEpisodeSelector from "@/components/features/anime/Player/LocaleEpisodeSelector";
 import CommentsSection from "@/components/features/comment/CommentsSection";
 import Button from "@/components/shared/Button";
 import Card from "@/components/shared/Card";
@@ -240,7 +240,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
               title={t("episodes_section")}
               className="overflow-hidden"
             >
-              <SourceEpisodeSelector episodes={sortedEpisodes} />
+              <LocaleEpisodeSelector episodes={sortedEpisodes} />
             </DetailsSection>
 
             {!!anime?.characters?.length && (
@@ -300,7 +300,7 @@ export const getStaticProps: GetStaticProps = async ({
         characters:kaguya_anime_characters!mediaId(*, character:characterId(*)),
         recommendations:kaguya_anime_recommendations!originalId(media:recommendationId(*)),
         relations:kaguya_anime_relations!originalId(media:relationId(*)),
-        sourceConnections:kaguya_anime_source!mediaId(*, episodes:kaguya_episodes(*, source:kaguya_sources(id, name)))
+        sourceConnections:kaguya_anime_source!mediaId(*, episodes:kaguya_episodes(*, source:kaguya_sources(id, name, locales)))
       `
     )
     .eq("id", Number(params[0]))

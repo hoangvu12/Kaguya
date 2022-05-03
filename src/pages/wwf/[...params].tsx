@@ -105,7 +105,7 @@ export const getServerSideProps: GetServerSideProps = async ({
           *,
           episodes:kaguya_episodes(
             *,
-            source:kaguya_sources(id, name)
+            source:kaguya_sources(id, name, locales)
           )
         )
       ),

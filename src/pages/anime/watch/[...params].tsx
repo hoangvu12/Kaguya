@@ -1,10 +1,12 @@
+import Video from "@/components/features/anime/Player";
 import EpisodesButton from "@/components/features/anime/Player/EpisodesButton";
+import LocaleEpisodeSelector from "@/components/features/anime/Player/LocaleEpisodeSelector";
 import MobileEpisodesButton from "@/components/features/anime/Player/MobileEpisodesButton";
 import MobileNextEpisode from "@/components/features/anime/Player/MobileNextEpisode";
 import NextEpisodeButton from "@/components/features/anime/Player/NextEpisodeButton";
-import SourceEpisodeSelector from "@/components/features/anime/SourceEpisodeSelector";
 import Button from "@/components/shared/Button";
 import ClientOnly from "@/components/shared/ClientOnly";
+import Description from "@/components/shared/Description";
 import Head from "@/components/shared/Head";
 import Loading from "@/components/shared/Loading";
 import Portal from "@/components/shared/Portal";
@@ -20,6 +22,7 @@ import { Anime, Episode } from "@/types";
 import { getDescription, getTitle, sortMediaUnit } from "@/utils/data";
 import classNames from "classnames";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import React, {
   useCallback,
@@ -30,9 +33,6 @@ import React, {
 } from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import { BsArrowLeft } from "react-icons/bs";
-import Video from "@/components/features/anime/Player";
-import { useTranslation } from "next-i18next";
-import Description from "@/components/shared/Description";
 
 interface WatchPageProps {
   anime: Anime;
@@ -318,7 +318,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
 
             <EpisodesButton>
               <div className="w-[70vw] overflow-hidden">
-                <SourceEpisodeSelector
+                <LocaleEpisodeSelector
                   episodes={sortedEpisodes}
                   activeEpisode={currentEpisode}
                   episodeLinkProps={{ shallow: true, replace: true }}
@@ -345,7 +345,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
                     />
 
                     <div>
-                      <SourceEpisodeSelector
+                      <LocaleEpisodeSelector
                         episodes={sortedEpisodes}
                         activeEpisode={currentEpisode}
                         episodeLinkProps={{ shallow: true, replace: true }}
@@ -439,7 +439,7 @@ export const getStaticProps: GetStaticProps = async ({
         description,
         bannerImage,
         coverImage,
-        sourceConnections:kaguya_anime_source!mediaId(*, episodes:kaguya_episodes(*, source:kaguya_sources(id, name)))`
+        sourceConnections:kaguya_anime_source!mediaId(*, episodes:kaguya_episodes(*, source:kaguya_sources(id, name, locales)))`
     )
     .eq("id", Number(params[0]))
     .single();

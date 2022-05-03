@@ -1,4 +1,4 @@
-import SourceEpisodeSelector from "@/components/features/anime/SourceEpisodeSelector";
+import LocaleEpisodeSelector from "@/components/features/anime/Player/LocaleEpisodeSelector";
 import Button from "@/components/shared/Button";
 import Description from "@/components/shared/Description";
 import DotList from "@/components/shared/DotList";
@@ -160,7 +160,7 @@ const CreateRoomPage: NextPage<CreateRoomPageProps> = ({ media }) => {
               </div>
             </div>
             <div className="overflow-hidden">
-              <SourceEpisodeSelector
+              <LocaleEpisodeSelector
                 episodes={sortedEpisodes}
                 activeEpisode={chosenEpisode}
                 onEachEpisode={(episode) => (
@@ -207,7 +207,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         genres,
         description,
         coverImage,
-        sourceConnections:kaguya_anime_source!mediaId(*, episodes:kaguya_episodes(*, source:kaguya_sources(id, name)))
+        sourceConnections:kaguya_anime_source!mediaId(*, episodes:kaguya_episodes(*, source:kaguya_sources(id, name, locales)))
     `
     )
     .eq("id", Number(params.id))

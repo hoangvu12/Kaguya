@@ -220,7 +220,7 @@ export const getStaticProps: GetStaticProps = async ({
         characters:kaguya_manga_characters!mediaId(*, character:characterId(*)),
         recommendations:kaguya_manga_recommendations!originalId(media:recommendationId(*)),
         relations:kaguya_manga_relations!originalId(media:relationId(*)),
-        sourceConnections:kaguya_manga_source!mediaId(*, chapters:kaguya_chapters(*, source:kaguya_sources(id, name)))
+        sourceConnections:kaguya_manga_source!mediaId(*, chapters:kaguya_chapters(*, source:kaguya_sources(id, name, locales)))
       `
     )
     .eq("id", Number(params[0]))
