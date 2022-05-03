@@ -23,7 +23,7 @@ import {
   parseNumbersFromString,
   vietnameseSlug,
 } from "@/utils";
-import { convert, getTitle } from "@/utils/data";
+import { convert, getDescription, getTitle } from "@/utils/data";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Link from "next/link";
 import React, { useMemo } from "react";
@@ -65,12 +65,13 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
   );
 
   const title = useMemo(() => getTitle(anime), [anime]);
+  const description = useMemo(() => getDescription(anime), [anime]);
 
   return (
     <>
       <Head
         title={`${title} - Kaguya`}
-        description={anime.description}
+        description={description}
         image={anime.bannerImage}
       />
 
@@ -119,7 +120,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                 </DotList>
 
                 <p className="mt-4 mb-8 text-gray-300">
-                  {anime.description || "Đang cập nhật..."}
+                  {description || "Đang cập nhật..."}
                 </p>
               </div>
 

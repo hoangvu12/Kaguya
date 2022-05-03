@@ -5,7 +5,7 @@ import PlainCard from "@/components/shared/PlainCard";
 import TextIcon from "@/components/shared/TextIcon";
 import { TraceImageResponse } from "@/hooks/useTraceImage";
 import { numberWithCommas } from "@/utils";
-import { getTitle, convert } from "@/utils/data";
+import { getTitle, convert, getDescription } from "@/utils/data";
 import Link from "next/link";
 import React, { useCallback, useMemo, useState } from "react";
 import { AiFillHeart } from "react-icons/ai";
@@ -121,7 +121,7 @@ const TracePanel: React.FC<TracePanelProps> = ({ data, image }) => {
               </div>
 
               <p className="text-gray-300 line-clamp-5">
-                {card.anime.description}
+                {getDescription(card.anime)}
               </p>
 
               <Link href={`/anime/details/${card.anime.id}`}>

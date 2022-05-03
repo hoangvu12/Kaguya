@@ -7,7 +7,7 @@ import { useRoomInfo } from "@/contexts/RoomContext";
 import { useRoomState } from "@/contexts/RoomStateContext";
 import useDevice from "@/hooks/useDevice";
 import { numberWithCommas } from "@/utils";
-import { convert, getTitle } from "@/utils/data";
+import { convert, getDescription, getTitle } from "@/utils/data";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import Link from "next/link";
@@ -99,7 +99,7 @@ const RoomWatchPanel = () => {
             </DotList>
 
             <p className="mt-4 line-clamp-4 text-gray-300">
-              {room.media.description}
+              {getDescription(room.media)}
             </p>
           </div>
         </div>
