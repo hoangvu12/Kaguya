@@ -72,8 +72,8 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
   const nextAiringScheduleTime = useMemo(() => {
     if (!hasNextAiringSchedule?.airingAt) return null;
 
-    return dayjs.unix(hasNextAiringSchedule.airingAt).fromNow();
-  }, [hasNextAiringSchedule?.airingAt]);
+    return dayjs.unix(hasNextAiringSchedule.airingAt).locale(locale).fromNow();
+  }, [hasNextAiringSchedule.airingAt, locale]);
 
   const title = useMemo(() => getTitle(anime, locale), [anime, locale]);
   const description = useMemo(
