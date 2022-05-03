@@ -109,7 +109,7 @@ export const getDescription = <T extends Media<Anime> | Media<Manga>>(
 ) => {
   if (locale === "en") return data?.description?.english;
 
-  return data?.description?.vietnamese || data?.description?.ebglish;
+  return data?.description?.vietnamese || data?.description?.english;
 };
 
 export const sortMediaUnit = <T extends Chapter | Episode>(data: T[]) => {
