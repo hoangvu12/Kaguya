@@ -4,12 +4,12 @@ import { Manga } from "@/types";
 import { groupBy } from "@/utils";
 import { sortMediaUnit } from "@/utils/data";
 import classNames from "classnames";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import React, { useEffect, useMemo, useState } from "react";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 
-interface ChapterSelectorProps {
+export interface ChapterSelectorProps {
   manga: Manga;
 }
 
@@ -28,8 +28,9 @@ const ChapterSelector: React.FC<ChapterSelectorProps> = ({ manga }) => {
     () =>
       chapters
         .filter((chapter) => chapter.source.name === activeSource)
-        .reverse(),
-    [activeSource, chapters]
+        .reverse()
+        .slice(0, isChapterExpanded ? undefined : 10),
+    [activeSource, chapters, isChapterExpanded]
   );
 
   const sources = useMemo(
@@ -68,42 +69,44 @@ const ChapterSelector: React.FC<ChapterSelectorProps> = ({ manga }) => {
         })}
       </ArrowSwiper>
 
-      <motion.div
-        className="space-y-2 overflow-hidden"
-        variants={{
-          animate: {
-            height: "100%",
-          },
+      <AnimatePresence initial={false}>
+        <motion.div
+          className="space-y-2 overflow-hidden"
+          variants={{
+            animate: {
+              height: "100%",
+            },
 
-          initial: {
-            height: chapters.length <= 7 ? "100%" : 300,
-          },
-        }}
-        transition={{ ease: "linear" }}
-        animate={isChapterExpanded ? "animate" : "initial"}
-      >
-        {sourceChapters.map((chapter) => (
-          <Link
-            href={`/manga/read/${manga.id}/${chapter.sourceId}/${chapter.sourceChapterId}`}
-            key={chapter.sourceChapterId}
-          >
-            <a className="block">
-              <p className="line-clamp-1 bg-background-900 p-2 text-sm font-semibold hover:bg-white/20 duration-300 transition">
-                {chapter.name}
-              </p>
-            </a>
-          </Link>
-        ))}
-      </motion.div>
+            initial: {
+              height: chapters.length <= 7 ? "100%" : 300,
+            },
+          }}
+          transition={{ ease: "linear" }}
+          animate={isChapterExpanded ? "animate" : "initial"}
+        >
+          {sourceChapters.map((chapter) => (
+            <Link
+              href={`/manga/read/${manga.id}/${chapter.sourceId}/${chapter.sourceChapterId}`}
+              key={chapter.sourceChapterId}
+            >
+              <a className="block">
+                <p className="line-clamp-1 bg-background-900 p-2 text-sm font-semibold hover:bg-white/20 duration-300 transition">
+                  {chapter.name}
+                </p>
+              </a>
+            </Link>
+          ))}
+        </motion.div>
 
-      {chapters.length > 7 && (
-        <CircleButton
-          onClick={() => setIsChapterExpanded(!isChapterExpanded)}
-          outline
-          className="absolute top-full mt-4 left-1/2 -translate-x-1/2"
-          LeftIcon={isChapterExpanded ? BsChevronUp : BsChevronDown}
-        />
-      )}
+        {chapters.length > 7 && (
+          <CircleButton
+            onClick={() => setIsChapterExpanded(!isChapterExpanded)}
+            outline
+            className="absolute top-full mt-4 left-1/2 -translate-x-1/2"
+            LeftIcon={isChapterExpanded ? BsChevronUp : BsChevronDown}
+          />
+        )}
+      </AnimatePresence>
     </React.Fragment>
   );
 };

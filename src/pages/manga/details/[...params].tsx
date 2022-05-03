@@ -1,5 +1,5 @@
 import CommentsSection from "@/components/features/comment/CommentsSection";
-import ChapterSelector from "@/components/features/manga/ChapterSelector";
+import LocaleChapterSelector from "@/components/features/manga/LocaleChapterSelector";
 import Button from "@/components/shared/Button";
 import Card from "@/components/shared/Card";
 import CharacterConnectionCard from "@/components/shared/CharacterConnectionCard";
@@ -161,7 +161,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
 
           <div className="md:col-span-8 space-y-12">
             <DetailsSection title={t("chapters_section")} className="relative">
-              <ChapterSelector manga={manga} />
+              <LocaleChapterSelector manga={manga} />
             </DetailsSection>
 
             {!!manga?.characters?.length && (
