@@ -1,0 +1,18 @@
+[build]
+    base=""
+    command = ""
+    publish = ""
+
+[[redirects]]
+    from = "/*"
+    to = "/index_vi.html"
+    status = 302
+    force = true
+    conditions = {Language = ["vi"]}
+
+[[redirects]]
+    from = "/*"
+    to = "/index_en.html"
+    status = 302
+    force = true
+    conditions = {Language = ["en"]}
