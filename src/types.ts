@@ -9,8 +9,14 @@ import {
   MediaFormat,
   MediaRelation,
   MediaStatus,
-  MediaTitle,
+  MediaTitle as ALMediaTitle,
 } from "./anilist";
+
+export interface MediaTitle extends Partial<ALMediaTitle> {
+  [key: string]: string;
+}
+
+export type MediaDescription = Record<string, string>;
 
 export type MediaGenre = typeof GENRES[number]["value"];
 
@@ -192,8 +198,7 @@ export interface Media<T extends Anime | Manga> {
   isAdult: boolean;
   synonyms: string[];
   averageScore: number;
-  description: string;
-  vietnameseTitle?: string;
+  description: MediaDescription;
   updated_at?: string;
   created_at?: string;
 }

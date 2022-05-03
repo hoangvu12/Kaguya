@@ -4,7 +4,7 @@ import Image from "@/components/shared/Image";
 import TextIcon from "@/components/shared/TextIcon";
 import { Anime, Manga } from "@/types";
 import { numberWithCommas } from "@/utils";
-import { convert, getTitle } from "@/utils/data";
+import { convert, getDescription, getTitle } from "@/utils/data";
 import Link from "next/link";
 import React, { useMemo } from "react";
 import { AiFillHeart, AiFillPlayCircle } from "react-icons/ai";
@@ -80,7 +80,7 @@ const ShouldWatch = <T extends "anime" | "manga">({
           </div>
           <div className="h-full w-full">
             <p className="text-base text-gray-300 line-clamp-4">
-              {data.description}
+              {getDescription(data)}
             </p>
           </div>
         </div>

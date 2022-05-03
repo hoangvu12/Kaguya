@@ -39,10 +39,13 @@ export const convert = (
 };
 
 export const getTitle = <T extends Media<Anime> | Media<Manga>>(data: T) => {
-  const title =
-    typeof data?.title === "string" ? data?.title : data?.title.userPreferred;
+  return data?.title?.vietnamese || data?.title?.userPreferred;
+};
 
-  return data?.vietnameseTitle || title;
+export const getDescription = <T extends Media<Anime> | Media<Manga>>(
+  data: T
+) => {
+  return data?.description?.vietnamese || data?.description?.ebglish;
 };
 
 export const sortMediaUnit = <T extends Chapter | Episode>(data: T[]) => {
