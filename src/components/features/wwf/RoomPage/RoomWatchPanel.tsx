@@ -29,6 +29,11 @@ const RoomWatchPanel = () => {
     [room?.media, locale]
   );
 
+  const mediaDescription = useMemo(
+    () => getDescription(room?.media, locale),
+    [locale, room?.media]
+  );
+
   return (
     <div
       className={classNames(
@@ -104,7 +109,7 @@ const RoomWatchPanel = () => {
             </DotList>
 
             <p className="mt-4 line-clamp-4 text-gray-300">
-              {getDescription(room.media)}
+              {mediaDescription}
             </p>
           </div>
         </div>

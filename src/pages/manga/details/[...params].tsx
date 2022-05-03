@@ -36,7 +36,10 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
   const { t } = useTranslation("manga_details");
 
   const title = useMemo(() => getTitle(manga, locale), [manga, locale]);
-  const description = useMemo(() => getDescription(manga), [manga]);
+  const description = useMemo(
+    () => getDescription(manga, locale),
+    [manga, locale]
+  );
 
   return (
     <>

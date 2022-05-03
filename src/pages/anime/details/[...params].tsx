@@ -75,7 +75,10 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
   }, [hasNextAiringSchedule?.airingAt]);
 
   const title = useMemo(() => getTitle(anime, locale), [anime, locale]);
-  const description = useMemo(() => getDescription(anime), [anime]);
+  const description = useMemo(
+    () => getDescription(anime, locale),
+    [anime, locale]
+  );
 
   return (
     <>

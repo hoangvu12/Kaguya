@@ -34,6 +34,10 @@ const TracePanel: React.FC<TracePanelProps> = ({ data, image }) => {
     () => getTitle(card.anime, locale),
     [card.anime, locale]
   );
+  const description = useMemo(
+    () => getDescription(card.anime, locale),
+    [card.anime, locale]
+  );
 
   return (
     <div className="w-full flex flex-col md:flex-row gap-8">
@@ -133,9 +137,7 @@ const TracePanel: React.FC<TracePanelProps> = ({ data, image }) => {
                 />
               </div>
 
-              <p className="text-gray-300 line-clamp-5">
-                {getDescription(card.anime)}
-              </p>
+              <p className="text-gray-300 line-clamp-5">{description}</p>
 
               <Link href={`/anime/details/${card.anime.id}`}>
                 <a className="block">

@@ -22,6 +22,10 @@ const ShouldWatch = <T extends "anime" | "manga">({
 }: ShouldWatchProps<T>) => {
   const { locale } = useRouter();
   const title = useMemo(() => getTitle(data, locale), [data, locale]);
+  const description = useMemo(
+    () => getDescription(data, locale),
+    [data, locale]
+  );
 
   const redirectUrl = useMemo(
     () =>
@@ -82,7 +86,7 @@ const ShouldWatch = <T extends "anime" | "manga">({
           </div>
           <div className="h-full w-full">
             <p className="text-base text-gray-300 line-clamp-4">
-              {getDescription(data)}
+              {description}
             </p>
           </div>
         </div>
