@@ -5,6 +5,7 @@ import { useCreateComment } from "@/hooks/useCreateComment";
 import supabase from "@/lib/supabase";
 import { Comment } from "@/types";
 import { useSupaInfiniteQuery } from "@/utils/supabase";
+import { useTranslation } from "next-i18next";
 import React, { useMemo } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { useQueryClient } from "react-query";
@@ -16,6 +17,7 @@ interface CommentsSectionProps {
 
 const CommentsSection: React.FC<CommentsSectionProps> = (props) => {
   const queryClient = useQueryClient();
+  const { t } = useTranslation("comment");
 
   const createCommentMutation = useCreateComment({
     type: "new",
@@ -93,7 +95,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = (props) => {
               ))
             ) : (
               <p className="text-center text-gray-300 text-sm">
-                Hãy là người đầu tiên bày tỏ suy nghĩ về bộ này!
+                {t("no_comments_msg")}
               </p>
             )}
 
@@ -102,7 +104,10 @@ const CommentsSection: React.FC<CommentsSectionProps> = (props) => {
         )}
       </div>
 
-      <CommentInput onEnter={handleInputSubmit} />
+      <CommentInput
+        placeholder={t("comment_placeholder")}
+        onEnter={handleInputSubmit}
+      />
     </div>
   );
 };

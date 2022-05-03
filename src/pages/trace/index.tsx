@@ -9,12 +9,14 @@ import React, { useCallback, useState } from "react";
 import { CgArrowLongRight } from "react-icons/cg";
 import { MdOutlineRestartAlt } from "react-icons/md";
 import { ImageType } from "react-images-uploading";
+import { useTranslation } from "react-i18next";
 
 const TracePage = () => {
   const [traceResult, setTraceResult] = useState<TraceImageResponse>(null);
   const [image, setImage] = useState<ImageType>(null);
 
   const { mutateAsync, isLoading } = useTraceImage();
+  const [t] = useTranslation("trace");
 
   const handleOnSearch = useCallback(
     async (image: ImageType) => {
@@ -34,20 +36,16 @@ const TracePage = () => {
 
   return (
     <React.Fragment>
-      <Head title="Tìm kiếm Anime qua hình ảnh - Kaguya" />
+      <Head title={`${t("tab_title")} - Kaguya`} />
 
       <div className="pt-20 px-4 md:px-12 space-y-16 flex flex-col items-center justify-center">
         <div className="text-center">
-          <h1 className="text-3xl font-bold mb-1">
-            Công cụ tìm kiếm Anime bằng hình ảnh.
-          </h1>
+          <h1 className="text-3xl font-bold mb-1">{t("heading")}</h1>
 
-          <h3 className="text-lg mb-2">
-            Nó cho bạn biết anime, tập và khoảnh khắc mà hình ảnh đó xuất hiện!
-          </h3>
+          <h3 className="text-lg mb-2">{t("description")}</h3>
 
           <p className="italic text-lg mb-1">
-            Công cụ sử dụng công nghệ tìm kiếm của{" "}
+            {t("made_by")}{" "}
             <a
               className="text-primary-300 hover:underline"
               href="https://github.com/soruly/trace.moe"
@@ -56,13 +54,7 @@ const TracePage = () => {
             </a>
           </p>
 
-          <p className="italic">
-            Lưu ý: Kết quả tìm kiếm không hoàn toàn chính xác 100%.
-          </p>
-          <p className="italic">
-            Lưu ý: Chỉ hoạt động với cảnh ở trong phim. Không hoạt động với art
-            hay những ảnh không có trong phim.
-          </p>
+          <p className="italic">{t("note")}</p>
         </div>
 
         <div className="w-full hidden md:flex items-center justify-center gap-4">
@@ -94,7 +86,7 @@ const TracePage = () => {
               onClick={handleReset}
               LeftIcon={MdOutlineRestartAlt}
             >
-              <p>Thử ảnh khác</p>
+              <p>{t("try_again")}</p>
             </Button>
 
             <TracePanel data={traceResult} image={image} />

@@ -1,5 +1,4 @@
 import { SkeletonProps } from "@/components/shared/Skeleton";
-import { GENRES, READ_STATUS, WATCH_STATUS } from "@/constants";
 import { SupabaseQueryFunction, SupabaseQueryOptions } from "@/utils/supabase";
 import { User } from "@supabase/gotrue-js";
 import { QueryKey } from "react-query";
@@ -17,8 +16,6 @@ export interface MediaTitle extends Partial<ALMediaTitle> {
 }
 
 export type MediaDescription = Record<string, string>;
-
-export type MediaGenre = typeof GENRES[number]["value"];
 
 export type SourceConnection = {
   id: string;
@@ -39,6 +36,7 @@ export interface MangaSourceConnection extends SourceConnection {
 export type Source = {
   id: string;
   name: string;
+  locales: string[];
 };
 
 export type Episode = {
@@ -336,8 +334,8 @@ export type CallbackSetter<T> = (handler: T) => void;
 
 export type Noop = () => void;
 
-export type WatchStatus = typeof WATCH_STATUS[number]["value"];
-export type ReadStatus = typeof READ_STATUS[number]["value"];
+export type WatchStatus = "WATCHING" | "COMPLETED" | "PLANNING";
+export type ReadStatus = "READING" | "COMPLETED" | "PLANNING";
 
 export type SourceStatus<T> = (T extends "anime"
   ? {

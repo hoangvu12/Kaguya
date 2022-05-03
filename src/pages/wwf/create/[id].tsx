@@ -1,5 +1,6 @@
-import SourceEpisodeSelector from "@/components/features/anime/SourceEpisodeSelector";
+import LocaleEpisodeSelector from "@/components/features/anime/Player/LocaleEpisodeSelector";
 import Button from "@/components/shared/Button";
+import Description from "@/components/shared/Description";
 import DotList from "@/components/shared/DotList";
 import Head from "@/components/shared/Head";
 import Input from "@/components/shared/Input";
@@ -8,6 +9,7 @@ import Section from "@/components/shared/Section";
 import Select from "@/components/shared/Select";
 import { REVALIDATE_TIME } from "@/constants";
 import withAuthRedirect from "@/hocs/withAuthRedirect";
+import useConstantTranslation from "@/hooks/useConstantTranslation";
 import useCreateRoom from "@/hooks/useCreateRoom";
 import useDevice from "@/hooks/useDevice";
 import supabase from "@/lib/supabase";
@@ -15,6 +17,8 @@ import { Anime, Episode } from "@/types";
 import { convert, getDescription, getTitle, sortMediaUnit } from "@/utils/data";
 import classNames from "classnames";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 import React, { useCallback, useMemo, useState } from "react";
 import { MdOutlineTitle } from "react-icons/md";
 
@@ -28,21 +32,15 @@ type VisibilityOption = {
   value: Visibility;
 };
 
-const visibilityModes: VisibilityOption[] = [
-  {
-    value: "public",
-    label: "Công khai",
-  },
-  {
-    value: "private",
-    label: "Riêng tư",
-  },
-];
-
 const CreateRoomPage: NextPage<CreateRoomPageProps> = ({ media }) => {
   const { isMobile } = useDevice();
   const [roomTitle, setRoomTitle] = useState("");
-  const [visibility, setVisibility] = useState(visibilityModes[0].value);
+  const { VISIBILITY_MODES } = useConstantTranslation();
+  const [visibility, setVisibility] = useState(
+    VISIBILITY_MODES[0].value as "public" | "private"
+  );
+  const { locale } = useRouter();
+  const { t } = useTranslation("wwf");
 
   const { mutate, isLoading } = useCreateRoom();
 
@@ -63,8 +61,11 @@ const CreateRoomPage: NextPage<CreateRoomPageProps> = ({ media }) => {
     sortedEpisodes[0]
   );
 
-  const mediaTitle = useMemo(() => getTitle(media), [media]);
-  const mediaDescription = useMemo(() => getDescription(media), [media]);
+  const mediaTitle = useMemo(() => getTitle(media, locale), [media, locale]);
+  const mediaDescription = useMemo(
+    () => getDescription(media, locale),
+    [media, locale]
+  );
 
   const handleInputChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,13 +92,9 @@ const CreateRoomPage: NextPage<CreateRoomPageProps> = ({ media }) => {
 
   return (
     <Section className="py-20">
-      <Head
-        title={`Tạo phòng ${mediaTitle} - Kaguya`}
-        description={`Chọn các thiết lập như tên phòng, tập phim để xem ${mediaTitle} cùng với bạn bè tại Kaguya`}
-        image={media.bannerImage || media.coverImage.extraLarge}
-      />
+      <Head title={t("create_page_title", { mediaTitle })} />
 
-      <h1 className="text-4xl font-semibold mb-8">Tạo phòng</h1>
+      <h1 className="text-4xl font-semibold mb-8">{t("create_room")}</h1>
 
       <div className="w-full flex flex-col md:flex-row gap-8 md:gap-0">
         <div className="md:w-1/3 bg-background-800 p-4 md:p-8 text-center md:text-left">
@@ -109,11 +106,14 @@ const CreateRoomPage: NextPage<CreateRoomPageProps> = ({ media }) => {
 
           <DotList className="mt-2">
             {media.genres.map((genre) => (
-              <span key={genre}>{convert(genre, "genre")}</span>
+              <span key={genre}>{convert(genre, "genre", { locale })}</span>
             ))}
           </DotList>
 
-          <p className="mt-4 line-clamp-6 text-gray-300">{mediaDescription}</p>
+          <Description
+            description={mediaDescription || t("common:updating") + "..."}
+            className="mt-4 line-clamp-6 text-gray-300"
+          />
         </div>
         <div className="flex flex-col justify-between md:w-2/3 bg-background-900 p-4 md:p-8 space-y-4">
           <div className="space-y-8">
@@ -123,18 +123,18 @@ const CreateRoomPage: NextPage<CreateRoomPageProps> = ({ media }) => {
                 LeftIcon={MdOutlineTitle}
                 onChange={handleInputChange}
                 defaultValue={roomTitle}
-                placeholder="Tên phòng"
-                label="Tên phòng (không bắt buộc)"
+                placeholder={t("room_name")}
+                label={`${t("room_name")} (${t("common:optional")})`}
                 containerClassName="w-full md:w-1/3"
               />
 
               <div className="space-y-2">
-                <p className="font-semibold">Hiển thị</p>
+                <p className="font-semibold">{t("room_visibility")}</p>
 
                 <Select
-                  options={visibilityModes}
-                  placeholder="Chọn chế độ"
-                  value={visibilityModes.find(
+                  options={VISIBILITY_MODES}
+                  placeholder={t("pick_visibility_mode")}
+                  value={VISIBILITY_MODES.find(
                     (mode) => mode.value === visibility
                   )}
                   onChange={(newValue: VisibilityOption) =>
@@ -154,13 +154,13 @@ const CreateRoomPage: NextPage<CreateRoomPageProps> = ({ media }) => {
 
                 {visibility === "private" && (
                   <p className="italic text-sm text-gray-400">
-                    Chỉ những người có link mới có thể truy cập phòng này
+                    {t("private_visibility_note")}
                   </p>
                 )}
               </div>
             </div>
             <div className="overflow-hidden">
-              <SourceEpisodeSelector
+              <LocaleEpisodeSelector
                 episodes={sortedEpisodes}
                 activeEpisode={chosenEpisode}
                 onEachEpisode={(episode) => (
@@ -188,7 +188,7 @@ const CreateRoomPage: NextPage<CreateRoomPageProps> = ({ media }) => {
             primary
             onClick={handleCreateRoom}
           >
-            <p>Tạo phòng</p>
+            <p>{t("create_room")}</p>
           </Button>
         </div>
       </div>
@@ -207,7 +207,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         genres,
         description,
         coverImage,
-        sourceConnections:kaguya_anime_source!mediaId(*, episodes:kaguya_episodes(*, source:kaguya_sources(id, name)))
+        sourceConnections:kaguya_anime_source!mediaId(*, episodes:kaguya_episodes(*, source:kaguya_sources(id, name, locales)))
     `
     )
     .eq("id", Number(params.id))

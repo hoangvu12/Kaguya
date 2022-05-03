@@ -8,6 +8,7 @@ import { UseBrowseOptions } from "@/hooks/useBrowseAnime";
 import useCharacterSearch from "@/hooks/useCharacterSearch";
 import useFavouriteCharacters from "@/hooks/useFavouriteCharacters";
 import { debounce } from "@/utils";
+import { useTranslation } from "next-i18next";
 import React, { useMemo, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 
@@ -17,6 +18,7 @@ interface BrowseListProps {
 
 const BrowseList: React.FC<BrowseListProps> = ({ defaultQuery }) => {
   const [keyword, setKeyword] = useState(defaultQuery.keyword || "");
+  const { t } = useTranslation();
 
   const {
     data: searchResult,
@@ -56,9 +58,9 @@ const BrowseList: React.FC<BrowseListProps> = ({ defaultQuery }) => {
           LeftIcon={AiOutlineSearch}
           onChange={handleInputChange}
           defaultValue={keyword}
-          label="Tìm kiếm"
+          label={t("common:search")}
           containerClassName="w-full md:w-96"
-          placeholder="Tên nhân vật"
+          placeholder={t("common:character_name")}
         />
       </form>
 
@@ -90,7 +92,7 @@ const BrowseList: React.FC<BrowseListProps> = ({ defaultQuery }) => {
         ) : (
           <div className="space-y-8">
             <div className="space-y-4">
-              <h2 className="text-3xl font-semibold">Sinh nhật</h2>
+              <h2 className="text-3xl font-semibold">{t("common:birthday")}</h2>
 
               {birthdayIsLoading ? (
                 <ListSkeleton />
@@ -102,7 +104,9 @@ const BrowseList: React.FC<BrowseListProps> = ({ defaultQuery }) => {
             </div>
 
             <div className="space-y-4">
-              <h2 className="text-3xl font-semibold">Được yêu thích</h2>
+              <h2 className="text-3xl font-semibold">
+                {t("common:most_favourite")}
+              </h2>
 
               {favouritesIsLoading ? (
                 <ListSkeleton />

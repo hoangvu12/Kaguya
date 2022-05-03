@@ -3,12 +3,13 @@ import CircleButton from "@/components/shared/CircleButton";
 import ClientOnly from "@/components/shared/ClientOnly";
 import EmojiPicker from "@/components/shared/EmojiPicker";
 import Input from "@/components/shared/Input";
+import TransLink from "@/components/shared/TransLink";
 import { useUser } from "@/contexts/AuthContext";
 import useDevice from "@/hooks/useDevice";
 import { insertTextAtCursor } from "@/utils";
 import classNames from "classnames";
 import { IEmojiData } from "emoji-picker-react";
-import Link from "next/link";
+import { Trans } from "next-i18next";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { BsEmojiSmile } from "react-icons/bs";
 import { RiSendPlaneFill, RiSendPlaneLine } from "react-icons/ri";
@@ -28,11 +29,13 @@ const CommentInput: React.FC<CommentInputProps> = ({
   onEnter,
   needLoginMessage = (
     <p className="text-gray-300">
-      Bạn phải{" "}
-      <Link href="/login">
-        <a className="text-primary-300 hover:underline">đăng nhập</a>
-      </Link>{" "}
-      dể bình luận.
+      <Trans i18nKey="comment:need_login_msg">
+        Bạn phải{" "}
+        <TransLink href="/login" className="text-primary-300 hover:underline">
+          đăng nhập
+        </TransLink>{" "}
+        dể bình luận.
+      </Trans>
     </p>
   ),
   showAvatar = true,

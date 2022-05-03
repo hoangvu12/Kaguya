@@ -8,6 +8,7 @@ import { convert, getTitle } from "@/utils/data";
 import classNames from "classnames";
 import { motion, Variants } from "framer-motion";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { AiFillHeart } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
@@ -64,12 +65,19 @@ const Card = <T extends "anime" | "manga">(props: AnimeCardProps<T>) => {
 
   const { isDesktop } = useDevice();
 
-  const primaryColor =
-    data.coverImage?.color && isColorVisible(data.coverImage.color, "#3a3939")
-      ? data.coverImage.color
-      : "white";
+  const router = useRouter();
 
-  const title = useMemo(() => getTitle(data), [data]);
+  const primaryColor = useMemo(
+    () =>
+      data.coverImage?.color && isColorVisible(data.coverImage.color, "#3a3939")
+        ? data.coverImage.color
+        : "white",
+    [data]
+  );
+  const title = useMemo(
+    () => getTitle(data, router.locale),
+    [data, router?.locale]
+  );
 
   return (
     <Link href={redirectUrl}>
@@ -110,7 +118,7 @@ const Card = <T extends "anime" | "manga">(props: AnimeCardProps<T>) => {
                         }}
                         key={genre}
                       >
-                        {convert(genre, "genre")}
+                        {convert(genre, "genre", { locale: router.locale })}
                       </span>
                     ))}
                   </DotList>

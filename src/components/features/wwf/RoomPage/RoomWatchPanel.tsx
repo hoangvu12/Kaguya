@@ -1,5 +1,6 @@
 import Avatar from "@/components/shared/Avatar";
 import Button from "@/components/shared/Button";
+import Description from "@/components/shared/Description";
 import DotList from "@/components/shared/DotList";
 import PlainCard from "@/components/shared/PlainCard";
 import TextIcon from "@/components/shared/TextIcon";
@@ -11,6 +12,7 @@ import { convert, getDescription, getTitle } from "@/utils/data";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { MobileView } from "react-device-detect";
 import { AiOutlineUser } from "react-icons/ai";
@@ -21,8 +23,17 @@ const RoomWatchPanel = () => {
   const { room } = useRoomInfo();
   const { state, setState } = useRoomState();
   const { isMobile } = useDevice();
+  const { locale } = useRouter();
 
-  const mediaTitle = useMemo(() => getTitle(room?.media), [room?.media]);
+  const mediaTitle = useMemo(
+    () => getTitle(room?.media, locale),
+    [room?.media, locale]
+  );
+
+  const mediaDescription = useMemo(
+    () => getDescription(room?.media, locale),
+    [locale, room?.media]
+  );
 
   return (
     <div
@@ -52,7 +63,7 @@ const RoomWatchPanel = () => {
                 </span>
 
                 <span className="text-sm text-gray-300">
-                  {dayjs(new Date(room.created_at)).fromNow()}
+                  {dayjs(new Date(room.created_at), { locale }).fromNow()}
                 </span>
               </DotList>
             </div>
@@ -94,13 +105,14 @@ const RoomWatchPanel = () => {
 
             <DotList className="mt-2">
               {room.media.genres.map((genre) => (
-                <span key={genre}>{convert(genre, "genre")}</span>
+                <span key={genre}>{convert(genre, "genre", { locale })}</span>
               ))}
             </DotList>
 
-            <p className="mt-4 line-clamp-4 text-gray-300">
-              {getDescription(room.media)}
-            </p>
+            <Description
+              description={mediaDescription}
+              className="mt-4 line-clamp-4 text-gray-300"
+            />
           </div>
         </div>
       </div>

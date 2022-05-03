@@ -1,11 +1,12 @@
 import Video from "@/components/features/anime/Player";
 import EpisodesButton from "@/components/features/anime/Player/EpisodesButton";
+import LocaleEpisodeSelector from "@/components/features/anime/Player/LocaleEpisodeSelector";
 import MobileEpisodesButton from "@/components/features/anime/Player/MobileEpisodesButton";
 import MobileNextEpisode from "@/components/features/anime/Player/MobileNextEpisode";
 import NextEpisodeButton from "@/components/features/anime/Player/NextEpisodeButton";
-import SourceEpisodeSelector from "@/components/features/anime/SourceEpisodeSelector";
 import Button from "@/components/shared/Button";
 import ClientOnly from "@/components/shared/ClientOnly";
+import Description from "@/components/shared/Description";
 import Head from "@/components/shared/Head";
 import Loading from "@/components/shared/Loading";
 import Portal from "@/components/shared/Portal";
@@ -21,6 +22,7 @@ import { Anime, Episode } from "@/types";
 import { getDescription, getTitle, sortMediaUnit } from "@/utils/data";
 import classNames from "classnames";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import React, {
   useCallback,
@@ -53,6 +55,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   const showInfoTimeout = useRef<NodeJS.Timeout>(null);
   const saveWatchedInterval = useRef<NodeJS.Timer>(null);
   const saveWatchedMutation = useSaveWatched();
+  const { t } = useTranslation("anime_watch");
 
   useEventListener("visibilitychange", () => {
     if (isMobile) return;
@@ -231,8 +234,14 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchedEpisode?.sourceEpisodeId]);
 
-  const title = useMemo(() => getTitle(anime), [anime]);
-  const description = useMemo(() => getDescription(anime), [anime]);
+  const title = useMemo(
+    () => getTitle(anime, router.locale),
+    [anime, router.locale]
+  );
+  const description = useMemo(
+    () => getDescription(anime, router.locale),
+    [anime, router.locale]
+  );
 
   const overlaySlot = useMemo(
     () => (
@@ -309,7 +318,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
 
             <EpisodesButton>
               <div className="w-[70vw] overflow-hidden">
-                <SourceEpisodeSelector
+                <LocaleEpisodeSelector
                   episodes={sortedEpisodes}
                   activeEpisode={currentEpisode}
                   episodeLinkProps={{ shallow: true, replace: true }}
@@ -336,7 +345,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
                     />
 
                     <div>
-                      <SourceEpisodeSelector
+                      <LocaleEpisodeSelector
                         episodes={sortedEpisodes}
                         activeEpisode={currentEpisode}
                         episodeLinkProps={{ shallow: true, replace: true }}
@@ -361,11 +370,15 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
             onMouseMove={() => setShowInfoOverlay(false)}
           >
             <div className="w-11/12 px-40">
-              <p className="mb-2 text-xl text-gray-200">Bạn đang xem</p>
+              <p className="mb-2 text-xl text-gray-200">{t("blur_heading")}</p>
               <p className="mb-8 text-5xl font-semibold">
                 {title} - {currentEpisode.name}
               </p>
-              <p className="text-lg text-gray-300">{description}</p>
+
+              <Description
+                description={description || t("common:updating") + "..."}
+                className="text-lg text-gray-300"
+              />
             </div>
           </div>
         </Portal>
@@ -383,12 +396,14 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
 
           <div className="fixed left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 z-50 w-2/3 p-8 rounded-md bg-background-900">
             <h1 className="text-4xl font-bold mb-4">
-              Xem {watchedEpisode.name}
+              {t("rewatch_heading", { episodeName: watchedEpisode.name })}
             </h1>
             <p className="">
-              Hệ thống ghi nhận bạn đã xem {watchedEpisode.name}.
+              {t("rewatch_description", { episodeName: watchedEpisode.name })}
             </p>
-            <p className="mb-4">Bạn có muốn xem {watchedEpisode.name} không?</p>
+            <p className="mb-4">
+              {t("rewatch_question", { episodeName: watchedEpisode.name })}
+            </p>
             <div className="flex items-center justify-end space-x-4">
               <Button
                 onClick={() => {
@@ -396,13 +411,13 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
                 }}
                 className="!bg-transparent hover:!bg-white/20 transition duration-300"
               >
-                <p>Không</p>
+                <p>{t("rewatch_no")}</p>
               </Button>
               <Button
                 onClick={handleNavigateEpisode(watchedEpisodeData?.episode)}
                 primary
               >
-                <p>Xem</p>
+                <p>{t("rewatch_yes")}</p>
               </Button>
             </div>
           </div>
@@ -424,7 +439,7 @@ export const getStaticProps: GetStaticProps = async ({
         description,
         bannerImage,
         coverImage,
-        sourceConnections:kaguya_anime_source!mediaId(*, episodes:kaguya_episodes(*, source:kaguya_sources(id, name)))`
+        sourceConnections:kaguya_anime_source!mediaId(*, episodes:kaguya_episodes(*, source:kaguya_sources(id, name, locales)))`
     )
     .eq("id", Number(params[0]))
     .single();

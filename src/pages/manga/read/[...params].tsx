@@ -22,6 +22,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { useTranslation } from "next-i18next";
 
 const ReadPanel = dynamic(
   () => import("@/components/features/manga/Reader/ReadPanel"),
@@ -39,10 +40,11 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
   const [showReadOverlay, setShowReadOverlay] = useState(false);
   const [declinedReread, setDeclinedReread] = useState(false);
   const saveReadTimeout = useRef<NodeJS.Timeout>();
-
+  const { locale } = useRouter();
+  const { t } = useTranslation("manga_read");
   const saveReadMutation = useSaveRead();
 
-  const title = useMemo(() => getTitle(manga), [manga]);
+  const title = useMemo(() => getTitle(manga, locale), [manga, locale]);
 
   const chapters = useMemo(
     () =>
@@ -180,7 +182,10 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
         <div className="flex items-center justify-center w-full min-h-screen">
           <Head
             title={`${title} (${currentChapter.name}) - Kaguya`}
-            description={`Đọc truyện ${title} (${currentChapter.name}) tại Kaguya. Hoàn toàn miễn phí, không quảng cáo`}
+            description={t("head_description", {
+              title,
+              chapterName: currentChapter.name,
+            })}
             image={manga.bannerImage || manga.coverImage.extraLarge}
           />
 
@@ -189,12 +194,15 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
               <div className="space-y-4">
                 <p className="text-4xl font-semibold">｡゜(｀Д´)゜｡</p>
                 <p className="text-xl">
-                  Đã có lỗi xảy ra ({error?.response?.data?.error})
+                  {t("error_message", { error: error?.response?.data?.error })}
                 </p>
               </div>
 
               <Button primary onClick={router.back}>
-                <p>Trở về trang trước</p>
+                <p>
+                  {" "}
+                  {t("error_goback", { error: error?.response?.data?.error })}
+                </p>
               </Button>
             </div>
           ) : (
@@ -215,13 +223,13 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
 
               <div className="fixed left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 z-50 w-11/12 lg:w-2/3 p-8 rounded-md bg-background-900">
                 <h1 className="text-4xl font-bold mb-4">
-                  Đọc {readChapter.name}
+                  {t("reread_heading", { chapterName: readChapter.name })}
                 </h1>
-                <p className="">
-                  Hệ thống ghi nhận bạn đã đọc {readChapter.name}.
+                <p>
+                  {t("reread_description", { chapterName: readChapter.name })}
                 </p>
                 <p className="mb-4">
-                  Bạn có muốn đọc {readChapter.name} không?
+                  {t("reread_question", { chapterName: readChapter.name })}
                 </p>
                 <div className="flex items-center justify-end space-x-4">
                   <Button
@@ -230,7 +238,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
                     }}
                     className="!bg-transparent hover:!bg-white/20 transition duration-300"
                   >
-                    <p>Không</p>
+                    <p>{t("reread_no")}</p>
                   </Button>
                   <Button
                     onClick={() => {
@@ -247,7 +255,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
                     }}
                     primary
                   >
-                    <p>Đọc</p>
+                    <p>{t("reread_yes")}</p>
                   </Button>
                 </div>
               </div>
@@ -267,7 +275,7 @@ export const getStaticProps: GetStaticProps = async ({
     .select(
       `
         title,
-        sourceConnections:kaguya_manga_source!mediaId(*, chapters:kaguya_chapters(*, source:kaguya_sources(id, name))),
+        sourceConnections:kaguya_manga_source!mediaId(*, chapters:kaguya_chapters(*, source:kaguya_sources(id, name, locales))),
         bannerImage,
         coverImage,
         vietnameseTitle

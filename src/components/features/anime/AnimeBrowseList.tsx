@@ -7,14 +7,18 @@ import InView from "@/components/shared/InView";
 import List from "@/components/shared/List";
 import SortSelector from "@/components/shared/SortSelector";
 import ListSkeleton from "@/components/skeletons/ListSkeleton";
-import { COUNTRIES, FORMATS, SEASONS, SEASON_YEARS, STATUS } from "@/constants";
+import { SEASON_YEARS } from "@/constants";
 import useBrowse, { UseBrowseOptions } from "@/hooks/useBrowseAnime";
+import useConstantTranslation from "@/hooks/useConstantTranslation";
 import { debounce } from "@/utils";
+import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useMemo } from "react";
 import { MobileView } from "react-device-detect";
 import { Controller, useForm } from "react-hook-form";
 import { AiOutlineSearch } from "react-icons/ai";
+
+const seasonYears = SEASON_YEARS.map((year) => ({ label: year, value: year }));
 
 const initialValues: UseBrowseOptions = {
   format: undefined,
@@ -27,21 +31,6 @@ const initialValues: UseBrowseOptions = {
   countries: [],
 };
 
-const seasonYears = SEASON_YEARS.map((year) => ({
-  value: year.toString(),
-  label: year.toString(),
-}));
-
-const seasons = SEASONS.map((season) => ({
-  value: season.value,
-  label: season.label,
-}));
-
-const formats = FORMATS.map((format) => ({
-  value: format.value,
-  label: format.label,
-}));
-
 interface BrowseListProps {
   defaultQuery?: UseBrowseOptions;
 }
@@ -49,6 +38,7 @@ interface BrowseListProps {
 const BrowseList: React.FC<BrowseListProps> = ({
   defaultQuery = initialValues,
 }) => {
+  const { t } = useTranslation("common");
   const defaultValues = { ...initialValues, ...defaultQuery };
 
   const {
@@ -63,7 +53,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
   });
 
   const router = useRouter();
-
+  const { FORMATS, SEASONS, STATUS, COUNTRIES } = useConstantTranslation();
   const query = watch();
 
   const {
@@ -131,7 +121,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
             LeftIcon={AiOutlineSearch}
             onChange={handleInputChange}
             defaultValue={defaultValues.keyword}
-            label="Tìm kiếm"
+            label={t("search")}
             containerClassName="md:hidden shrink-0"
           />
 
@@ -142,7 +132,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
               LeftIcon={AiOutlineSearch}
               onChange={handleInputChange}
               defaultValue={defaultValues.keyword}
-              label="Tìm kiếm"
+              label={t("search")}
               containerClassName="hidden md:block shrink-0"
             />
 
@@ -156,10 +146,10 @@ const BrowseList: React.FC<BrowseListProps> = ({
               name="season"
               defaultValue={defaultValues.season}
               selectProps={{
-                placeholder: "Mùa",
-                options: seasons,
+                placeholder: t("season"),
+                options: SEASONS,
               }}
-              label="Mùa"
+              label={t("season")}
             />
 
             <FormSelect
@@ -167,10 +157,10 @@ const BrowseList: React.FC<BrowseListProps> = ({
               name="seasonYear"
               defaultValue={defaultValues.seasonYear}
               selectProps={{
-                placeholder: "Năm",
+                placeholder: t("year"),
                 options: seasonYears,
               }}
-              label="Năm"
+              label={t("year")}
             />
 
             <FormSelect
@@ -178,10 +168,10 @@ const BrowseList: React.FC<BrowseListProps> = ({
               name="format"
               defaultValue={defaultValues.format}
               selectProps={{
-                placeholder: "Định dạng",
-                options: formats,
+                placeholder: t("format"),
+                options: FORMATS,
               }}
-              label="Định dạng"
+              label={t("format")}
             />
 
             <MobileView renderWithFragment>
@@ -190,11 +180,11 @@ const BrowseList: React.FC<BrowseListProps> = ({
                 name="countries"
                 defaultValue={defaultValues.countries}
                 selectProps={{
-                  placeholder: "Quốc gia",
+                  placeholder: t("country"),
                   options: COUNTRIES,
                   isMulti: true,
                 }}
-                label="Quốc gia"
+                label={t("country")}
               />
 
               <FormSelect
@@ -202,10 +192,10 @@ const BrowseList: React.FC<BrowseListProps> = ({
                 name="status"
                 defaultValue={defaultValues.status}
                 selectProps={{
-                  placeholder: "Tình trạng",
+                  placeholder: t("status"),
                   options: STATUS,
                 }}
-                label="Tình trạng"
+                label={t("status")}
               />
             </MobileView>
           </div>
@@ -216,11 +206,11 @@ const BrowseList: React.FC<BrowseListProps> = ({
               name="countries"
               defaultValue={defaultValues.countries}
               selectProps={{
-                placeholder: "Quốc gia",
+                placeholder: t("country"),
                 options: COUNTRIES,
                 isMulti: true,
               }}
-              label="Quốc gia"
+              label={t("country")}
             />
 
             <FormSelect
@@ -228,10 +218,10 @@ const BrowseList: React.FC<BrowseListProps> = ({
               name="status"
               defaultValue={defaultValues.status}
               selectProps={{
-                placeholder: "Tình trạng",
+                placeholder: t("status"),
                 options: STATUS,
               }}
-              label="Tình trạng"
+              label={t("status")}
             />
           </AdvancedSettings>
         </div>

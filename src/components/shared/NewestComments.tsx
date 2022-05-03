@@ -4,7 +4,9 @@ import Swiper, { SwiperSlide } from "@/components/shared/Swiper";
 import useNewestComments from "@/hooks/useNewestComments";
 import dayjs from "@/lib/dayjs";
 import { getTitle } from "@/utils/data";
+import { useTranslation } from "next-i18next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { PropsWithChildren, useMemo } from "react";
 import CommentsSwiperSkeleton from "../skeletons/CommentsSwiperSkeleton";
 import EmojiText from "./EmojiText";
@@ -17,6 +19,8 @@ const NewestComments = <T extends "anime" | "manga">(
   props: PropsWithChildren<NewestCommentsProps<T>>
 ) => {
   const { data, isLoading } = useNewestComments(props.type);
+  const { t } = useTranslation("common");
+  const { locale } = useRouter();
 
   const isAnime = useMemo(() => props.type === "anime", [props.type]);
 
@@ -25,7 +29,7 @@ const NewestComments = <T extends "anime" | "manga">(
   }
 
   return data?.length ? (
-    <Section title="Bình luận gần đây">
+    <Section title={t("recent_comments")}>
       <Swiper
         hideNavigation
         slidesPerGroup={1}
@@ -55,6 +59,7 @@ const NewestComments = <T extends "anime" | "manga">(
           const redirectUrl = isAnime
             ? `/anime/details/${source?.id}`
             : `/manga/details/${source?.id}`;
+          const title = getTitle(source, locale);
 
           return (
             <SwiperSlide key={comment.id}>
@@ -67,7 +72,7 @@ const NewestComments = <T extends "anime" | "manga">(
                       <p className="line-clamp-1">{user?.name}</p>
 
                       <p className="text-gray-300 line-clamp-1">
-                        {dayjs(comment.created_at).fromNow()}
+                        {dayjs(comment.created_at, { locale }).fromNow()}
                       </p>
                     </div>
                   </div>
@@ -80,9 +85,9 @@ const NewestComments = <T extends "anime" | "manga">(
                   <Link href={redirectUrl}>
                     <a
                       className="shrink-0 font-semibold line-clamp-1 text-sm block text-primary-300 hover:text-primary-400 transition duration-300"
-                      title={getTitle(source)}
+                      title={title}
                     >
-                      {getTitle(source)}
+                      {title}
                     </a>
                   </Link>
                 </div>

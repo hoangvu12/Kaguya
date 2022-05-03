@@ -4,7 +4,9 @@ import classNames from "classnames";
 import React, { useMemo, useState } from "react";
 import EpisodeSelector, { EpisodeSelectorProps } from "./EpisodeSelector";
 
-const SourceEpisodeSelector: React.FC<EpisodeSelectorProps> = ({
+export interface SourceEpisodeSelectorProps extends EpisodeSelectorProps {}
+
+const SourceEpisodeSelector: React.FC<SourceEpisodeSelectorProps> = ({
   episodes,
   activeEpisode,
   ...episodeSelectorProps
@@ -37,7 +39,7 @@ const SourceEpisodeSelector: React.FC<EpisodeSelectorProps> = ({
   return (
     <React.Fragment>
       <ArrowSwiper isOverflowHidden={false} className="w-11/12 mx-auto mb-8">
-        {Object.keys(sources).map((source, i) => (
+        {Object.keys(sources).map((source) => (
           <SwiperSlide onClick={() => setActiveSource(source)} key={source}>
             <div
               className={classNames(

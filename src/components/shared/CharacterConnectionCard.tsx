@@ -2,6 +2,7 @@ import Image from "@/components/shared/Image";
 import { Anime, CharacterConnection, Manga } from "@/types";
 import { convert } from "@/utils/data";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 
 interface CharacterCardProps<T> {
@@ -13,6 +14,8 @@ const CharacterConnectionCard = <T extends "anime" | "manga">({
   characterConnection,
   type: T,
 }: CharacterCardProps<T>) => {
+  const { locale } = useRouter();
+
   return (
     <Link href={`/characters/details/${characterConnection.characterId}`}>
       <a>
@@ -31,7 +34,9 @@ const CharacterConnectionCard = <T extends "anime" | "manga">({
               {characterConnection.character.name.userPreferred}
             </p>
 
-            <p>{convert(characterConnection.role, "characterRole")}</p>
+            <p>
+              {convert(characterConnection.role, "characterRole", { locale })}
+            </p>
           </div>
         </div>
       </a>

@@ -13,7 +13,8 @@ import { Room } from "@/types";
 import { vietnameseSlug } from "@/utils";
 import { getTitle } from "@/utils/data";
 import { GetServerSideProps, NextPage } from "next";
-import { ParsedUrlQuery } from "querystring";
+import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 import React, { useEffect, useMemo, useState } from "react";
 import { useQueryClient } from "react-query";
 import { io, Socket } from "socket.io-client";
@@ -27,9 +28,14 @@ const RoomPage: NextPage<RoomPageProps> = ({ room }) => {
   const { data } = useRoom(room.id, room);
   const queryClient = useQueryClient();
   const user = useUser();
+  const { locale } = useRouter();
+  const { t } = useTranslation("wwf");
 
   const title = useMemo(() => data.title, [data.title]);
-  const mediaTitle = useMemo(() => getTitle(data.media), [data.media]);
+  const mediaTitle = useMemo(
+    () => getTitle(data.media, locale),
+    [data.media, locale]
+  );
 
   useEffect(() => {
     const { pathname, origin } = new URL(config.socketServerUrl);
@@ -57,7 +63,10 @@ const RoomPage: NextPage<RoomPageProps> = ({ room }) => {
     <React.Fragment>
       <Head
         title={`${title || mediaTitle} - Kaguya`}
-        description={`Cùng xem ${mediaTitle} với ${data.hostUser.user_metadata.name} tại Kaguya`}
+        description={t("head_description", {
+          mediaTitle,
+          username: data.hostUser.user_metadata.name,
+        })}
         image={data.media.bannerImage || data.media.coverImage.extraLarge}
       />
 
@@ -96,7 +105,7 @@ export const getServerSideProps: GetServerSideProps = async ({
           *,
           episodes:kaguya_episodes(
             *,
-            source:kaguya_sources(id, name)
+            source:kaguya_sources(id, name, locales)
           )
         )
       ),
@@ -125,7 +134,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 const RoomPageWithRedirect = withRedirect(RoomPage, (router, props) => {
   const { params } = router.query;
   const [id, slug] = params as string[];
-  const title = getTitle(props.room.media);
+  const title = getTitle(props.room.media, router.locale);
 
   if (slug) return null;
 

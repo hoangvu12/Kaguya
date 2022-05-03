@@ -5,9 +5,9 @@ import classNames from "classnames";
 import React, { useMemo } from "react";
 import { MobileView } from "react-device-detect";
 import { BsArrowLeft } from "react-icons/bs";
+import LocaleEpisodeSelector from "../../anime/Player/LocaleEpisodeSelector";
 import MobileEpisodesButton from "../../anime/Player/MobileEpisodesButton";
 import MobileNextEpisode from "../../anime/Player/MobileNextEpisode";
-import SourceEpisodeSelector from "../../anime/SourceEpisodeSelector";
 
 interface MobileCustomControlsProps {
   episodes: Episode[];
@@ -56,7 +56,7 @@ const MobileCustomControls: React.FC<MobileCustomControlsProps> = ({
                 />
 
                 <div>
-                  <SourceEpisodeSelector
+                  <LocaleEpisodeSelector
                     episodes={episodes}
                     activeEpisode={room.episode}
                     onEachEpisode={(episode) => (
