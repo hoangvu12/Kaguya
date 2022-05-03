@@ -12,7 +12,7 @@ import useCreateRoom from "@/hooks/useCreateRoom";
 import useDevice from "@/hooks/useDevice";
 import supabase from "@/lib/supabase";
 import { Anime, Episode } from "@/types";
-import { convert, getTitle, sortMediaUnit } from "@/utils/data";
+import { convert, getDescription, getTitle, sortMediaUnit } from "@/utils/data";
 import classNames from "classnames";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import React, { useCallback, useMemo, useState } from "react";
@@ -64,6 +64,7 @@ const CreateRoomPage: NextPage<CreateRoomPageProps> = ({ media }) => {
   );
 
   const mediaTitle = useMemo(() => getTitle(media), [media]);
+  const mediaDescription = useMemo(() => getDescription(media), [media]);
 
   const handleInputChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,7 +113,7 @@ const CreateRoomPage: NextPage<CreateRoomPageProps> = ({ media }) => {
             ))}
           </DotList>
 
-          <p className="mt-4 line-clamp-6 text-gray-300">{media.description}</p>
+          <p className="mt-4 line-clamp-6 text-gray-300">{mediaDescription}</p>
         </div>
         <div className="flex flex-col justify-between md:w-2/3 bg-background-900 p-4 md:p-8 space-y-4">
           <div className="space-y-8">

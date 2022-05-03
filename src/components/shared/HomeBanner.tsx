@@ -6,7 +6,7 @@ import Swiper, { SwiperProps, SwiperSlide } from "@/components/shared/Swiper";
 import TextIcon from "@/components/shared/TextIcon";
 import { Anime, Manga } from "@/types";
 import { numberWithCommas } from "@/utils";
-import { convert, getTitle } from "@/utils/data";
+import { convert, getDescription, getTitle } from "@/utils/data";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
@@ -173,6 +173,7 @@ const DesktopHomeBanner = <T extends "anime" | "manga">({
   }, [player]);
 
   const title = useMemo(() => getTitle(activeSlide), [activeSlide]);
+  const description = useMemo(() => getDescription(activeSlide), [activeSlide]);
 
   useEffect(() => {
     setShowTrailer(false);
@@ -277,7 +278,7 @@ const DesktopHomeBanner = <T extends "anime" | "manga">({
           </div>
 
           <p className="hidden mt-2 text-base md:block text-gray-200 md:line-clamp-5">
-            {activeSlide.description}
+            {description}
           </p>
         </motion.div>
 

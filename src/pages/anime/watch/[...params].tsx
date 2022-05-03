@@ -1,3 +1,4 @@
+import Video from "@/components/features/anime/Player";
 import EpisodesButton from "@/components/features/anime/Player/EpisodesButton";
 import MobileEpisodesButton from "@/components/features/anime/Player/MobileEpisodesButton";
 import MobileNextEpisode from "@/components/features/anime/Player/MobileNextEpisode";
@@ -17,8 +18,7 @@ import useSavedWatched from "@/hooks/useSavedWatched";
 import useSaveWatched from "@/hooks/useSaveWatched";
 import supabase from "@/lib/supabase";
 import { Anime, Episode } from "@/types";
-import { getTitle, sortMediaUnit } from "@/utils/data";
-import Storage from "@/utils/storage";
+import { getDescription, getTitle, sortMediaUnit } from "@/utils/data";
 import classNames from "classnames";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
@@ -31,7 +31,6 @@ import React, {
 } from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import { BsArrowLeft } from "react-icons/bs";
-import Video from "@/components/features/anime/Player";
 
 interface WatchPageProps {
   anime: Anime;
@@ -233,6 +232,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   }, [watchedEpisode?.sourceEpisodeId]);
 
   const title = useMemo(() => getTitle(anime), [anime]);
+  const description = useMemo(() => getDescription(anime), [anime]);
 
   const overlaySlot = useMemo(
     () => (
@@ -365,7 +365,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
               <p className="mb-8 text-5xl font-semibold">
                 {title} - {currentEpisode.name}
               </p>
-              <p className="text-lg text-gray-300">{anime.description}</p>
+              <p className="text-lg text-gray-300">{description}</p>
             </div>
           </div>
         </Portal>
