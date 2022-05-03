@@ -18,7 +18,7 @@ import withRedirect from "@/hocs/withRedirect";
 import supabase from "@/lib/supabase";
 import { Manga } from "@/types";
 import { numberWithCommas, vietnameseSlug } from "@/utils";
-import { convert, getTitle } from "@/utils/data";
+import { convert, getDescription, getTitle } from "@/utils/data";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import Link from "next/link";
@@ -36,12 +36,13 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
   const { t } = useTranslation("manga_details");
 
   const title = useMemo(() => getTitle(manga, locale), [manga, locale]);
+  const description = useMemo(() => getDescription(manga), [manga]);
 
   return (
     <>
       <Head
         title={`${title} - Kaguya`}
-        description={manga.description}
+        description={description}
         image={manga.bannerImage}
       />
 
@@ -82,7 +83,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
                 </DotList>
 
                 <p className="mt-4 text-gray-300 mb-8">
-                  {manga.description || t("common:updating")}
+                  {description || "Đang cập nhật"}
                 </p>
               </div>
 

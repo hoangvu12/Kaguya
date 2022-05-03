@@ -23,7 +23,7 @@ import {
   parseNumbersFromString,
   vietnameseSlug,
 } from "@/utils";
-import { convert, getTitle } from "@/utils/data";
+import { convert, getDescription, getTitle } from "@/utils/data";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import Link from "next/link";
@@ -75,12 +75,13 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
   }, [hasNextAiringSchedule?.airingAt]);
 
   const title = useMemo(() => getTitle(anime, locale), [anime, locale]);
+  const description = useMemo(() => getDescription(anime), [anime]);
 
   return (
     <>
       <Head
         title={`${title} - Kaguya`}
-        description={anime.description}
+        description={description}
         image={anime.bannerImage}
       />
 
@@ -131,7 +132,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                 </DotList>
 
                 <p className="mt-4 mb-8 text-gray-300">
-                  {anime.description || t("common:updating") + "..."}
+                  {description || "Đang cập nhật..."}
                 </p>
               </div>
 
