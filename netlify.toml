@@ -1,3 +1,6 @@
+[build]
+  base = "/"
+
 [[redirects]]
 from = "/*"
 to = "/index_vi.html"
