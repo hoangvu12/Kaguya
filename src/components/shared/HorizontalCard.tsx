@@ -2,6 +2,7 @@ import { Anime, Manga } from "@/types";
 import { convert, getTitle } from "@/utils/data";
 import classNames from "classnames";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import DotList from "./DotList";
 import PlainCard from "./PlainCard";
@@ -25,7 +26,9 @@ const HorizontalCard = <T extends "anime" | "manga">({
     [data.id, type]
   );
 
-  const title = useMemo(() => getTitle(data), [data]);
+  const { locale } = useRouter();
+
+  const title = useMemo(() => getTitle(data, locale), [data, locale]);
 
   return (
     <div
@@ -54,16 +57,18 @@ const HorizontalCard = <T extends "anime" | "manga">({
 
           {"season" in data && "seasonYear" in data && (
             <span>
-              {convert(data.season, "season")} {data.seasonYear}
+              {convert(data.season, "season", { locale })} {data.seasonYear}
             </span>
           )}
 
-          {data.status && <span>{convert(data.status, "status")}</span>}
+          {data.status && (
+            <span>{convert(data.status, "status", { locale })}</span>
+          )}
         </DotList>
 
         <DotList className="text-sm text-gray-300">
           {data.genres?.map((genre) => (
-            <span key={genre}>{convert(genre, "genre")}</span>
+            <span key={genre}>{convert(genre, "genre", { locale })}</span>
           ))}
         </DotList>
       </div>

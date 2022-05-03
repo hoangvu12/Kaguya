@@ -3,6 +3,9 @@ import supabase from "@/lib/supabase";
 import { Anime, Manga } from "@/types";
 import { getTitle } from "@/utils/data";
 import { PostgrestError } from "@supabase/supabase-js";
+import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
+import { useMemo } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 
@@ -14,6 +17,11 @@ const useSubscribe = <T extends "anime" | "manga">(
 ) => {
   const user = useUser();
   const queryClient = useQueryClient();
+  const { locale } = useRouter();
+  const { t } = useTranslation("notification");
+
+  const mediaTitle = useMemo(() => getTitle(source, locale), [locale, source]);
+
   const tableName =
     type === "anime" ? "kaguya_anime_subscribers" : "kaguya_manga_subscribers";
   const queryKey = ["is_subscribed", user.id, source.id];
@@ -33,11 +41,7 @@ const useSubscribe = <T extends "anime" | "manga">(
         queryClient.setQueryData(queryKey, true);
       },
       onSuccess: () => {
-        toast.success(
-          <p>
-            Đã bật thông báo <b>{getTitle(source)}</b>{" "}
-          </p>
-        );
+        toast.success(t("subscribed_msg", { mediaTitle }));
       },
       onError: (error) => {
         toast.error(error.message);

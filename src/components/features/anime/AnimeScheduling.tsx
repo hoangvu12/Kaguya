@@ -4,18 +4,29 @@ import DotList from "@/components/shared/DotList";
 import dayjs from "@/lib/dayjs";
 import { AiringSchedule } from "@/types";
 import classNames from "classnames";
+import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 
-const daysOfWeek = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
+const daysOfWeek_vi = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
+const daysOfWeek_en = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 interface AnimeSchedulingProps {
   schedules: AiringSchedule[];
 }
 
 const AnimeScheduling: React.FC<AnimeSchedulingProps> = ({ schedules }) => {
+  const { t } = useTranslation("anime_home");
+  const { locale } = useRouter();
+
   const today = dayjs();
   const todayIndex = today.day();
+
+  const daysOfWeek = useMemo(
+    () => (locale === "en" ? daysOfWeek_en : daysOfWeek_vi),
+    [locale]
+  );
 
   const chunks = useMemo(
     () =>
@@ -33,7 +44,7 @@ const AnimeScheduling: React.FC<AnimeSchedulingProps> = ({ schedules }) => {
 
         return acc;
       }, {}),
-    [schedules]
+    [daysOfWeek, schedules]
   );
 
   return (
@@ -88,13 +99,15 @@ const AnimeScheduling: React.FC<AnimeSchedulingProps> = ({ schedules }) => {
                           <React.Fragment>
                             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60"></div>
                             <DotList className="p-2 absolute bottom-0 w-full">
-                              <span>Tập {cardWithSchedule.episode}</span>
+                              <span>
+                                {t("common:episode")} {cardWithSchedule.episode}
+                              </span>
                               <span>
                                 {!isReleased
                                   ? dayjs
                                       .unix(cardWithSchedule.airingAt)
                                       .format("HH:mm")
-                                  : "Đã cập nhật"}
+                                  : t("airing_schedule_passed")}
                               </span>
                             </DotList>
                           </React.Fragment>

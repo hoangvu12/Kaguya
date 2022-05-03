@@ -1,12 +1,12 @@
 import supabase from "@/lib/supabase";
 import { MediaFormat, MediaStatus } from "@/anilist";
-import { Anime, MediaGenre } from "@/types";
+import { Anime } from "@/types";
 import { useSupaInfiniteQuery } from "@/utils/supabase";
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
 
 export interface UseBrowseOptions {
   keyword?: string;
-  genres?: MediaGenre[];
+  genres?: string[];
   seasonYear?: string;
   season?: string;
   format?: MediaFormat;

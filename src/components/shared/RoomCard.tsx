@@ -1,7 +1,9 @@
 import dayjs from "@/lib/dayjs";
 import { Room } from "@/types";
 import { getTitle } from "@/utils/data";
+import { useTranslation } from "next-i18next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { AiFillEye } from "react-icons/ai";
 import { GoPrimitiveDot } from "react-icons/go";
@@ -15,7 +17,13 @@ interface RoomCardProps {
 }
 
 const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
-  const mediaTitle = useMemo(() => getTitle(room.media), [room.media]);
+  const { locale } = useRouter();
+  const { t } = useTranslation("wwf");
+
+  const mediaTitle = useMemo(
+    () => getTitle(room.media, locale),
+    [room.media, locale]
+  );
 
   return (
     <Link href={`/wwf/${room.id}`}>
@@ -35,7 +43,7 @@ const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
                 iconClassName="w-4 h-4"
                 className="absolute left-2 top-2 px-2 py-0.5 rounded-md bg-red-500"
               >
-                <p className="font-medium">Trực tiếp</p>
+                <p className="font-medium">{t("live")}</p>
               </TextIcon>
 
               <TextIcon
@@ -83,7 +91,7 @@ const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
                   {room.hostUser?.user_metadata?.name}
                 </span>
                 <span className="text-gray-400">
-                  {dayjs(new Date(room.created_at)).fromNow()}
+                  {dayjs(new Date(room.created_at), { locale }).fromNow()}
                 </span>
               </DotList>
             </div>

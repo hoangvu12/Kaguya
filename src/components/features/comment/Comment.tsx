@@ -17,6 +17,8 @@ import dayjs from "@/lib/dayjs";
 import { Comment as CommentType } from "@/types";
 import { getMostOccuringEmojis } from "@/utils/emoji";
 import { IEmojiData } from "emoji-picker-react";
+import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 import React, { useCallback, useMemo, useState } from "react";
 
 interface CommentProps {
@@ -29,6 +31,7 @@ const Comment: React.FC<CommentProps> = ({
   level = 1,
 }) => {
   const user = useUser();
+  const { t } = useTranslation("comment");
 
   const { data: comment } = useComment(initialComment.id, {
     enabled: false,
@@ -39,6 +42,7 @@ const Comment: React.FC<CommentProps> = ({
   const deleteMutation = useDeleteComment(comment);
   const editMutation = useEditComment(comment);
   const createMutation = useCreateComment({ type: "reply", comment });
+  const { locale } = useRouter();
 
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [hasReacted, setHasReacted] = useState(() => {
@@ -118,7 +122,7 @@ const Comment: React.FC<CommentProps> = ({
                   {comment.user.user_metadata.name}
                 </span>
                 <span className="text-sm text-gray-300">
-                  {dayjs(comment.created_at).fromNow()}
+                  {dayjs(comment.created_at, { locale }).fromNow()}
                 </span>
               </DotList>
 
@@ -148,7 +152,9 @@ const Comment: React.FC<CommentProps> = ({
             {!hasReacted ? (
               <EmojiPicker
                 reference={
-                  <p className="text-sm text-gray-300 hover:underline">Thích</p>
+                  <p className="text-sm text-gray-300 hover:underline">
+                    {t("like")}
+                  </p>
                 }
                 placement="top"
                 onEmojiClick={handleReactEmojiSelect}
@@ -160,7 +166,7 @@ const Comment: React.FC<CommentProps> = ({
                 onClick={handleUnReact}
                 className="text-sm text-primary-500 hover:underline"
               >
-                Đã thích
+                {t("liked")}
               </button>
             )}
 
@@ -169,12 +175,12 @@ const Comment: React.FC<CommentProps> = ({
                 onClick={handleReplyClick}
                 className="text-sm text-gray-300 hover:underline"
               >
-                Trả lời
+                {t("reply")}
               </button>
             )}
 
             {comment.is_edited && (
-              <p className="text-gray-400 text-sm">Đã chỉnh sửa</p>
+              <p className="text-gray-400 text-sm">{t("is_edited")}</p>
             )}
           </div>
 
@@ -189,7 +195,7 @@ const Comment: React.FC<CommentProps> = ({
           {showReplyInput && (
             <div className="mt-4">
               <CommentInput
-                placeholder="Trả lời bình luận."
+                placeholder={t("reply_placeholder")}
                 onEnter={handleReply}
               />
             </div>

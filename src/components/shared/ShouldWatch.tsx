@@ -6,9 +6,11 @@ import { Anime, Manga } from "@/types";
 import { numberWithCommas } from "@/utils";
 import { convert, getDescription, getTitle } from "@/utils/data";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { AiFillHeart, AiFillPlayCircle } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
+import Description from "./Description";
 
 interface ShouldWatchProps<T> {
   data: T extends "anime" ? Anime : Manga;
@@ -19,7 +21,12 @@ const ShouldWatch = <T extends "anime" | "manga">({
   data,
   type,
 }: ShouldWatchProps<T>) => {
-  const title = useMemo(() => getTitle(data), [data]);
+  const { locale } = useRouter();
+  const title = useMemo(() => getTitle(data, locale), [data, locale]);
+  const description = useMemo(
+    () => getDescription(data, locale),
+    [data, locale]
+  );
 
   const redirectUrl = useMemo(
     () =>
@@ -73,15 +80,16 @@ const ShouldWatch = <T extends "anime" | "manga">({
 
               <DotList>
                 {data.genres.map((genre) => (
-                  <span key={genre}>{convert(genre, "genre")}</span>
+                  <span key={genre}>{convert(genre, "genre", { locale })}</span>
                 ))}
               </DotList>
             </div>
           </div>
           <div className="h-full w-full">
-            <p className="text-base text-gray-300 line-clamp-4">
-              {getDescription(data)}
-            </p>
+            <Description
+              description={description}
+              className="text-base text-gray-300 line-clamp-4"
+            />
           </div>
         </div>
       </a>

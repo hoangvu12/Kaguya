@@ -4,11 +4,13 @@ import Popup from "@/components/shared/Popup";
 import TextIcon from "@/components/shared/TextIcon";
 import { useUser } from "@/contexts/AuthContext";
 import supabase from "@/lib/supabase";
+import { useTranslation } from "next-i18next";
 import React from "react";
 import { HiOutlineLogout } from "react-icons/hi";
 
 const HeaderProfile = () => {
   const user = useUser();
+  const { t } = useTranslation("header");
 
   if (!user) return null;
 
@@ -25,7 +27,7 @@ const HeaderProfile = () => {
 
         <div>
           <p className="font-semibold">{user.user_metadata.name}</p>
-          <p className="text-gray-300">Người dùng</p>
+          <p className="text-gray-300 text-sm">{t("user")}</p>
         </div>
       </div>
 
@@ -37,7 +39,7 @@ const HeaderProfile = () => {
           }}
         >
           <TextIcon LeftIcon={HiOutlineLogout}>
-            <p>Đăng xuất</p>
+            <p>{t("logout")}</p>
           </TextIcon>
         </Button>
       </div>

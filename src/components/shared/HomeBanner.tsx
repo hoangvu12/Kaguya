@@ -10,6 +10,7 @@ import { convert, getDescription, getTitle } from "@/utils/data";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, {
   useCallback,
   useEffect,
@@ -22,6 +23,7 @@ import { AiFillHeart, AiFillPlayCircle } from "react-icons/ai";
 import { BsFillVolumeMuteFill, BsFillVolumeUpFill } from "react-icons/bs";
 import { MdTagFaces } from "react-icons/md";
 import YouTube, { YouTubeProps } from "react-youtube";
+import Description from "./Description";
 
 interface HomeBannerProps<T> {
   data: T extends "anime" ? Anime[] : Manga[];
@@ -57,6 +59,8 @@ const MobileHomeBanner = <T extends "anime" | "manga">({
   data,
   type,
 }: HomeBannerProps<T>) => {
+  const { locale } = useRouter();
+
   const getRedirectUrl = useCallback(
     (id: number) => {
       return type === "anime" ? `/anime/details/${id}` : `/manga/details/${id}`;
@@ -73,7 +77,7 @@ const MobileHomeBanner = <T extends "anime" | "manga">({
       loop
     >
       {data.map((slide: Anime | Manga, index: number) => {
-        const title = getTitle(slide);
+        const title = getTitle(slide, locale);
 
         return (
           <SwiperSlide key={index}>
@@ -113,7 +117,9 @@ const MobileHomeBanner = <T extends "anime" | "manga">({
                         </TextIcon>
                         <DotList>
                           {slide.genres.map((genre) => (
-                            <span key={genre}>{convert(genre, "genre")}</span>
+                            <span key={genre}>
+                              {convert(genre, "genre", { locale })}
+                            </span>
                           ))}
                         </DotList>
                       </div>
@@ -139,6 +145,7 @@ const DesktopHomeBanner = <T extends "anime" | "manga">({
     useState<ReturnType<YouTube["getInternalPlayer"]>>();
   const [isMuted, setIsMuted] = useState(true);
   const isRanOnce = useRef(false);
+  const { locale } = useRouter();
 
   const activeSlide = useMemo(() => data[index], [data, index]);
 
@@ -172,8 +179,14 @@ const DesktopHomeBanner = <T extends "anime" | "manga">({
     setIsMuted(false);
   }, [player]);
 
-  const title = useMemo(() => getTitle(activeSlide), [activeSlide]);
-  const description = useMemo(() => getDescription(activeSlide), [activeSlide]);
+  const title = useMemo(
+    () => getTitle(activeSlide, locale),
+    [activeSlide, locale]
+  );
+  const description = useMemo(
+    () => getDescription(activeSlide, locale),
+    [activeSlide, locale]
+  );
 
   useEffect(() => {
     setShowTrailer(false);
@@ -272,14 +285,15 @@ const DesktopHomeBanner = <T extends "anime" | "manga">({
 
             <DotList>
               {activeSlide.genres.map((genre) => (
-                <span key={genre}>{convert(genre, "genre")}</span>
+                <span key={genre}>{convert(genre, "genre", { locale })}</span>
               ))}
             </DotList>
           </div>
 
-          <p className="hidden mt-2 text-base md:block text-gray-200 md:line-clamp-5">
-            {description}
-          </p>
+          <Description
+            description={description}
+            className="hidden mt-2 text-base md:block text-gray-200 md:line-clamp-5"
+          />
         </motion.div>
 
         <Link href={getRedirectUrl(activeSlide.id)}>

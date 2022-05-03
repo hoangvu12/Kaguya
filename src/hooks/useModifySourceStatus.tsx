@@ -1,27 +1,36 @@
-import { READ_STATUS, WATCH_STATUS } from "@/constants";
 import { useUser } from "@/contexts/AuthContext";
 import supabase from "@/lib/supabase";
 import { Anime, Manga, SourceStatus } from "@/types";
 import { getTitle } from "@/utils/data";
 import { PostgrestError } from "@supabase/supabase-js";
+import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
+import { useMemo } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
-
-type StatusInput<T> = T extends "anime"
-  ? typeof WATCH_STATUS[number]["value"]
-  : typeof READ_STATUS[number]["value"];
+import useConstantTranslation from "./useConstantTranslation";
 
 const useModifySourceStatus = <T extends "anime" | "manga">(
   type: T,
   source: T extends "anime" ? Anime : Manga
 ) => {
+  const { WATCH_STATUS, READ_STATUS } = useConstantTranslation();
+
+  type StatusInput = T extends "anime"
+    ? typeof WATCH_STATUS[number]["value"]
+    : typeof READ_STATUS[number]["value"];
+
+  const { locale } = useRouter();
+  const queryClient = useQueryClient();
+  const { t } = useTranslation("source_status");
+  const user = useUser();
+  const mediaTitle = useMemo(() => getTitle(source, locale), [locale, source]);
+
   const tableName =
     type === "anime" ? "kaguya_watch_status" : "kaguya_read_status";
   const queryKey = [tableName, source.id];
-  const queryClient = useQueryClient();
-  const user = useUser();
 
-  return useMutation<any, PostgrestError, StatusInput<T>, any>(
+  return useMutation<any, PostgrestError, StatusInput, any>(
     async (status) => {
       const upsertValue = {
         status,
@@ -42,7 +51,10 @@ const useModifySourceStatus = <T extends "anime" | "manga">(
       onMutate: (status) => {
         const oldStatus = queryClient.getQueryData<SourceStatus<T>>(queryKey);
 
-        queryClient.setQueryData(queryKey, { ...oldStatus, status });
+        queryClient.setQueryData(queryKey, {
+          ...oldStatus,
+          status,
+        });
       },
       onSuccess: (_, status) => {
         const { label } =
@@ -50,11 +62,7 @@ const useModifySourceStatus = <T extends "anime" | "manga">(
             ? WATCH_STATUS.find(({ value }) => value === status)
             : READ_STATUS.find(({ value }) => value === status);
 
-        toast.success(
-          <p>
-            Đã thêm <b>{getTitle(source)}</b> vào <b>{label}</b>
-          </p>
-        );
+        toast.success(t("added_to_list_msg", { mediaTitle, label }));
       },
       onError: (error) => {
         toast.error(error.message);

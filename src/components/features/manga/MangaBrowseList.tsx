@@ -6,9 +6,10 @@ import InView from "@/components/shared/InView";
 import List from "@/components/shared/List";
 import SortSelector from "@/components/shared/SortSelector";
 import ListSkeleton from "@/components/skeletons/ListSkeleton";
-import { COUNTRIES, FORMATS, STATUS } from "@/constants";
 import useBrowse, { UseBrowseOptions } from "@/hooks/useBrowseManga";
+import useConstantTranslation from "@/hooks/useConstantTranslation";
 import { debounce } from "@/utils";
+import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -44,7 +45,8 @@ const BrowseList: React.FC<BrowseListProps> = ({
   });
 
   const router = useRouter();
-
+  const { FORMATS, STATUS, COUNTRIES } = useConstantTranslation();
+  const { t } = useTranslation("common");
   const query = watch();
 
   const {
@@ -112,7 +114,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
             LeftIcon={AiOutlineSearch}
             onChange={handleInputChange}
             defaultValue={defaultValues.keyword}
-            label="Tìm kiếm"
+            label={t("search")}
             containerClassName="md:hidden shrink-0"
           />
 
@@ -123,7 +125,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
               LeftIcon={AiOutlineSearch}
               onChange={handleInputChange}
               defaultValue={defaultValues.keyword}
-              label="Tìm kiếm"
+              label={t("search")}
               containerClassName="hidden md:block shrink-0"
             />
 
@@ -137,20 +139,21 @@ const BrowseList: React.FC<BrowseListProps> = ({
               name="format"
               defaultValue={defaultValues.format}
               selectProps={{
-                placeholder: "Định dạng",
+                placeholder: t("format"),
                 options: FORMATS,
               }}
-              label="Định dạng"
+              label={t("format")}
             />
+
             <FormSelect
               control={control}
               name="status"
-              defaultValue={defaultValues.format}
+              defaultValue={defaultValues.status}
               selectProps={{
-                placeholder: "Tình trạng",
+                placeholder: t("status"),
                 options: STATUS,
               }}
-              label="Tình trạng"
+              label={t("status")}
             />
 
             <FormSelect
@@ -158,11 +161,11 @@ const BrowseList: React.FC<BrowseListProps> = ({
               name="countries"
               defaultValue={defaultValues.countries}
               selectProps={{
-                placeholder: "Quốc gia",
+                placeholder: t("country"),
                 options: COUNTRIES,
                 isMulti: true,
               }}
-              label="Quốc gia"
+              label={t("country")}
             />
           </div>
         </div>

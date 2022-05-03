@@ -2,6 +2,7 @@ import useEventListener from "@/hooks/useEventListener";
 import { Comment } from "@/types";
 import React from "react";
 import CommentInput from "@/components/features/comment/CommentInput";
+import { Trans } from "next-i18next";
 
 interface EditingCommentProps {
   comment: Comment;
@@ -26,11 +27,16 @@ const EditingComment: React.FC<EditingCommentProps> = ({
     <React.Fragment>
       <CommentInput defaultText={comment.body} onEnter={onSave} />
       <p className="text-sm text-gray-300">
-        Bấm ESC để{" "}
-        <button onClick={onLeave} className="text-primary-500 hover:underline">
-          thoát
-        </button>
-        .
+        <Trans i18nKey="comment:editing_escape">
+          Bấm ESC để{" "}
+          <button
+            onClick={onLeave}
+            className="text-primary-500 hover:underline"
+          >
+            thoát
+          </button>
+          .
+        </Trans>
       </p>
     </React.Fragment>
   );

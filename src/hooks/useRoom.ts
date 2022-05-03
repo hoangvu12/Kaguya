@@ -21,7 +21,7 @@ const useRoom = (roomId: number, initialData: Room) => {
                 *,
                 episodes:kaguya_episodes(
                   *,
-                  source:kaguya_sources(id, name)
+                  source:kaguya_sources(id, name, locales)
                 )
               )
             ),

@@ -5,8 +5,8 @@ import classNames from "classnames";
 import React, { useMemo } from "react";
 import { BrowserView } from "react-device-detect";
 import EpisodesButton from "../../anime/Player/EpisodesButton";
+import LocaleEpisodeSelector from "../../anime/Player/LocaleEpisodeSelector";
 import NextEpisodeButton from "../../anime/Player/NextEpisodeButton";
-import SourceEpisodeSelector from "../../anime/SourceEpisodeSelector";
 
 interface DesktopCustomControlsProps {
   episodes: Episode[];
@@ -49,7 +49,7 @@ const DesktopCustomControls: React.FC<DesktopCustomControlsProps> = ({
 
         <EpisodesButton>
           <div className="w-[70vw] overflow-hidden">
-            <SourceEpisodeSelector
+            <LocaleEpisodeSelector
               episodes={episodes}
               activeEpisode={currentEpisode}
               onEachEpisode={(episode) => (

@@ -1,9 +1,10 @@
 import Select from "@/components/shared/Select";
-import { READ_STATUS, WATCH_STATUS } from "@/constants";
+import useConstantTranslation from "@/hooks/useConstantTranslation";
 import useModifySourceStatus from "@/hooks/useModifySourceStatus";
 import useSourceStatus from "@/hooks/useSourceStatus";
 import { Anime, Manga } from "@/types";
-import React from "react";
+import { useTranslation } from "next-i18next";
+import React, { useMemo } from "react";
 import { AiFillPlusCircle, AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const styles = {
@@ -60,10 +61,15 @@ const SourceStatus = <T extends "anime" | "manga">(
 ) => {
   const { source, type } = props;
 
+  const { t } = useTranslation("source_status");
   const { data: status, isLoading } = useSourceStatus(type, source);
   const statusMutation = useModifySourceStatus(type, source);
+  const { WATCH_STATUS, READ_STATUS } = useConstantTranslation();
 
-  const options = type === "anime" ? WATCH_STATUS : READ_STATUS;
+  const options = useMemo(
+    () => (type === "anime" ? WATCH_STATUS : READ_STATUS),
+    [READ_STATUS, WATCH_STATUS, type]
+  );
 
   const onChange = ({ value }) => {
     statusMutation.mutate(value);
@@ -79,7 +85,7 @@ const SourceStatus = <T extends "anime" | "manga">(
         <div className="flex items-center space-x-2">
           <AiFillPlusCircle className="w-6 h-6" />
 
-          <p>Danh sách</p>
+          <p>{t("add_to_list")}</p>
         </div>
       }
       styles={styles}

@@ -5,19 +5,16 @@ import PlainCard from "@/components/shared/PlainCard";
 import Section from "@/components/shared/Section";
 import TextIcon from "@/components/shared/TextIcon";
 import { REVALIDATE_TIME } from "@/constants";
+import useConstantTranslation from "@/hooks/useConstantTranslation";
 import dayjs from "@/lib/dayjs";
 import supabase from "@/lib/supabase";
 import { Character, VoiceActor } from "@/types";
 import { arePropertiesFalsy, formatDate, numberWithCommas } from "@/utils";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import { useTranslation } from "next-i18next";
 import React, { useMemo } from "react";
 import { AiFillHeart } from "react-icons/ai";
 import { BiCake } from "react-icons/bi";
-
-const genders = {
-  male: "Nam",
-  female: "Nữ",
-};
 
 const KeyValue: React.FC<{ property: string; value: string }> = ({
   property,
@@ -39,9 +36,12 @@ interface DetailsPageProps {
 }
 
 const DetailsPage: NextPage<DetailsPageProps> = ({ voiceActor }) => {
+  const { t } = useTranslation("voice_actor_details");
+  const { GENDERS } = useConstantTranslation();
+
   const gender = useMemo(
-    () => genders[voiceActor.gender?.toLowerCase()] || voiceActor.gender,
-    [voiceActor.gender]
+    () => GENDERS[voiceActor.gender?.toLowerCase()] || voiceActor.gender,
+    [GENDERS, voiceActor.gender]
   );
 
   const birthday = useMemo(() => {
@@ -59,10 +59,10 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ voiceActor }) => {
 
     if (!yearsActive?.length) return null;
 
-    if (!yearsActive[1]) return `${yearsActive[0]} - Hiện tại`;
+    if (!yearsActive[1]) return `${yearsActive[0]} - ${t("common:present")}`;
 
     return `${yearsActive[0]} - ${yearsActive[1]}`;
-  }, [voiceActor.yearsActive]);
+  }, [t, voiceActor.yearsActive]);
 
   const isDead = useMemo(
     () => !arePropertiesFalsy(voiceActor.dateOfDeath),
@@ -112,7 +112,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ voiceActor }) => {
                       iconClassName="text-primary-300"
                       LeftIcon={BiCake}
                     >
-                      <p>Sinh nhật</p>
+                      <p>{t("is_today_birthday")}</p>
                     </TextIcon>
                   )}
                 </div>
@@ -120,24 +120,33 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ voiceActor }) => {
               </div>
 
               <div className="space-y-2">
-                <KeyValue property="Giới tính" value={gender} />
-                <KeyValue property="Ngày sinh" value={birthday} />
+                <KeyValue property={t("gender")} value={gender} />
+                <KeyValue property={t("birthday")} value={birthday} />
                 {isDead && (
                   <KeyValue
-                    property="Ngày mất"
+                    property={t("deathday")}
                     value={formatDate(voiceActor.dateOfDeath)}
                   />
                 )}
-                <KeyValue property="Tuổi" value={voiceActor.age?.toString()} />
-                <KeyValue property="Thời gian hoạt động" value={yearsActive} />
-                <KeyValue property="Nhóm máu" value={voiceActor.bloodType} />
-                <KeyValue property="Quê nhà" value={voiceActor.homeTown} />
+                <KeyValue
+                  property={t("age")}
+                  value={voiceActor.age?.toString()}
+                />
+                <KeyValue property={t("years_active")} value={yearsActive} />
+                <KeyValue
+                  property={t("blood_type")}
+                  value={voiceActor.bloodType}
+                />
+                <KeyValue
+                  property={t("hometown")}
+                  value={voiceActor.homeTown}
+                />
               </div>
             </div>
           </div>
         </div>
 
-        <Section title="Nhân vật">
+        <Section title={t("characters_section")}>
           <List data={voiceActor.characters.map(({ character }) => character)}>
             {(character) => <CharacterCard character={character} />}
           </List>

@@ -7,11 +7,13 @@ import Section from "@/components/shared/Section";
 import ListSkeleton from "@/components/skeletons/ListSkeleton";
 import useBrowseAnime from "@/hooks/useBrowseAnime";
 import { debounce } from "@/utils";
+import { useTranslation } from "next-i18next";
 import React, { useCallback, useMemo, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 
 const ChooseAnimePage = () => {
   const [keyword, setKeyword] = useState("");
+  const { t } = useTranslation("wwf");
 
   const {
     data,
@@ -41,18 +43,20 @@ const ChooseAnimePage = () => {
   return (
     <Section className="py-20">
       <Head
-        title="Tạo phòng (chọn Anime) - Kaguya"
-        description="Chọn Anime để tạo phòng xem cùng với bạn bè tại Kaguya"
+        title={t("choose_page_title")}
+        description={t("choose_page_description")}
       />
 
-      <h1 className="text-4xl font-semibold mb-8">Chọn Anime để tạo phòng</h1>
+      <h1 className="text-4xl font-semibold mb-8">
+        {t("choose_page_heading")}
+      </h1>
 
       <Input
         containerInputClassName="border border-white/80"
         LeftIcon={AiOutlineSearch}
         onChange={handleInputChange}
         defaultValue={keyword}
-        label="Tìm kiếm"
+        label={t("common:search")}
         containerClassName="w-full md:w-1/3 mb-8"
       />
 

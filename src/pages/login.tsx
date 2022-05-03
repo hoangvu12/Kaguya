@@ -10,6 +10,7 @@ import React, { useMemo } from "react";
 import { FaFacebookF } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { REVALIDATE_TIME } from "@/constants";
+import { useTranslation } from "next-i18next";
 
 interface Quote {
   anime: string;
@@ -21,9 +22,11 @@ interface LoginPageProps {
   quotes: Quote[];
 }
 
+const isDev = process.env.NODE_ENV === "development";
+
 const LoginPage: NextPage<LoginPageProps> = ({ quotes }) => {
   const randomQuote = useMemo(() => randomElement(quotes), [quotes]);
-  const isDev = process.env.NODE_ENV === "development";
+  const { t } = useTranslation("login");
 
   const signInMutation = useSignIn({
     redirectTo: isDev ? "http://localhost:3000" : "/",
@@ -36,8 +39,8 @@ const LoginPage: NextPage<LoginPageProps> = ({ quotes }) => {
   return (
     <React.Fragment>
       <Head
-        title="Đăng nhập - Kaguya"
-        description="Đăng nhập vào Kaguya để xem anime và sử dụng nhiều tính năng hay."
+        title={`${t("login_heading")} - Kaguya`}
+        description={t("login_description")}
       />
 
       <div className="w-full h-screen grid grid-cols-1 md:grid-cols-5">
@@ -65,7 +68,7 @@ const LoginPage: NextPage<LoginPageProps> = ({ quotes }) => {
         </div>
         <div className="col-span-3 bg-background flex items-center justify-center">
           <div className="w-full px-4 md:px-0 md:w-1/2">
-            <h1 className="text-5xl font-bold mb-8">Đăng nhập</h1>
+            <h1 className="text-5xl font-bold mb-8">{t("login_heading")}</h1>
 
             <Button
               className="shadow-lg relative bg-white text-black font-bold flex items-center justify-center w-full hover:!bg-opacity-90 mb-2"
@@ -73,7 +76,7 @@ const LoginPage: NextPage<LoginPageProps> = ({ quotes }) => {
               iconClassName="absolute left-6"
               onClick={handleSignIn("google")}
             >
-              <p>Đăng nhập với Google</p>
+              <p>{t("login_with_google")}</p>
             </Button>
             <Button
               className="shadow-lg relative bg-[#2D88FF] !hover:bg-white/20 text-white font-bold flex items-center justify-center w-full hover:!bg-opacity-90"
@@ -81,7 +84,7 @@ const LoginPage: NextPage<LoginPageProps> = ({ quotes }) => {
               iconClassName="absolute left-6"
               onClick={handleSignIn("facebook")}
             >
-              <p>Đăng nhập với Facebook</p>
+              <p>{t("login_with_facebook")}</p>
             </Button>
           </div>
         </div>

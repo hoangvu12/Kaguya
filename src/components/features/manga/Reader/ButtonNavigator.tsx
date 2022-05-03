@@ -1,5 +1,4 @@
 import Button from "@/components/shared/Button";
-import { useViewPanel } from "@/contexts/ReadContainerContext";
 import { useReadInfo } from "@/contexts/ReadContext";
 import { useReadPanel } from "@/contexts/ReadPanelContext";
 import { useReadSettings } from "@/contexts/ReadSettingsContext";
@@ -11,6 +10,7 @@ import {
   HiOutlineArrowNarrowLeft,
   HiOutlineArrowNarrowRight,
 } from "react-icons/hi";
+import { useTranslation } from "next-i18next";
 
 interface ButtonNavigatorProps {
   onLeft: () => void;
@@ -26,6 +26,7 @@ const ButtonNavigator: React.FC<ButtonNavigatorProps> = ({
   const {
     state: { isSidebarOpen, activeImageIndex },
   } = useReadPanel();
+  const { t } = useTranslation("manga_read");
 
   const { direction } = useReadSettings();
 
@@ -47,9 +48,9 @@ const ButtonNavigator: React.FC<ButtonNavigatorProps> = ({
             onClick={onLeft}
           >
             {isMobile ? null : direction === "ltr" ? (
-              <p>Ảnh trước</p>
+              <p>{t("previous_image")}</p>
             ) : (
-              <p>Ảnh tiếp theo</p>
+              <p>{t("next_image")}</p>
             )}
           </Button>
 
@@ -63,9 +64,9 @@ const ButtonNavigator: React.FC<ButtonNavigatorProps> = ({
             onClick={onRight}
           >
             {isMobile ? null : direction === "ltr" ? (
-              <p>Ảnh tiếp theo</p>
+              <p>{t("next_image")}</p>
             ) : (
-              <p>Ảnh trước</p>
+              <p>{t("previous_image")}</p>
             )}
           </Button>
         </motion.div>
