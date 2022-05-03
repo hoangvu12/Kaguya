@@ -45,7 +45,7 @@ export const getTitle = <T extends Media<Anime> | Media<Manga>>(data: T) => {
 export const getDescription = <T extends Media<Anime> | Media<Manga>>(
   data: T
 ) => {
-  return data?.description?.vietnamese || data?.description?.ebglish;
+  return data?.description?.vietnamese || data?.description?.english;
 };
 
 export const sortMediaUnit = <T extends Chapter | Episode>(data: T[]) => {
