@@ -1,7 +1,7 @@
 import locales from "@/locales.json";
 import { useRouter } from "next/router";
 import nookies from "nookies";
-import React from "react";
+import React, { useMemo } from "react";
 import { MdOutlineLanguage } from "react-icons/md";
 import Popup from "./Popup";
 
@@ -21,12 +21,24 @@ const LanguageSwitcher = () => {
     nookies.set(null, "NEXT_LOCALE", lang, { path: "/" });
   };
 
+  const currentLocale = useMemo(
+    () => locales.find(({ locale }) => router.locale === locale),
+    [router.locale]
+  );
+
   return (
     <Popup
       type="click"
       placement="bottom-end"
+      showArrow
       reference={
-        <MdOutlineLanguage className="w-6 h-6 hover:text-primary-300 transition duration-300" />
+        <div className="lg:bg-background-900 rounded-3xl p-2 flex items-center gap-x-2">
+          <MdOutlineLanguage className="w-6 h-6 hover:text-primary-300 transition duration-300" />
+
+          <p className="hidden lg:block text-white text-base">
+            {currentLocale.name}
+          </p>
+        </div>
       }
     >
       <ul className="space-y-1">
