@@ -2,48 +2,47 @@ import Button from "@/components/shared/Button";
 import Head from "@/components/shared/Head";
 import Image from "@/components/shared/Image";
 import Section from "@/components/shared/Section";
+import { Trans, useTranslation } from "next-i18next";
 import Link from "next/link";
 
 function Error({ statusCode }) {
-  return (
-    <Section className="w-full h-screen flex items-center">
-      <div className="flex flex-col items-center w-full text-center md:text-left md:items-start">
-        <Head title={`Đã có lỗi xảy ra (${statusCode}) - Kaguya`} />
+  const { t } = useTranslation("_error_page");
 
+  return (
+    <div className="relative w-full min-h-screen flex items-center">
+      <Head title={`${t("error_title", { statusCode })} - Kaguya`} />
+
+      <div className="fixed z-0 w-full h-full flex items-center justify-center">
+        <h1 className="font-bold text-[30vw] text-gray-500">{statusCode}</h1>
+
+        <div className="absolute inset-0 bg-black/90 w-full h-full"></div>
+      </div>
+
+      <Section className="relative z-10 flex flex-col items-center w-full h-full text-center ">
         <div className="mb-4 text-gray-300">
-          <span className="text-base">
-            Chào mừng đến với{" "}
-            <span className="text-red-300">chiều không gian {statusCode}</span>
+          <span className="text-lg">
+            <Trans i18nKey="_error_page:error_welcome" statusCode={statusCode}>
+              Chào mừng đến với{" "}
+              <span className="text-red-300">chiều không gian 404</span>
+            </Trans>
           </span>
         </div>
 
-        <p className="text-3xl font-semibold">
-          Bạn đã tìm thấy một chiều không gian mới.
+        <p className="text-4xl font-semibold">
+          {t("error_heading", { statusCode })}
         </p>
 
-        <p className="text-xl text-gray-200 mt-4">
-          Nhưng đáng tiếc thay, chiều không gian này không có thứ gì cả
-        </p>
+        <p className="text-2xl text-gray-200 mt-4">{t("error_description")}</p>
 
         <Link href="/">
           <a>
             <Button primary outline className="mt-8">
-              <p>Quay về chiều không gian cũ</p>
+              <p className="text-lg">{t("error_goback")}</p>
             </Button>
           </a>
         </Link>
-      </div>
-
-      <div className="hidden md:block relative w-full h-full grow">
-        <Image
-          src="/error-background.png"
-          alt={statusCode}
-          objectFit="contain"
-          className="grow"
-          layout="fill"
-        />
-      </div>
-    </Section>
+      </Section>
+    </div>
   );
 }
 
