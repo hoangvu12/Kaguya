@@ -1,8 +1,7 @@
 import ArrowSwiper, { SwiperSlide } from "@/components/shared/ArrowSwiper";
 import CircleButton from "@/components/shared/CircleButton";
-import { Manga } from "@/types";
+import { Chapter } from "@/types";
 import { groupBy } from "@/utils";
-import { sortMediaUnit } from "@/utils/data";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
@@ -10,18 +9,12 @@ import React, { useEffect, useMemo, useState } from "react";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 
 export interface ChapterSelectorProps {
-  manga: Manga;
+  chapters: Chapter[];
 }
 
-const ChapterSelector: React.FC<ChapterSelectorProps> = ({ manga }) => {
+const ChapterSelector: React.FC<ChapterSelectorProps> = ({ chapters }) => {
   const [isChapterExpanded, setIsChapterExpanded] = useState(false);
-  const chapters = useMemo(
-    () =>
-      sortMediaUnit(
-        manga.sourceConnections.flatMap((connection) => connection.chapters)
-      ),
-    [manga]
-  );
+
   const [activeSource, setActiveSource] = useState(chapters[0].source.name);
 
   const sourceChapters = useMemo(
@@ -86,7 +79,7 @@ const ChapterSelector: React.FC<ChapterSelectorProps> = ({ manga }) => {
         >
           {sourceChapters.map((chapter) => (
             <Link
-              href={`/manga/read/${manga.id}/${chapter.sourceId}/${chapter.sourceChapterId}`}
+              href={`/manga/read/${chapter.sourceConnection.mediaId}/${chapter.sourceId}/${chapter.sourceChapterId}`}
               key={chapter.sourceChapterId}
             >
               <a className="block">

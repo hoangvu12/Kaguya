@@ -1,14 +1,18 @@
-import React, { useMemo } from "react";
-
 import locales from "@/locales.json";
-import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
-import { useRouter } from "next/router";
+import { Manga } from "@/types";
+import { sortMediaUnit } from "@/utils/data";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
-import ChapterSelector, { ChapterSelectorProps } from "./ChapterSelector";
-import { sortMediaUnit } from "@/utils/data";
+import { useRouter } from "next/router";
+import React, { useMemo } from "react";
+import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
+import ChapterSelector from "./ChapterSelector";
 
-const LocaleChapterSelector: React.FC<ChapterSelectorProps> = ({
+interface LocaleChapterSelectorProps {
+  manga: Manga;
+}
+
+const LocaleChapterSelector: React.FC<LocaleChapterSelectorProps> = ({
   manga,
   ...props
 }) => {
@@ -21,7 +25,12 @@ const LocaleChapterSelector: React.FC<ChapterSelectorProps> = ({
   const chapters = useMemo(
     () =>
       sortMediaUnit(
-        manga.sourceConnections.flatMap((connection) => connection.chapters)
+        manga.sourceConnections.flatMap((connection) =>
+          connection.chapters.map((chapter) => ({
+            ...chapter,
+            sourceConnection: connection,
+          }))
+        )
       ),
     [manga]
   );
@@ -49,7 +58,7 @@ const LocaleChapterSelector: React.FC<ChapterSelectorProps> = ({
 
         <div className="mt-4">
           {locales.map(({ locale }) => {
-            const localeEpisodes = chapters?.filter((chapter) =>
+            const localeChapters = chapters?.filter((chapter) =>
               chapter?.source?.locales.some(
                 (sourceLocale) => sourceLocale === locale
               )
@@ -57,10 +66,10 @@ const LocaleChapterSelector: React.FC<ChapterSelectorProps> = ({
 
             return (
               <TabPanel key={locale}>
-                {!localeEpisodes?.length ? (
+                {!localeChapters?.length ? (
                   <p className="text-center text-2xl">{t("no_chapters")}</p>
                 ) : (
-                  <ChapterSelector manga={manga} {...props} />
+                  <ChapterSelector chapters={localeChapters} {...props} />
                 )}
               </TabPanel>
             );
