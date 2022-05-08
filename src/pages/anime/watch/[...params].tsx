@@ -11,7 +11,6 @@ import Head from "@/components/shared/Head";
 import Loading from "@/components/shared/Loading";
 import Portal from "@/components/shared/Portal";
 import config from "@/config";
-import { REVALIDATE_TIME } from "@/constants";
 import useDevice from "@/hooks/useDevice";
 import useEventListener from "@/hooks/useEventListener";
 import { useFetchSource } from "@/hooks/useFetchSource";
@@ -21,7 +20,7 @@ import supabase from "@/lib/supabase";
 import { Anime, Episode } from "@/types";
 import { getDescription, getTitle, sortMediaUnit } from "@/utils/data";
 import classNames from "classnames";
-import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import React, {
@@ -429,7 +428,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({
+export const getServerSideProps: GetServerSideProps = async ({
   params: { params },
 }) => {
   const { data, error } = await supabase
@@ -437,7 +436,6 @@ export const getStaticProps: GetStaticProps = async ({
     .select(
       `
         title,
-        vietnameseTitle,
         description,
         bannerImage,
         coverImage,
@@ -449,29 +447,14 @@ export const getStaticProps: GetStaticProps = async ({
   if (error) {
     console.log(error);
 
-    return { notFound: true, revalidate: REVALIDATE_TIME };
+    return { notFound: true };
   }
 
   return {
     props: {
       anime: data,
     },
-    revalidate: REVALIDATE_TIME,
   };
-};
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  const { data } = await supabase
-    .from<Anime>("kaguya_anime")
-    .select("id")
-    .order("trending", { ascending: false })
-    .limit(5);
-
-  const paths = data.map((anime: Anime) => ({
-    params: { params: [anime.id.toString()] },
-  }));
-
-  return { paths, fallback: "blocking" };
 };
 
 // @ts-ignore
