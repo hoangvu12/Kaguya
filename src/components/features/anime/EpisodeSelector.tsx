@@ -11,6 +11,7 @@ import React, { useMemo } from "react";
 
 export interface EpisodeSelectorProps {
   episodes: Episode[];
+  mediaId?: number;
   activeEpisode?: Episode;
   chunkSwiperProps?: SwiperProps;
   episodeLinkProps?: Omit<LinkProps, "href">;
@@ -27,7 +28,7 @@ const EpisodeSelector: React.FC<EpisodeSelectorProps> = (props) => {
     episodeLinkProps,
     onEachEpisode = (episode) => (
       <Link
-        href={`/anime/watch/${episode.sourceConnection.mediaId}/${episode.sourceId}/${episode.sourceEpisodeId}`}
+        href={`/anime/watch/${props.mediaId}/${episode.sourceId}/${episode.sourceEpisodeId}`}
         key={episode.sourceEpisodeId}
         shallow
         {...episodeLinkProps}
