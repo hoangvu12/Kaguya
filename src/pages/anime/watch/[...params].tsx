@@ -378,7 +378,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
 
               <Description
                 description={description || t("common:updating") + "..."}
-                className="text-lg text-gray-300"
+                className="text-lg text-gray-300 line-clamp-6"
               />
             </div>
           </div>
