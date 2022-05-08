@@ -21,9 +21,7 @@ import useEpisodes from "@/hooks/useEpisodes";
 import dayjs from "@/lib/dayjs";
 import supabase from "@/lib/supabase";
 import { Anime } from "@/types";
-import {
-  numberWithCommas, vietnameseSlug
-} from "@/utils";
+import { numberWithCommas, vietnameseSlug } from "@/utils";
 import { convert, getDescription, getTitle } from "@/utils/data";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
@@ -43,21 +41,19 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
 
   const { data: episodes, isLoading } = useEpisodes(anime.id);
 
-  const hasNextAiringSchedule = useMemo(
+  const nextAiringSchedule = useMemo(
     () =>
-      anime.airingSchedules.length
-        ? anime.airingSchedules.find((schedule) =>
-            dayjs.unix(schedule.airingAt).isAfter(dayjs())
-          )
-        : null,
+      anime?.airingSchedules
+        ?.sort((a, b) => a.episode - b.episode)
+        .find((schedule) => dayjs.unix(schedule.airingAt).isAfter(dayjs())),
     [anime?.airingSchedules]
   );
 
   const nextAiringScheduleTime = useMemo(() => {
-    if (!hasNextAiringSchedule?.airingAt) return null;
+    if (!nextAiringSchedule?.airingAt) return null;
 
-    return dayjs.unix(hasNextAiringSchedule.airingAt).locale(locale).fromNow();
-  }, [hasNextAiringSchedule?.airingAt, locale]);
+    return dayjs.unix(nextAiringSchedule.airingAt).locale(locale).fromNow();
+  }, [nextAiringSchedule?.airingAt, locale]);
 
   const title = useMemo(() => getTitle(anime, locale), [anime, locale]);
   const description = useMemo(
@@ -152,12 +148,12 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                   value={anime.isAdult ? "18+" : ""}
                 />
 
-                {hasNextAiringSchedule && (
+                {nextAiringSchedule && (
                   <InfoItem
                     className="!text-primary-300"
                     title={t("next_airing_schedule")}
                     value={`${t("common:episode")} ${
-                      hasNextAiringSchedule.episode
+                      nextAiringSchedule.episode
                     }: ${nextAiringScheduleTime}`}
                   />
                 )}
