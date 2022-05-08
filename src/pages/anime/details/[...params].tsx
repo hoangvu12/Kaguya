@@ -13,9 +13,11 @@ import List from "@/components/shared/List";
 import NotificationButton from "@/components/shared/NotificationButton";
 import PlainCard from "@/components/shared/PlainCard";
 import SourceStatus from "@/components/shared/SourceStatus";
+import Spinner from "@/components/shared/Spinner";
 import { REVALIDATE_TIME } from "@/constants";
 import { useUser } from "@/contexts/AuthContext";
 import withRedirect from "@/hocs/withRedirect";
+import useEpisodes from "@/hooks/useEpisodes";
 import dayjs from "@/lib/dayjs";
 import supabase from "@/lib/supabase";
 import { Anime } from "@/types";
@@ -41,23 +43,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
   const { locale } = useRouter();
   const { t } = useTranslation("anime_details");
 
-  const sortedEpisodes = useMemo(
-    () =>
-      anime.sourceConnections
-        .flatMap((connection) =>
-          connection.episodes.map((episode) => ({
-            ...episode,
-            sourceConnection: connection,
-          }))
-        )
-        .sort((a, b) => {
-          const aNumber = parseNumbersFromString(a.name, 9999)?.[0];
-          const bNumber = parseNumbersFromString(b.name, 9999)?.[0];
-
-          return aNumber - bNumber;
-        }),
-    [anime]
-  );
+  const { data: episodes, isLoading, isError } = useEpisodes(anime.id);
 
   const hasNextAiringSchedule = useMemo(
     () =>
@@ -240,7 +226,13 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
               title={t("episodes_section")}
               className="overflow-hidden"
             >
-              <LocaleEpisodeSelector episodes={sortedEpisodes} />
+              {isLoading ? (
+                <div className="h-full w-full flex items-center justify-center">
+                  <Spinner />
+                </div>
+              ) : (
+                <LocaleEpisodeSelector mediaId={anime.id} episodes={episodes} />
+              )}
             </DetailsSection>
 
             {!!anime?.characters?.length && (
@@ -299,8 +291,7 @@ export const getStaticProps: GetStaticProps = async ({
         airingSchedules:kaguya_airing_schedules(*),
         characters:kaguya_anime_characters!mediaId(*, character:characterId(*)),
         recommendations:kaguya_anime_recommendations!originalId(media:recommendationId(*)),
-        relations:kaguya_anime_relations!originalId(media:relationId(*)),
-        sourceConnections:kaguya_anime_source!mediaId(*, episodes:kaguya_episodes(*, source:kaguya_sources(id, name, locales)))
+        relations:kaguya_anime_relations!originalId(media:relationId(*))
       `
     )
     .eq("id", Number(params[0]))
