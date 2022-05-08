@@ -10,6 +10,7 @@ import DotList from "@/components/shared/DotList";
 import Head from "@/components/shared/Head";
 import InfoItem from "@/components/shared/InfoItem";
 import List from "@/components/shared/List";
+import MediaDescription from "@/components/shared/MediaDescription";
 import NotificationButton from "@/components/shared/NotificationButton";
 import PlainCard from "@/components/shared/PlainCard";
 import SourceStatus from "@/components/shared/SourceStatus";
@@ -89,9 +90,10 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
                   ))}
                 </DotList>
 
-                <Description
-                  description={description || t("common:updating") + "..."}
-                  className="mt-4 text-gray-300 mb-8"
+                <MediaDescription
+                  description={description}
+                  containerClassName="mt-4 mb-8"
+                  className="text-gray-300 hover:text-gray-100 transition duration-300"
                 />
               </div>
 

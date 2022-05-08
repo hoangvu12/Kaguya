@@ -3,13 +3,13 @@ import CommentsSection from "@/components/features/comment/CommentsSection";
 import Button from "@/components/shared/Button";
 import Card from "@/components/shared/Card";
 import CharacterConnectionCard from "@/components/shared/CharacterConnectionCard";
-import Description from "@/components/shared/Description";
 import DetailsBanner from "@/components/shared/DetailsBanner";
 import DetailsSection from "@/components/shared/DetailsSection";
 import DotList from "@/components/shared/DotList";
 import Head from "@/components/shared/Head";
 import InfoItem from "@/components/shared/InfoItem";
 import List from "@/components/shared/List";
+import MediaDescription from "@/components/shared/MediaDescription";
 import NotificationButton from "@/components/shared/NotificationButton";
 import PlainCard from "@/components/shared/PlainCard";
 import SourceStatus from "@/components/shared/SourceStatus";
@@ -22,9 +22,7 @@ import dayjs from "@/lib/dayjs";
 import supabase from "@/lib/supabase";
 import { Anime } from "@/types";
 import {
-  numberWithCommas,
-  parseNumbersFromString,
-  vietnameseSlug,
+  numberWithCommas, vietnameseSlug
 } from "@/utils";
 import { convert, getDescription, getTitle } from "@/utils/data";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
@@ -43,7 +41,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
   const { locale } = useRouter();
   const { t } = useTranslation("anime_details");
 
-  const { data: episodes, isLoading, isError } = useEpisodes(anime.id);
+  const { data: episodes, isLoading } = useEpisodes(anime.id);
 
   const hasNextAiringSchedule = useMemo(
     () =>
@@ -121,9 +119,10 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                   ))}
                 </DotList>
 
-                <Description
-                  description={description || t("common:updating") + "..."}
-                  className="mt-4 mb-8 text-gray-300"
+                <MediaDescription
+                  description={description}
+                  containerClassName="mt-4 mb-8"
+                  className="text-gray-300 hover:text-gray-100 transition duration-300"
                 />
               </div>
 
