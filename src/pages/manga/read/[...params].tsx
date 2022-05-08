@@ -3,7 +3,6 @@ import Button from "@/components/shared/Button";
 import Head from "@/components/shared/Head";
 import Loading from "@/components/shared/Loading";
 import Portal from "@/components/shared/Portal";
-import { REVALIDATE_TIME } from "@/constants";
 import { ReadContextProvider } from "@/contexts/ReadContext";
 import { ReadSettingsContextProvider } from "@/contexts/ReadSettingsContext";
 import useFetchImages from "@/hooks/useFetchImages";
@@ -12,7 +11,8 @@ import useSaveRead from "@/hooks/useSaveRead";
 import supabase from "@/lib/supabase";
 import { Chapter, Manga } from "@/types";
 import { getTitle, sortMediaUnit } from "@/utils/data";
-import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
+import { useTranslation } from "next-i18next";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React, {
@@ -22,7 +22,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { useTranslation } from "next-i18next";
 
 const ReadPanel = dynamic(
   () => import("@/components/features/manga/Reader/ReadPanel"),
@@ -267,7 +266,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({
+export const getServerSideProps: GetServerSideProps = async ({
   params: { params },
 }) => {
   const { data, error } = await supabase
@@ -287,29 +286,14 @@ export const getStaticProps: GetStaticProps = async ({
   if (error) {
     console.log(error);
 
-    return { notFound: true, revalidate: REVALIDATE_TIME };
+    return { notFound: true };
   }
 
   return {
     props: {
       manga: data,
     },
-    revalidate: REVALIDATE_TIME,
   };
-};
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  const { data } = await supabase
-    .from<Manga>("kaguya_manga")
-    .select("id")
-    .order("trending", { ascending: false })
-    .limit(5);
-
-  const paths = data.map((manga) => ({
-    params: { params: [manga.id.toString()] },
-  }));
-
-  return { paths, fallback: "blocking" };
 };
 
 // @ts-ignore
