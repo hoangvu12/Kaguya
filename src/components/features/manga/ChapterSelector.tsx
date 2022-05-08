@@ -10,9 +10,13 @@ import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 
 export interface ChapterSelectorProps {
   chapters: Chapter[];
+  mediaId: number;
 }
 
-const ChapterSelector: React.FC<ChapterSelectorProps> = ({ chapters }) => {
+const ChapterSelector: React.FC<ChapterSelectorProps> = ({
+  chapters,
+  mediaId,
+}) => {
   const [isChapterExpanded, setIsChapterExpanded] = useState(false);
 
   const [activeSource, setActiveSource] = useState(chapters[0].source.name);
@@ -79,7 +83,7 @@ const ChapterSelector: React.FC<ChapterSelectorProps> = ({ chapters }) => {
         >
           {sourceChapters.map((chapter) => (
             <Link
-              href={`/manga/read/${chapter.sourceConnection.mediaId}/${chapter.sourceId}/${chapter.sourceChapterId}`}
+              href={`/manga/read/${mediaId}/${chapter.sourceId}/${chapter.sourceChapterId}`}
               key={chapter.sourceChapterId}
             >
               <a className="block">

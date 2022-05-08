@@ -1,19 +1,17 @@
 import locales from "@/locales.json";
-import { Manga } from "@/types";
+import { Chapter, Manga } from "@/types";
 import { sortMediaUnit } from "@/utils/data";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
-import ChapterSelector from "./ChapterSelector";
+import ChapterSelector, { ChapterSelectorProps } from "./ChapterSelector";
 
-interface LocaleChapterSelectorProps {
-  manga: Manga;
-}
+interface LocaleChapterSelectorProps extends ChapterSelectorProps {}
 
 const LocaleChapterSelector: React.FC<LocaleChapterSelectorProps> = ({
-  manga,
+  chapters,
   ...props
 }) => {
   const router = useRouter();
@@ -21,18 +19,6 @@ const LocaleChapterSelector: React.FC<LocaleChapterSelectorProps> = ({
   const defaultTabIndex = useMemo(
     () => locales.findIndex(({ locale }) => locale === router.locale),
     [router.locale]
-  );
-  const chapters = useMemo(
-    () =>
-      sortMediaUnit(
-        manga.sourceConnections.flatMap((connection) =>
-          connection.chapters.map((chapter) => ({
-            ...chapter,
-            sourceConnection: connection,
-          }))
-        )
-      ),
-    [manga]
   );
 
   return (
