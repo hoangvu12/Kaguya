@@ -13,9 +13,11 @@ import List from "@/components/shared/List";
 import NotificationButton from "@/components/shared/NotificationButton";
 import PlainCard from "@/components/shared/PlainCard";
 import SourceStatus from "@/components/shared/SourceStatus";
+import Spinner from "@/components/shared/Spinner";
 import { REVALIDATE_TIME } from "@/constants";
 import { useUser } from "@/contexts/AuthContext";
 import withRedirect from "@/hocs/withRedirect";
+import useChapters from "@/hooks/useChapters";
 import supabase from "@/lib/supabase";
 import { Manga } from "@/types";
 import { numberWithCommas, vietnameseSlug } from "@/utils";
@@ -35,6 +37,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
   const user = useUser();
   const { locale } = useRouter();
   const { t } = useTranslation("manga_details");
+  const { data: chapters, isLoading, isError } = useChapters(manga.id);
 
   const title = useMemo(() => getTitle(manga, locale), [manga, locale]);
   const description = useMemo(
@@ -161,7 +164,13 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
 
           <div className="md:col-span-8 space-y-12">
             <DetailsSection title={t("chapters_section")} className="relative">
-              <LocaleChapterSelector manga={manga} />
+              {isLoading ? (
+                <div className="h-full w-full flex items-center justify-center">
+                  <Spinner />
+                </div>
+              ) : (
+                <LocaleChapterSelector mediaId={manga.id} chapters={chapters} />
+              )}
             </DetailsSection>
 
             {!!manga?.characters?.length && (
