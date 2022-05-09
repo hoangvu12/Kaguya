@@ -5,11 +5,17 @@ import PlainCard from "@/components/shared/PlainCard";
 import Section from "@/components/shared/Section";
 import TextIcon from "@/components/shared/TextIcon";
 import { REVALIDATE_TIME } from "@/constants";
+import withRedirect from "@/hocs/withRedirect";
 import useConstantTranslation from "@/hooks/useConstantTranslation";
 import dayjs from "@/lib/dayjs";
 import supabase from "@/lib/supabase";
 import { Character, VoiceActor } from "@/types";
-import { arePropertiesFalsy, formatDate, numberWithCommas } from "@/utils";
+import {
+  arePropertiesFalsy,
+  formatDate,
+  numberWithCommas,
+  vietnameseSlug,
+} from "@/utils";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import React, { useMemo } from "react";
@@ -156,7 +162,9 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ voiceActor }) => {
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps = async ({
+  params: { params },
+}) => {
   const { data, error } = await supabase
     .from("kaguya_voice_actors")
     .select(
@@ -165,7 +173,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         characters:kaguya_voice_actor_connections(character:characterId(id, name, image))
       `
     )
-    .eq("id", Number(params.id))
+    .eq("id", Number(params[0]))
     .single();
 
   if (error) {
@@ -190,10 +198,24 @@ export const getStaticPaths: GetStaticPaths = async () => {
     .limit(5);
 
   const paths = data.map((manga) => ({
-    params: { id: manga.id.toString() },
+    params: { params: [manga.id.toString()] },
   }));
 
   return { paths, fallback: "blocking" };
 };
 
-export default DetailsPage;
+export default withRedirect(DetailsPage, (router, props) => {
+  const { params } = router.query;
+  const [id, slug] = params as string[];
+
+  if (slug) return null;
+
+  return {
+    url: `/voice-actors/details/${id}/${vietnameseSlug(
+      props.voiceActor.name.userPreferred
+    )}`,
+    options: {
+      shallow: true,
+    },
+  };
+});
