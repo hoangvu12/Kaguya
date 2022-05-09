@@ -3,7 +3,7 @@ import React from "react";
 
 interface InfoItemProps {
   title: string;
-  value?: string | number;
+  value?: string | number | React.ReactNode;
   className?: string;
 }
 
