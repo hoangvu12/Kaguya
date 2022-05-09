@@ -6,6 +6,7 @@ import List from "@/components/shared/List";
 import PlainCard from "@/components/shared/PlainCard";
 import TextIcon from "@/components/shared/TextIcon";
 import { REVALIDATE_TIME } from "@/constants";
+import withRedirect from "@/hocs/withRedirect";
 import useConstantTranslation from "@/hooks/useConstantTranslation";
 import dayjs from "@/lib/dayjs";
 import supabase from "@/lib/supabase";
@@ -17,7 +18,7 @@ import {
   VoiceActor,
   VoiceActorConnection,
 } from "@/types";
-import { isFalsy, numberWithCommas } from "@/utils";
+import { isFalsy, numberWithCommas, vietnameseSlug } from "@/utils";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import React, { useMemo } from "react";
@@ -178,7 +179,9 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ character }) => {
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps = async ({
+  params: { params },
+}) => {
   const { data, error } = await supabase
     .from("kaguya_characters")
     .select(
@@ -189,7 +192,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         animeConnections:kaguya_anime_characters!characterId(media:mediaId(*))
       `
     )
-    .eq("id", Number(params.id))
+    .eq("id", Number(params[0]))
     .single();
 
   if (error) {
@@ -214,10 +217,24 @@ export const getStaticPaths: GetStaticPaths = async () => {
     .limit(5);
 
   const paths = data.map((manga) => ({
-    params: { id: manga.id.toString() },
+    params: { params: [manga.id.toString()] },
   }));
 
   return { paths, fallback: "blocking" };
 };
 
-export default DetailsPage;
+export default withRedirect(DetailsPage, (router, props) => {
+  const { params } = router.query;
+  const [id, slug] = params as string[];
+
+  if (slug) return null;
+
+  return {
+    url: `/characters/details/${id}/${vietnameseSlug(
+      props.character.name.userPreferred
+    )}`,
+    options: {
+      shallow: true,
+    },
+  };
+});
