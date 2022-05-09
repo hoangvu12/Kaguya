@@ -61,6 +61,8 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
     [anime, locale]
   );
 
+  console.log(anime.studios);
+
   return (
     <>
       <Head
@@ -184,10 +186,20 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                 title={t("common:trending")}
                 value={numberWithCommas(anime.trending)}
               />
-              {/* <InfoItem
+
+              <InfoItem
                 title="Studio"
-                value={anime.studios.slice(0, 3).join(", ")}
-              /> */}
+                value={anime.studios.map((studio) => (
+                  <p key={studio.studioId}>
+                    <Link href={`/studios/${studio.studioId}`}>
+                      <a className="hover:text-primary-300 transition duration-300">
+                        {studio.studio.name}
+                      </a>
+                    </Link>
+                  </p>
+                ))}
+              />
+
               <InfoItem
                 title={t("common:season")}
                 value={`${convert(anime.season, "season", { locale })} ${
@@ -289,6 +301,7 @@ export const getStaticProps: GetStaticProps = async ({
     .select(
       `
         *,
+        studios:kaguya_studio_connections!mediaId(*, studio:kaguya_studios(*)),
         airingSchedules:kaguya_airing_schedules(*),
         characters:kaguya_anime_characters!mediaId(*, character:characterId(*)),
         recommendations:kaguya_anime_recommendations!originalId(media:recommendationId(*)),

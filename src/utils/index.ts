@@ -233,7 +233,7 @@ export function isValidUrl(string: string) {
   return url.protocol === "http:" || url.protocol === "https:";
 }
 
-export const groupBy = <T, K extends keyof any>(
+export const groupBy = <T, K extends string>(
   list: T[],
   getKey: (data: T) => K
 ) =>
@@ -245,7 +245,7 @@ export const groupBy = <T, K extends keyof any>(
     previous[key].push(currentItem);
 
     return previous;
-  }, {} as Record<K, T[]>);
+  }, {} as Record<string, T[]>);
 
 // https://gist.github.com/bluzky/b8c205c98ff3318907b30c3e0da4bf3f
 export const vietnameseSlug = (str: string) => {
