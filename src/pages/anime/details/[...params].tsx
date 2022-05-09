@@ -205,7 +205,13 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
 
               <ul className="space-y-2">
                 {anime.tags.map((tag) => (
-                  <Link href={`/browse?type=anime&tags=${tag}`} key={tag}>
+                  <Link
+                    href={{
+                      pathname: "/browse",
+                      query: { type: "anime", tags: tag },
+                    }}
+                    key={tag}
+                  >
                     <a className="block">
                       <li className="p-2 rounded-md bg-background-900 hover:text-primary-300 transition duration-300">
                         {tag}

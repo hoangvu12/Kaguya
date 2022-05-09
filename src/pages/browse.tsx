@@ -123,7 +123,7 @@ const BrowsePage = ({ query: baseQuery }) => {
         />
       </div>
 
-      <BrowseComponent defaultQuery={baseQuery} />
+      <BrowseComponent defaultQuery={query} />
     </div>
   );
 };

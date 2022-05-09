@@ -152,7 +152,13 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
 
               <ul className="space-y-2">
                 {manga.tags.map((tag) => (
-                  <Link href={`/browse?type=manga&tags=${tag}`} key={tag}>
+                  <Link
+                    href={{
+                      pathname: "/browse",
+                      query: { type: "manga", tags: tag },
+                    }}
+                    key={tag}
+                  >
                     <a className="block">
                       <li className="p-2 rounded-md bg-background-900 hover:text-primary-300 transition duration-300">
                         {tag}
