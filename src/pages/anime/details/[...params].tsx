@@ -61,8 +61,6 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
     [anime, locale]
   );
 
-  console.log(anime.studios);
-
   return (
     <>
       <Head

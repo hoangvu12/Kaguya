@@ -1,4 +1,6 @@
 import { useUser } from "@/contexts/AuthContext";
+import supabase from "@/lib/supabase";
+import { Watched } from "@/types";
 import axios from "axios";
 import { useMutation } from "react-query";
 
@@ -11,10 +13,26 @@ interface MutationInput {
 const useSaveWatched = () => {
   const user = useUser();
 
-  return useMutation((data: MutationInput) => {
+  return useMutation(async (data: MutationInput) => {
     if (!user) return;
 
-    return axios.post(`/api/anime/watched`, data);
+    const { episode_id, media_id, watched_time } = data;
+
+    const { error: upsertError } = await supabase
+      .from<Watched>("kaguya_watched")
+      .upsert(
+        {
+          mediaId: media_id,
+          episodeId: episode_id,
+          userId: user.id,
+          watchedTime: watched_time,
+        },
+        { returning: "minimal" }
+      );
+
+    if (upsertError) throw upsertError;
+
+    return true;
   });
 };
 
