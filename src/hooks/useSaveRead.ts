@@ -1,4 +1,6 @@
 import { useUser } from "@/contexts/AuthContext";
+import supabase from "@/lib/supabase";
+import { Read } from "@/types";
 import axios from "axios";
 import { useMutation } from "react-query";
 
@@ -10,10 +12,25 @@ interface MutationInput {
 const useSaveRead = () => {
   const user = useUser();
 
-  return useMutation((data: MutationInput) => {
+  return useMutation(async (data: MutationInput) => {
     if (!user) return;
 
-    return axios.post(`/api/manga/read`, data);
+    const { chapter_id, media_id } = data;
+
+    const { error: upsertError } = await supabase
+      .from<Read>("kaguya_read")
+      .upsert(
+        {
+          mediaId: media_id,
+          userId: user.id,
+          chapterId: chapter_id,
+        },
+        { returning: "minimal" }
+      );
+
+    if (upsertError) throw upsertError;
+
+    return true;
   });
 };
 
