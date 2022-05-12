@@ -3,9 +3,9 @@
 
 [![Kaguya Discord server](https://discordapp.com/api/guilds/906042713688928257/widget.png?style=banner2)](https://discord.gg/PnT7mjcV2x)
 
-### Kaguya is a vietnamese website that provide you anime, manga and related stuff.
+### Kaguya is a multi-language website that provides you anime, manga and related resources.
 
-Since it is an open-source project, there will be no ads in this website.
+Since it is an open-source project, there won't be any ads in this website.
 
 The official website is [kaguya.live](https://kaguya.live)
 
@@ -23,6 +23,7 @@ The official website is [kaguya.live](https://kaguya.live)
 - NextJS
 - TailwindCSS
 - Supabase
+- I18n
 - Libraries such as SwiperJS, Framer Motion, React Query...
 
 ## Screenshots
@@ -44,13 +45,14 @@ The official website is [kaguya.live](https://kaguya.live)
 ## Todo
 
 - <s>Comments</s> ✔
-- <s>Notifications</s> ✔
+- <s>Push Notifications</s> ✔
+- Notifications
+- Forum
 - User profile
-- Chat (maybe?)
 
 ## Sources
 
-- Video player design is heavily inspired by (Netflix)[https://netflix.com]
+- Video player design is heavily inspired by [Netflix](https://netflix.com)
 - Reader is heavily inspired by [danke.moe](https://danke.moe)
 - Info from [Anilist](anilist.co)
 
@@ -58,24 +60,21 @@ The official website is [kaguya.live](https://kaguya.live)
 
 ```
 # Supabase (See: https://github.com/hoangvu12/kaguya-database)
-
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_KEY=
 ADMIN_SUPABASE_KEY=
-# Google Analytics
 
+# Google Analytics
 NEXT_PUBLIC_GA_ID=
 
 # See: https://github.com/hoangvu12/kaguya-scraper
-
 NEXT_PUBLIC_NODE_SERVER_URL=
 NEXT_PUBLIC_SOCKET_SERVER_URL=
 
 # See: https://github.com/hoangvu12/kaguya-proxy
-
 NEXT_PUBLIC_PROXY_SERVER_URL=
-# Public web push key (https://github.com/hoangvu12/kaguya-scraper)
 
+# Public web push key (https://github.com/hoangvu12/kaguya-scraper)
 NEXT_PUBLIC_WEB_PUSH=
 
 ```
