@@ -13,17 +13,23 @@ const PWAInstallPrompt = () => {
   const [showPrompt, setShowPrompt] = useState(false);
   const [installable, setInstallable] = useState(false);
 
+  const handleClosePrompt = useCallback(() => {
+    setShowPrompt(false);
+
+    localStorage.setItem(PROMPT_KEY, "true");
+  }, []);
+
+  const handleOpenPrompt = useCallback(() => {
+    setShowPrompt(true);
+  }, []);
+
   const handleInstall = useCallback(async () => {
     deferredPrompt.current.prompt();
 
-    setShowPrompt(false);
+    handleClosePrompt();
 
     deferredPrompt.current = null;
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem(PROMPT_KEY, "true");
-  }, [showPrompt]);
 
   useEffect(() => {
     const handleBeforeInstall = (e) => {
@@ -33,7 +39,7 @@ const PWAInstallPrompt = () => {
 
       setInstallable(true);
 
-      if (localStorage.getItem("pwa_install_prompt_asked") !== "true") {
+      if (localStorage.getItem(PROMPT_KEY) !== "true") {
         setShowPrompt(true);
       }
     };
@@ -53,20 +59,13 @@ const PWAInstallPrompt = () => {
 
   return installable ? (
     <React.Fragment>
-      <HiDownload
-        className="w-6 h-6"
-        onClick={() => {
-          setShowPrompt(true);
-        }}
-      />
+      <HiDownload className="w-6 h-6" onClick={handleOpenPrompt} />
 
       {showPrompt ? (
         <Portal>
           <div
             className="fixed inset-0 z-40 bg-black/70"
-            onClick={() => {
-              setShowPrompt(false);
-            }}
+            onClick={handleClosePrompt}
           />
 
           <div className="fixed left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 z-50 w-11/12 md:w-2/3 p-8 rounded-md bg-background-900">
@@ -74,9 +73,7 @@ const PWAInstallPrompt = () => {
             <p className="mb-4">{t("prompt_description")}</p>
             <div className="flex items-center justify-end space-x-4">
               <Button
-                onClick={() => {
-                  setShowPrompt(false);
-                }}
+                onClick={handleClosePrompt}
                 className="!bg-transparent hover:!bg-white/20 transition duration-300"
               >
                 <p>{t("prompt_no")}</p>
@@ -92,4 +89,4 @@ const PWAInstallPrompt = () => {
   ) : null;
 };
 
-export default PWAInstallPrompt;
+export default React.memo(PWAInstallPrompt);
