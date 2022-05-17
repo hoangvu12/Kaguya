@@ -13,6 +13,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { AiFillFacebook, AiOutlineSearch } from "react-icons/ai";
 import { FaDiscord } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
+import PWAInstallPrompt from "../features/pwa/PWAInstallPrompt";
 import LanguageSwitcher from "../shared/LanguageSwitcher";
 
 const routes = [
@@ -123,6 +124,8 @@ const Header = () => {
       </div>
 
       <div className="flex items-center space-x-4 ml-auto">
+        <PWAInstallPrompt />
+
         <LanguageSwitcher />
 
         <NavItem href={searchUrl}>
