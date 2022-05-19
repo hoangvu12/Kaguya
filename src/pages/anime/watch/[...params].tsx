@@ -318,7 +318,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
             <EpisodesButton>
               <div className="w-[70vw] overflow-hidden">
                 <LocaleEpisodeSelector
-                  mediaId={anime.id}
+                  mediaId={Number(animeId)}
                   episodes={sortedEpisodes}
                   activeEpisode={currentEpisode}
                   episodeLinkProps={{ shallow: true, replace: true }}
@@ -346,7 +346,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
 
                     <div>
                       <LocaleEpisodeSelector
-                        mediaId={anime.id}
+                        mediaId={Number(animeId)}
                         episodes={sortedEpisodes}
                         activeEpisode={currentEpisode}
                         episodeLinkProps={{ shallow: true, replace: true }}
