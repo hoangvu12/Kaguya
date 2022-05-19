@@ -10,6 +10,7 @@ module.exports = withPWA({
       "platform-lookaside.fbsbx.com",
       "i.ibb.co",
     ],
+    minimumCacheTTL: 604800, // a week,
   },
   pwa: {
     dest: "public",
