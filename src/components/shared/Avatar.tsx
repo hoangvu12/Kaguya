@@ -15,7 +15,12 @@ const Avatar: React.FC<AvatarProps> = ({ src, className }) => {
   };
 
   return (
-    <div className={classNames("relative w-10 h-10 rounded-full", className)}>
+    <div
+      className={classNames(
+        "shrink-0 relative w-10 h-10 rounded-full",
+        className
+      )}
+    >
       <Image
         onError={handleImageError}
         src={isLoadFailed ? "/fallback_profile.png" : src}
