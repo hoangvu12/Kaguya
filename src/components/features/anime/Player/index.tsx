@@ -20,7 +20,7 @@ const Player = React.forwardRef<HTMLVideoElement, NetPlayerProps>(
               videoEl.currentTime = videoEl.currentTime + SKIP_TIME;
             },
             hotKey: "shift+right",
-            name: "op/ed-skip",
+            name: "skip-op/ed",
           },
           ...hotkeys,
         ]}
