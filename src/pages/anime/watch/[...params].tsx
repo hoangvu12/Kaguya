@@ -4,7 +4,6 @@ import Description from "@/components/shared/Description";
 import Head from "@/components/shared/Head";
 import Loading from "@/components/shared/Loading";
 import Portal from "@/components/shared/Portal";
-import config from "@/config";
 import { WatchContextProvider } from "@/contexts/WatchContext";
 import useDevice from "@/hooks/useDevice";
 import useEventListener from "@/hooks/useEventListener";
@@ -12,7 +11,7 @@ import { useFetchSource } from "@/hooks/useFetchSource";
 import useSavedWatched from "@/hooks/useSavedWatched";
 import useSaveWatched from "@/hooks/useSaveWatched";
 import supabase from "@/lib/supabase";
-import { Anime, Episode, VideoSource } from "@/types";
+import { Anime, Episode } from "@/types";
 import { getDescription, getTitle, sortMediaUnit } from "@/utils/data";
 import { GetServerSideProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
@@ -25,7 +24,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { BsArrowLeft } from "react-icons/bs";
 const WatchPlayer = dynamic(
   () => import("@/components/features/anime/WatchPlayer"),
   {
@@ -287,14 +285,14 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
         ) : (
           <ForwardRefPlayer
             ref={videoRef}
-            sources={isLoading ? blankVideo : data.sources}
-            subtitles={isLoading ? [] : data.subtitles}
+            sources={!data?.sources?.length ? blankVideo : data.sources}
+            subtitles={!data?.subtitles?.length ? [] : data.subtitles}
             className="object-contain w-full h-full"
           />
         )}
 
         {isLoading && (
-          <Portal selector=".video-wrapper">
+          <Portal selector=".netplayer-container">
             <Loading />
           </Portal>
         )}
