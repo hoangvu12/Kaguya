@@ -1,3 +1,5 @@
+import { I18n } from "netplayer";
+
 export const SEASONS = [
   { value: "WINTER", label: "Mùa đông" },
   { value: "SPRING", label: "Mùa xuân" },
@@ -263,6 +265,39 @@ export const EMOJI_GROUP = {
   recently_used: "Gần đây",
 };
 
+export const PLAYER_TRANSLATIONS: I18n = {
+  controls: {
+    play: "Phát ({{shortcut}})",
+    pause: "Dừng ({{shortcut}})",
+    forward: "Tiến {{time}} giây",
+    backward: "Lùi {{time}} giây",
+    enableSubtitle: "Bật phụ đề",
+    disableSubtitle: "Tắt phụ đề",
+    settings: "Cài đặt",
+    enterFullscreen: "Toàn màn hình ({{shortcut}})",
+    exitFullscreen: "Thoát toàn màn hình ({{shortcut}})",
+    muteVolume: "Tắt tiếng ({{shortcut}})",
+    unmuteVolume: "Bật tiếng ({{shortcut}})",
+    sliderDragMessage: "Kéo để tua",
+    nextEpisode: "Tập tiếp theo",
+    episodes: "Danh sách tập",
+  },
+  settings: {
+    audio: "Âm thanh",
+    playbackSpeed: "Tốc độ phát",
+    quality: "Chất lượng",
+    subtitle: "Phụ đề",
+    subtitleSettings: "Cài đặt phụ đề",
+    reset: "Khôi phục",
+    none: "Không",
+    off: "Tắt",
+    subtitleBackgroundOpacity: "Nền trong suốt",
+    subtitleFontOpacity: "Chữ trong suốt",
+    subtitleFontSize: "Cỡ chữ",
+    subtitleTextStyle: "Kiểu chữ",
+  },
+};
+
 const translations = {
   SEASONS,
   FORMATS,
@@ -279,6 +314,7 @@ const translations = {
   READ_STATUS,
   GENDERS,
   EMOJI_GROUP,
+  PLAYER_TRANSLATIONS,
 };
 
 export default translations;

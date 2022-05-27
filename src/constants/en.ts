@@ -1,3 +1,5 @@
+import { I18n } from "netplayer";
+
 export const SEASONS = [
   { value: "WINTER", label: "Winter" },
   { value: "SPRING", label: "Spring" },
@@ -263,6 +265,39 @@ export const EMOJI_GROUP = {
   recently_used: "Recently used",
 };
 
+export const PLAYER_TRANSLATIONS: I18n = {
+  controls: {
+    play: "Play ({{shortcut}})",
+    pause: "Pause ({{shortcut}})",
+    forward: "Forward {{time}} seconds",
+    backward: "Backward {{time}} seconds",
+    enableSubtitle: "Enable subtitles",
+    disableSubtitle: "Disable subtitles",
+    settings: "Settings",
+    enterFullscreen: "Enter fullscreen ({{shortcut}})",
+    exitFullscreen: "Exit fullscreen ({{shortcut}})",
+    muteVolume: "Mute ({{shortcut}})",
+    unmuteVolume: "Unmute ({{shortcut}})",
+    sliderDragMessage: "Drag to seek video",
+    nextEpisode: "Next episode",
+    episodes: "Episodes",
+  },
+  settings: {
+    audio: "Audio",
+    playbackSpeed: "Playback speed",
+    quality: "Quality",
+    subtitle: "Subtitle",
+    subtitleSettings: "Subtitle settings",
+    reset: "Reset",
+    none: "None",
+    off: "Off",
+    subtitleBackgroundOpacity: "Background Opacity",
+    subtitleFontOpacity: "Font Opacity",
+    subtitleFontSize: "Font Size",
+    subtitleTextStyle: "Text Style",
+  },
+};
+
 const translations = {
   SEASONS,
   FORMATS,
@@ -279,6 +314,7 @@ const translations = {
   READ_STATUS,
   GENDERS,
   EMOJI_GROUP,
+  PLAYER_TRANSLATIONS,
 };
 
 export default translations;

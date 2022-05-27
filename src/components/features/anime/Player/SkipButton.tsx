@@ -1,11 +1,10 @@
-import React, { useCallback } from "react";
-import Popup from "@/components/shared/Popup";
 import ControlsIcon from "@/components/features/anime/Player/ControlsIcon";
-import { AiOutlineFastForward } from "react-icons/ai";
-import { useVideo } from "@/contexts/VideoContext";
-import { BrowserView, MobileView } from "react-device-detect";
 import MobileControlsIcon from "@/components/features/anime/Player/MobileControlsIcon";
 import { SKIP_TIME } from "@/constants";
+import { ControlButton, useVideo } from "netplayer";
+import React, { useCallback } from "react";
+import { BrowserView, MobileView } from "react-device-detect";
+import { AiOutlineFastForward } from "react-icons/ai";
 
 const SkipButton = () => {
   const { videoEl } = useVideo();
@@ -26,16 +25,9 @@ const SkipButton = () => {
       </MobileView>
 
       <BrowserView>
-        <Popup
-          portalSelector=".video-wrapper"
-          placement="top"
-          reference={
-            <ControlsIcon Icon={AiOutlineFastForward} onClick={handleClick} />
-          }
-          referenceClassName="h-8 w-8"
-        >
-          <p className="rounded-sm">Bỏ qua OP/ED ({SKIP_TIME} giây)</p>
-        </Popup>
+        <ControlButton tooltip={`Bỏ qua OP/ED (${SKIP_TIME} giây)`}>
+          <ControlsIcon Icon={AiOutlineFastForward} onClick={handleClick} />
+        </ControlButton>
       </BrowserView>
     </React.Fragment>
   );

@@ -1,27 +1,22 @@
-import Video from "@/components/features/anime/Player";
-import EpisodesButton from "@/components/features/anime/Player/EpisodesButton";
-import LocaleEpisodeSelector from "@/components/features/anime/Player/LocaleEpisodeSelector";
-import MobileEpisodesButton from "@/components/features/anime/Player/MobileEpisodesButton";
-import MobileNextEpisode from "@/components/features/anime/Player/MobileNextEpisode";
-import NextEpisodeButton from "@/components/features/anime/Player/NextEpisodeButton";
+import { WatchPlayerProps } from "@/components/features/anime/WatchPlayer";
 import Button from "@/components/shared/Button";
-import ClientOnly from "@/components/shared/ClientOnly";
 import Description from "@/components/shared/Description";
 import Head from "@/components/shared/Head";
 import Loading from "@/components/shared/Loading";
 import Portal from "@/components/shared/Portal";
 import config from "@/config";
+import { WatchContextProvider } from "@/contexts/WatchContext";
 import useDevice from "@/hooks/useDevice";
 import useEventListener from "@/hooks/useEventListener";
 import { useFetchSource } from "@/hooks/useFetchSource";
 import useSavedWatched from "@/hooks/useSavedWatched";
 import useSaveWatched from "@/hooks/useSaveWatched";
 import supabase from "@/lib/supabase";
-import { Anime, Episode } from "@/types";
+import { Anime, Episode, VideoSource } from "@/types";
 import { getDescription, getTitle, sortMediaUnit } from "@/utils/data";
-import classNames from "classnames";
 import { GetServerSideProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React, {
   useCallback,
@@ -30,8 +25,13 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { BrowserView, MobileView } from "react-device-detect";
 import { BsArrowLeft } from "react-icons/bs";
+const WatchPlayer = dynamic(
+  () => import("@/components/features/anime/WatchPlayer"),
+  {
+    ssr: false,
+  }
+);
 
 interface WatchPageProps {
   anime: Anime;
@@ -42,6 +42,12 @@ const blankVideo = [
     file: "https://cdn.plyr.io/static/blank.mp4",
   },
 ];
+
+const ForwardRefPlayer = React.forwardRef<HTMLVideoElement, WatchPlayerProps>(
+  (props, ref) => <WatchPlayer {...props} videoRef={ref} />
+);
+
+ForwardRefPlayer.displayName = "ForwardRefPlayer";
 
 const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -138,7 +144,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   );
 
   const handleNavigateEpisode = useCallback(
-    (episode: Episode) => () => {
+    (episode: Episode) => {
       if (!episode) return;
 
       router.replace(
@@ -191,7 +197,6 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
       if (saveWatchedInterval.current) {
         clearInterval(saveWatchedInterval.current);
       }
-
       saveWatchedInterval.current = setInterval(() => {
         saveWatchedMutation.mutate({
           media_id: Number(animeId),
@@ -208,7 +213,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
       videoEl.removeEventListener("canplay", handleSaveTime);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [animeId, currentEpisode]);
+  }, [animeId, currentEpisode, videoRef.current]);
 
   useEffect(() => {
     const videoEl = videoRef.current;
@@ -231,7 +236,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
       videoEl.removeEventListener("canplay", handleVideoPlay);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [watchedEpisode?.sourceEpisodeId]);
+  }, [watchedEpisode?.sourceEpisodeId, videoRef.current]);
 
   const title = useMemo(
     () => getTitle(anime, router.locale),
@@ -242,189 +247,124 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
     [anime, router.locale]
   );
 
-  const overlaySlot = useMemo(
-    () => (
-      <BsArrowLeft
-        className="absolute w-10 h-10 transition duration-300 cursor-pointer top-10 left-10 hover:text-gray-200"
-        onClick={router.back}
-      />
-    ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
-
-  const proxyBuilder = useCallback(
-    (url: string) => {
-      if (url.includes(config.proxyServerUrl)) return url;
-
-      const encodedUrl = encodeURIComponent(url);
-
-      const requestUrl = `${config.proxyServerUrl}/?url=${encodedUrl}&source_id=${currentEpisode.sourceId}`;
-
-      return requestUrl;
-    },
-    [currentEpisode.sourceId]
+  const sources = useMemo(
+    () => (isLoading ? blankVideo : data.sources),
+    [data?.sources, isLoading]
   );
 
   return (
-    <div className="relative w-full h-screen">
-      <Head
-        title={`${title} (${currentEpisode.name}) - Kaguya`}
-        description={`Xem phim ${title} (${currentEpisode.name}) tại Kaguya. Hoàn toàn miễn phí, không quảng cáo`}
-        image={anime.bannerImage}
-      />
-
-      {isError ? (
-        <div className="w-full h-full flex flex-col items-center justify-center space-y-8">
-          <div className="space-y-4 text-center">
-            <p className="text-4xl font-semibold">｡゜(｀Д´)゜｡</p>
-            <p className="text-xl">
-              Đã có lỗi xảy ra ({error?.response?.data?.error})
-            </p>
-          </div>
-
-          <Button primary onClick={router.back}>
-            <p>Trở về trang trước</p>
-          </Button>
-        </div>
-      ) : (
-        <Video
-          ref={videoRef}
-          src={isLoading ? blankVideo : data.sources}
-          subtitles={isLoading ? [] : data.subtitles}
-          className="object-contain w-full h-full"
-          overlaySlot={overlaySlot}
-          proxyBuilder={proxyBuilder}
+    <WatchContextProvider
+      value={{
+        anime,
+        currentEpisode,
+        currentEpisodeIndex,
+        episodes: sortedEpisodes,
+        setEpisode: handleNavigateEpisode,
+        sourceId,
+        sources,
+      }}
+    >
+      <div className="relative w-full h-screen">
+        <Head
+          title={`${title} (${currentEpisode.name}) - Kaguya`}
+          description={`Xem phim ${title} (${currentEpisode.name}) tại Kaguya. Hoàn toàn miễn phí, không quảng cáo`}
+          image={anime.bannerImage}
         />
-      )}
 
-      {isLoading && (
-        <Portal selector=".video-wrapper">
-          <Loading />
-        </Portal>
-      )}
+        {isError ? (
+          <div className="w-full h-full flex flex-col items-center justify-center space-y-8">
+            <div className="space-y-4 text-center">
+              <p className="text-4xl font-semibold">｡゜(｀Д´)゜｡</p>
+              <p className="text-xl">
+                Đã có lỗi xảy ra ({error?.response?.data?.error})
+              </p>
+            </div>
 
-      {/* Because Controls component cause too much rerender (rerender based on video playing) */}
-      {/* It makes these two components perform really bad */}
-      {/* This bring them to the right position, but not being rerender by the parent */}
-      <ClientOnly>
-        {/* Browser Only */}
-        <BrowserView>
-          <Portal selector=".right-controls-slot">
-            {currentEpisodeIndex < sourceEpisodes.length - 1 && (
-              <NextEpisodeButton onClick={handleNavigateEpisode(nextEpisode)} />
-            )}
+            <Button primary onClick={router.back}>
+              <p>Trở về trang trước</p>
+            </Button>
+          </div>
+        ) : (
+          <ForwardRefPlayer
+            ref={videoRef}
+            sources={isLoading ? blankVideo : data.sources}
+            subtitles={isLoading ? [] : data.subtitles}
+            className="object-contain w-full h-full"
+          />
+        )}
 
-            <EpisodesButton>
-              <div className="w-[70vw] overflow-hidden">
-                <LocaleEpisodeSelector
-                  mediaId={Number(animeId)}
-                  episodes={sortedEpisodes}
-                  activeEpisode={currentEpisode}
-                  episodeLinkProps={{ shallow: true, replace: true }}
+        {isLoading && (
+          <Portal selector=".video-wrapper">
+            <Loading />
+          </Portal>
+        )}
+
+        {showInfoOverlay && (
+          <Portal>
+            <div
+              className="fixed inset-0 z-[9999] flex items-center bg-black/70"
+              onMouseMove={() => setShowInfoOverlay(false)}
+            >
+              <div className="w-11/12 px-40">
+                <p className="mb-2 text-xl text-gray-200">
+                  {t("blur_heading")}
+                </p>
+                <p className="mb-8 text-5xl font-semibold">
+                  {title} - {currentEpisode.name}
+                </p>
+
+                <Description
+                  description={description || t("common:updating") + "..."}
+                  className="text-lg text-gray-300 line-clamp-6"
                 />
               </div>
-            </EpisodesButton>
+            </div>
           </Portal>
-        </BrowserView>
+        )}
 
-        {/* Mobile Only */}
-        <MobileView>
-          <Portal selector=".mobile-controls">
-            <MobileEpisodesButton>
-              {(isOpen, setIsOpen) =>
-                isOpen && (
-                  <div
-                    className={classNames(
-                      "w-full px-2 fixed inset-0 z-[9999] flex flex-col justify-center bg-background"
-                    )}
-                  >
-                    <BsArrowLeft
-                      className="absolute w-8 h-8 transition duration-300 cursor-pointer left-3 top-3 hover:text-gray-200"
-                      onClick={() => setIsOpen(false)}
-                    />
+        {showWatchedOverlay && !declinedRewatch && (
+          <Portal selector=".video-wrapper">
+            <div
+              className="fixed inset-0 z-40 bg-black/70"
+              onClick={() => {
+                setShowWatchedOverlay(false);
+                setDeclinedRewatch(true);
+              }}
+            />
 
-                    <div>
-                      <LocaleEpisodeSelector
-                        mediaId={Number(animeId)}
-                        episodes={sortedEpisodes}
-                        activeEpisode={currentEpisode}
-                        episodeLinkProps={{ shallow: true, replace: true }}
-                      />
-                    </div>
-                  </div>
-                )
-              }
-            </MobileEpisodesButton>
-
-            {currentEpisodeIndex < sourceEpisodes.length - 1 && (
-              <MobileNextEpisode onClick={handleNavigateEpisode(nextEpisode)} />
-            )}
-          </Portal>
-        </MobileView>
-      </ClientOnly>
-
-      {showInfoOverlay && (
-        <Portal>
-          <div
-            className="fixed inset-0 z-[9999] flex items-center bg-black/70"
-            onMouseMove={() => setShowInfoOverlay(false)}
-          >
-            <div className="w-11/12 px-40">
-              <p className="mb-2 text-xl text-gray-200">{t("blur_heading")}</p>
-              <p className="mb-8 text-5xl font-semibold">
-                {title} - {currentEpisode.name}
+            <div className="fixed left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 z-50 w-2/3 p-8 rounded-md bg-background-900">
+              <h1 className="text-4xl font-bold mb-4">
+                {t("rewatch_heading", { episodeName: watchedEpisode.name })}
+              </h1>
+              <p className="">
+                {t("rewatch_description", { episodeName: watchedEpisode.name })}
               </p>
-
-              <Description
-                description={description || t("common:updating") + "..."}
-                className="text-lg text-gray-300 line-clamp-6"
-              />
+              <p className="mb-4">
+                {t("rewatch_question", { episodeName: watchedEpisode.name })}
+              </p>
+              <div className="flex items-center justify-end space-x-4">
+                <Button
+                  onClick={() => {
+                    setShowWatchedOverlay(false), setDeclinedRewatch(true);
+                  }}
+                  className="!bg-transparent hover:!bg-white/20 transition duration-300"
+                >
+                  <p>{t("rewatch_no")}</p>
+                </Button>
+                <Button
+                  onClick={() =>
+                    handleNavigateEpisode(watchedEpisodeData?.episode)
+                  }
+                  primary
+                >
+                  <p>{t("rewatch_yes")}</p>
+                </Button>
+              </div>
             </div>
-          </div>
-        </Portal>
-      )}
-
-      {showWatchedOverlay && !declinedRewatch && (
-        <Portal selector=".video-wrapper">
-          <div
-            className="fixed inset-0 z-40 bg-black/70"
-            onClick={() => {
-              setShowWatchedOverlay(false);
-              setDeclinedRewatch(true);
-            }}
-          />
-
-          <div className="fixed left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 z-50 w-2/3 p-8 rounded-md bg-background-900">
-            <h1 className="text-4xl font-bold mb-4">
-              {t("rewatch_heading", { episodeName: watchedEpisode.name })}
-            </h1>
-            <p className="">
-              {t("rewatch_description", { episodeName: watchedEpisode.name })}
-            </p>
-            <p className="mb-4">
-              {t("rewatch_question", { episodeName: watchedEpisode.name })}
-            </p>
-            <div className="flex items-center justify-end space-x-4">
-              <Button
-                onClick={() => {
-                  setShowWatchedOverlay(false), setDeclinedRewatch(true);
-                }}
-                className="!bg-transparent hover:!bg-white/20 transition duration-300"
-              >
-                <p>{t("rewatch_no")}</p>
-              </Button>
-              <Button
-                onClick={handleNavigateEpisode(watchedEpisodeData?.episode)}
-                primary
-              >
-                <p>{t("rewatch_yes")}</p>
-              </Button>
-            </div>
-          </div>
-        </Portal>
-      )}
-    </div>
+          </Portal>
+        )}
+      </div>
+    </WatchContextProvider>
   );
 };
 
@@ -435,6 +375,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     .from<Anime>("kaguya_anime")
     .select(
       `
+        id,
         title,
         description,
         bannerImage,

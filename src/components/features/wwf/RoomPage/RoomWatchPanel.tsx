@@ -17,7 +17,9 @@ import React, { useMemo } from "react";
 import { MobileView } from "react-device-detect";
 import { AiOutlineUser } from "react-icons/ai";
 import { MdOutlineChatBubbleOutline } from "react-icons/md";
-import RoomPlayer from "./RoomPlayer";
+import dynamic from "next/dynamic";
+
+const RoomPlayer = dynamic(() => import("./RoomPlayer"), { ssr: false });
 
 const RoomWatchPanel = () => {
   const { room } = useRoomInfo();

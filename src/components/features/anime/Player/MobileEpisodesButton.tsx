@@ -27,7 +27,9 @@ const MobileEpisodesButton: React.FC<MobileEpisodesButtonProps> = ({
         onClick={handleClick}
       />
 
-      <Portal selector=".video-wrapper">{children(isOpen, setIsOpen)}</Portal>
+      <Portal selector=".netplayer-container">
+        {children(isOpen, setIsOpen)}
+      </Portal>
     </div>
   );
 };

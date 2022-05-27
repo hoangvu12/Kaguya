@@ -1,34 +1,17 @@
+import ControlsIcon, {
+  ControlsIconProps,
+} from "@/components/features/anime/Player/ControlsIcon";
 import NextIcon from "@/components/icons/NextIcon";
+import { ControlButton, useVideoProps } from "netplayer";
 import React from "react";
-import Popup from "@/components/shared/Popup";
-import ControlsIcon from "@/components/features/anime/Player/ControlsIcon";
-import { useHotkeys } from "react-hotkeys-hook";
 
-interface NextEpisodeButtonProps {
-  className?: string;
-  onClick?: () => void;
-}
-
-const NextEpisodeButton: React.FC<NextEpisodeButtonProps> = ({
-  children,
-  className,
-  onClick,
-}) => {
-  useHotkeys("shift+n", onClick, [onClick]);
+const NextEpisodeButton: React.FC<Partial<ControlsIconProps>> = (props) => {
+  const { i18n } = useVideoProps();
 
   return (
-    <Popup
-      portalSelector=".video-wrapper"
-      reference={<ControlsIcon Icon={NextIcon} onClick={onClick} />}
-      referenceClassName="h-8"
-      placement="top-start"
-      offset={[-15, 15]}
-      showArrow={false}
-      type="hover"
-      className={className}
-    >
-      <p className="rounded-sm">Tập tiếp theo</p>
-    </Popup>
+    <ControlButton tooltip={i18n.controls.nextEpisode}>
+      <ControlsIcon Icon={NextIcon} {...props} />
+    </ControlButton>
   );
 };
 
