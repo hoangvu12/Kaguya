@@ -1,31 +1,30 @@
-import EpisodesIcon from "@/components/icons/EpisodesIcon";
-import React from "react";
-import Popup from "@/components/shared/Popup";
 import ControlsIcon from "@/components/features/anime/Player/ControlsIcon";
-
+import EpisodesIcon from "@/components/icons/EpisodesIcon";
+import { ControlButton, Popover, useVideoProps } from "netplayer";
+import React from "react";
 interface EpisodesButtonProps {
   className?: string;
-  onClick?: () => void;
 }
 
 const EpisodesButton: React.FC<EpisodesButtonProps> = ({
   children,
   className,
-  onClick,
 }) => {
+  const { i18n } = useVideoProps();
+
   return (
-    <Popup
-      portalSelector=".video-wrapper"
-      reference={<ControlsIcon Icon={EpisodesIcon} onClick={onClick} />}
-      referenceClassName="h-8"
-      placement="top-start"
-      offset={[-15, 15]}
-      showArrow={false}
-      type="click"
-      className={className}
+    <Popover
+      portalSelector=".netplayer-container"
+      reference={
+        <ControlButton className={className} tooltip={i18n.controls.episodes}>
+          <ControlsIcon Icon={EpisodesIcon} />
+        </ControlButton>
+      }
+      position="top"
+      overflowElement=".netplayer-container"
     >
       {children}
-    </Popup>
+    </Popover>
   );
 };
 

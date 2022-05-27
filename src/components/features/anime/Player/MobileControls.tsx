@@ -1,65 +1,48 @@
-import FullscreenIcon from "@/components/icons/FullscreenIcon";
-import useDidMount from "@/hooks/useDidMount";
 import classNames from "classnames";
-import React, { useCallback } from "react";
-import screenfull from "screenfull";
-import MobileControlsIcon from "@/components/features/anime/Player/MobileControlsIcon";
-// import ProgressControl from "@/components/features/anime/Player/ProgressControl";
-import SkipButton from "@/components/features/anime/Player/SkipButton";
-import dynamic from "next/dynamic";
+import {
+  FullscreenButton,
+  ProgressSlider,
+  TimeIndicator,
+  useInteract,
+  useVideo,
+} from "netplayer";
+import * as React from "react";
+import SkipButton from "./SkipButton";
 
-const ProgressControl = dynamic(
-  () => import("@/components/features/anime/Player/ProgressControl"),
-  { ssr: false }
-);
+interface MobileControlsProps {
+  controlsSlot?: React.ReactNode;
+}
 
-const MobileControls = () => {
-  const handleEnterFullScreen = useCallback(() => {
-    if (!screenfull.isEnabled) return;
-
-    const videoWrapper = document.querySelector(".video-wrapper");
-
-    screenfull
-      .request(videoWrapper)
-      .then(() => {
-        screen.orientation.lock("landscape");
-      })
-      .catch((err) => console.log(err));
-  }, []);
-
-  const handleToggleFullscreen = useCallback(() => {
-    if (!screenfull.isEnabled) return;
-
-    if (!screenfull.isFullscreen) {
-      handleEnterFullScreen();
-    } else {
-      screenfull.exit();
-    }
-  }, [handleEnterFullScreen]);
-
-  useDidMount(handleEnterFullScreen);
+const MobileControls: React.FC<MobileControlsProps> = ({ controlsSlot }) => {
+  const { isInteracting } = useInteract();
+  const { videoState } = useVideo();
 
   return (
-    <React.Fragment>
-      <div
-        className={classNames(
-          "z-40 relative w-full px-4 bg-gradient-to-t from-black/80 via-black/40 to-transparent"
-        )}
-      >
-        <ProgressControl />
+    <div
+      className={classNames(
+        "mobile-controls-container w-full bg-gradient-to-t from-black/80 via-black/40 to-transparent transition-all duration-300",
+        !videoState.seeking && !isInteracting && !videoState.buffering
+          ? "opacity-0 invisible"
+          : "opacity-100 visible"
+      )}
+    >
+      <div className="px-4 flex w-full items-center justify-between">
+        <TimeIndicator />
 
-        <div className="mobile-controls flex justify-evenly items-center py-6">
-          <MobileControlsIcon
-            title="Toàn màn hình"
-            Icon={FullscreenIcon}
-            onClick={handleToggleFullscreen}
-          />
-
-          <SkipButton />
+        <div className="w-4 h-4">
+          <FullscreenButton />
         </div>
       </div>
-    </React.Fragment>
+      <div className="px-4 w-full mt-2">
+        <ProgressSlider />
+      </div>
+      <div className="flex justify-evenly items-center py-6">
+        <SkipButton />
+
+        {controlsSlot}
+      </div>{" "}
+    </div>
   );
 };
 
-export default MobileControls;
+export default React.memo(MobileControls);

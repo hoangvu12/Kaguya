@@ -177,87 +177,6 @@ main {
   @apply min-h-screen;
 }
 
-div.jsoneditor,
-div.jsoneditor-menu {
-  @apply !border-background-900;
-}
-div.jsoneditor-menu {
-  @apply !bg-background-900;
-}
-div.jsoneditor-tree,
-div.jsoneditor textarea.jsoneditor-text {
-  @apply !bg-background-800 !text-white;
-}
-div.jsoneditor-field,
-div.jsoneditor-value {
-  @apply !text-white;
-}
-div.jsoneditor-search div.jsoneditor-frame {
-  @apply !bg-background-800;
-}
-div.jsoneditor-search div.jsoneditor-frame input {
-  @apply !bg-background-800 !text-white;
-}
-
-tr.jsoneditor-highlight,
-tr.jsoneditor-selected {
-  @apply !bg-background-900;
-}
-
-div.jsoneditor-field[contenteditable="true"]:focus,
-div.jsoneditor-field[contenteditable="true"]:hover,
-div.jsoneditor-value[contenteditable="true"]:focus,
-div.jsoneditor-value[contenteditable="true"]:hover,
-div.jsoneditor-field.jsoneditor-highlight,
-div.jsoneditor-value.jsoneditor-highlight {
-  @apply !bg-background-900 !border-background-900;
-}
-
-div.jsoneditor-field.highlight-active,
-div.jsoneditor-field.highlight-active:focus,
-div.jsoneditor-field.highlight-active:hover,
-div.jsoneditor-value.highlight-active,
-div.jsoneditor-value.highlight-active:focus,
-div.jsoneditor-value.highlight-active:hover {
-  background-color: #b1b1b1 !important;
-  border-color: #b1b1b1 !important;
-}
-
-div.jsoneditor-navigation-bar {
-  @apply !bg-background-800;
-}
-
-div.jsoneditor-tree button:focus {
-  background-color: #868686 !important;
-}
-
-/* coloring of JSON in tree mode */
-div.jsoneditor-readonly {
-  color: #acacac !important;
-}
-div.jsoneditor td.jsoneditor-separator {
-  color: #acacac !important;
-}
-div.jsoneditor-value.jsoneditor-string {
-  color: #00ff88 !important;
-}
-div.jsoneditor-value.jsoneditor-object,
-div.jsoneditor-value.jsoneditor-array {
-  color: #bababa !important;
-}
-div.jsoneditor-value.jsoneditor-number {
-  color: #ff4040 !important;
-}
-div.jsoneditor-value.jsoneditor-boolean {
-  color: #ff8048 !important;
-}
-div.jsoneditor-value.jsoneditor-null {
-  color: #49a7fc !important;
-}
-div.jsoneditor-value.jsoneditor-invalid {
-  color: white !important;
-}
-
 ::-webkit-scrollbar {
   @apply w-2 bg-white/10;
 }
@@ -267,9 +186,9 @@ div.jsoneditor-value.jsoneditor-invalid {
 }
 
 .no-scrollbar::-webkit-scrollbar {
-  display: none;
+  @apply hidden;
 }
 
-.ui-time-seek-slider {
-  width: 100%;
+.controls-container .control-button {
+  @apply w-8 h-8;
 }
