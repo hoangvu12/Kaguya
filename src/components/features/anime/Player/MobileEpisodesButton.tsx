@@ -2,6 +2,7 @@ import EpisodesIcon from "@/components/icons/EpisodesIcon";
 import React, { Children, useCallback } from "react";
 import Portal from "@/components/shared/Portal";
 import MobileControlsIcon from "@/components/features/anime/Player/MobileControlsIcon";
+import { useVideoProps } from "netplayer";
 
 interface MobileEpisodesButtonProps {
   children(
@@ -14,6 +15,7 @@ const MobileEpisodesButton: React.FC<MobileEpisodesButtonProps> = ({
   children,
 }) => {
   const [isOpen, setIsOpen] = React.useState(false);
+  const { i18n } = useVideoProps();
 
   const handleClick = useCallback(() => {
     setIsOpen((prev) => !prev);
@@ -22,7 +24,7 @@ const MobileEpisodesButton: React.FC<MobileEpisodesButtonProps> = ({
   return (
     <div>
       <MobileControlsIcon
-        title="Tập phim"
+        title={i18n.controls.episodes as string}
         Icon={EpisodesIcon}
         onClick={handleClick}
       />

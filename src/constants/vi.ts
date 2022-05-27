@@ -281,6 +281,7 @@ export const PLAYER_TRANSLATIONS: I18n = {
     sliderDragMessage: "Kéo để tua",
     nextEpisode: "Tập tiếp theo",
     episodes: "Danh sách tập",
+    skipOPED: "Skip OP/ED",
   },
   settings: {
     audio: "Âm thanh",

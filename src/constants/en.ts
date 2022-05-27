@@ -281,6 +281,7 @@ export const PLAYER_TRANSLATIONS: I18n = {
     sliderDragMessage: "Drag to seek video",
     nextEpisode: "Next episode",
     episodes: "Episodes",
+    skipOPED: "Skip OP/ED",
   },
   settings: {
     audio: "Audio",
