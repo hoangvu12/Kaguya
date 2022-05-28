@@ -21,7 +21,7 @@ export interface WatchPlayerProps extends NetPlayerProps {
   videoRef?: React.ForwardedRef<HTMLVideoElement>;
 }
 
-const PlayerControls = () => {
+const PlayerControls = React.memo(() => {
   const {
     setEpisode,
     episodes,
@@ -63,9 +63,11 @@ const PlayerControls = () => {
       }
     />
   );
-};
+});
 
-const PlayerMobileControls = () => {
+PlayerControls.displayName = "PlayerControls";
+
+const PlayerMobileControls = React.memo(() => {
   const {
     setEpisode,
     episodes,
@@ -122,9 +124,11 @@ const PlayerMobileControls = () => {
       }
     />
   );
-};
+});
 
-const PlayerOverlay = () => {
+PlayerMobileControls.displayName = "PlayerMobileControls";
+
+const PlayerOverlay = React.memo(() => {
   const router = useRouter();
   const { isInteracting } = useInteract();
 
@@ -139,9 +143,11 @@ const PlayerOverlay = () => {
       />
     </Overlay>
   );
-};
+});
 
-const PlayerMobileOverlay = () => {
+PlayerOverlay.displayName = "PlayerOverlay";
+
+const PlayerMobileOverlay = React.memo(() => {
   const router = useRouter();
   const { isInteracting } = useInteract();
 
@@ -156,7 +162,9 @@ const PlayerMobileOverlay = () => {
       />
     </MobileOverlay>
   );
-};
+});
+
+PlayerMobileOverlay.displayName = "PlayerMobileOverlay";
 
 const WatchPlayer: React.FC<WatchPlayerProps> = ({ videoRef, ...props }) => {
   const { setEpisode, episodes, currentEpisodeIndex, sourceId } =
@@ -185,35 +193,43 @@ const WatchPlayer: React.FC<WatchPlayerProps> = ({ videoRef, ...props }) => {
     [sourceId]
   );
 
+  const hotkeys = useMemo(
+    () => [
+      {
+        fn: () => {
+          if (currentEpisodeIndex < sourceEpisodes.length - 1) {
+            setEpisode(nextEpisode);
+          }
+        },
+        hotKey: "shift+n",
+        name: "next-episode",
+      },
+    ],
+    [currentEpisodeIndex, nextEpisode, setEpisode, sourceEpisodes.length]
+  );
+
+  const components = useMemo(
+    () => ({
+      Controls: PlayerControls,
+      MobileControls: PlayerMobileControls,
+      Overlay: PlayerOverlay,
+      MobileOverlay: PlayerMobileOverlay,
+    }),
+    []
+  );
+
   return (
     <Player
       ref={videoRef}
-      components={{
-        Controls: PlayerControls,
-        MobileControls: PlayerMobileControls,
-        Overlay: PlayerOverlay,
-        MobileOverlay: PlayerMobileOverlay,
-      }}
-      hotkeys={[
-        {
-          fn: () => {
-            if (currentEpisodeIndex < sourceEpisodes.length - 1) {
-              setEpisode(nextEpisode);
-            }
-          },
-          hotKey: "shift+n",
-          name: "next-episode",
-        },
-      ]}
+      components={components}
+      hotkeys={hotkeys}
       autoPlay
       changeSourceUrl={proxyBuilder}
       {...props}
-    >
-      {props.children}
-    </Player>
+    />
   );
 };
 
 WatchPlayer.displayName = "WatchPlayer";
 
-export default WatchPlayer;
+export default React.memo(WatchPlayer);

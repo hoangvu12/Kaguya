@@ -234,6 +234,36 @@ const RoomPlayer = () => {
     [room.episode.sourceId]
   );
 
+  const components = useMemo(
+    () => ({
+      Controls: PlayerControls,
+      MobileControls: PlayerMobileControls,
+      Overlay: PlayerOverlay,
+      MobileOverlay: PlayerMobileOverlay,
+    }),
+    []
+  );
+
+  const hotkeys = useMemo(
+    () => [
+      {
+        fn: () => {
+          if (currentEpisodeIndex < sourceEpisodes.length - 1) {
+            handleNavigateEpisode(nextEpisode);
+          }
+        },
+        hotKey: "shift+n",
+        name: "next-episode",
+      },
+    ],
+    [
+      currentEpisodeIndex,
+      handleNavigateEpisode,
+      nextEpisode,
+      sourceEpisodes.length,
+    ]
+  );
+
   return (
     <RoomPlayerContextProvider
       value={{
@@ -255,23 +285,8 @@ const RoomPlayer = () => {
             subtitles={data?.subtitles || []}
             className="object-contain w-full h-full"
             changeSourceUrl={proxyBuilder}
-            components={{
-              Controls: PlayerControls,
-              MobileControls: PlayerMobileControls,
-              Overlay: PlayerOverlay,
-              MobileOverlay: PlayerMobileOverlay,
-            }}
-            hotkeys={[
-              {
-                fn: () => {
-                  if (currentEpisodeIndex < sourceEpisodes.length - 1) {
-                    handleNavigateEpisode(nextEpisode);
-                  }
-                },
-                hotKey: "shift+n",
-                name: "next-episode",
-              },
-            ]}
+            components={components}
+            hotkeys={hotkeys}
             autoPlay
           />
         </div>
