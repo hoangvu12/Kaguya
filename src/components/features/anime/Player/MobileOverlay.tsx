@@ -9,6 +9,7 @@ import {
   PlayPauseButton,
   ForwardButton,
   SettingsButton,
+  MobileVolumeSlider,
 } from "netplayer";
 import * as React from "react";
 
@@ -41,6 +42,10 @@ const MobileOverlay: React.FC<MobileOverlayProps> = ({ children }) => {
       >
         {i18n.controls.sliderDragMessage}
       </TextIcon>
+
+      <div className="w-[max-content] h-[90%]">
+        <MobileVolumeSlider />
+      </div>
 
       <div
         className={classNames(
