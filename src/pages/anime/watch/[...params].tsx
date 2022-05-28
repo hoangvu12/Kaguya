@@ -41,8 +41,10 @@ const blankVideo = [
   },
 ];
 
-const ForwardRefPlayer = React.forwardRef<HTMLVideoElement, WatchPlayerProps>(
-  (props, ref) => <WatchPlayer {...props} videoRef={ref} />
+const ForwardRefPlayer = React.memo(
+  React.forwardRef<HTMLVideoElement, WatchPlayerProps>((props, ref) => (
+    <WatchPlayer {...props} videoRef={ref} />
+  ))
 );
 
 ForwardRefPlayer.displayName = "ForwardRefPlayer";
@@ -246,8 +248,13 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   );
 
   const sources = useMemo(
-    () => (isLoading ? blankVideo : data.sources),
-    [data?.sources, isLoading]
+    () => (!data?.sources?.length ? blankVideo : data.sources),
+    [data?.sources]
+  );
+
+  const subtitles = useMemo(
+    () => (!data?.subtitles?.length ? [] : data.subtitles),
+    [data?.subtitles]
   );
 
   return (
@@ -285,8 +292,8 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
         ) : (
           <ForwardRefPlayer
             ref={videoRef}
-            sources={!data?.sources?.length ? blankVideo : data.sources}
-            subtitles={!data?.subtitles?.length ? [] : data.subtitles}
+            sources={sources}
+            subtitles={subtitles}
             className="object-contain w-full h-full"
           />
         )}
