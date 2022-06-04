@@ -8,6 +8,7 @@ import {
 import { useFetchSource } from "@/hooks/useFetchSource";
 import useVideoSync from "@/hooks/useVideoSync";
 import { Episode, VideoSource } from "@/types";
+import { parseNumberFromString } from "@/utils";
 import { sortMediaUnit } from "@/utils/data";
 import classNames from "classnames";
 import { useInteract } from "netplayer";
@@ -24,6 +25,7 @@ import MobileNextEpisode from "../../anime/Player/MobileNextEpisode";
 import MobileOverlay from "../../anime/Player/MobileOverlay";
 import NextEpisodeButton from "../../anime/Player/NextEpisodeButton";
 import Overlay from "../../anime/Player/Overlay";
+import TimestampSkipButton from "../../anime/Player/TimestampSkipButton";
 
 const blankVideo = [
   {
@@ -143,6 +145,7 @@ const PlayerMobileControls = () => {
 const PlayerOverlay = () => {
   const router = useRouter();
   const { isInteracting } = useInteract();
+  const { currentEpisode, anime } = useRoomPlayer();
 
   return (
     <Overlay>
@@ -153,6 +156,14 @@ const PlayerOverlay = () => {
         )}
         onClick={router.back}
       />
+
+      {anime.idMal && (
+        <TimestampSkipButton
+          className="absolute right-4 bottom-20"
+          episode={parseNumberFromString(currentEpisode.name)}
+          malId={anime.idMal}
+        />
+      )}
     </Overlay>
   );
 };
@@ -160,6 +171,7 @@ const PlayerOverlay = () => {
 const PlayerMobileOverlay = () => {
   const router = useRouter();
   const { isInteracting } = useInteract();
+  const { currentEpisode, anime } = useRoomPlayer();
 
   return (
     <MobileOverlay>
@@ -170,6 +182,14 @@ const PlayerMobileOverlay = () => {
         )}
         onClick={router.back}
       />
+
+      {anime.idMal && (
+        <TimestampSkipButton
+          className="absolute right-2 bottom-32"
+          episode={parseNumberFromString(currentEpisode.name)}
+          malId={anime.idMal}
+        />
+      )}
     </MobileOverlay>
   );
 };

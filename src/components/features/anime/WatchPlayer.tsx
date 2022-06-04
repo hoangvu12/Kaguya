@@ -1,6 +1,7 @@
 import config from "@/config";
 import { useWatchPlayer } from "@/contexts/WatchContext";
 import { VideoSource } from "@/types";
+import { parseNumberFromString } from "@/utils";
 import classNames from "classnames";
 import { NetPlayerProps, useInteract } from "netplayer";
 import { useRouter } from "next/router";
@@ -16,6 +17,7 @@ import MobileNextEpisode from "./Player/MobileNextEpisode";
 import MobileOverlay from "./Player/MobileOverlay";
 import NextEpisodeButton from "./Player/NextEpisodeButton";
 import Overlay from "./Player/Overlay";
+import TimestampSkipButton from "./Player/TimestampSkipButton";
 
 export interface WatchPlayerProps extends NetPlayerProps {
   videoRef?: React.ForwardedRef<HTMLVideoElement>;
@@ -131,6 +133,7 @@ PlayerMobileControls.displayName = "PlayerMobileControls";
 const PlayerOverlay = React.memo(() => {
   const router = useRouter();
   const { isInteracting } = useInteract();
+  const { currentEpisode, anime } = useWatchPlayer();
 
   return (
     <Overlay>
@@ -141,6 +144,14 @@ const PlayerOverlay = React.memo(() => {
         )}
         onClick={router.back}
       />
+
+      {anime.idMal && (
+        <TimestampSkipButton
+          className="absolute right-4 bottom-20"
+          episode={parseNumberFromString(currentEpisode.name)}
+          malId={anime.idMal}
+        />
+      )}
     </Overlay>
   );
 });
@@ -150,6 +161,7 @@ PlayerOverlay.displayName = "PlayerOverlay";
 const PlayerMobileOverlay = React.memo(() => {
   const router = useRouter();
   const { isInteracting } = useInteract();
+  const { currentEpisode, anime } = useWatchPlayer();
 
   return (
     <MobileOverlay>
@@ -160,6 +172,14 @@ const PlayerMobileOverlay = React.memo(() => {
         )}
         onClick={router.back}
       />
+
+      {anime.idMal && (
+        <TimestampSkipButton
+          className="absolute right-4 bottom-32"
+          episode={parseNumberFromString(currentEpisode.name)}
+          malId={anime.idMal}
+        />
+      )}
     </MobileOverlay>
   );
 });

@@ -381,6 +381,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     .select(
       `
         id,
+        idMal,
         title,
         description,
         bannerImage,
