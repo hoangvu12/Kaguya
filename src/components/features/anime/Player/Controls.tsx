@@ -4,7 +4,6 @@ import {
   ForwardButton,
   FullscreenButton,
   PlayPauseButton,
-  ProgressSlider,
   SettingsButton,
   SubtitleButton,
   TimeIndicator,
@@ -13,6 +12,7 @@ import {
   VolumeButton,
 } from "netplayer";
 import * as React from "react";
+import ProgressSlider from "./ProgressSlider";
 import SkipButton from "./SkipButton";
 
 interface ControlsProps {

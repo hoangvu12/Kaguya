@@ -351,3 +351,15 @@ export type SourceStatus<T> = (T extends "anime"
   user_id?: number;
   user?: User;
 };
+
+export type SkipType = "ed" | "op" | "mixed-ed" | "mixed-op" | "recap";
+
+export interface SkipTimeStamp {
+  interval: {
+    startTime: number;
+    endTime: number;
+  };
+  skipType: SkipType;
+  skipId: string;
+  episodeLength: number;
+}
