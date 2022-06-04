@@ -108,13 +108,18 @@ const TimestampSkipButton: React.FC<TimestampSkipButtonProps> = ({
     [timestamp?.skipType]
   );
 
-  const handleClick = useCallback(() => {
-    if (!timestamp) return;
+  const handleClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      e.stopPropagation();
 
-    const { endTime } = timestamp.interval;
+      if (!timestamp) return;
 
-    videoEl.currentTime = endTime;
-  }, [timestamp, videoEl]);
+      const { endTime } = timestamp.interval;
+
+      videoEl.currentTime = endTime;
+    },
+    [timestamp, videoEl]
+  );
 
   return timestamp && !timestampLoading ? (
     <Button
