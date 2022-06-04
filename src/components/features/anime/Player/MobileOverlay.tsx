@@ -39,6 +39,7 @@ const MobileOverlay: React.FC<MobileOverlayProps> = ({ children }) => {
           "absolute left-1/2 -translate-x-1/2 mt-4 transition-all duration-300",
           !videoState.seeking ? "invisible opacity-0" : "visible opacity-100"
         )}
+        iconClassName="!w-10 !h-10"
       >
         {i18n.controls.sliderDragMessage}
       </TextIcon>
