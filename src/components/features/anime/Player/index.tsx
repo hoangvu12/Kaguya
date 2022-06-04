@@ -4,6 +4,7 @@ import { buildAbsoluteURL } from "url-toolkit";
 import useConstantTranslation from "@/hooks/useConstantTranslation";
 import config from "@/config";
 import { SKIP_TIME } from "@/constants";
+import { CustomVideoStateContextProvider } from "@/contexts/CustomVideoStateContext";
 
 const skipOPEDHotkey = () => ({
   fn: (videoEl: HTMLVideoElement) => {
@@ -45,15 +46,17 @@ const Player = React.forwardRef<HTMLVideoElement, NetPlayerProps>(
     }, []);
 
     return (
-      <NetPlayer
-        ref={ref}
-        i18n={PLAYER_TRANSLATIONS}
-        hotkeys={playerHotkeys}
-        onHlsInit={handleHlsInit}
-        {...props}
-      >
-        {props.children}
-      </NetPlayer>
+      <CustomVideoStateContextProvider>
+        <NetPlayer
+          ref={ref}
+          i18n={PLAYER_TRANSLATIONS}
+          hotkeys={playerHotkeys}
+          onHlsInit={handleHlsInit}
+          {...props}
+        >
+          {props.children}
+        </NetPlayer>
+      </CustomVideoStateContextProvider>
     );
   }
 );

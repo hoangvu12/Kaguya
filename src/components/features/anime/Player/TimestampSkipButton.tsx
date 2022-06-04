@@ -1,24 +1,12 @@
 import { BaseButtonProps } from "@/components/shared/BaseButton";
 import Button from "@/components/shared/Button";
+import { useCustomVideoState } from "@/contexts/CustomVideoStateContext";
+import { SkipTimeStamp, SkipType } from "@/types";
 import axios from "axios";
 import classNames from "classnames";
 import { useVideo } from "netplayer";
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useQuery } from "react-query";
-
-export type SkipType = "ed" | "op" | "mixed-ed" | "mixed-op" | "recap";
-
-export interface Interval {
-  startTime: number;
-  endTime: number;
-}
-
-export interface SkipTimeStamp {
-  interval: Interval;
-  skipType: SkipType;
-  skipId: string;
-  episodeLength: number;
-}
 
 interface TimestampSkipButtonProps extends BaseButtonProps {
   episode: number;
@@ -45,11 +33,11 @@ const getTimestamps = async (
 
 const getTypeName = (skipType: SkipType) => {
   if (skipType === "op") {
-    return "OP";
+    return "Opening";
   }
 
   if (skipType === "ed") {
-    return "ED";
+    return "Ending";
   }
 
   if (skipType === "mixed-ed") {
@@ -72,6 +60,7 @@ const TimestampSkipButton: React.FC<TimestampSkipButtonProps> = ({
   ...props
 }) => {
   const { videoEl } = useVideo();
+  const { setState } = useCustomVideoState();
   const { data: timestamps, isLoading: timestampLoading } = useQuery<
     SkipTimeStamp[]
   >(
@@ -80,6 +69,21 @@ const TimestampSkipButton: React.FC<TimestampSkipButtonProps> = ({
     { enabled: !!videoEl?.duration }
   );
   const [timestamp, setTimeStamp] = useState<SkipTimeStamp>(null);
+
+  useEffect(() => {
+    if (!timestamps?.length) return null;
+
+    const composedTimestamps = timestamps.map((ts) => ({
+      startTime: ts.interval.startTime,
+      endTime: ts.interval.endTime,
+      title: getTypeName(ts.skipType),
+    }));
+
+    setState((prev) => ({
+      ...prev,
+      timestamps: composedTimestamps,
+    }));
+  }, [setState, timestamps]);
 
   useEffect(() => {
     if (!timestamps?.length) return;
