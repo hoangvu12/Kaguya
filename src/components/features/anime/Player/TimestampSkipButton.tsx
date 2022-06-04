@@ -123,8 +123,10 @@ const TimestampSkipButton: React.FC<TimestampSkipButtonProps> = ({
 
   return timestamp && !timestampLoading ? (
     <Button
-      outline
-      className={classNames("bg-white/30 hover:bg-white/20", className)}
+      className={classNames(
+        "font-semibold tracking-wider uppercase text-white/90 hover:text-white border border-solid border-white/80 hover:border-white bg-zinc-800/80 hover:bg-zinc-800/60",
+        className
+      )}
       onClick={handleClick}
       {...props}
     >
