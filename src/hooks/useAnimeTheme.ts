@@ -1,4 +1,5 @@
 import { AnimeTheme } from "@/types";
+import { randomElement } from "@/utils";
 import axios, { AxiosError } from "axios";
 import { useQuery } from "react-query";
 
@@ -93,7 +94,7 @@ export const useAnimeTheme = () => {
       );
 
       const theme = data.animethemes[0];
-      const entry = theme.animethemeentries[0];
+      const entry = randomElement(theme.animethemeentries);
 
       return {
         episode: entry.episodes,
