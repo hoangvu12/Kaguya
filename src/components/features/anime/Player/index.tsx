@@ -5,6 +5,7 @@ import useConstantTranslation from "@/hooks/useConstantTranslation";
 import config from "@/config";
 import { SKIP_TIME } from "@/constants";
 import { CustomVideoStateContextProvider } from "@/contexts/CustomVideoStateContext";
+import Subtitle from "./Subtitle";
 
 const skipOPEDHotkey = () => ({
   fn: (videoEl: HTMLVideoElement) => {
@@ -15,8 +16,13 @@ const skipOPEDHotkey = () => ({
 });
 
 const Player = React.forwardRef<HTMLVideoElement, NetPlayerProps>(
-  ({ hotkeys, ...props }, ref) => {
+  ({ hotkeys, components, ...props }, ref) => {
     const { PLAYER_TRANSLATIONS } = useConstantTranslation();
+
+    const playerComponents = useMemo(
+      () => ({ ...components, Subtitle }),
+      [components]
+    );
 
     const playerHotkeys = useMemo(
       () => [skipOPEDHotkey(), ...hotkeys],
@@ -52,6 +58,7 @@ const Player = React.forwardRef<HTMLVideoElement, NetPlayerProps>(
           i18n={PLAYER_TRANSLATIONS}
           hotkeys={playerHotkeys}
           onHlsInit={handleHlsInit}
+          components={playerComponents}
           {...props}
         >
           {props.children}
