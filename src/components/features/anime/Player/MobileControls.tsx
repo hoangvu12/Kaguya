@@ -1,12 +1,12 @@
 import classNames from "classnames";
 import {
   FullscreenButton,
-  ProgressSlider,
   TimeIndicator,
   useInteract,
   useVideo,
 } from "netplayer";
 import * as React from "react";
+import ProgressSlider from "./ProgressSlider";
 import SkipButton from "./SkipButton";
 
 interface MobileControlsProps {
