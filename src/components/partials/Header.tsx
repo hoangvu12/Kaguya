@@ -33,6 +33,10 @@ const routes = [
     title: "watch_with_friends",
     href: "/wwf",
   },
+  {
+    title: "Anime Themes",
+    href: "/themes",
+  },
 ];
 
 const Header = () => {
