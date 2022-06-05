@@ -14,6 +14,7 @@ import {
 import * as React from "react";
 import ProgressSlider from "./ProgressSlider";
 import SkipButton from "./SkipButton";
+import TimestampsButton from "./TimestampsButton";
 
 interface ControlsProps {
   rightControlsSlot?: React.ReactNode;
@@ -51,6 +52,7 @@ const Controls: React.FC<ControlsProps> = ({
         </div>
         <div className="flex items-center space-x-4">
           {rightControlsSlot}
+          <TimestampsButton />
           <SkipButton />
           <SubtitleButton />
           <SettingsButton />

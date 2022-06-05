@@ -282,6 +282,7 @@ export const PLAYER_TRANSLATIONS: I18n = {
     nextEpisode: "Next episode",
     episodes: "Episodes",
     skipOPED: "Skip OP/ED",
+    timestamps: "Timestamps",
   },
   settings: {
     audio: "Audio",

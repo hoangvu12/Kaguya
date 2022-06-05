@@ -12,6 +12,7 @@ import {
   MobileVolumeSlider,
 } from "netplayer";
 import * as React from "react";
+import MobileTimestampsButton from "./MobileTimestampsButton";
 
 interface MobileOverlayProps {}
 
@@ -93,6 +94,10 @@ const MobileOverlay: React.FC<MobileOverlayProps> = ({ children }) => {
 
         <div className="absolute top-4 right-4 w-8 h-8">
           <SettingsButton />
+        </div>
+
+        <div className="absolute top-4 right-16 w-8 h-8">
+          <MobileTimestampsButton />
         </div>
       </div>
 

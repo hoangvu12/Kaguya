@@ -282,6 +282,7 @@ export const PLAYER_TRANSLATIONS: I18n = {
     nextEpisode: "Tập tiếp theo",
     episodes: "Danh sách tập",
     skipOPED: "Skip OP/ED",
+    timestamps: "Mốc thời gian",
   },
   settings: {
     audio: "Âm thanh",
