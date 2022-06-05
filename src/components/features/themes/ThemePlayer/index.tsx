@@ -12,10 +12,12 @@ interface ThemePlayerProps extends NetPlayerProps {}
 const ThemePlayer: React.FC<ThemePlayerProps> = (props) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const { endMode } = useThemeSettings();
-  const { refresh } = useThemePlayer();
+  const { refresh, isLoading } = useThemePlayer();
 
   useEffect(() => {
     if (!videoRef.current) return;
+
+    if (isLoading) return;
 
     const videoEl = videoRef.current;
 
@@ -36,7 +38,7 @@ const ThemePlayer: React.FC<ThemePlayerProps> = (props) => {
     return () => {
       videoEl.removeEventListener("ended", handleVideoEnd);
     };
-  }, [endMode, refresh]);
+  }, [endMode, isLoading, refresh]);
 
   useEffect(() => {
     if (!videoRef.current) return;
@@ -69,7 +71,12 @@ const ThemePlayer: React.FC<ThemePlayerProps> = (props) => {
     <CustomVideoStateContextProvider>
       <NetPlayer
         autoPlay
-        components={{ Controls, Overlay }}
+        components={{
+          Controls,
+          Overlay,
+          MobileControls: Controls,
+          MobileOverlay: Overlay,
+        }}
         hotkeys={hotkeys}
         ref={videoRef}
         {...props}
