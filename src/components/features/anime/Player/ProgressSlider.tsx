@@ -5,7 +5,17 @@ import { Slider, useVideo } from "netplayer";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { isDesktop } from "react-device-detect";
 
-const ProgressSlider = () => {
+interface ProgressSliderProps {
+  className?: string;
+  innerClassName?: string;
+  hideDot?: boolean;
+}
+
+const ProgressSlider: React.FC<ProgressSliderProps> = ({
+  className,
+  innerClassName,
+  hideDot,
+}) => {
   const { videoEl, setVideoState } = useVideo();
   const { state } = useCustomVideoState();
   const [bufferPercent, setBufferPercent] = useState(0);
@@ -109,7 +119,8 @@ const ProgressSlider = () => {
     <Slider
       className={classNames(
         "w-full h-1.5 cursor-pointer flex flex-col justify-end",
-        isDesktop ? "h-1.5" : "h-6"
+        isDesktop ? "h-1.5" : "h-6",
+        className
       )}
       onPercentIntent={handlePercentIntent}
       onPercentChange={handlePercentChange}
@@ -117,7 +128,7 @@ const ProgressSlider = () => {
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="w-full h-1 relative">
+      <div className={classNames("w-full h-1 relative", innerClassName)}>
         <Slider.Bar className="bg-white/50" percent={hoverPercent} />
         <Slider.Bar className="bg-white/40" percent={bufferPercent} />
 
@@ -139,10 +150,13 @@ const ProgressSlider = () => {
 
         <Slider.Bar className="bg-primary-500" percent={currentPercent} />
         <Slider.Bar className="bg-white/20" />
-        <Slider.Dot
-          className="h-3.5 w-3.5 absolute bg-primary-500 rounded-full"
-          percent={currentPercent}
-        />
+
+        {!hideDot && (
+          <Slider.Dot
+            className="h-3.5 w-3.5 absolute bg-primary-500 rounded-full"
+            percent={currentPercent}
+          />
+        )}
 
         {!!hoverPercent && videoEl?.duration && (
           <div

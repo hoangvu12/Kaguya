@@ -363,3 +363,10 @@ export interface SkipTimeStamp {
   skipId: string;
   episodeLength: number;
 }
+
+export interface AnimeTheme {
+  type: "ED" | "OP";
+  name: string;
+  episode: string;
+  sources: VideoSource[];
+}
