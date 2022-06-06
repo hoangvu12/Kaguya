@@ -364,10 +364,15 @@ export interface SkipTimeStamp {
   episodeLength: number;
 }
 
+export interface AnimeSongTheme {
+  title: string;
+}
 export interface AnimeTheme {
   slug: string;
-  type: "ED" | "OP";
+  song: AnimeSongTheme;
   name: string;
+  type: string;
   episode: string;
   sources: VideoSource[];
+  anilistId?: number;
 }

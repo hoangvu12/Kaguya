@@ -12,6 +12,7 @@ import * as React from "react";
 import LoopToggle from "./LoopToggle";
 import RefreshButton from "./RefreshButton";
 import { useThemePlayer } from "@/contexts/ThemePlayerContext";
+import DotList from "@/components/shared/DotList";
 
 const Controls: React.FC = () => {
   const { isInteracting } = useInteract();
@@ -33,10 +34,14 @@ const Controls: React.FC = () => {
           <LoopToggle />
 
           {theme && (
-            <span className="text-white">
-              {theme.name} - {theme.type}{" "}
-              {theme.episode && `(Episode ${theme.episode})`}
-            </span>
+            <DotList>
+              <span>
+                {theme.song.title} - {theme.type}{" "}
+                {theme.episode && `(Episode ${theme.episode})`}
+              </span>
+
+              <span>{theme.name}</span>
+            </DotList>
           )}
         </div>
 

@@ -20,7 +20,7 @@ const blankVideo = [
 
 interface ThemesPageProps {
   slug: string;
-  type: "OP" | "ED";
+  type: string;
 }
 
 const ThemesPage = ({ slug, type }: ThemesPageProps) => {
@@ -75,12 +75,10 @@ ThemesPage.getLayout = (children) => (
 );
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const { slug, type } = query;
-
   return {
     props: {
-      slug,
-      type,
+      slug: query.slug || null,
+      type: query.type || null,
     },
   };
 };

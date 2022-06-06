@@ -45,15 +45,7 @@ const ThemePlayer: React.FC<ThemePlayerProps> = (props) => {
 
     const videoEl = videoRef.current;
 
-    const handleCanPlay = () => {
-      videoEl.play();
-    };
-
-    videoEl.addEventListener("canplay", handleCanPlay);
-
-    return () => {
-      videoEl.removeEventListener("canplay", handleCanPlay);
-    };
+    videoEl.autoplay = true;
   }, []);
 
   const hotkeys: HotKey[] = useMemo(
