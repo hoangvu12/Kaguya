@@ -5,13 +5,9 @@ import { useRef } from "react";
 import { useQuery } from "react-query";
 
 declare module AnimeThemeAPI {
-  export interface Anime {
+  export interface Song {
     id: number;
-    name: string;
-    slug: string;
-    year: number;
-    season: string;
-    synopsis: string;
+    title: string;
     created_at: Date;
     updated_at: Date;
     deleted_at?: any;
@@ -40,7 +36,7 @@ declare module AnimeThemeAPI {
 
   export interface Animethemeentry {
     id: number;
-    version?: any;
+    version?: number;
     episodes: string;
     nsfw: boolean;
     spoiler: boolean;
@@ -53,15 +49,33 @@ declare module AnimeThemeAPI {
 
   export interface Animetheme {
     id: number;
-    type: "OP" | "ED";
+    type: string;
     sequence?: any;
     group?: any;
     slug: string;
     created_at: Date;
     updated_at: Date;
     deleted_at?: any;
-    anime: Anime;
+    song: Song;
     animethemeentries: Animethemeentry[];
+  }
+
+  export interface Resource {
+    external_id: number;
+  }
+
+  export interface Anime {
+    id: number;
+    name: string;
+    slug: string;
+    year: number;
+    season: string;
+    synopsis: string;
+    created_at: Date;
+    updated_at: Date;
+    deleted_at?: any;
+    animethemes: Animetheme[];
+    resources: Resource[];
   }
 
   export interface Links {
@@ -80,19 +94,20 @@ declare module AnimeThemeAPI {
   }
 
   export interface RandomThemeResponse {
-    animethemes: Animetheme[];
+    anime: Anime[];
     links: Links;
     meta: Meta;
   }
-
-  export interface AnimeResponse {
-    anime: Anime & { animethemes: Animetheme[] };
+  export interface ThemeResponse {
+    anime: Anime;
+    links: Links;
+    meta: Meta;
   }
 }
 
 const composeTheme = (
-  theme: AnimeThemeAPI.Animetheme,
-  anime: AnimeThemeAPI.Anime
+  anime: AnimeThemeAPI.Anime,
+  theme = randomElement(anime.animethemes)
 ): AnimeTheme => {
   const entry = randomElement(theme.animethemeentries);
 
@@ -104,37 +119,35 @@ const composeTheme = (
       label: video.tags || video.resolution + "p",
     })),
     slug: anime.slug,
-    type: theme.type,
+    type: theme.slug,
+    song: {
+      title: theme.song.title,
+    },
+    anilistId: anime.resources?.[0]?.external_id,
   };
 };
 
 const fetchRandomTheme = async () => {
   const { data } = await axios.get<AnimeThemeAPI.RandomThemeResponse>(
-    "https://api.animethemes.moe/animetheme?page[size]=1&sort=random&include=anime,animethemeentries.videos&filter[has]=animethemeentries&filter[spoiler]=false&filter[nsfw]=false"
+    "https://api.animethemes.moe/anime?sort=random&page[size]=1&include=animethemes.animethemeentries.videos,animethemes.song,resources&filter[site]=Anilist&fields[resource]=external_id"
   );
 
-  const theme = data.animethemes[0];
-
-  return composeTheme(theme, theme.anime);
+  return composeTheme(data.anime[0]);
 };
 
-const fetchThemeByAnime = async (slug: string, type: "ED" | "OP") => {
-  const { data } = await axios.get<AnimeThemeAPI.AnimeResponse>(
-    `https://api.animethemes.moe/anime/${slug}?include=animethemes.animethemeentries.videos`
+const fetchThemeByAnime = async (slug: string, type: string) => {
+  const { data } = await axios.get<AnimeThemeAPI.ThemeResponse>(
+    `https://api.animethemes.moe/anime/${slug}?include=animethemes.animethemeentries.videos,animethemes.song,resources&filter[site]=Anilist&fields[resource]=external_id`
   );
 
-  let theme: AnimeThemeAPI.Animetheme = null;
+  const theme: AnimeThemeAPI.Animetheme = data.anime.animethemes.find(
+    (theme) => theme.slug === type
+  );
 
-  if (type === "ED" || type === "OP") {
-    theme = data.anime.animethemes.find((theme) => theme.type === type);
-  } else {
-    theme = randomElement(data.anime.animethemes);
-  }
-
-  return composeTheme(theme, data.anime);
+  return composeTheme(data.anime, theme);
 };
 
-export const useAnimeTheme = (slug: string, type: "ED" | "OP") => {
+export const useAnimeTheme = (slug: string, type: string) => {
   const loaded = useRef(false);
 
   return useQuery<AnimeTheme, AxiosError>(
