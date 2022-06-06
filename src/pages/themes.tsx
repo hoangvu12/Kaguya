@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { ThemeSettingsContextProvider } from "@/contexts/ThemeSettingsContext";
-import { useAnimeTheme } from "@/hooks/useAnimeTheme";
+import { fetchRandomTheme, useAnimeTheme } from "@/hooks/useAnimeTheme";
 import { ThemePlayerContextProvider } from "@/contexts/ThemePlayerContext";
 import Head from "@/components/shared/Head";
 import { useRouter } from "next/router";
@@ -25,7 +25,19 @@ interface ThemesPageProps {
 
 const ThemesPage = ({ slug, type }: ThemesPageProps) => {
   const router = useRouter();
-  const { data, refetch, isLoading } = useAnimeTheme(slug, type);
+  const { data, isLoading } = useAnimeTheme({ slug, type });
+
+  const handleNewTheme = async () => {
+    const { slug, type } = await fetchRandomTheme();
+
+    router.replace({
+      pathname: router.pathname,
+      query: {
+        slug,
+        type,
+      },
+    });
+  };
 
   const sources = useMemo(
     () => (isLoading || !data?.sources?.length ? blankVideo : data?.sources),
@@ -43,10 +55,7 @@ const ThemesPage = ({ slug, type }: ThemesPageProps) => {
           type: data.type,
         },
       },
-      null,
-      {
-        shallow: true,
-      }
+      null
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
@@ -60,7 +69,7 @@ const ThemesPage = ({ slug, type }: ThemesPageProps) => {
       />
 
       <ThemePlayerContextProvider
-        value={{ theme: data, refresh: refetch, isLoading }}
+        value={{ theme: data, refresh: handleNewTheme, isLoading }}
       >
         <ThemeSettingsContextProvider>
           <ThemePlayer sources={sources} className="w-full h-screen" />
