@@ -3,6 +3,7 @@ import Loading from "@/components/shared/Loading";
 import Portal from "@/components/shared/Portal";
 import { useThemePlayer } from "@/contexts/ThemePlayerContext";
 import useThemeSearch from "@/hooks/useThemeSearch";
+import { debounce } from "@/utils";
 import React, { useEffect, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import ThemeCard from "./ThemeCard";
@@ -23,9 +24,10 @@ const ThemeSearch: React.FC<SearchProps> = ({ className }) => {
     setKeyword(theme.name);
   }, [theme?.name]);
 
-  const handleInputChange: React.FormEventHandler<HTMLInputElement> = (e) => {
-    setKeyword((e.target as HTMLInputElement).value);
-  };
+  const handleInputChange: React.FormEventHandler<HTMLInputElement> = debounce(
+    (e: React.ChangeEvent<HTMLInputElement>) => setKeyword(e.target.value),
+    500
+  );
 
   return (
     <React.Fragment>
