@@ -7,15 +7,19 @@ interface OverlayProps extends React.HTMLAttributes<HTMLDivElement> {}
 const Overlay: React.FC<OverlayProps> = ({ className, ...props }) => {
   const { videoEl } = useVideo();
 
-  const handleToggleVideo = React.useCallback(() => {
-    if (!videoEl) return;
+  const handleToggleVideo: React.MouseEventHandler<HTMLDivElement> =
+    React.useCallback(
+      (e) => {
+        if (!videoEl) return;
 
-    if (videoEl.paused) {
-      videoEl.play();
-    } else {
-      videoEl.pause();
-    }
-  }, [videoEl]);
+        if (videoEl.paused) {
+          videoEl.play();
+        } else {
+          videoEl.pause();
+        }
+      },
+      [videoEl]
+    );
 
   return (
     <div
