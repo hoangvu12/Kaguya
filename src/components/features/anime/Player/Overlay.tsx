@@ -10,6 +10,8 @@ const Overlay: React.FC<OverlayProps> = ({ className, ...props }) => {
   const handleToggleVideo: React.MouseEventHandler<HTMLDivElement> =
     React.useCallback(
       (e) => {
+        if (e.target !== e.currentTarget) return;
+
         if (!videoEl) return;
 
         if (videoEl.paused) {
