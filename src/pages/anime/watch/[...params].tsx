@@ -276,31 +276,30 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
           image={anime.bannerImage}
         />
 
-        {isError ? (
-          <div className="w-full h-full flex flex-col items-center justify-center space-y-8">
-            <div className="space-y-4 text-center">
-              <p className="text-4xl font-semibold">｡゜(｀Д´)゜｡</p>
-              <p className="text-xl">
-                Đã có lỗi xảy ra ({error?.response?.data?.error})
-              </p>
-            </div>
-
-            <Button primary onClick={router.back}>
-              <p>Trở về trang trước</p>
-            </Button>
-          </div>
-        ) : (
-          <ForwardRefPlayer
-            ref={videoRef}
-            sources={sources}
-            subtitles={subtitles}
-            className="object-contain w-full h-full"
-          />
-        )}
+        <ForwardRefPlayer
+          ref={videoRef}
+          sources={sources}
+          subtitles={subtitles}
+          className="object-contain w-full h-full"
+        />
 
         {isLoading && (
           <Portal selector=".netplayer-container">
             <Loading />
+          </Portal>
+        )}
+
+        {isError && (
+          <Portal selector=".netplayer-container">
+            <div className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 space-y-4">
+              <p className="text-4xl font-semibold text-center">｡゜(｀Д´)゜｡</p>
+              <p className="text-xl text-center">
+                Đã có lỗi xảy ra ({error?.response?.data?.error})
+              </p>
+              <p className="text-lg text-center">
+                Bạn có thể chọn source khác hoặc thử lại sau.
+              </p>
+            </div>
           </Portal>
         )}
 
