@@ -44,7 +44,7 @@ const ThemeSearch: React.FC<SearchProps> = ({ className }) => {
           ></div>
 
           <div
-            className="absolute h-5/6 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 fixed inset-0 flex flex-col items-center space-y-2"
+            className="absolute h-5/6 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 flex flex-col items-center space-y-2"
             onClick={(e) => {
               e.stopPropagation();
             }}
