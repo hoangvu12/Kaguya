@@ -30,7 +30,11 @@ const queryClient = new QueryClient({
   },
 });
 
-function App({ Component, pageProps, router }: AppProps) {
+interface WorkaroundAppProps extends AppProps {
+  err: any;
+}
+
+function App({ Component, pageProps, router, err }: WorkaroundAppProps) {
   useEffect(() => {
     const handleRouteChange = (url: string) => {
       pageview(url);
@@ -80,7 +84,7 @@ function App({ Component, pageProps, router }: AppProps) {
       <QueryClientProvider client={queryClient}>
         <AuthContextProvider>
           <SubscriptionContextProvider>
-            {getLayout(<Component {...pageProps} />)}
+            {getLayout(<Component {...pageProps} err={err} />)}
           </SubscriptionContextProvider>
         </AuthContextProvider>
 

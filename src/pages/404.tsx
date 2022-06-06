@@ -1,11 +1,10 @@
 import Button from "@/components/shared/Button";
 import Head from "@/components/shared/Head";
-import Image from "@/components/shared/Image";
 import Section from "@/components/shared/Section";
 import { Trans, useTranslation } from "next-i18next";
 import Link from "next/link";
 
-function Error() {
+function ErrorPage() {
   const { t } = useTranslation("404_page");
 
   return (
@@ -44,6 +43,6 @@ function Error() {
   );
 }
 
-Error.getLayout = (page) => page;
+ErrorPage.getLayout = (page) => page;
 
-export default Error;
+export default ErrorPage;
