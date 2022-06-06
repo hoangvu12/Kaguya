@@ -1,6 +1,7 @@
 import { AnimeTheme } from "@/types";
 import { randomElement } from "@/utils";
 import axios, { AxiosError } from "axios";
+import { useRef } from "react";
 import { useQuery } from "react-query";
 
 declare module AnimeThemeAPI {
@@ -78,33 +79,78 @@ declare module AnimeThemeAPI {
     to: number;
   }
 
-  export interface Response {
+  export interface RandomThemeResponse {
     animethemes: Animetheme[];
     links: Links;
     meta: Meta;
   }
+
+  export interface AnimeResponse {
+    anime: Anime & { animethemes: Animetheme[] };
+  }
 }
 
-export const useAnimeTheme = () => {
+const composeTheme = (
+  theme: AnimeThemeAPI.Animetheme,
+  anime: AnimeThemeAPI.Anime
+): AnimeTheme => {
+  const entry = randomElement(theme.animethemeentries);
+
+  return {
+    episode: entry.episodes,
+    name: anime.name,
+    sources: entry.videos.map((video) => ({
+      file: video.link,
+      label: video.tags || video.resolution + "p",
+    })),
+    slug: anime.slug,
+    type: theme.type,
+  };
+};
+
+const fetchRandomTheme = async () => {
+  const { data } = await axios.get<AnimeThemeAPI.RandomThemeResponse>(
+    "https://api.animethemes.moe/animetheme?page[size]=1&sort=random&include=anime,animethemeentries.videos&filter[has]=animethemeentries&filter[spoiler]=false&filter[nsfw]=false"
+  );
+
+  const theme = data.animethemes[0];
+
+  return composeTheme(theme, theme.anime);
+};
+
+const fetchThemeByAnime = async (slug: string, type: "ED" | "OP") => {
+  const { data } = await axios.get<AnimeThemeAPI.AnimeResponse>(
+    `https://api.animethemes.moe/anime/${slug}?include=animethemes.animethemeentries.videos`
+  );
+
+  let theme: AnimeThemeAPI.Animetheme = null;
+
+  if (type === "ED" || type === "OP") {
+    theme = data.anime.animethemes.find((theme) => theme.type === type);
+  } else {
+    theme = randomElement(data.anime.animethemes);
+  }
+
+  return composeTheme(theme, data.anime);
+};
+
+export const useAnimeTheme = (slug: string, type: "ED" | "OP") => {
+  const loaded = useRef(false);
+
   return useQuery<AnimeTheme, AxiosError>(
     "anime-themes",
     async () => {
-      const { data } = await axios.get<AnimeThemeAPI.Response>(
-        "https://api.animethemes.moe/animetheme?page[size]=1&sort=random&include=anime,animethemeentries.videos&filter[has]=animethemeentries&filter[spoiler]=false&filter[nsfw]=false"
-      );
+      let theme: AnimeTheme = null;
 
-      const theme = data.animethemes[0];
-      const entry = randomElement(theme.animethemeentries);
+      if (slug && !loaded.current) {
+        theme = await fetchThemeByAnime(slug, type);
+      } else {
+        theme = await fetchRandomTheme();
+      }
 
-      return {
-        episode: entry.episodes,
-        name: theme.anime.name,
-        sources: entry.videos.map((video) => ({
-          file: video.link,
-          label: video.tags || video.resolution + "p",
-        })),
-        type: theme.type,
-      };
+      loaded.current = true;
+
+      return theme;
     },
     {
       cacheTime: 0,

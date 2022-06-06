@@ -365,6 +365,7 @@ export interface SkipTimeStamp {
 }
 
 export interface AnimeTheme {
+  slug: string;
   type: "ED" | "OP";
   name: string;
   episode: string;
