@@ -1,4 +1,6 @@
 import dayjs from "@/lib/dayjs";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 export const randomElement = <T>(array: T[]): T => {
   const index = Math.floor(Math.random() * array.length);
@@ -307,3 +309,28 @@ export function convertTime(seconds: string | number) {
 
   return `${minutes}:${seconds}`;
 }
+
+export const getFileNameFromUrl = (url: string) => {
+  return new URL(url).pathname.split("/").pop();
+};
+
+export const download = async (url: string, name: string) => {
+  if (!url) {
+    throw new Error("Resource URL not provided! You need to provide one");
+  }
+
+  fetch(url, { mode: "no-cors" })
+    .then((response) => response.blob())
+    .then((blob) => {
+      const blobURL = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = blobURL;
+      a.style.display = "none";
+
+      if (name && name.length) a.download = name;
+      document.body.appendChild(a);
+      a.click();
+
+      toast.info("The file has been downloaded successfully!");
+    });
+};
