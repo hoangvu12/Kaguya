@@ -58,8 +58,7 @@ const Subtitle = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const subtitle = useMemo(
-    () =>
-      state.subtitles?.find((sub) => sub.lang === state.currentSubtitle?.lang),
+    () => state.subtitles?.find((sub) => sub.lang === state.currentSubtitle),
     [state.subtitles, state.currentSubtitle]
   );
 
