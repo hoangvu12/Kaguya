@@ -29,7 +29,7 @@ const PWAInstallPrompt = () => {
     handleClosePrompt();
 
     deferredPrompt.current = null;
-  }, []);
+  }, [handleClosePrompt]);
 
   useEffect(() => {
     const handleBeforeInstall = (e) => {
