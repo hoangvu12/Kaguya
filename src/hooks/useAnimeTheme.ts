@@ -158,6 +158,7 @@ export const useAnimeTheme = ({ slug, type }: UseAnimeThemeProps) => {
     async ({ queryKey: [_, slug, type] }) =>
       fetchThemeByAnime(slug as string, type as string),
     {
+      enabled: !!slug,
       cacheTime: 0,
       refetchOnMount: false,
       refetchOnWindowFocus: false,

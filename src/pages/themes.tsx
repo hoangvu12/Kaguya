@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { ThemeSettingsContextProvider } from "@/contexts/ThemeSettingsContext";
 import { fetchRandomTheme, useAnimeTheme } from "@/hooks/useAnimeTheme";
@@ -27,7 +27,7 @@ const ThemesPage = ({ slug, type }: ThemesPageProps) => {
   const router = useRouter();
   const { data, isLoading } = useAnimeTheme({ slug, type });
 
-  const handleNewTheme = async () => {
+  const handleNewTheme = useCallback(async () => {
     const { slug, type } = await fetchRandomTheme();
 
     router.replace({
@@ -37,7 +37,7 @@ const ThemesPage = ({ slug, type }: ThemesPageProps) => {
         type,
       },
     });
-  };
+  }, [router]);
 
   const sources = useMemo(
     () => (isLoading || !data?.sources?.length ? blankVideo : data?.sources),
@@ -59,6 +59,12 @@ const ThemesPage = ({ slug, type }: ThemesPageProps) => {
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
+
+  useEffect(() => {
+    if (slug && type) return;
+
+    handleNewTheme();
+  }, [handleNewTheme, slug, type]);
 
   return (
     <React.Fragment>
