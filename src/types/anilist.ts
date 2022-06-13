@@ -131,7 +131,7 @@ export interface Media {
   /** The amount of volumes the manga has when complete*/
   volumes: Maybe<number>;
   /** Where the media was created. (ISO 3166-1 alpha-2)*/
-  countryOfOrigin: Maybe<undefined>;
+  countryOfOrigin: Maybe<string>;
   /** If the media is officially licensed or a self-published doujin release*/
   isLicensed: Maybe<boolean>;
   /** Source type the media was adapted from.*/
@@ -257,7 +257,7 @@ export interface MediaArgs {
   /** Filter by the source type of the media*/
   source?: MediaSource;
   /** Filter by the media's country of origin*/
-  countryOfOrigin?: undefined;
+  countryOfOrigin?: string;
   /** If the media is officially licensed or a self-published doujin release*/
   isLicensed?: boolean;
   /** Filter by search query*/

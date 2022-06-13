@@ -33,6 +33,18 @@ export const anilistFetcher = async <T>(query: string, variables: any) => {
   return data?.data;
 };
 
+export const getPageMedia = async (
+  args: MediaArgs & PageArgs,
+  fields?: string
+) => {
+  const response = await anilistFetcher<MediaQueryResponse>(
+    mediaQuery(fields),
+    args
+  );
+
+  return response?.Page;
+};
+
 export const getMedia = async (args: MediaArgs & PageArgs, fields?: string) => {
   const response = await anilistFetcher<MediaQueryResponse>(
     mediaQuery(fields),
