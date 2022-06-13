@@ -1,4 +1,4 @@
-import { MediaFormat } from "@/anilist";
+import { MediaFormat } from "@/types/anilist";
 import AnimeBrowseList from "@/components/features/anime/AnimeBrowseList";
 import CharacterBrowseList from "@/components/features/characters/CharacterBrowseList";
 import MangaBrowseList from "@/components/features/manga/MangaBrowseList";

@@ -7,13 +7,14 @@ import Section from "@/components/shared/Section";
 import { getTitle } from "@/utils/data";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
+import { MediaType } from "@/types/anilist";
 
 const composeData = (data: Watched, locale?: string) => {
   const title = getTitle(data.media, locale);
 
-  const recommendations = data.media?.recommendations?.map(
-    ({ media }) => media
-  );
+  const recommendations = data.media?.recommendations?.nodes.map((node) => {
+    return node.mediaRecommendation;
+  });
 
   return {
     title,
@@ -38,7 +39,7 @@ const RecommendedAnimeSection = () => {
 
   return composedData?.list?.length ? (
     <Section title={`${t("because_you_watched")} "${composedData.title}"`}>
-      <CardSwiper data={composedData.list} type="anime" />
+      <CardSwiper data={composedData.list} type={MediaType.Anime} />
     </Section>
   ) : null;
 };

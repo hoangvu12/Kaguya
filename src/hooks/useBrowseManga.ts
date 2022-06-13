@@ -1,6 +1,6 @@
-import { MediaFormat } from "@/anilist";
+import { MediaFormat } from "@/types/anilist";
 import supabase from "@/lib/supabase";
-import { MediaStatus } from "@/anilist";
+import { MediaStatus } from "@/types/anilist";
 import { Manga } from "@/types";
 import { useSupaInfiniteQuery } from "@/utils/supabase";
 import { PostgrestFilterBuilder } from "@supabase/postgrest-js";

@@ -1,24 +1,18 @@
-import { Anime, Manga } from "@/types";
-import React from "react";
 import Card from "@/components/shared/Card";
 import Swiper, { SwiperSlide } from "@/components/shared/Swiper";
+import { Media, MediaType } from "@/types/anilist";
+import React from "react";
 
-type CardSwiperProps =
-  | {
-      type: "anime";
-      data: Anime[];
-      onEachCard?: (card: Anime) => React.ReactNode;
-    }
-  | {
-      type: "manga";
-      data: Manga[];
-      onEachCard?: (card: Manga) => React.ReactNode;
-    };
+interface CardSwiperProps {
+  data: Media[];
+  type: MediaType;
+  onEachCard?: (data: Media) => React.ReactNode;
+}
 
 const CardSwiper: React.FC<CardSwiperProps> = (props) => {
   const {
     data,
-    type = "anime",
+    type,
     onEachCard = (data) => <Card data={data} type={type} />,
   } = props;
 

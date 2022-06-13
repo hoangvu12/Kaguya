@@ -1,22 +1,41 @@
-import supabase from "@/lib/supabase";
-import { Watched } from "@/types";
-import { useSupabaseQuery } from "@/utils/supabase";
 import { useUser } from "@/contexts/AuthContext";
+import supabase from "@/lib/supabase";
+import { getMedia } from "@/services/anilist";
+import { Watched } from "@/types";
+import { fulfilledPromises } from "@/utils";
+import { useQuery } from "react-query";
 
 const useWatched = () => {
   const user = useUser();
 
-  return useSupabaseQuery(
+  return useQuery<Watched[]>(
     "watched",
-    () => {
-      return supabase
+    async () => {
+      const { data, error } = await supabase
         .from<Watched>("kaguya_watched")
         .select(
-          "media:mediaId(id, title, vietnameseTitle, bannerImage, coverImage), episode:kaguya_episodes!episodeId(sourceEpisodeId, name, sourceId)"
+          "mediaId, episode:kaguya_episodes!episodeId(sourceEpisodeId, name, sourceId)"
         )
         .eq("userId", user.id)
         .order("updated_at", { ascending: false })
         .limit(15);
+
+      if (error) throw error;
+
+      const anilistMedia = await getMedia({
+        id_in: data.map((watched) => watched.mediaId),
+      });
+
+      return data.map((watched) => {
+        const media = anilistMedia.find(
+          (media) => media.id === watched.mediaId
+        );
+
+        return {
+          ...watched,
+          media,
+        };
+      });
     },
     { enabled: !!user }
   );

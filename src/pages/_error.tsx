@@ -14,6 +14,8 @@ interface CustomErrorProps extends ErrorProps {
   };
 }
 
+const isDev = process.env.NODE_ENV === 'development'
+
 // @ts-ignore
 const ErrorPage: NextPage<CustomErrorProps, CustomErrorProps> = ({
   statusCode,
@@ -22,7 +24,7 @@ const ErrorPage: NextPage<CustomErrorProps, CustomErrorProps> = ({
 }) => {
   const { t } = useTranslation("_error_page");
 
-  if (!hasGetInitialPropsRun && err) {
+  if (!hasGetInitialPropsRun && err && !isDev) {
     // getInitialProps is not called in case of
     // https://github.com/vercel/next.js/issues/8592. As a workaround, we pass
     // err via _app.js so it can be captured
@@ -106,7 +108,7 @@ ErrorPage.getInitialProps = async (context) => {
   //    Boundary. Read more about what types of exceptions are caught by Error
   //    Boundaries: https://reactjs.org/docs/error-boundaries.html
 
-  if (err) {
+  if (err && !isDev) {
     Sentry.captureException(err);
 
     // Flushing before returning is necessary if deploying to Vercel, see
