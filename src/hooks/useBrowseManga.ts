@@ -50,7 +50,9 @@ const useBrowse = (options: UseBrowseOptions) => {
     },
     {
       getNextPageParam: (lastPage) =>
-        lastPage.pageInfo.hasNextPage ? lastPage.pageInfo.lastPage + 1 : null,
+        lastPage.pageInfo.hasNextPage
+          ? lastPage.pageInfo.currentPage + 1
+          : null,
     }
   );
 };
