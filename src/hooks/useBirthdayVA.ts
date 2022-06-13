@@ -1,25 +1,18 @@
-import dayjs from "@/lib/dayjs";
-import supabase from "@/lib/supabase";
-import { VoiceActor } from "@/types";
-import { useSupabaseQuery } from "@/utils/supabase";
+import { getStaff } from "@/services/anilist";
+import { StaffSort } from "@/types/anilist";
+import { useQuery } from "react-query";
 
 const useBirthdayVA = () => {
-  const day = dayjs();
-
-  return useSupabaseQuery(
+  return useQuery(
     ["voice-actors birthday"],
-    () => {
-      return (
-        supabase
-          .from<VoiceActor>("kaguya_voice_actors")
-          .select("*")
-          // @ts-ignore
-          .eq("dateOfBirth->day", day.date())
-          // @ts-ignore
-          .eq("dateOfBirth->month", day.month() + 1)
-          .limit(30)
-          .order("favourites", { ascending: false })
-      );
+    async () => {
+      const data = await getStaff({
+        isBirthday: true,
+        perPage: 30,
+        sort: [StaffSort.Favourites_desc],
+      });
+
+      return data;
     },
     {
       retry: 0,

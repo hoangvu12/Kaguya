@@ -46,7 +46,7 @@ const BrowseList: React.FC<BrowseListProps> = ({ defaultQuery }) => {
   );
 
   const totalData = useMemo(
-    () => searchResult?.pages.map((el) => el.data).flat(),
+    () => searchResult?.pages.flatMap((el) => el.staff),
     [searchResult?.pages]
   );
 
