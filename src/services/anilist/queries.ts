@@ -1,19 +1,15 @@
-import { Media, Page } from "@/types/anilist";
+import { Media, Page, Studio } from "@/types/anilist";
 
-export type MediaQueryResponse = {
-  Page: Page;
-};
-
-export type AiringSchedulesQueryResponse = {
-  Page: Page;
-};
-
-export type RecommendationsQueryResponse = {
+export type PageQueryResponse = {
   Page: Page;
 };
 
 export type MediaDetailsQueryResponse = {
   Media: Media;
+};
+
+export type StudioDetailsQueryResponse = {
+  Studio: Studio;
 };
 
 export const mediaDefaultFields = `
@@ -565,6 +561,185 @@ query Recommendation ($page:Int = 1, $perPage: Int = 20, $id: Int,$mediaId: Int,
     ) {
       ${fields}
     }
+  }
+}
+`;
+
+export const charactersDefaultFields = `
+id
+name {
+  first
+  middle
+  last
+  full
+  native
+  alternative
+  alternativeSpoiler
+  userPreferred
+}
+image {
+  large
+  medium
+}
+description
+gender
+dateOfBirth {
+  year
+  month
+  day
+}
+age
+bloodType
+updatedAt
+favourites
+`;
+
+export const charactersQuery = (fields = charactersDefaultFields) => `
+query Character(
+  $page: Int = 1
+  $perPage: Int = 20
+  $id: Int
+  $isBirthday: Boolean
+  $search: String
+  $id_not: Int
+  $id_in: [Int]
+  $id_not_in: [Int]
+  $sort: [CharacterSort]
+) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      total
+      perPage
+      currentPage
+      lastPage
+      hasNextPage
+    }
+    characters(
+      id: $id
+      isBirthday: $isBirthday
+      search: $search
+      id_not: $id_not
+      id_in: $id_in
+      id_not_in: $id_not_in
+      sort: $sort
+    ) {
+      ${fields}
+    }
+  }
+}
+`;
+
+export const staffDefaultFields = `
+id
+name {
+  first
+  middle
+  last
+  full
+  native
+  alternative
+  userPreferred
+}
+language
+languageV2
+image {
+  large
+  medium
+}
+description
+primaryOccupations
+gender
+dateOfBirth {
+  year
+  month
+  day
+}
+dateOfDeath {
+  year
+  month
+  day
+}
+age
+yearsActive
+homeTown
+bloodType
+isFavourite
+updatedAt
+favourites
+`;
+
+export const staffQuery = (fields = staffDefaultFields) => `
+query Staff(
+  $page: Int = 1
+  $perPage: Int = 20
+  $id: Int
+  $isBirthday: Boolean
+  $search: String
+  $id_not: Int
+  $id_in: [Int]
+  $id_not_in: [Int]
+  $sort: [StaffSort]
+) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      total
+      perPage
+      currentPage
+      lastPage
+      hasNextPage
+    }
+    staff(
+      id: $id
+      isBirthday: $isBirthday
+      search: $search
+      id_not: $id_not
+      id_in: $id_in
+      id_not_in: $id_not_in
+      sort: $sort
+    ) {
+      ${fields}
+    }
+  }
+}
+`;
+
+export const studioDetailsDefaultFields = `
+id
+name
+isAnimationStudio
+media {
+  nodes {
+    ${mediaDefaultFields}
+  }
+  pageInfo {
+    total
+    perPage
+    currentPage
+    lastPage
+    hasNextPage
+  }
+}
+favourites
+`;
+
+export const studioDetailsQuery = (fields = studioDetailsDefaultFields) => `
+query Studio(
+  $id: Int
+  $search: String
+  $id_not: Int
+  $id_in: [Int]
+  $id_not_in: [Int]
+  $sort: [StudioSort]
+) {
+  Studio(
+    id: $id
+    search: $search
+    id_not: $id_not
+    id_in: $id_in
+    id_not_in: $id_not_in
+    sort: $sort
+  ) {
+    ${fields}
   }
 }
 `;

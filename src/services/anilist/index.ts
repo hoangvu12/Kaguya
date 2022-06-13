@@ -4,18 +4,23 @@ import {
   PageArgs,
   AiringScheduleArgs,
   RecommendationArgs,
+  StaffArgs,
+  CharacterArgs,
+  StudioArgs,
 } from "@/types/anilist";
 import { removeArrayOfObjectDup } from "@/utils";
 import axios from "axios";
 import {
   airingSchedulesQuery,
-  AiringSchedulesQueryResponse,
+  charactersQuery,
   mediaDetailsQuery,
   MediaDetailsQueryResponse,
   mediaQuery,
-  MediaQueryResponse,
+  PageQueryResponse,
   recommendationsQuery,
-  RecommendationsQueryResponse,
+  staffQuery,
+  studioDetailsQuery,
+  StudioDetailsQueryResponse,
 } from "./queries";
 
 const GRAPHQL_URL = "https://graphql.anilist.co";
@@ -37,7 +42,7 @@ export const getPageMedia = async (
   args: MediaArgs & PageArgs,
   fields?: string
 ) => {
-  const response = await anilistFetcher<MediaQueryResponse>(
+  const response = await anilistFetcher<PageQueryResponse>(
     mediaQuery(fields),
     args
   );
@@ -46,7 +51,7 @@ export const getPageMedia = async (
 };
 
 export const getMedia = async (args: MediaArgs & PageArgs, fields?: string) => {
-  const response = await anilistFetcher<MediaQueryResponse>(
+  const response = await anilistFetcher<PageQueryResponse>(
     mediaQuery(fields),
     args
   );
@@ -70,7 +75,7 @@ export const getAiringSchedules = async (
   args: AiringScheduleArgs & PageArgs,
   fields?: string
 ) => {
-  const response = await anilistFetcher<AiringSchedulesQueryResponse>(
+  const response = await anilistFetcher<PageQueryResponse>(
     airingSchedulesQuery(fields),
     args
   );
@@ -82,7 +87,7 @@ export const getRecommendations = async (
   args: RecommendationArgs & PageArgs,
   fields?: string
 ) => {
-  const response = await anilistFetcher<RecommendationsQueryResponse>(
+  const response = await anilistFetcher<PageQueryResponse>(
     recommendationsQuery(fields),
     args
   );
@@ -99,7 +104,7 @@ export const getAllAiringSchedules = async (
   let page = 1;
 
   const fetch = async () => {
-    const response = await anilistFetcher<AiringSchedulesQueryResponse>(
+    const response = await anilistFetcher<PageQueryResponse>(
       airingSchedulesQuery(fields),
       { ...args, page }
     );
@@ -115,4 +120,61 @@ export const getAllAiringSchedules = async (
   await fetch();
 
   return removeArrayOfObjectDup(list, "mediaId");
+};
+
+export const getCharacters = async (
+  args: PageArgs & CharacterArgs,
+  fields?: string
+) => {
+  const response = await anilistFetcher<PageQueryResponse>(
+    charactersQuery(fields),
+    args
+  );
+
+  return response?.Page.characters;
+};
+
+export const getPageCharacters = async (
+  args: PageArgs & CharacterArgs,
+  fields?: string
+) => {
+  const response = await anilistFetcher<PageQueryResponse>(
+    charactersQuery(fields),
+    args
+  );
+
+  return response?.Page;
+};
+
+export const getStaff = async (args: PageArgs & StaffArgs, fields?: string) => {
+  const response = await anilistFetcher<PageQueryResponse>(
+    staffQuery(fields),
+    args
+  );
+
+  return response?.Page.staff;
+};
+
+export const getPageStaff = async (
+  args: PageArgs & StaffArgs,
+  fields?: string
+) => {
+  const response = await anilistFetcher<PageQueryResponse>(
+    staffQuery(fields),
+    args
+  );
+
+  return response?.Page;
+};
+
+export const getStudioDetails = async (
+  args: PageArgs & StudioArgs,
+  fields?: string
+) => {
+  const response = await anilistFetcher<StudioDetailsQueryResponse>(
+    studioDetailsQuery(fields),
+    args
+  );
+
+  return response?.Studio;
 };

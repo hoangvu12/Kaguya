@@ -1,16 +1,17 @@
-import supabase from "@/lib/supabase";
-import { Character } from "@/types";
-import { useSupabaseQuery } from "@/utils/supabase";
+import { getCharacters } from "@/services/anilist";
+import { CharacterSort } from "@/types/anilist";
+import { useQuery } from "react-query";
 
 const useFavouriteCharacters = () => {
-  return useSupabaseQuery(
+  return useQuery(
     ["characters favourites"],
-    () => {
-      return supabase
-        .from<Character>("kaguya_characters")
-        .select("*")
-        .limit(30)
-        .order("favourites", { ascending: false });
+    async () => {
+      const data = await getCharacters({
+        perPage: 30,
+        sort: [CharacterSort.Favourites_desc],
+      });
+
+      return data;
     },
     {
       retry: 0,
