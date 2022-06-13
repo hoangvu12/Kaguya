@@ -24,6 +24,7 @@ import {
   staffQuery,
   studioDetailsQuery,
   StudioDetailsQueryResponse,
+  studiosQuery,
 } from "./queries";
 
 const GRAPHQL_URL = "https://graphql.anilist.co";
@@ -211,6 +212,30 @@ export const getPageStaff = async (
 ) => {
   const response = await anilistFetcher<PageQueryResponse>(
     staffQuery(fields),
+    args
+  );
+
+  return response?.Page;
+};
+
+export const getStudios = async (
+  args: PageArgs & StudioArgs,
+  fields?: string
+) => {
+  const response = await anilistFetcher<PageQueryResponse>(
+    studiosQuery(fields),
+    args
+  );
+
+  return response?.Page.studios;
+};
+
+export const getPageStudios = async (
+  args: PageArgs & StudioArgs,
+  fields?: string
+) => {
+  const response = await anilistFetcher<PageQueryResponse>(
+    studiosQuery(fields),
     args
   );
 

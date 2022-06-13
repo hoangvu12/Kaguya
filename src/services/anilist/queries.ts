@@ -707,7 +707,7 @@ export const studioDetailsDefaultFields = `
 id
 name
 isAnimationStudio
-media {
+media(page: $page, perPage: $perPage, sort: ID_DESC) {
   nodes {
     ${mediaDefaultFields}
   }
@@ -722,8 +722,17 @@ media {
 favourites
 `;
 
+export const studiosDefaultFields = `
+id
+name
+isAnimationStudio
+favourites
+`;
+
 export const studioDetailsQuery = (fields = studioDetailsDefaultFields) => `
 query Studio(
+  $page: Int = 1
+  $perPage: Int = 20
   $id: Int
   $search: String
   $id_not: Int
@@ -740,6 +749,39 @@ query Studio(
     sort: $sort
   ) {
     ${fields}
+  }
+}
+`;
+
+export const studiosQuery = (fields = studiosDefaultFields) => `
+query Studio(
+  $page: Int = 1
+  $perPage: Int = 20
+  $id: Int
+  $search: String
+  $id_not: Int
+  $id_in: [Int]
+  $id_not_in: [Int]
+  $sort: [StudioSort]
+) {
+  Page(page: $page, perPage: $perPage) {
+    pageInfo {
+      total
+      perPage
+      currentPage
+      lastPage
+      hasNextPage
+    }
+    studios(
+      id: $id
+      search: $search
+      id_not: $id_not
+      id_in: $id_in
+      id_not_in: $id_not_in
+      sort: $sort
+    ) {
+      ${fields}
+    }
   }
 }
 `;
