@@ -8,6 +8,7 @@ import SortSelector from "@/components/shared/SortSelector";
 import ListSkeleton from "@/components/skeletons/ListSkeleton";
 import useBrowse, { UseBrowseOptions } from "@/hooks/useBrowseManga";
 import useConstantTranslation from "@/hooks/useConstantTranslation";
+import { MediaSort } from "@/types/anilist";
 import { debounce } from "@/utils";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
@@ -20,8 +21,8 @@ const initialValues: UseBrowseOptions = {
   keyword: "",
   genres: [],
   tags: [],
-  sort: "averageScore",
-  countries: [],
+  sort: MediaSort.Trending_desc,
+  country: undefined,
 };
 
 interface BrowseListProps {
@@ -82,7 +83,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
   );
 
   const totalData = useMemo(
-    () => data?.pages.map((el) => el.data).flat(),
+    () => data?.pages.flatMap((el) => el.media),
     [data?.pages]
   );
 
@@ -158,12 +159,11 @@ const BrowseList: React.FC<BrowseListProps> = ({
 
             <FormSelect
               control={control}
-              name="countries"
-              defaultValue={defaultValues.countries}
+              name="country"
+              defaultValue={defaultValues.country}
               selectProps={{
                 placeholder: t("country"),
                 options: COUNTRIES,
-                isMulti: true,
               }}
               label={t("country")}
             />
@@ -189,9 +189,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
       <div className="mt-8">
         {!isLoading && query ? (
           <React.Fragment>
-            <List data={totalData}>
-              {(item) => <Card type="manga" data={item} />}
-            </List>
+            <List data={totalData}>{(item) => <Card data={item} />}</List>
 
             {isFetchingNextPage && !isError && (
               <div className="mt-4">
