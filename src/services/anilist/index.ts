@@ -184,6 +184,27 @@ export const getStaff = async (args: PageArgs & StaffArgs, fields?: string) => {
   return response?.Page.staff;
 };
 
+export const getStaffDetails = async (
+  args: PageArgs & StaffArgs,
+  fields?: string
+) => {
+  const defaultFields = `
+    ${staffDefaultFields}
+    characters {
+      nodes {
+        ${charactersDefaultFields}
+      }
+    }
+  `;
+
+  const response = await anilistFetcher<PageQueryResponse>(
+    staffQuery(fields || defaultFields),
+    { ...args, perPage: 1 }
+  );
+
+  return response?.Page.staff[0];
+};
+
 export const getPageStaff = async (
   args: PageArgs & StaffArgs,
   fields?: string
