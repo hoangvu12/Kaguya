@@ -39,7 +39,7 @@ const RecommendedAnimeSection = () => {
 
   return composedData?.list?.length ? (
     <Section title={`${t("because_you_watched")} "${composedData.title}"`}>
-      <CardSwiper data={composedData.list} type={MediaType.Anime} />
+      <CardSwiper data={composedData.list} />
     </Section>
   ) : null;
 };

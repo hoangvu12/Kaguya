@@ -94,7 +94,7 @@ const Home: NextPage<HomeProps> = ({
             <NewestComments type={MediaType.Anime} />
 
             <Section title={t("newly_added", { ns: "common" })}>
-              <CardSwiper type={MediaType.Anime} data={recentlyUpdated} />
+              <CardSwiper data={recentlyUpdated} />
             </Section>
 
             <div

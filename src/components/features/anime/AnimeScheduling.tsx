@@ -83,7 +83,6 @@ const AnimeScheduling: React.FC<AnimeSchedulingProps> = ({ schedules }) => {
                   data={schedules.map(
                     (schedule: AiringSchedule) => schedule.media
                   )}
-                  type={MediaType.Anime}
                   onEachCard={(card) => {
                     const cardWithSchedule = schedules.find(
                       (schedule) => schedule.media.id === card.id
@@ -96,7 +95,6 @@ const AnimeScheduling: React.FC<AnimeSchedulingProps> = ({ schedules }) => {
                     return (
                       <Card
                         data={card}
-                        type={MediaType.Anime}
                         imageEndSlot={
                           <React.Fragment>
                             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60"></div>
