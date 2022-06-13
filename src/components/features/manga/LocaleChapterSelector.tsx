@@ -1,6 +1,4 @@
 import locales from "@/locales.json";
-import { Chapter, Manga } from "@/types";
-import { sortMediaUnit } from "@/utils/data";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
@@ -28,10 +26,10 @@ const LocaleChapterSelector: React.FC<LocaleChapterSelectorProps> = ({
         selectedTabClassName="bg-white !text-black"
       >
         <TabList className="flex items-center justify-end gap-x-1">
-          {locales.map(({ locale }) => {
+          {locales.map(({ locale }, index) => {
             return (
               <Tab
-                key={locale}
+                key={index}
                 className={classNames(
                   "px-3 py-2 rounded-[6px] cursor-pointer hover:bg-white hover:text-black transition duration-300"
                 )}
@@ -43,7 +41,7 @@ const LocaleChapterSelector: React.FC<LocaleChapterSelectorProps> = ({
         </TabList>
 
         <div className="mt-4">
-          {locales.map(({ locale }) => {
+          {locales.map(({ locale }, index) => {
             const localeChapters = chapters?.filter((chapter) =>
               chapter?.source?.locales.some(
                 (sourceLocale) => sourceLocale === locale
@@ -51,7 +49,7 @@ const LocaleChapterSelector: React.FC<LocaleChapterSelectorProps> = ({
             );
 
             return (
-              <TabPanel key={locale}>
+              <TabPanel key={index}>
                 {!localeChapters?.length ? (
                   <p className="text-center text-2xl">{t("no_chapters")}</p>
                 ) : (

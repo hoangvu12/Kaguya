@@ -66,44 +66,42 @@ const ChapterSelector: React.FC<ChapterSelectorProps> = ({
         })}
       </ArrowSwiper>
 
-      <AnimatePresence initial={false}>
-        <motion.div
-          className="space-y-2 overflow-hidden"
-          variants={{
-            animate: {
-              height: "100%",
-            },
+      <motion.div
+        className="space-y-2 overflow-hidden"
+        variants={{
+          animate: {
+            height: "100%",
+          },
 
-            initial: {
-              height: chapters.length <= 7 ? "100%" : 300,
-            },
-          }}
-          transition={{ ease: "linear" }}
-          animate={isChapterExpanded ? "animate" : "initial"}
-        >
-          {sourceChapters.map((chapter) => (
-            <Link
-              href={`/manga/read/${mediaId}/${chapter.sourceId}/${chapter.sourceChapterId}`}
-              key={chapter.sourceChapterId}
-            >
-              <a className="block">
-                <p className="line-clamp-1 bg-background-900 p-2 text-sm font-semibold hover:bg-white/20 duration-300 transition">
-                  {chapter.name}
-                </p>
-              </a>
-            </Link>
-          ))}
-        </motion.div>
+          initial: {
+            height: chapters.length <= 7 ? "100%" : 300,
+          },
+        }}
+        transition={{ ease: "linear" }}
+        animate={isChapterExpanded ? "animate" : "initial"}
+      >
+        {sourceChapters.map((chapter, index) => (
+          <Link
+            href={`/manga/read/${mediaId}/${chapter.sourceId}/${chapter.sourceChapterId}`}
+            key={chapter.sourceChapterId}
+          >
+            <a className="block">
+              <p className="line-clamp-1 bg-background-900 p-2 text-sm font-semibold hover:bg-white/20 duration-300 transition">
+                {chapter.name}
+              </p>
+            </a>
+          </Link>
+        ))}
+      </motion.div>
 
-        {chapters.length > 7 && (
-          <CircleButton
-            onClick={() => setIsChapterExpanded(!isChapterExpanded)}
-            outline
-            className="absolute top-full mt-4 left-1/2 -translate-x-1/2"
-            LeftIcon={isChapterExpanded ? BsChevronUp : BsChevronDown}
-          />
-        )}
-      </AnimatePresence>
+      {chapters.length > 7 && (
+        <CircleButton
+          onClick={() => setIsChapterExpanded(!isChapterExpanded)}
+          outline
+          className="absolute top-full mt-4 left-1/2 -translate-x-1/2"
+          LeftIcon={isChapterExpanded ? BsChevronUp : BsChevronDown}
+        />
+      )}
     </React.Fragment>
   );
 };
