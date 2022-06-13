@@ -12,12 +12,15 @@ import { removeArrayOfObjectDup } from "@/utils";
 import axios from "axios";
 import {
   airingSchedulesQuery,
+  charactersDefaultFields,
   charactersQuery,
+  mediaDefaultFields,
   mediaDetailsQuery,
   MediaDetailsQueryResponse,
   mediaQuery,
   PageQueryResponse,
   recommendationsQuery,
+  staffDefaultFields,
   staffQuery,
   studioDetailsQuery,
   StudioDetailsQueryResponse,
@@ -144,6 +147,32 @@ export const getPageCharacters = async (
   );
 
   return response?.Page;
+};
+
+export const getCharacterDetails = async (
+  args: PageArgs & CharacterArgs,
+  fields?: string
+) => {
+  const defaultFields = `
+    ${charactersDefaultFields}
+    media {
+      edges {
+        node {
+          ${mediaDefaultFields}
+        }
+        voiceActors {
+          ${staffDefaultFields}
+        }
+      }
+    }
+  `;
+
+  const response = await anilistFetcher<PageQueryResponse>(
+    charactersQuery(fields || defaultFields),
+    { ...args, perPage: 1 }
+  );
+
+  return response?.Page.characters[0];
 };
 
 export const getStaff = async (args: PageArgs & StaffArgs, fields?: string) => {
