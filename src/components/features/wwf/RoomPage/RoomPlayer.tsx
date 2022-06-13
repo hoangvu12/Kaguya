@@ -70,6 +70,21 @@ const PlayerControls = () => {
                   episodes={episodes}
                   activeEpisode={currentEpisode}
                   episodeLinkProps={{ shallow: true, replace: true }}
+                  onEachEpisode={(episode) => (
+                    <button
+                      key={episode.sourceEpisodeId}
+                      className={classNames(
+                        "rounded-md bg-background-800 col-span-1 aspect-w-2 aspect-h-1 group",
+                        episode.sourceEpisodeId ===
+                          currentEpisode?.sourceEpisodeId && "text-primary-300"
+                      )}
+                      onClick={() => setEpisode(episode)}
+                    >
+                      <div className="flex items-center justify-center w-full h-full group-hover:bg-white/10 rounded-md transition duration-300">
+                        <p>{episode.name}</p>
+                      </div>
+                    </button>
+                  )}
                 />
               </div>
             </EpisodesButton>
@@ -125,6 +140,22 @@ const PlayerMobileControls = () => {
                         episodes={episodes}
                         activeEpisode={currentEpisode}
                         episodeLinkProps={{ shallow: true, replace: true }}
+                        onEachEpisode={(episode) => (
+                          <button
+                            key={episode.sourceEpisodeId}
+                            className={classNames(
+                              "rounded-md bg-background-800 col-span-1 aspect-w-2 aspect-h-1 group",
+                              episode.sourceEpisodeId ===
+                                currentEpisode?.sourceEpisodeId &&
+                                "text-primary-300"
+                            )}
+                            onClick={() => setEpisode(episode)}
+                          >
+                            <div className="flex items-center justify-center w-full h-full group-hover:bg-white/10 rounded-md transition duration-300">
+                              <p>{episode.name}</p>
+                            </div>
+                          </button>
+                        )}
                       />
                     </div>
                   </div>
@@ -202,16 +233,12 @@ const RoomPlayer = () => {
 
   const isHost = useMemo(() => user?.id === room?.hostUserId, [user, room]);
 
-  const episodes = useMemo(
-    () =>
-      room.media.sourceConnections.flatMap((connection) => connection.episodes),
-    [room.media?.sourceConnections]
-  );
-
   const sourceEpisodes = useMemo(
     () =>
-      episodes.filter((episode) => episode.sourceId === room.episode.sourceId),
-    [episodes, room.episode.sourceId]
+      room.episodes.filter(
+        (episode) => episode.sourceId === room.episode.sourceId
+      ),
+    [room.episodes, room.episode.sourceId]
   );
 
   const currentEpisodeIndex = useMemo(
@@ -227,7 +254,10 @@ const RoomPlayer = () => {
     [currentEpisodeIndex, sourceEpisodes]
   );
 
-  const sortedEpisodes = useMemo(() => sortMediaUnit(episodes), [episodes]);
+  const sortedEpisodes = useMemo(
+    () => sortMediaUnit(room.episodes),
+    [room.episodes]
+  );
 
   const handleNavigateEpisode = useCallback(
     (episode: Episode) => {

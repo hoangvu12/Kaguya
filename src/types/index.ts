@@ -153,6 +153,7 @@ export type Room = {
   episodeId: string;
   users: User[];
   title?: string;
+  episodes: Episode[];
   visibility: "public" | "private";
 };
 
