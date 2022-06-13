@@ -184,10 +184,10 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
                 title={t("characters_section")}
                 className="w-full grid md:grid-cols-2 grid-cols-1 gap-4"
               >
-                {manga.characters.edges.map((characterEdge) => (
+                {manga.characters.edges.map((characterEdge, index) => (
                   <CharacterConnectionCard
                     characterEdge={characterEdge}
-                    key={characterEdge.id}
+                    key={index}
                   />
                 ))}
               </DetailsSection>

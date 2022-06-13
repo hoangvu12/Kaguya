@@ -252,10 +252,10 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                 title={t("characters_section")}
                 className="grid w-full grid-cols-1 gap-4 md:grid-cols-2"
               >
-                {anime.characters.edges.map((characterEdge) => (
+                {anime.characters.edges.map((characterEdge, index) => (
                   <CharacterConnectionCard
                     characterEdge={characterEdge}
-                    key={characterEdge.id}
+                    key={index}
                   />
                 ))}
               </DetailsSection>
