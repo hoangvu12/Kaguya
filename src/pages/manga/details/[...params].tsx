@@ -196,7 +196,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
             {!!manga?.relations?.nodes?.length && (
               <DetailsSection title={t("relations_section")}>
                 <List data={manga.relations.nodes}>
-                  {(manga) => <Card type={MediaType.Manga} data={manga} />}
+                  {(node) => <Card data={node} />}
                 </List>
               </DetailsSection>
             )}
@@ -208,7 +208,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
                     (node) => node.mediaRecommendation
                   )}
                 >
-                  {(manga) => <Card type={MediaType.Manga} data={manga} />}
+                  {(node) => <Card data={node} />}
                 </List>
               </DetailsSection>
             )}
