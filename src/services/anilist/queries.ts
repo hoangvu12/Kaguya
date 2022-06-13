@@ -18,6 +18,7 @@ export type MediaDetailsQueryResponse = {
 
 export const mediaDefaultFields = `
 id
+type
 title {
   userPreferred
 }
@@ -221,7 +222,6 @@ query Media(
 
 export const mediaDetailsDefaultFields = `
 id
-idMal
 title {
   romaji
   english

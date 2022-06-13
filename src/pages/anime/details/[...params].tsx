@@ -20,7 +20,8 @@ import withRedirect from "@/hocs/withRedirect";
 import useEpisodes from "@/hooks/useEpisodes";
 import dayjs from "@/lib/dayjs";
 import supabase from "@/lib/supabase";
-import { Anime } from "@/types";
+import { getMedia, getMediaDetails } from "@/services/anilist";
+import { Media, MediaSort, MediaType } from "@/types/anilist";
 import { numberWithCommas, vietnameseSlug } from "@/utils";
 import { convert, getDescription, getTitle } from "@/utils/data";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
@@ -31,7 +32,7 @@ import React, { useMemo } from "react";
 import { BsFillPlayFill } from "react-icons/bs";
 
 interface DetailsPageProps {
-  anime: Anime;
+  anime: Media;
 }
 
 const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
@@ -43,10 +44,10 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
 
   const nextAiringSchedule = useMemo(
     () =>
-      anime?.airingSchedules
+      anime?.airingSchedule?.nodes
         ?.sort((a, b) => a.episode - b.episode)
         .find((schedule) => dayjs.unix(schedule.airingAt).isAfter(dayjs())),
-    [anime?.airingSchedules]
+    [anime?.airingSchedule]
   );
 
   const nextAiringScheduleTime = useMemo(() => {
@@ -129,7 +130,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                 />
                 <InfoItem
                   title={t("common:total_episodes")}
-                  value={anime.totalEpisodes}
+                  value={anime.episodes}
                 />
 
                 {anime.duration && (
@@ -187,11 +188,11 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
 
               <InfoItem
                 title="Studio"
-                value={anime.studios.map((studio) => (
-                  <p key={studio.studioId}>
-                    <Link href={`/studios/${studio.studioId}`}>
+                value={anime.studios.nodes.map((studio) => (
+                  <p key={studio.id}>
+                    <Link href={`/studios/${studio.id}`}>
                       <a className="hover:text-primary-300 transition duration-300">
-                        {studio.studio.name}
+                        {studio.name}
                       </a>
                     </Link>
                   </p>
@@ -218,13 +219,13 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                   <Link
                     href={{
                       pathname: "/browse",
-                      query: { type: "anime", tags: tag },
+                      query: { type: "anime", tags: tag.name },
                     }}
-                    key={tag}
+                    key={tag.id}
                   >
                     <a className="block">
                       <li className="p-2 rounded-md bg-background-900 hover:text-primary-300 transition duration-300">
-                        {tag}
+                        {tag.name}
                       </li>
                     </a>
                   </Link>
@@ -246,37 +247,36 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
               )}
             </DetailsSection>
 
-            {!!anime?.characters?.length && (
+            {!!anime?.characters?.edges?.length && (
               <DetailsSection
                 title={t("characters_section")}
                 className="grid w-full grid-cols-1 gap-4 md:grid-cols-2"
               >
-                {anime.characters.map((character, index) => (
+                {anime.characters.edges.map((characterEdge) => (
                   <CharacterConnectionCard
-                    characterConnection={character}
-                    key={index}
-                    type="anime"
+                    characterEdge={characterEdge}
+                    key={characterEdge.id}
                   />
                 ))}
               </DetailsSection>
             )}
 
-            {!!anime?.relations?.length && (
+            {!!anime?.relations?.nodes?.length && (
               <DetailsSection title={t("relations_section")}>
-                <List data={anime.relations.map((relation) => relation.media)}>
-                  {(anime) => <Card type="anime" data={anime} />}
+                <List data={anime.relations.nodes}>
+                  {(node) => <Card data={node} />}
                 </List>
               </DetailsSection>
             )}
 
-            {!!anime?.recommendations?.length && (
+            {!!anime?.recommendations?.nodes?.length && (
               <DetailsSection title={t("recommendations_section")}>
                 <List
-                  data={anime.recommendations.map(
-                    (recommendation) => recommendation.media
+                  data={anime.recommendations.nodes.map(
+                    (node) => node.mediaRecommendation
                   )}
                 >
-                  {(anime) => <Card type="anime" data={anime} />}
+                  {(node) => <Card data={node} />}
                 </List>
               </DetailsSection>
             )}
@@ -294,49 +294,36 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
 export const getStaticProps: GetStaticProps = async ({
   params: { params },
 }) => {
-  const { data, error } = await supabase
-    .from("kaguya_anime")
-    .select(
-      `
-        *,
-        studios:kaguya_studio_connections!mediaId(*, studio:kaguya_studios(*)),
-        airingSchedules:kaguya_airing_schedules(*),
-        characters:kaguya_anime_characters!mediaId(*, character:characterId(*)),
-        recommendations:kaguya_anime_recommendations!originalId(media:recommendationId(*)),
-        relations:kaguya_anime_relations!originalId(media:relationId(*))
-      `
-    )
-    .eq("id", Number(params[0]))
-    .single();
+  try {
+    const media = await getMediaDetails({
+      type: MediaType.Anime,
+      id: Number(params[0]),
+    });
 
-  if (error) {
-    console.log(error);
-
+    return {
+      props: {
+        anime: media as Media,
+      },
+      revalidate: REVALIDATE_TIME,
+    };
+  } catch (err) {
     return { notFound: true, revalidate: REVALIDATE_TIME };
   }
-
-  return {
-    props: {
-      anime: data as Anime,
-    },
-    revalidate: REVALIDATE_TIME,
-  };
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const { data } = await supabase
-    .from<Anime>("kaguya_anime")
-    .select("id")
-    .order("trending", { ascending: false })
-    .limit(5);
+  const trendingAnime = await getMedia({
+    type: MediaType.Anime,
+    sort: [MediaSort.Trending_desc, MediaSort.Popularity_desc],
+    perPage: 5,
+  });
 
-  const paths = data.map((anime: Anime) => ({
+  const paths = trendingAnime.map((anime) => ({
     params: { params: [anime.id.toString()] },
   }));
 
   return { paths, fallback: "blocking" };
 };
-
 export default withRedirect(DetailsPage, (router, props) => {
   const { params } = router.query;
   const [id, slug] = params as string[];
