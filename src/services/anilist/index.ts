@@ -10,6 +10,8 @@ import axios from "axios";
 import {
   airingSchedulesQuery,
   AiringSchedulesQueryResponse,
+  mediaDetailsQuery,
+  MediaDetailsQueryResponse,
   mediaQuery,
   MediaQueryResponse,
   recommendationsQuery,
@@ -38,6 +40,18 @@ export const getMedia = async (args: MediaArgs & PageArgs, fields?: string) => {
   );
 
   return response?.Page.media;
+};
+
+export const getMediaDetails = async (
+  args: MediaArgs & PageArgs,
+  fields?: string
+) => {
+  const response = await anilistFetcher<MediaDetailsQueryResponse>(
+    mediaDetailsQuery(fields),
+    args
+  );
+
+  return response?.Media;
 };
 
 export const getAiringSchedules = async (

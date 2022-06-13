@@ -22,7 +22,7 @@ export type SourceConnection = {
   id: string;
   sourceId: string;
   sourceMediaId: string;
-  mediaId: string;
+  mediaId: number;
   source: Source;
 };
 
