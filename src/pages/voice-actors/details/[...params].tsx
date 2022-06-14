@@ -181,19 +181,7 @@ export const getStaticProps: GetStaticProps = async ({
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const data = await getStaff(
-    {
-      sort: [StaffSort.Favourites_desc],
-      perPage: 5,
-    },
-    "id"
-  );
-
-  const paths = data.map((staff) => ({
-    params: { params: [staff.id.toString()] },
-  }));
-
-  return { paths, fallback: "blocking" };
+  return { paths: [], fallback: "blocking" };
 };
 
 export default withRedirect(DetailsPage, (router, props) => {

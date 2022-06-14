@@ -8,14 +8,12 @@ import ListSkeleton from "@/components/skeletons/ListSkeleton";
 import { REVALIDATE_TIME } from "@/constants";
 import withRedirect from "@/hocs/withRedirect";
 import { useStudio } from "@/hooks/useStudio";
-import supabase from "@/lib/supabase";
-import { getStudioDetails, getStudios } from "@/services/anilist";
-import { MediaSort, Studio, StudioSort } from "@/types/anilist";
+import { getStudioDetails } from "@/services/anilist";
+import { Studio } from "@/types/anilist";
 import { groupBy, numberWithCommas, vietnameseSlug } from "@/utils";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { AiFillHeart } from "react-icons/ai";
-import { isError } from "react-query";
 
 interface DetailsPageProps {
   studio: Studio;
@@ -116,13 +114,7 @@ export const getStaticProps: GetStaticProps = async ({
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const data = await getStudios({ perPage: 5 });
-
-  const paths = data.map((studio) => ({
-    params: { params: [studio.id.toString()] },
-  }));
-
-  return { paths, fallback: "blocking" };
+  return { paths: [], fallback: "blocking" };
 };
 
 export default withRedirect(DetailsPage, (router, props) => {

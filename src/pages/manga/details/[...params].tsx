@@ -244,17 +244,7 @@ export const getStaticProps: GetStaticProps = async ({
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const trendingManga = await getMedia({
-    type: MediaType.Manga,
-    sort: [MediaSort.Trending_desc, MediaSort.Popularity_desc],
-    perPage: 5,
-  });
-
-  const paths = trendingManga.map((manga) => ({
-    params: { params: [manga.id.toString()] },
-  }));
-
-  return { paths, fallback: "blocking" };
+  return { paths: [], fallback: "blocking" };
 };
 
 export default withRedirect(DetailsPage, (router, props) => {

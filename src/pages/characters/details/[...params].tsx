@@ -204,16 +204,7 @@ export const getStaticProps: GetStaticProps = async ({
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const data = await getCharacters(
-    { perPage: 5, sort: [CharacterSort.Favourites_desc] },
-    "id"
-  );
-
-  const paths = data.map((character) => ({
-    params: { params: [character.id.toString()] },
-  }));
-
-  return { paths, fallback: "blocking" };
+  return { paths: [], fallback: "blocking" };
 };
 
 export default withRedirect(DetailsPage, (router, props) => {

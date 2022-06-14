@@ -253,19 +253,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const data = await getMedia(
-    {
-      perPage: 20,
-      sort: [MediaSort.Id_desc],
-    },
-    "id"
-  );
-
-  const paths = data.map((anime) => ({
-    params: { id: anime.id.toString() },
-  }));
-
-  return { paths, fallback: "blocking" };
+  return { paths: [], fallback: "blocking" };
 };
 
 export default withAuthRedirect(CreateRoomPage, { url: "/login" });
