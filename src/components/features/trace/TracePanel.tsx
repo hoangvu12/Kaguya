@@ -117,7 +117,7 @@ const TracePanel: React.FC<TracePanelProps> = ({ data, image }) => {
                 />
                 <InfoItem
                   title={t("common:total_episodes")}
-                  value={card.anime.totalEpisodes}
+                  value={card.anime.episodes}
                 />
 
                 {card.anime.duration && (
