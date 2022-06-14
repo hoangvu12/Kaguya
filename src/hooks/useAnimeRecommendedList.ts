@@ -1,6 +1,6 @@
 import { useUser } from "@/contexts/AuthContext";
 import supabase from "@/lib/supabase";
-import { getMedia } from "@/services/anilist";
+import { getMedia, getMediaDetails } from "@/services/anilist";
 import { mediaDefaultFields } from "@/services/anilist/queries";
 import { Watched } from "@/types";
 import { useQuery } from "react-query";
@@ -21,7 +21,7 @@ const useAnimeRecommendedList = () => {
 
       if (error) throw error;
 
-      const anilistMedia = await getMedia(
+      const anilistMedia = await getMediaDetails(
         {
           id: data.mediaId,
           perPage: 1,
@@ -45,7 +45,7 @@ const useAnimeRecommendedList = () => {
 
       return {
         ...data,
-        media: anilistMedia[0],
+        media: anilistMedia,
       };
     },
     { enabled: !!user }
