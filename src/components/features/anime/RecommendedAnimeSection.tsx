@@ -1,13 +1,12 @@
-import useAnimeRecommendedList from "@/hooks/useAnimeRecommendedList";
-import { Watched } from "@/types";
-import React from "react";
-import ListSwiperSkeleton from "@/components/skeletons/ListSwiperSkeleton";
 import CardSwiper from "@/components/shared/CardSwiper";
 import Section from "@/components/shared/Section";
+import ListSwiperSkeleton from "@/components/skeletons/ListSwiperSkeleton";
+import useAnimeRecommendedList from "@/hooks/useAnimeRecommendedList";
+import { Watched } from "@/types";
 import { getTitle } from "@/utils/data";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
-import { MediaType } from "@/types/anilist";
+import React from "react";
 
 const composeData = (data: Watched, locale?: string) => {
   const title = getTitle(data.media, locale);

@@ -67,7 +67,7 @@ const Home: NextPage<HomeProps> = ({
             <NewestComments type={MediaType.Manga} />
 
             <Section title={t("common:newly_added")}>
-              <CardSwiper type={MediaType.Manga} data={recentlyUpdatedManga} />
+              <CardSwiper  data={recentlyUpdatedManga} />
             </Section>
 
             <div
