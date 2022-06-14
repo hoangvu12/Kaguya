@@ -1,7 +1,9 @@
 import enTranslations from "@/constants/en";
 import viTranslations from "@/constants/vi";
-import { Anime, Chapter, Episode, Manga } from "@/types";
+import { TMDBTranlations } from "@/services/tmdb";
+import { Chapter, Episode } from "@/types";
 import { Media } from "@/types/anilist";
+import { Translation } from "next-i18next";
 import { parseNumbersFromString } from ".";
 
 type Translate = { readonly value: string; readonly label: string } & Record<
@@ -95,18 +97,36 @@ export const convert = (
   return constant[index].label;
 };
 
-export const getTitle = (data: Media, locale?: string) => {
+export const getTitle = (
+  data: Media,
+  locale?: string,
+  translations: TMDBTranlations.Translation[] = []
+) => {
   if (locale === "en") return data?.title.userPreferred;
 
-  return data?.title.vietnamese || data?.title.userPreferred;
+  const translation = translations.find((trans) => trans.iso_639_1 === locale);
+
+  if (!translation) {
+    return data?.title?.userPreferred;
+  }
+
+  return translation.data.name || data?.title?.userPreferred;
 };
 
-export const getDescription = (data: Media, locale?: string) => {
-  return data.description;
+export const getDescription = (
+  data: Media,
+  locale?: string,
+  translations: TMDBTranlations.Translation[] = []
+) => {
+  if (locale === "en") return data?.description;
 
-  // if (locale === "en") return data?.description?.english;
+  const translation = translations.find((trans) => trans.iso_639_1 === locale);
 
-  // return data?.description?.vietnamese || data?.description?.english;
+  if (!translation) {
+    return data?.description;
+  }
+
+  return translation.data.overview || data?.description;
 };
 
 export const sortMediaUnit = <T extends Chapter | Episode>(data: T[]) => {

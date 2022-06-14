@@ -19,8 +19,8 @@ import { useUser } from "@/contexts/AuthContext";
 import withRedirect from "@/hocs/withRedirect";
 import useEpisodes from "@/hooks/useEpisodes";
 import dayjs from "@/lib/dayjs";
-import supabase from "@/lib/supabase";
 import { getMedia, getMediaDetails } from "@/services/anilist";
+import { getTranslations, TMDBTranlations } from "@/services/tmdb";
 import { Media, MediaSort, MediaType } from "@/types/anilist";
 import { numberWithCommas, vietnameseSlug } from "@/utils";
 import { convert, getDescription, getTitle } from "@/utils/data";
@@ -28,14 +28,15 @@ import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { BsFillPlayFill } from "react-icons/bs";
 
 interface DetailsPageProps {
   anime: Media;
+  translations: TMDBTranlations.Translation[];
 }
 
-const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
+const DetailsPage: NextPage<DetailsPageProps> = ({ anime, translations }) => {
   const user = useUser();
   const { locale } = useRouter();
   const { t } = useTranslation("anime_details");
@@ -56,10 +57,13 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
     return dayjs.unix(nextAiringSchedule.airingAt).locale(locale).fromNow();
   }, [nextAiringSchedule?.airingAt, locale]);
 
-  const title = useMemo(() => getTitle(anime, locale), [anime, locale]);
+  const title = useMemo(
+    () => getTitle(anime, locale, translations),
+    [anime, locale, translations]
+  );
   const description = useMemo(
-    () => getDescription(anime, locale),
-    [anime, locale]
+    () => getDescription(anime, locale, translations),
+    [anime, locale, translations]
   );
 
   return (
@@ -300,13 +304,18 @@ export const getStaticProps: GetStaticProps = async ({
       id: Number(params[0]),
     });
 
+    const translations = await getTranslations(media);
+
     return {
       props: {
         anime: media as Media,
+        translations,
       },
       revalidate: REVALIDATE_TIME,
     };
   } catch (err) {
+    console.log(err);
+
     return { notFound: true, revalidate: REVALIDATE_TIME };
   }
 };
