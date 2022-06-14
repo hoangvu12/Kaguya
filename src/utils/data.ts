@@ -110,7 +110,11 @@ export const getTitle = (
     return data?.title?.userPreferred;
   }
 
-  return translation.data.name || data?.title?.userPreferred;
+  return (
+    translation.data.title ||
+    translation.data.name ||
+    data?.title?.userPreferred
+  );
 };
 
 export const getDescription = (

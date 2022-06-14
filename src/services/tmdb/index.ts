@@ -63,6 +63,7 @@ export declare module TMDBTranlations {
     overview: string;
     homepage: string;
     tagline: string;
+    title: string;
   }
 
   export interface Translation {
