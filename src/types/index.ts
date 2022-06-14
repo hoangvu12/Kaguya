@@ -164,7 +164,7 @@ export type Chat = {
   eventType?: string;
 };
 
-export type ChatMessage1 = {
+export type ChatMessage = {
   body: string;
   user: User;
 };
