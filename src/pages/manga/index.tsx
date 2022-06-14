@@ -9,13 +9,12 @@ import HomeBanner from "@/components/shared/HomeBanner";
 import NewestComments from "@/components/shared/NewestComments";
 import Section from "@/components/shared/Section";
 import ShouldWatch from "@/components/shared/ShouldWatch";
-import { REVALIDATE_TIME } from "@/constants";
 import useDevice from "@/hooks/useDevice";
 import { getMedia, getRecommendations } from "@/services/anilist";
 import { Media, MediaSort, MediaType } from "@/types/anilist";
 import { randomElement } from "@/utils";
 import classNames from "classnames";
-import { GetStaticProps, NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
@@ -67,7 +66,7 @@ const Home: NextPage<HomeProps> = ({
             <NewestComments type={MediaType.Manga} />
 
             <Section title={t("common:newly_added")}>
-              <CardSwiper  data={recentlyUpdatedManga} />
+              <CardSwiper data={recentlyUpdatedManga} />
             </Section>
 
             <div
@@ -96,7 +95,7 @@ const Home: NextPage<HomeProps> = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const trendingManga = await getMedia({
     type: MediaType.Manga,
     sort: [MediaSort.Trending_desc, MediaSort.Popularity_desc],
@@ -134,8 +133,6 @@ export const getStaticProps: GetStaticProps = async () => {
       popularManga,
       favouriteManga,
     },
-
-    revalidate: REVALIDATE_TIME,
   };
 };
 

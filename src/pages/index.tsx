@@ -10,12 +10,9 @@ import HomeBanner from "@/components/shared/HomeBanner";
 import NewestComments from "@/components/shared/NewestComments";
 import Section from "@/components/shared/Section";
 import ShouldWatch from "@/components/shared/ShouldWatch";
-import { REVALIDATE_TIME } from "@/constants";
 import useDevice from "@/hooks/useDevice";
 import dayjs from "@/lib/dayjs";
-import supabase from "@/lib/supabase";
 import {
-  getAiringSchedules,
   getAllAiringSchedules,
   getMedia,
   getRecommendations,
@@ -23,7 +20,7 @@ import {
 import { AiringSchedule, Media, MediaSort, MediaType } from "@/types/anilist";
 import { getSeason, randomElement } from "@/utils";
 import classNames from "classnames";
-import { GetStaticProps, NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import React, { useMemo } from "react";
 
@@ -128,7 +125,7 @@ const Home: NextPage<HomeProps> = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const currentSeason = getSeason();
   const firstDayOfWeek = dayjs().startOf("week").unix();
   const lastDayOfWeek = dayjs().endOf("week").unix();
@@ -196,8 +193,6 @@ export const getStaticProps: GetStaticProps = async () => {
       favouriteAllTime,
       favouriteSeason,
     },
-
-    revalidate: REVALIDATE_TIME,
   };
 };
 
