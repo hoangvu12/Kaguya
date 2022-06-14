@@ -3,7 +3,7 @@ import { useSubscription } from "@/contexts/SubscriptionContext";
 import useIsSubscribed from "@/hooks/useIsSubscribed";
 import useSubscribe from "@/hooks/useSubscribe";
 import useUnsubscribe from "@/hooks/useUnsubscribe";
-import { Anime, Manga } from "@/types";
+import { Media } from "@/types/anilist";
 import { useTranslation } from "next-i18next";
 import React, { useCallback } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 
 interface NotificationButtonProps<T> {
   type: T;
-  source: T extends "anime" ? Anime : Manga;
+  source: Media;
 }
 
 const NotificationButton = <T extends "anime" | "manga">(

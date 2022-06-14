@@ -1,4 +1,3 @@
-import { Anime, Manga } from "@/types";
 import { Media, MediaType } from "@/types/anilist";
 import Link from "next/link";
 import React from "react";

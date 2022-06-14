@@ -1,8 +1,9 @@
-import { Chapter, ImageSource, Manga } from "@/types";
+import { Chapter, ImageSource } from "@/types";
+import { Media } from "@/types/anilist";
 import React from "react";
 
 interface ContextProps {
-  manga: Manga;
+  manga: Media;
   chapters: Chapter[];
   currentChapter: Chapter;
   currentChapterIndex: number;

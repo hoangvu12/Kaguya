@@ -1,6 +1,5 @@
 import { useUser } from "@/contexts/AuthContext";
 import supabase from "@/lib/supabase";
-import { Anime, Manga } from "@/types";
 import { useQuery } from "react-query";
 
 const useIsSavedSub = () => {
