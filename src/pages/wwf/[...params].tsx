@@ -121,7 +121,7 @@ export const getServerSideProps: GetServerSideProps = async ({
           episodes:kaguya_episodes(*, source:kaguya_sources(id, name, locales))
         `
       )
-      .eq("mediaId", Number(params[0]));
+      .eq("mediaId", room.mediaId);
 
     const mediaPromise = getMediaDetails(
       {
