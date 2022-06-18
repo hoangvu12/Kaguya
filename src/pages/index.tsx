@@ -10,6 +10,7 @@ import HomeBanner from "@/components/shared/HomeBanner";
 import NewestComments from "@/components/shared/NewestComments";
 import Section from "@/components/shared/Section";
 import ShouldWatch from "@/components/shared/ShouldWatch";
+import { REVALIDATE_TIME } from "@/constants";
 import useDevice from "@/hooks/useDevice";
 import dayjs from "@/lib/dayjs";
 import {
@@ -18,9 +19,9 @@ import {
   getRecommendations,
 } from "@/services/anilist";
 import { AiringSchedule, Media, MediaSort, MediaType } from "@/types/anilist";
-import { getSeason, randomElement } from "@/utils";
+import { getSeason, randomElement, sleep } from "@/utils";
 import classNames from "classnames";
-import { GetServerSideProps, NextPage } from "next";
+import { GetServerSideProps, GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import React, { useMemo } from "react";
 
@@ -125,7 +126,7 @@ const Home: NextPage<HomeProps> = ({
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const currentSeason = getSeason();
   const firstDayOfWeek = dayjs().startOf("week").unix();
   const lastDayOfWeek = dayjs().endOf("week").unix();
@@ -137,10 +138,14 @@ export const getServerSideProps: GetServerSideProps = async () => {
     notYetAired: true,
   });
 
+  await sleep(2500);
+
   const trendingAnime = await getMedia({
     type: MediaType.Anime,
     sort: [MediaSort.Trending_desc, MediaSort.Popularity_desc],
   });
+
+  await sleep(2500);
 
   const popularSeason = await getMedia({
     type: MediaType.Anime,
@@ -150,11 +155,15 @@ export const getServerSideProps: GetServerSideProps = async () => {
     perPage: 5,
   });
 
+  await sleep(2500);
+
   const popularAllTime = await getMedia({
     type: MediaType.Anime,
     sort: [MediaSort.Popularity_desc],
     perPage: 5,
   });
+
+  await sleep(2500);
 
   const favouriteSeason = await getMedia({
     type: MediaType.Anime,
@@ -164,21 +173,29 @@ export const getServerSideProps: GetServerSideProps = async () => {
     perPage: 5,
   });
 
+  await sleep(2500);
+
   const favouriteAllTime = await getMedia({
     type: MediaType.Anime,
     sort: [MediaSort.Favourites_desc],
     perPage: 5,
   });
 
+  await sleep(2500);
+
   const recommendationsAnime = await getRecommendations({
     mediaId: randomElement(trendingAnime).id,
   });
+
+  await sleep(2500);
 
   const recentlyUpdated = await getMedia({
     type: MediaType.Anime,
     sort: [MediaSort.Updated_at_desc],
     isAdult: false,
   });
+
+  await sleep(2500);
 
   const randomAnime = randomElement(recommendationsAnime).media;
 
@@ -193,6 +210,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
       favouriteAllTime,
       favouriteSeason,
     },
+    revalidate: REVALIDATE_TIME,
   };
 };
 
