@@ -19,9 +19,9 @@ import {
   getRecommendations,
 } from "@/services/anilist";
 import { AiringSchedule, Media, MediaSort, MediaType } from "@/types/anilist";
-import { getSeason, randomElement, sleep } from "@/utils";
+import { getSeason, prodSleep, randomElement } from "@/utils";
 import classNames from "classnames";
-import { GetServerSideProps, GetStaticProps, NextPage } from "next";
+import { GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import React, { useMemo } from "react";
 
@@ -138,14 +138,14 @@ export const getStaticProps: GetStaticProps = async () => {
     notYetAired: true,
   });
 
-  await sleep(2500);
+  await prodSleep(2500);
 
   const trendingAnime = await getMedia({
     type: MediaType.Anime,
     sort: [MediaSort.Trending_desc, MediaSort.Popularity_desc],
   });
 
-  await sleep(2500);
+  await prodSleep(2500);
 
   const popularSeason = await getMedia({
     type: MediaType.Anime,
@@ -155,7 +155,7 @@ export const getStaticProps: GetStaticProps = async () => {
     perPage: 5,
   });
 
-  await sleep(2500);
+  await prodSleep(2500);
 
   const popularAllTime = await getMedia({
     type: MediaType.Anime,
@@ -163,7 +163,7 @@ export const getStaticProps: GetStaticProps = async () => {
     perPage: 5,
   });
 
-  await sleep(2500);
+  await prodSleep(2500);
 
   const favouriteSeason = await getMedia({
     type: MediaType.Anime,
@@ -173,7 +173,7 @@ export const getStaticProps: GetStaticProps = async () => {
     perPage: 5,
   });
 
-  await sleep(2500);
+  await prodSleep(2500);
 
   const favouriteAllTime = await getMedia({
     type: MediaType.Anime,
@@ -181,13 +181,13 @@ export const getStaticProps: GetStaticProps = async () => {
     perPage: 5,
   });
 
-  await sleep(2500);
+  await prodSleep(2500);
 
   const recommendationsAnime = await getRecommendations({
     mediaId: randomElement(trendingAnime).id,
   });
 
-  await sleep(2500);
+  await prodSleep(2500);
 
   const recentlyUpdated = await getMedia({
     type: MediaType.Anime,
@@ -195,7 +195,7 @@ export const getStaticProps: GetStaticProps = async () => {
     isAdult: false,
   });
 
-  await sleep(2500);
+  await prodSleep(2500);
 
   const randomAnime = randomElement(recommendationsAnime).media;
 

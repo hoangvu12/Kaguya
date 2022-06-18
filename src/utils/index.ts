@@ -353,3 +353,12 @@ export const fulfilledPromises = <T extends Promise<any>>(promises: T[]) =>
       .filter((result) => result.status === "fulfilled")
       .map((result) => (result as PromiseFulfilledResult<Awaited<T>>).value)
   );
+
+// This is for avoiding anilist's rate limit on build time
+export const prodSleep = (ms: number) => {
+  if (process.env.NODE_ENV === "production") {
+    return sleep(ms);
+  }
+
+  return Promise.resolve();
+};

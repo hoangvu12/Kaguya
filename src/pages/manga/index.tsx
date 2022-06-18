@@ -13,7 +13,7 @@ import { REVALIDATE_TIME } from "@/constants";
 import useDevice from "@/hooks/useDevice";
 import { getMedia, getRecommendations } from "@/services/anilist";
 import { Media, MediaSort, MediaType } from "@/types/anilist";
-import { randomElement, sleep } from "@/utils";
+import { prodSleep, randomElement } from "@/utils";
 import classNames from "classnames";
 import { GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
@@ -102,7 +102,7 @@ export const getStaticProps: GetStaticProps = async () => {
     sort: [MediaSort.Trending_desc, MediaSort.Popularity_desc],
   });
 
-  await sleep(2500);
+  await prodSleep(2500);
 
   const popularManga = await getMedia({
     type: MediaType.Manga,
@@ -110,7 +110,7 @@ export const getStaticProps: GetStaticProps = async () => {
     perPage: 5,
   });
 
-  await sleep(2500);
+  await prodSleep(2500);
 
   const favouriteManga = await getMedia({
     type: MediaType.Manga,
@@ -118,7 +118,7 @@ export const getStaticProps: GetStaticProps = async () => {
     perPage: 5,
   });
 
-  await sleep(2500);
+  await prodSleep(2500);
 
   const recentlyUpdatedManga = await getMedia({
     type: MediaType.Manga,
@@ -130,7 +130,7 @@ export const getStaticProps: GetStaticProps = async () => {
     mediaId: randomElement(trendingManga).id,
   });
 
-  await sleep(2500);
+  await prodSleep(2500);
 
   const randomManga = randomElement(recommendationsManga).media;
 
