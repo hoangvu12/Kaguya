@@ -338,6 +338,12 @@ recommendations {
     hasNextPage
   }
 }
+airingSchedule(notYetAired: true, perPage: 1) {
+  nodes {
+    airingAt
+    episode
+  }
+}
 `;
 
 export const mediaDetailsQuery = (
