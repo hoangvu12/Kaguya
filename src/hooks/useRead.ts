@@ -10,7 +10,7 @@ const useRead = () => {
   const user = useUser();
 
   return useQuery<Read[]>(
-    "watched",
+    "read",
     async () => {
       const { data, error } = await supabase
         .from<Read>("kaguya_read")
