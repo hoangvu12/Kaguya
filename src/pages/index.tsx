@@ -131,6 +131,8 @@ export const getStaticProps: GetStaticProps = async () => {
   const firstDayOfWeek = dayjs().startOf("week").unix();
   const lastDayOfWeek = dayjs().endOf("week").unix();
 
+  await prodSleep(2500);
+
   const schedulesAnime = await getAllAiringSchedules({
     airingAt_greater: firstDayOfWeek,
     airingAt_lesser: lastDayOfWeek,

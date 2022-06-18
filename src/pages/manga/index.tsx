@@ -97,6 +97,8 @@ const Home: NextPage<HomeProps> = ({
 };
 
 export const getStaticProps: GetStaticProps = async () => {
+  await prodSleep(2500);
+
   const trendingManga = await getMedia({
     type: MediaType.Manga,
     sort: [MediaSort.Trending_desc, MediaSort.Popularity_desc],
