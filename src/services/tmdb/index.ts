@@ -90,8 +90,6 @@ const client = axios.create({
 });
 
 export const search = async (keyword: string, type: "movie" | "tv") => {
-  console.log(keyword, type);
-
   const { data } = await client.get<TMDBSearch.Response>(`/search/${type}`, {
     params: { language: "en-US", query: keyword, page: 1, include_adult: true },
   });
