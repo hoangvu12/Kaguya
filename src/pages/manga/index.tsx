@@ -9,12 +9,13 @@ import HomeBanner from "@/components/shared/HomeBanner";
 import NewestComments from "@/components/shared/NewestComments";
 import Section from "@/components/shared/Section";
 import ShouldWatch from "@/components/shared/ShouldWatch";
+import { REVALIDATE_TIME } from "@/constants";
 import useDevice from "@/hooks/useDevice";
 import { getMedia, getRecommendations } from "@/services/anilist";
 import { Media, MediaSort, MediaType } from "@/types/anilist";
-import { randomElement } from "@/utils";
+import { randomElement, sleep } from "@/utils";
 import classNames from "classnames";
-import { GetServerSideProps, NextPage } from "next";
+import { GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
@@ -95,11 +96,13 @@ const Home: NextPage<HomeProps> = ({
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const trendingManga = await getMedia({
     type: MediaType.Manga,
     sort: [MediaSort.Trending_desc, MediaSort.Popularity_desc],
   });
+
+  await sleep(2500);
 
   const popularManga = await getMedia({
     type: MediaType.Manga,
@@ -107,11 +110,15 @@ export const getServerSideProps: GetServerSideProps = async () => {
     perPage: 5,
   });
 
+  await sleep(2500);
+
   const favouriteManga = await getMedia({
     type: MediaType.Manga,
     sort: [MediaSort.Favourites_desc],
     perPage: 5,
   });
+
+  await sleep(2500);
 
   const recentlyUpdatedManga = await getMedia({
     type: MediaType.Manga,
@@ -123,6 +130,8 @@ export const getServerSideProps: GetServerSideProps = async () => {
     mediaId: randomElement(trendingManga).id,
   });
 
+  await sleep(2500);
+
   const randomManga = randomElement(recommendationsManga).media;
 
   return {
@@ -133,6 +142,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
       popularManga,
       favouriteManga,
     },
+    revalidate: REVALIDATE_TIME,
   };
 };
 
