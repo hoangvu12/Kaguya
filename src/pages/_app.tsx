@@ -9,11 +9,14 @@ import { AppProps } from "next/app";
 import Router from "next/router";
 import Script from "next/script";
 import NProgress from "nprogress";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
+import * as Sentry from "@sentry/nextjs";
+import { ErrorBoundary } from "react-error-boundary";
+import { AppErrorFallback } from "@/components/shared/AppErrorFallback";
 
 Router.events.on("routeChangeStart", NProgress.start);
 Router.events.on("routeChangeComplete", NProgress.done);
@@ -35,6 +38,8 @@ interface WorkaroundAppProps extends AppProps {
 }
 
 function App({ Component, pageProps, router, err }: WorkaroundAppProps) {
+  const [errorInfo, setErrorInfo] = useState<React.ErrorInfo>(null);
+
   useEffect(() => {
     const handleRouteChange = (url: string) => {
       pageview(url);
@@ -84,7 +89,21 @@ function App({ Component, pageProps, router, err }: WorkaroundAppProps) {
       <QueryClientProvider client={queryClient}>
         <AuthContextProvider>
           <SubscriptionContextProvider>
-            {getLayout(<Component {...pageProps} err={err} />)}
+            <ErrorBoundary
+              onError={(error, info) => {
+                if (process.env.NODE_ENV === "production") {
+                  Sentry.captureException(error);
+                }
+                setErrorInfo(info);
+              }}
+              fallbackRender={(fallbackProps) => {
+                return (
+                  <AppErrorFallback {...fallbackProps} errorInfo={errorInfo} />
+                );
+              }}
+            >
+              {getLayout(<Component {...pageProps} err={err} />)}
+            </ErrorBoundary>
           </SubscriptionContextProvider>
         </AuthContextProvider>
 
