@@ -15,7 +15,7 @@ const useRead = () => {
       const { data, error } = await supabase
         .from<Read>("kaguya_read")
         .select(
-          "mediaId, chapter:kaguya_chapter!chapterId(sourceChapterId, name, sourceId)"
+          "mediaId, chapter:kaguya_chapters!chapterId(sourceChapterId, name, sourceId)"
         )
         .eq("userId", user.id)
         .order("updated_at", { ascending: false })
