@@ -10,16 +10,12 @@ import NewestComments from "@/components/shared/NewestComments";
 import Section from "@/components/shared/Section";
 import ShouldWatch from "@/components/shared/ShouldWatch";
 import ListSwiperSkeleton from "@/components/skeletons/ListSwiperSkeleton";
-import { REVALIDATE_TIME } from "@/constants";
 import useDevice from "@/hooks/useDevice";
 import useMedia from "@/hooks/useMedia";
 import useRecommendations from "@/hooks/useRecommendations";
-import useWeekAiringSchedules from "@/hooks/useWeekAIringSchedules";
-import { getMedia, getRecommendations } from "@/services/anilist";
-import { Media, MediaSort, MediaType } from "@/types/anilist";
-import { prodSleep, randomElement } from "@/utils";
+import { MediaSort, MediaType } from "@/types/anilist";
+import { randomElement } from "@/utils";
 import classNames from "classnames";
-import { GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import React, { useMemo } from "react";
 
@@ -140,57 +136,5 @@ const Home = () => {
     </React.Fragment>
   );
 };
-
-// export const getStaticProps: GetStaticProps = async () => {
-//   await prodSleep(2500);
-
-//   const trendingManga = await getMedia({
-//     type: MediaType.Manga,
-//     sort: [MediaSort.Trending_desc, MediaSort.Popularity_desc],
-//   });
-
-//   await prodSleep(2500);
-
-//   const popularManga = await getMedia({
-//     type: MediaType.Manga,
-//     sort: [MediaSort.Popularity_desc],
-//     perPage: 5,
-//   });
-
-//   await prodSleep(2500);
-
-//   const favouriteManga = await getMedia({
-//     type: MediaType.Manga,
-//     sort: [MediaSort.Favourites_desc],
-//     perPage: 5,
-//   });
-
-//   await prodSleep(2500);
-
-//   const recentlyUpdatedManga = await getMedia({
-//     type: MediaType.Manga,
-//     sort: [MediaSort.Updated_at_desc],
-//     isAdult: false,
-//   });
-
-//   const recommendationsManga = await getRecommendations({
-//     mediaId: randomElement(trendingManga).id,
-//   });
-
-//   await prodSleep(2500);
-
-//   const randomManga = randomElement(recommendationsManga).media;
-
-//   return {
-//     props: {
-//       trendingManga,
-//       recentlyUpdatedManga,
-//       randomManga,
-//       popularManga,
-//       favouriteManga,
-//     },
-//     revalidate: REVALIDATE_TIME,
-//   };
-// };
 
 export default Home;

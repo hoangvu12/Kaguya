@@ -15,25 +15,13 @@ import useDevice from "@/hooks/useDevice";
 import useMedia from "@/hooks/useMedia";
 import useRecommendations from "@/hooks/useRecommendations";
 import useWeekAiringSchedules from "@/hooks/useWeekAIringSchedules";
-import { AiringSchedule, Media, MediaSort, MediaType } from "@/types/anilist";
+import { MediaSort, MediaType } from "@/types/anilist";
 import { getSeason, randomElement } from "@/utils";
 import classNames from "classnames";
-import { NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import React, { useMemo } from "react";
 
-interface HomeProps {
-  trendingAnime: Media[];
-  randomAnime: Media;
-  recentlyUpdated: Media[];
-  schedulesAnime: AiringSchedule[];
-  popularSeason: Media[];
-  popularAllTime: Media[];
-  favouriteSeason: Media[];
-  favouriteAllTime: Media[];
-}
-
-const Home: NextPage<HomeProps> = () => {
+const Home = () => {
   const currentSeason = useMemo(getSeason, []);
   const { isDesktop } = useDevice();
   const { t } = useTranslation();
