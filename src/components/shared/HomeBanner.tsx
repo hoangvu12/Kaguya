@@ -23,11 +23,14 @@ import { AiFillHeart, AiFillPlayCircle } from "react-icons/ai";
 import { BsFillVolumeMuteFill, BsFillVolumeUpFill } from "react-icons/bs";
 import { MdTagFaces } from "react-icons/md";
 import YouTube from "react-youtube";
+import ListSwiperSkeleton from "../skeletons/ListSwiperSkeleton";
 import Description from "./Description";
+import Skeleton, { SkeletonItem } from "./Skeleton";
 
 interface HomeBannerProps {
   data: Media[];
   type: MediaType;
+  isLoading?: boolean;
 }
 
 const bannerVariants = {
@@ -38,15 +41,23 @@ const bannerVariants = {
 
 const transition = [0.33, 1, 0.68, 1];
 
-const HomeBanner: React.FC<HomeBannerProps> = ({ data, type }) => {
+const HomeBanner: React.FC<HomeBannerProps> = ({ data, type, isLoading }) => {
   return (
     <React.Fragment>
       <BrowserView>
-        <DesktopHomeBanner data={data} type={type} />
+        {isLoading ? (
+          <DesktopHomeBannerSkeleton />
+        ) : (
+          <DesktopHomeBanner data={data} type={type} />
+        )}
       </BrowserView>
 
       <MobileView className="px-4 md:px-12 pt-20 pb-8 overflow-hidden">
-        <MobileHomeBanner data={data} type={type} />
+        {isLoading ? (
+          <MobileHomeBannerSkeleton />
+        ) : (
+          <MobileHomeBanner data={data} type={type} />
+        )}
       </MobileView>
     </React.Fragment>
   );
@@ -130,6 +141,12 @@ const MobileHomeBanner: React.FC<HomeBannerProps> = ({ data, type }) => {
     </Swiper>
   );
 };
+
+const MobileHomeBannerSkeleton = () => (
+  <Skeleton className="mt-20 mb-8 px-4 md:px-12">
+    <SkeletonItem className="aspect-w-16 aspect-h-9 rounded-md" />
+  </Skeleton>
+);
 
 const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data, type }) => {
   const [index, setIndex] = useState<number>(0);
@@ -322,5 +339,25 @@ const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data, type }) => {
     </React.Fragment>
   );
 };
+
+const DesktopHomeBannerSkeleton = () => (
+  <Skeleton className="w-full">
+    <SkeletonItem className="h-[450px] w-full" container>
+      <SkeletonItem
+        className="absolute left-12 top-1/2 -translate-y-1/2 w-full md:w-[45%]"
+        container
+      >
+        <SkeletonItem className="h-12 w-5/6" />
+
+        <SkeletonItem className="mt-2 h-6 w-4/6" />
+
+        <SkeletonItem className="mt-4 h-32 w-full" />
+      </SkeletonItem>
+    </SkeletonItem>
+    <SkeletonItem className="h-[370px] w-full" container>
+      <ListSwiperSkeleton hasTitle={false} />
+    </SkeletonItem>
+  </Skeleton>
+);
 
 export default React.memo(HomeBanner) as typeof HomeBanner;
