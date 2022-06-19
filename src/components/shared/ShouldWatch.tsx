@@ -11,14 +11,17 @@ import React, { useMemo } from "react";
 import { AiFillHeart, AiFillPlayCircle } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
 import Description from "./Description";
+import Skeleton, { SkeletonItem } from "./Skeleton";
 
 interface ShouldWatchProps {
   data: Media;
   type: MediaType;
+  isLoading?: boolean;
 }
 
-const ShouldWatch: React.FC<ShouldWatchProps> = ({ data, type }) => {
+const ShouldWatch: React.FC<ShouldWatchProps> = ({ data, type, isLoading }) => {
   const { locale } = useRouter();
+
   const title = useMemo(() => getTitle(data, locale), [data, locale]);
   const description = useMemo(
     () => getDescription(data, locale),
@@ -28,12 +31,12 @@ const ShouldWatch: React.FC<ShouldWatchProps> = ({ data, type }) => {
   const redirectUrl = useMemo(
     () =>
       type === MediaType.Anime
-        ? `/anime/details/${data.id}`
-        : `/manga/details/${data.id}`,
-    [data.id, type]
+        ? `/anime/details/${data?.id}`
+        : `/manga/details/${data?.id}`,
+    [data?.id, type]
   );
 
-  return (
+  return !isLoading ? (
     <Link href={redirectUrl}>
       <a>
         <div className="cursor-pointer group relative z-0 w-full h-[200px] md:h-[400px] rounded-md">
@@ -91,7 +94,15 @@ const ShouldWatch: React.FC<ShouldWatchProps> = ({ data, type }) => {
         </div>
       </a>
     </Link>
+  ) : (
+    <ShouldWatchSkeleton />
   );
 };
+
+const ShouldWatchSkeleton = () => (
+  <Skeleton>
+    <SkeletonItem className="w-full h-full" />
+  </Skeleton>
+);
 
 export default React.memo(ShouldWatch) as typeof ShouldWatch;

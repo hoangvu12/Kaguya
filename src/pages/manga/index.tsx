@@ -9,33 +9,60 @@ import HomeBanner from "@/components/shared/HomeBanner";
 import NewestComments from "@/components/shared/NewestComments";
 import Section from "@/components/shared/Section";
 import ShouldWatch from "@/components/shared/ShouldWatch";
-import { REVALIDATE_TIME } from "@/constants";
+import ListSwiperSkeleton from "@/components/skeletons/ListSwiperSkeleton";
 import useDevice from "@/hooks/useDevice";
-import { getMedia, getRecommendations } from "@/services/anilist";
-import { Media, MediaSort, MediaType } from "@/types/anilist";
-import { prodSleep, randomElement } from "@/utils";
+import useMedia from "@/hooks/useMedia";
+import useRecommendations from "@/hooks/useRecommendations";
+import { MediaSort, MediaType } from "@/types/anilist";
+import { randomElement } from "@/utils";
 import classNames from "classnames";
-import { GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
-import React from "react";
+import React, { useMemo } from "react";
 
-interface HomeProps {
-  trendingManga: Media[];
-  randomManga: Media;
-  popularManga: Media[];
-  favouriteManga: Media[];
-  recentlyUpdatedManga: Media[];
-}
-
-const Home: NextPage<HomeProps> = ({
-  trendingManga,
-  randomManga,
-  recentlyUpdatedManga,
-  favouriteManga,
-  popularManga,
-}) => {
+const Home = () => {
   const { isDesktop } = useDevice();
   const { t } = useTranslation();
+
+  const { data: trendingManga, isLoading: trendingLoading } = useMedia({
+    type: MediaType.Manga,
+    sort: [MediaSort.Trending_desc, MediaSort.Popularity_desc],
+  });
+
+  const { data: popularManga, isLoading: popularMangaLoading } = useMedia({
+    type: MediaType.Manga,
+    sort: [MediaSort.Popularity_desc],
+    perPage: 5,
+  });
+
+  const { data: favouriteManga, isLoading: favouriteMangaLoading } = useMedia({
+    type: MediaType.Manga,
+    sort: [MediaSort.Favourites_desc],
+    perPage: 5,
+  });
+
+  const { data: recentlyUpdated, isLoading: recentlyUpdatedLoading } = useMedia(
+    {
+      type: MediaType.Manga,
+      sort: [MediaSort.Updated_at_desc],
+      isAdult: false,
+    }
+  );
+
+  const randomTrendingManga = useMemo(() => {
+    return randomElement(trendingManga || []);
+  }, [trendingManga]);
+
+  const { data: recommendationsManga } = useRecommendations(
+    {
+      mediaId: randomTrendingManga?.id,
+    },
+    { enabled: !!randomTrendingManga }
+  );
+
+  const randomManga = useMemo(
+    () => randomElement(recommendationsManga || [])?.media,
+    [recommendationsManga]
+  );
 
   return (
     <React.Fragment>
@@ -43,7 +70,11 @@ const Home: NextPage<HomeProps> = ({
 
       <ClientOnly>
         <div className="pb-8">
-          <HomeBanner type={MediaType.Manga} data={trendingManga} />
+          <HomeBanner
+            type={MediaType.Manga}
+            data={trendingManga}
+            isLoading={trendingLoading}
+          />
 
           <div className="space-y-8">
             <ReadSection />
@@ -55,20 +86,26 @@ const Home: NextPage<HomeProps> = ({
                 type={MediaType.Manga}
                 data={popularManga}
                 viewMoreHref="/browse?sort=popularity&type=manga"
+                isLoading={popularMangaLoading}
               />
               <ColumnSection
                 title={t("common:most_favourite")}
                 type={MediaType.Manga}
                 data={favouriteManga}
                 viewMoreHref="/browse?sort=favourites&type=manga"
+                isLoading={favouriteMangaLoading}
               />
             </Section>
 
             <NewestComments type={MediaType.Manga} />
 
-            <Section title={t("common:newly_added")}>
-              <CardSwiper data={recentlyUpdatedManga} />
-            </Section>
+            {recentlyUpdatedLoading ? (
+              <ListSwiperSkeleton />
+            ) : (
+              <Section title={t("common:newly_added")}>
+                <CardSwiper data={recentlyUpdated} />
+              </Section>
+            )}
 
             <div
               className={classNames(
@@ -80,7 +117,11 @@ const Home: NextPage<HomeProps> = ({
                 title={t("manga_home:should_read_today")}
                 className="w-full md:w-[80%] md:!pr-0"
               >
-                <ShouldWatch type={MediaType.Manga} data={randomManga} />
+                <ShouldWatch
+                  type={MediaType.Manga}
+                  data={randomManga}
+                  isLoading={!randomManga}
+                />
               </Section>
               <Section
                 title={t("common:genres")}
@@ -94,58 +135,6 @@ const Home: NextPage<HomeProps> = ({
       </ClientOnly>
     </React.Fragment>
   );
-};
-
-export const getStaticProps: GetStaticProps = async () => {
-  await prodSleep(2500);
-
-  const trendingManga = await getMedia({
-    type: MediaType.Manga,
-    sort: [MediaSort.Trending_desc, MediaSort.Popularity_desc],
-  });
-
-  await prodSleep(2500);
-
-  const popularManga = await getMedia({
-    type: MediaType.Manga,
-    sort: [MediaSort.Popularity_desc],
-    perPage: 5,
-  });
-
-  await prodSleep(2500);
-
-  const favouriteManga = await getMedia({
-    type: MediaType.Manga,
-    sort: [MediaSort.Favourites_desc],
-    perPage: 5,
-  });
-
-  await prodSleep(2500);
-
-  const recentlyUpdatedManga = await getMedia({
-    type: MediaType.Manga,
-    sort: [MediaSort.Updated_at_desc],
-    isAdult: false,
-  });
-
-  const recommendationsManga = await getRecommendations({
-    mediaId: randomElement(trendingManga).id,
-  });
-
-  await prodSleep(2500);
-
-  const randomManga = randomElement(recommendationsManga).media;
-
-  return {
-    props: {
-      trendingManga,
-      recentlyUpdatedManga,
-      randomManga,
-      popularManga,
-      favouriteManga,
-    },
-    revalidate: REVALIDATE_TIME,
-  };
 };
 
 export default Home;
