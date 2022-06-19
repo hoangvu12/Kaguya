@@ -72,31 +72,39 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
             </div>
 
             <div className="justify-between text-center md:text-left flex flex-col items-center md:items-start py-4 mt-4 md:-mt-16 space-y-4">
-              <div className="flex flex-col md:items-start items-center space-y-4">
-                <Link href={`/manga/read/${manga.id}`}>
-                  <a>
-                    <Button primary LeftIcon={BsFillPlayFill} className="mb-4">
-                      <p>{t("read_now")}</p>
-                    </Button>
-                  </a>
-                </Link>
+              {chapters?.length ? (
+                <div className="flex flex-col md:items-start items-center space-y-4">
+                  <Link href={`/manga/read/${manga.id}`}>
+                    <a>
+                      <Button
+                        primary
+                        LeftIcon={BsFillPlayFill}
+                        className="mb-4"
+                      >
+                        <p>{t("read_now")}</p>
+                      </Button>
+                    </a>
+                  </Link>
 
-                <p className="text-3xl font-semibold mb-2">{title}</p>
+                  <p className="text-3xl font-semibold mb-2">{title}</p>
 
-                <DotList>
-                  {manga.genres.map((genre) => (
-                    <span key={genre}>
-                      {convert(genre, "genre", { locale })}
-                    </span>
-                  ))}
-                </DotList>
+                  <DotList>
+                    {manga.genres.map((genre) => (
+                      <span key={genre}>
+                        {convert(genre, "genre", { locale })}
+                      </span>
+                    ))}
+                  </DotList>
 
-                <MediaDescription
-                  description={description}
-                  containerClassName="mt-4 mb-8"
-                  className="text-gray-300 hover:text-gray-100 transition duration-300"
-                />
-              </div>
+                  <MediaDescription
+                    description={description}
+                    containerClassName="mt-4 mb-8"
+                    className="text-gray-300 hover:text-gray-100 transition duration-300"
+                  />
+                </div>
+              ) : (
+                <div className="h-8 mb-4"></div>
+              )}
 
               <div className="flex overflow-x-auto md:scroll-bar snap-x space-x-8 md:space-x-16">
                 <InfoItem

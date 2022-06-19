@@ -92,30 +92,30 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime, translations }) => {
 
             <div className="flex flex-col items-center justify-between py-4 mt-4 text-center md:text-left md:items-start md:-mt-16 space-y-4">
               <div className="flex flex-col md:items-start items-center space-y-4">
-                <div className="flex items-center flex-wrap gap-2 mb-4">
-                  {episodes?.length ? (
-                    <Fragment>
-                      <Link href={`/anime/watch/${anime.id}`}>
-                        <a>
-                          <Button primary LeftIcon={BsFillPlayFill}>
-                            <p>{t("common:watch_now")}</p>
-                          </Button>
-                        </a>
-                      </Link>
+                {episodes?.length ? (
+                  <div className="flex items-center flex-wrap gap-2 mb-4">
+                    <Link href={`/anime/watch/${anime.id}`}>
+                      <a>
+                        <Button primary LeftIcon={BsFillPlayFill}>
+                          <p>{t("common:watch_now")}</p>
+                        </Button>
+                      </a>
+                    </Link>
 
-                      <Link href={`/wwf/create/${anime.id}`}>
-                        <a>
-                          <Button
-                            className="text-black"
-                            LeftIcon={BsFillPlayFill}
-                          >
-                            <p>{t("watch_with_friends")}</p>
-                          </Button>
-                        </a>
-                      </Link>
-                    </Fragment>
-                  ) : null}
-                </div>
+                    <Link href={`/wwf/create/${anime.id}`}>
+                      <a>
+                        <Button
+                          className="text-black"
+                          LeftIcon={BsFillPlayFill}
+                        >
+                          <p>{t("watch_with_friends")}</p>
+                        </Button>
+                      </a>
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="h-8 mb-4"></div>
+                )}
 
                 <p className="mb-2 text-3xl font-semibold">{title}</p>
 
