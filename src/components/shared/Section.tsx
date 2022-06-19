@@ -5,6 +5,7 @@ interface SectionProps {
   title?: string;
   className?: string;
   children?: React.ReactNode;
+  isLoading?: boolean;
 }
 
 const Section = React.forwardRef<HTMLDivElement, SectionProps>(

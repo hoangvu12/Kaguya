@@ -3,12 +3,14 @@ import Link from "next/link";
 import React from "react";
 import { MdArrowForwardIos } from "react-icons/md";
 import HorizontalCard from "./HorizontalCard";
+import Skeleton, { SkeletonItem } from "./Skeleton";
 
 interface ColumnSectionProps {
   data: Media[];
   title?: string;
   viewMoreHref?: string;
   type: MediaType;
+  isLoading?: boolean;
 }
 
 const ColumnSection: React.FC<ColumnSectionProps> = ({
@@ -16,8 +18,9 @@ const ColumnSection: React.FC<ColumnSectionProps> = ({
   title,
   viewMoreHref,
   type,
+  isLoading,
 }) => {
-  return (
+  return !isLoading ? (
     <div className="w-full grow-0 bg-background-800 pt-4">
       {title && (
         <h2 className="px-4 text-xl font-semibold mb-4 line-clamp-1">
@@ -45,7 +48,15 @@ const ColumnSection: React.FC<ColumnSectionProps> = ({
         </Link>
       )}
     </div>
+  ) : (
+    <ColumnSectionSkeleton />
   );
 };
+
+const ColumnSectionSkeleton = () => (
+  <Skeleton className="flex-1">
+    <SkeletonItem className="h-[400px]"></SkeletonItem>
+  </Skeleton>
+);
 
 export default ColumnSection;
