@@ -143,7 +143,7 @@ const MobileHomeBanner: React.FC<HomeBannerProps> = ({ data, type }) => {
 };
 
 const MobileHomeBannerSkeleton = () => (
-  <Skeleton className="mt-20 mb-8 px-4 md:px-12">
+  <Skeleton>
     <SkeletonItem className="aspect-w-16 aspect-h-9 rounded-md" />
   </Skeleton>
 );
@@ -342,7 +342,7 @@ const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data, type }) => {
 
 const DesktopHomeBannerSkeleton = () => (
   <Skeleton className="w-full">
-    <SkeletonItem className="h-[450px] w-full" container>
+    <SkeletonItem className="relative h-[450px] w-full" container>
       <SkeletonItem
         className="absolute left-12 top-1/2 -translate-y-1/2 w-full md:w-[45%]"
         container
