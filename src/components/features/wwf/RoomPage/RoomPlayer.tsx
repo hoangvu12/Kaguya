@@ -205,23 +205,25 @@ const PlayerMobileOverlay = () => {
   const { currentEpisode, anime } = useRoomPlayer();
 
   return (
-    <MobileOverlay>
-      <BsArrowLeft
-        className={classNames(
-          "absolute w-8 h-8 transition-all duration-300 cursor-pointer top-4 left-4 hover:text-gray-200",
-          isInteracting ? "opacity-100 visible" : "opacity-0 invisible"
-        )}
-        onClick={router.back}
-      />
+    <React.Fragment>
+      <MobileOverlay>
+        <BsArrowLeft
+          className={classNames(
+            "absolute w-8 h-8 transition-all duration-300 cursor-pointer top-4 left-4 hover:text-gray-200",
+            isInteracting ? "opacity-100 visible" : "opacity-0 invisible"
+          )}
+          onClick={router.back}
+        />
+      </MobileOverlay>
 
       {anime.idMal && (
         <TimestampSkipButton
-          className="absolute right-2 bottom-32"
+          className="absolute right-4 bottom-32"
           episode={parseNumberFromString(currentEpisode.name)}
           malId={anime.idMal}
         />
       )}
-    </MobileOverlay>
+    </React.Fragment>
   );
 };
 
