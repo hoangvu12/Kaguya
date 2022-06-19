@@ -6,6 +6,7 @@ import List from "@/components/shared/List";
 import Section from "@/components/shared/Section";
 import ListSkeleton from "@/components/skeletons/ListSkeleton";
 import useBrowseAnime from "@/hooks/useBrowseAnime";
+import { MediaSort } from "@/types/anilist";
 import { debounce } from "@/utils";
 import { useTranslation } from "next-i18next";
 import React, { useCallback, useMemo, useState } from "react";
@@ -22,7 +23,7 @@ const ChooseAnimePage = () => {
     isFetchingNextPage,
     hasNextPage,
     isError,
-  } = useBrowseAnime({ keyword, sort: "episodeUpdatedAt" });
+  } = useBrowseAnime({ keyword, sort: MediaSort.Id_desc });
 
   const handleFetch = useCallback(() => {
     if (isFetchingNextPage || !hasNextPage) return;
@@ -36,7 +37,7 @@ const ChooseAnimePage = () => {
   );
 
   const totalData = useMemo(
-    () => data?.pages.map((el) => el.data).flat(),
+    () => data?.pages.flatMap((el) => el.media),
     [data?.pages]
   );
 
@@ -64,11 +65,7 @@ const ChooseAnimePage = () => {
         <React.Fragment>
           <List data={totalData}>
             {(data) => (
-              <Card
-                data={data}
-                type="anime"
-                redirectUrl={`/wwf/create/${data.id}`}
-              />
+              <Card data={data} redirectUrl={`/wwf/create/${data.id}`} />
             )}
           </List>
 

@@ -9,7 +9,8 @@ import withRedirect from "@/hocs/withRedirect";
 import useConstantTranslation from "@/hooks/useConstantTranslation";
 import dayjs from "@/lib/dayjs";
 import supabase from "@/lib/supabase";
-import { Character, VoiceActor } from "@/types";
+import { getStaff, getStaffDetails } from "@/services/anilist";
+import { Staff, StaffSort } from "@/types/anilist";
 import {
   arePropertiesFalsy,
   formatDate,
@@ -33,12 +34,8 @@ const KeyValue: React.FC<{ property: string; value: string }> = ({
   </div>
 );
 
-interface VoiceActorWithCharacters extends VoiceActor {
-  characters: { character: Character }[];
-}
-
 interface DetailsPageProps {
-  voiceActor: VoiceActorWithCharacters;
+  voiceActor: Staff;
 }
 
 const DetailsPage: NextPage<DetailsPageProps> = ({ voiceActor }) => {
@@ -153,7 +150,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ voiceActor }) => {
         </div>
 
         <Section title={t("characters_section")}>
-          <List data={voiceActor.characters.map(({ character }) => character)}>
+          <List data={voiceActor.characters.nodes}>
             {(character) => <CharacterCard character={character} />}
           </List>
         </Section>
@@ -165,43 +162,26 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ voiceActor }) => {
 export const getStaticProps: GetStaticProps = async ({
   params: { params },
 }) => {
-  const { data, error } = await supabase
-    .from("kaguya_voice_actors")
-    .select(
-      `
-        *,
-        characters:kaguya_voice_actor_connections(character:characterId(id, name, image))
-      `
-    )
-    .eq("id", Number(params[0]))
-    .single();
+  try {
+    const data = await getStaffDetails({
+      id: Number(params[0]),
+    });
 
-  if (error) {
+    return {
+      props: {
+        voiceActor: data,
+      },
+      revalidate: REVALIDATE_TIME,
+    };
+  } catch (error) {
     console.log(error);
 
     return { notFound: true, revalidate: REVALIDATE_TIME };
   }
-
-  return {
-    props: {
-      voiceActor: data as VoiceActor,
-    },
-    revalidate: REVALIDATE_TIME,
-  };
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const { data } = await supabase
-    .from<VoiceActor>("kaguya_voice_actors")
-    .select("id")
-    .order("favourites", { ascending: false })
-    .limit(5);
-
-  const paths = data.map((manga) => ({
-    params: { params: [manga.id.toString()] },
-  }));
-
-  return { paths, fallback: "blocking" };
+  return { paths: [], fallback: "blocking" };
 };
 
 export default withRedirect(DetailsPage, (router, props) => {

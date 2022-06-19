@@ -11,19 +11,20 @@ import Section from "@/components/shared/Section";
 import ShouldWatch from "@/components/shared/ShouldWatch";
 import { REVALIDATE_TIME } from "@/constants";
 import useDevice from "@/hooks/useDevice";
-import supabase from "@/lib/supabase";
-import { Manga } from "@/types";
+import { getMedia, getRecommendations } from "@/services/anilist";
+import { Media, MediaSort, MediaType } from "@/types/anilist";
+import { prodSleep, randomElement } from "@/utils";
 import classNames from "classnames";
 import { GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import React from "react";
 
 interface HomeProps {
-  trendingManga: Manga[];
-  randomManga: Manga;
-  popularManga: Manga[];
-  favouriteManga: Manga[];
-  recentlyUpdatedManga: Manga[];
+  trendingManga: Media[];
+  randomManga: Media;
+  popularManga: Media[];
+  favouriteManga: Media[];
+  recentlyUpdatedManga: Media[];
 }
 
 const Home: NextPage<HomeProps> = ({
@@ -42,7 +43,7 @@ const Home: NextPage<HomeProps> = ({
 
       <ClientOnly>
         <div className="pb-8">
-          <HomeBanner type="manga" data={trendingManga} />
+          <HomeBanner type={MediaType.Manga} data={trendingManga} />
 
           <div className="space-y-8">
             <ReadSection />
@@ -51,22 +52,22 @@ const Home: NextPage<HomeProps> = ({
             <Section className="flex flex-col md:flex-row items-center md:space-between space-y-4 space-x-0 md:space-y-0 md:space-x-4">
               <ColumnSection
                 title={t("common:most_popular")}
-                type="manga"
+                type={MediaType.Manga}
                 data={popularManga}
                 viewMoreHref="/browse?sort=popularity&type=manga"
               />
               <ColumnSection
                 title={t("common:most_favourite")}
-                type="manga"
+                type={MediaType.Manga}
                 data={favouriteManga}
                 viewMoreHref="/browse?sort=favourites&type=manga"
               />
             </Section>
 
-            <NewestComments type="manga" />
+            <NewestComments type={MediaType.Manga} />
 
             <Section title={t("common:newly_added")}>
-              <CardSwiper type="manga" data={recentlyUpdatedManga} />
+              <CardSwiper data={recentlyUpdatedManga} />
             </Section>
 
             <div
@@ -79,7 +80,7 @@ const Home: NextPage<HomeProps> = ({
                 title={t("manga_home:should_read_today")}
                 className="w-full md:w-[80%] md:!pr-0"
               >
-                <ShouldWatch type="manga" data={randomManga} />
+                <ShouldWatch type={MediaType.Manga} data={randomManga} />
               </Section>
               <Section
                 title={t("common:genres")}
@@ -96,37 +97,44 @@ const Home: NextPage<HomeProps> = ({
 };
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { data: trendingManga } = await supabase
-    .from<Manga>("kaguya_manga")
-    .select("*")
-    .order("trending", { ascending: false })
-    .limit(15);
+  await prodSleep(2500);
 
-  const { data: recentlyUpdatedManga } = await supabase
-    .from<Manga>("kaguya_manga")
-    .select(
-      "coverImage, genres, averageScore, favourites, title, vietnameseTitle, id"
-    )
-    .order("chapterUpdatedAt", { ascending: false })
-    .limit(15);
+  const trendingManga = await getMedia({
+    type: MediaType.Manga,
+    sort: [MediaSort.Trending_desc, MediaSort.Popularity_desc],
+  });
 
-  const { data: randomManga } = await supabase
-    .rpc<Manga>("manga_random")
-    .limit(1)
-    .not("bannerImage", "is", null)
-    .single();
+  await prodSleep(2500);
 
-  const { data: popularManga } = await supabase
-    .from<Manga>("kaguya_manga")
-    .select("id, coverImage, genres, title, vietnameseTitle, format, status")
-    .order("popularity", { ascending: false })
-    .limit(5);
+  const popularManga = await getMedia({
+    type: MediaType.Manga,
+    sort: [MediaSort.Popularity_desc],
+    perPage: 5,
+  });
 
-  const { data: favouriteManga } = await supabase
-    .from<Manga>("kaguya_manga")
-    .select("id, coverImage, genres, title, vietnameseTitle, format, status")
-    .order("favourites", { ascending: false })
-    .limit(5);
+  await prodSleep(2500);
+
+  const favouriteManga = await getMedia({
+    type: MediaType.Manga,
+    sort: [MediaSort.Favourites_desc],
+    perPage: 5,
+  });
+
+  await prodSleep(2500);
+
+  const recentlyUpdatedManga = await getMedia({
+    type: MediaType.Manga,
+    sort: [MediaSort.Updated_at_desc],
+    isAdult: false,
+  });
+
+  const recommendationsManga = await getRecommendations({
+    mediaId: randomElement(trendingManga).id,
+  });
+
+  await prodSleep(2500);
+
+  const randomManga = randomElement(recommendationsManga).media;
 
   return {
     props: {
@@ -136,7 +144,6 @@ export const getStaticProps: GetStaticProps = async () => {
       popularManga,
       favouriteManga,
     },
-
     revalidate: REVALIDATE_TIME,
   };
 };

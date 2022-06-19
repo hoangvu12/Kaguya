@@ -11,7 +11,9 @@ import { useFetchSource } from "@/hooks/useFetchSource";
 import useSavedWatched from "@/hooks/useSavedWatched";
 import useSaveWatched from "@/hooks/useSaveWatched";
 import supabase from "@/lib/supabase";
-import { Anime, Episode } from "@/types";
+import { getMediaDetails } from "@/services/anilist";
+import { AnimeSourceConnection, Episode } from "@/types";
+import { Media } from "@/types/anilist";
 import { getDescription, getTitle, sortMediaUnit } from "@/utils/data";
 import { GetServerSideProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
@@ -32,7 +34,8 @@ const WatchPlayer = dynamic(
 );
 
 interface WatchPageProps {
-  anime: Anime;
+  anime: Media;
+  episodes: Episode[];
 }
 
 const blankVideo = [
@@ -49,7 +52,7 @@ const ForwardRefPlayer = React.memo(
 
 ForwardRefPlayer.displayName = "ForwardRefPlayer";
 
-const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
+const WatchPage: NextPage<WatchPageProps> = ({ anime, episodes }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const router = useRouter();
   const { isMobile } = useDevice();
@@ -77,17 +80,6 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
   });
 
   const { params } = router.query;
-
-  const episodes = useMemo(
-    () =>
-      anime.sourceConnections.flatMap((connection) =>
-        connection.episodes.map((episode) => ({
-          ...episode,
-          sourceConnection: connection,
-        }))
-      ),
-    [anime.sourceConnections]
-  );
 
   const sortedEpisodes = useMemo(() => sortMediaUnit(episodes), [episodes]);
 
@@ -375,32 +367,62 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime }) => {
 export const getServerSideProps: GetServerSideProps = async ({
   params: { params },
 }) => {
-  const { data, error } = await supabase
-    .from<Anime>("kaguya_anime")
-    .select(
-      `
-        id,
-        idMal,
-        title,
-        description,
-        bannerImage,
-        coverImage,
-        sourceConnections:kaguya_anime_source!mediaId(*, episodes:kaguya_episodes(*, source:kaguya_sources(id, name, locales)))`
-    )
-    .eq("id", Number(params[0]))
-    .single();
+  try {
+    const sourceConnectionPromise = supabase
+      .from<AnimeSourceConnection>("kaguya_anime_source")
+      .select(
+        `
+      episodes:kaguya_episodes(*, source:kaguya_sources(id, name, locales))
+    `
+      )
+      .eq("mediaId", Number(params[0]));
 
-  if (error) {
-    console.log(error);
+    const fields = `
+      id
+      idMal
+      title {
+        userPreferred
+        romaji
+        native
+        english
+      }
+      description
+      bannerImage
+      coverImage {
+        extraLarge
+        large
+        medium
+        color
+      }
+    `;
+
+    const mediaPromise = getMediaDetails(
+      {
+        id: Number(params[0]),
+      },
+      fields
+    );
+
+    const [{ data, error }, media] = await Promise.all([
+      sourceConnectionPromise,
+      mediaPromise,
+    ]);
+
+    if (error) {
+      throw error;
+    }
+
+    return {
+      props: {
+        anime: media,
+        episodes: data.flatMap((connection) => connection.episodes),
+      },
+    };
+  } catch (err) {
+    console.log(err);
 
     return { notFound: true };
   }
-
-  return {
-    props: {
-      anime: data,
-    },
-  };
 };
 
 // @ts-ignore

@@ -1,6 +1,6 @@
 import { useUser } from "@/contexts/AuthContext";
 import supabase from "@/lib/supabase";
-import { Anime, Manga } from "@/types";
+import { Media } from "@/types/anilist";
 import { getTitle } from "@/utils/data";
 import { PostgrestError } from "@supabase/supabase-js";
 import { useTranslation } from "next-i18next";
@@ -9,11 +9,9 @@ import { useMemo } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 
-type Source<T> = T extends "anime" ? Anime : Manga;
-
 const useUnsubscribe = <T extends "anime" | "manga">(
   type: T,
-  source: Source<T>
+  source: Media
 ) => {
   const user = useUser();
   const queryClient = useQueryClient();

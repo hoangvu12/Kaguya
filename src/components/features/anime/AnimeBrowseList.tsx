@@ -10,6 +10,7 @@ import ListSkeleton from "@/components/skeletons/ListSkeleton";
 import { SEASON_YEARS } from "@/constants";
 import useBrowse, { UseBrowseOptions } from "@/hooks/useBrowseAnime";
 import useConstantTranslation from "@/hooks/useConstantTranslation";
+import { MediaSort } from "@/types/anilist";
 import { debounce } from "@/utils";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
@@ -27,8 +28,8 @@ const initialValues: UseBrowseOptions = {
   season: undefined,
   seasonYear: undefined,
   tags: [],
-  sort: "averageScore",
-  countries: [],
+  sort: MediaSort.Trending_desc,
+  country: undefined,
 };
 
 interface BrowseListProps {
@@ -89,7 +90,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
   );
 
   const totalData = useMemo(
-    () => data?.pages.map((el) => el.data).flat(),
+    () => data?.pages.flatMap((el) => el.media),
     [data?.pages]
   );
 
@@ -177,12 +178,11 @@ const BrowseList: React.FC<BrowseListProps> = ({
             <MobileView renderWithFragment>
               <FormSelect
                 control={control}
-                name="countries"
-                defaultValue={defaultValues.countries}
+                name="country"
+                defaultValue={defaultValues.country}
                 selectProps={{
                   placeholder: t("country"),
                   options: COUNTRIES,
-                  isMulti: true,
                 }}
                 label={t("country")}
               />
@@ -203,12 +203,11 @@ const BrowseList: React.FC<BrowseListProps> = ({
           <AdvancedSettings referenceClassName="hidden md:flex">
             <FormSelect
               control={control}
-              name="countries"
-              defaultValue={defaultValues.countries}
+              name="country"
+              defaultValue={defaultValues.country}
               selectProps={{
                 placeholder: t("country"),
                 options: COUNTRIES,
-                isMulti: true,
               }}
               label={t("country")}
             />
@@ -245,9 +244,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
       <div className="mt-8">
         {!isLoading && query ? (
           <React.Fragment>
-            <List data={totalData}>
-              {(data) => <Card data={data} type="anime" />}
-            </List>
+            <List data={totalData}>{(data) => <Card data={data} />}</List>
 
             {isFetchingNextPage && !isError && (
               <div className="mt-4">

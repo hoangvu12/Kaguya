@@ -1,4 +1,5 @@
 import dayjs from "@/lib/dayjs";
+import { MediaSeason } from "@/types/anilist";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -116,18 +117,19 @@ export const getPagination = (page?: number, limit: number = 15) => {
 export const getSeason = () => {
   const month = dayjs().month();
   const year = dayjs().year();
-  let season = "WINTER";
+
+  let season = MediaSeason.Winter;
 
   if (3 <= month && month <= 5) {
-    season = "SPRING";
+    season = MediaSeason.Spring;
   }
 
   if (6 <= month && month <= 8) {
-    season = "SUMMER";
+    season = MediaSeason.Summer;
   }
 
   if (9 <= month && month <= 11) {
-    season = "FALL";
+    season = MediaSeason.Fall;
   }
 
   return {
@@ -333,4 +335,30 @@ export const download = async (url: string, name: string) => {
 
       toast.info("The file has been downloaded successfully!");
     });
+};
+
+export const removeArrayOfObjectDup = <T extends object, K extends keyof T>(
+  arr: T[],
+  property: K
+) => {
+  return arr.filter(
+    (obj, index, self) =>
+      index === self.findIndex((t) => t[property] === obj[property])
+  );
+};
+
+export const fulfilledPromises = <T extends Promise<any>>(promises: T[]) =>
+  Promise.allSettled(promises).then((results) =>
+    results
+      .filter((result) => result.status === "fulfilled")
+      .map((result) => (result as PromiseFulfilledResult<Awaited<T>>).value)
+  );
+
+// This is for avoiding anilist's rate limit on build time
+export const prodSleep = (ms: number) => {
+  if (process.env.NODE_ENV === "production") {
+    return sleep(ms);
+  }
+
+  return Promise.resolve();
 };

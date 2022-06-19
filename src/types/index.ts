@@ -5,6 +5,7 @@ import { QueryKey } from "react-query";
 import {
   CharacterRole,
   FuzzyDate,
+  Media,
   MediaFormat,
   MediaRelation,
   MediaStatus,
@@ -21,7 +22,7 @@ export type SourceConnection = {
   id: string;
   sourceId: string;
   sourceMediaId: string;
-  mediaId: string;
+  mediaId: number;
   source: Source;
 };
 
@@ -62,163 +63,6 @@ export type Chapter = {
   slug: string;
 };
 
-export type VoiceActorImage = {
-  large: string;
-  medium: string;
-};
-
-export type VoiceActorName = {
-  first: string;
-  middle: string;
-  last: string;
-  full: string;
-  native: string;
-  alternative: string[];
-  userPreferred: string;
-};
-
-export type VoiceActorConnection = {
-  voiceActorId: number;
-  characterId: number;
-  voiceActor?: VoiceActor;
-  character?: Character;
-};
-
-export type VoiceActor = {
-  id: number;
-  name: VoiceActorName;
-  language: string;
-  image: VoiceActorImage;
-  gender: string;
-  dateOfBirth: FuzzyDate;
-  dateOfDeath: FuzzyDate;
-  age: number;
-  yearsActive: number[];
-  homeTown: string;
-  bloodType: string;
-  favourites: number;
-};
-
-export type AiringSchedule = {
-  id: number;
-  airingAt: number;
-  episode: number;
-  mediaId: number;
-  media?: Anime;
-};
-
-export type Recommendation<T extends Anime | Manga> = {
-  media: T;
-};
-
-export type Relation<T extends Anime | Manga> = {
-  media: T;
-  relationType: MediaRelation;
-};
-
-export type CharacterImage = {
-  large: string;
-  medium: string;
-};
-
-export type CharacterName = {
-  first: string;
-  middle: string;
-  last: string;
-  full: string;
-  native: string;
-  alternative: string[];
-  alternativeSpoiler: string[];
-  userPreferred: string;
-};
-
-export type CharacterConnection<T extends Anime | Manga> = {
-  characterId: number;
-  id: number;
-  role: CharacterRole;
-  name: string;
-  mediaId: number;
-  media?: T;
-  character: Character;
-};
-
-export type Character = {
-  id: number;
-  name: CharacterName;
-  image: CharacterImage;
-  gender: string;
-  dateOfBirth: FuzzyDate;
-  age: string;
-  favourites: number;
-};
-
-export type StudioConnection = {
-  studioId: number;
-  isMain: boolean;
-  id: number;
-  mediaId: number;
-  studio: Studio;
-  media: Anime;
-};
-
-export type Studio = {
-  id: number;
-  name: string;
-  isAnimationStudio: boolean;
-  favourites: number;
-};
-
-export type CoverImage = {
-  extraLarge: string;
-  large: string;
-  medium: string;
-  color: string;
-};
-
-export interface Media<T extends Anime | Manga> {
-  id: number;
-  idMal: number;
-  title: MediaTitle;
-  coverImage: CoverImage;
-  startDate: FuzzyDate;
-  trending: number;
-  popularity: number;
-  favourites: number;
-  bannerImage: string;
-  format: MediaFormat;
-  status: MediaStatus;
-  characters: CharacterConnection<T>[];
-  relations: Relation<T>[];
-  recommendations: Recommendation<T>[];
-  tags: string[];
-  genres: string[];
-  countryOfOrigin: string;
-  isAdult: boolean;
-  synonyms: string[];
-  averageScore: number;
-  description: MediaDescription;
-  updated_at?: string;
-  created_at?: string;
-}
-
-export interface Anime extends Media<Anime> {
-  sourceConnections: AnimeSourceConnection[];
-  season: string;
-  seasonYear: number;
-  totalEpisodes: number;
-  studios: StudioConnection[];
-  voiceActors: VoiceActorConnection[];
-  airingSchedules: AiringSchedule[];
-  episodeUpdatedAt: string;
-  duration: number;
-  trailer?: string;
-}
-
-export interface Manga extends Media<Manga> {
-  totalChapters: number;
-  chapterUpdatedAt: string;
-  sourceConnections: MangaSourceConnection[];
-}
 export interface Section<T> {
   title: string;
   query?: {
@@ -232,7 +76,7 @@ export interface Section<T> {
 }
 
 export interface Watched {
-  media: Anime;
+  media: Media;
   episode: Episode;
   episodeId: string;
   mediaId?: number;
@@ -243,7 +87,7 @@ export interface Watched {
 }
 
 export interface Read {
-  media: Manga;
+  media: Media;
   mediaId?: number;
   chapterId?: string;
   chapter: Chapter;
@@ -270,8 +114,7 @@ export interface Comment {
   created_at?: string;
   user_id?: string;
   user?: User;
-  anime?: Anime;
-  manga?: Manga;
+  media?: Media;
   anime_id?: number;
   manga_id?: number;
   body: string;
@@ -304,12 +147,13 @@ export type Room = {
   hostUser: User;
   hostUserId: string;
   mediaId: number;
-  media: Anime;
+  media: Media;
   created_at?: string;
   episode: Episode;
   episodeId: string;
   users: User[];
   title?: string;
+  episodes: Episode[];
   visibility: "public" | "private";
 };
 
@@ -340,13 +184,13 @@ export type ReadStatus = "READING" | "COMPLETED" | "PLANNING";
 export type SourceStatus<T> = (T extends "anime"
   ? {
       status?: WatchStatus;
-      anime_id?: number;
-      anime?: Anime;
+      mediaId?: number;
+      media?: Media;
     }
   : {
       status?: ReadStatus;
-      anime_id?: number;
-      anime?: Manga;
+      mediaId?: number;
+      media?: Media;
     }) & {
   user_id?: number;
   user?: User;

@@ -2,7 +2,7 @@ import Select from "@/components/shared/Select";
 import useConstantTranslation from "@/hooks/useConstantTranslation";
 import useModifySourceStatus from "@/hooks/useModifySourceStatus";
 import useSourceStatus from "@/hooks/useSourceStatus";
-import { Anime, Manga } from "@/types";
+import { Media } from "@/types/anilist";
 import { useTranslation } from "next-i18next";
 import React, { useMemo } from "react";
 import { AiFillPlusCircle, AiOutlineLoading3Quarters } from "react-icons/ai";
@@ -53,7 +53,7 @@ const components = {
 
 interface SourceStatusProps<T> {
   type: T;
-  source: T extends "anime" ? Anime : Manga;
+  source: Media;
 }
 
 const SourceStatus = <T extends "anime" | "manga">(

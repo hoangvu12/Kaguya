@@ -1,22 +1,19 @@
 import supabase from "@/lib/supabase";
-import { Anime } from "@/types";
-import { parseNumberFromString } from "@/utils";
+import { AnimeSourceConnection } from "@/types";
 import { sortMediaUnit } from "@/utils/data";
 import { useSupabaseSingleQuery } from "@/utils/supabase";
 import { useMemo } from "react";
 
 const query = `
-sourceConnections:kaguya_anime_source!mediaId(
-    *,
-    episodes:kaguya_episodes(
-        *,
-        source:kaguya_sources(
-            id,
-            name,
-            locales
-        )
-    )
-)
+  *,
+  episodes:kaguya_episodes(
+      *,
+      source:kaguya_sources(
+          id,
+          name,
+          locales
+      )
+  )
 `;
 
 const useEpisodes = (mediaId: number) => {
@@ -24,15 +21,14 @@ const useEpisodes = (mediaId: number) => {
     ["episodes", mediaId],
     () =>
       supabase
-        .from<Anime>("kaguya_anime")
+        .from<AnimeSourceConnection>("kaguya_anime_source")
         .select(query)
-        .eq("id", mediaId)
-        .single()
+        .eq("mediaId", mediaId)
   );
 
   const episodes = useMemo(
-    () => data?.sourceConnections?.flatMap((connection) => connection.episodes),
-    [data?.sourceConnections]
+    () => data?.flatMap((connection) => connection.episodes),
+    [data]
   );
 
   const sortedEpisodes = useMemo(

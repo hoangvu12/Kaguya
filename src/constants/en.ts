@@ -1,45 +1,52 @@
+import {
+  CharacterRole,
+  MediaFormat,
+  MediaSeason,
+  MediaSort,
+  MediaStatus,
+} from "@/types/anilist";
 import { I18n } from "netplayer";
 
 export const SEASONS = [
-  { value: "WINTER", label: "Winter" },
-  { value: "SPRING", label: "Spring" },
-  { value: "SUMMER", label: "Summer" },
-  { value: "FALL", label: "Fall" },
+  { value: MediaSeason.Winter, label: "Winter" },
+  { value: MediaSeason.Spring, label: "Spring" },
+  { value: MediaSeason.Summer, label: "Summer" },
+  { value: MediaSeason.Fall, label: "Fall" },
 ];
 
 export const STATUS = [
-  { value: "FINISHED", label: "Finished" },
-  { value: "RELEASING", label: "Releasing" },
-  { value: "NOT_YET_RELEASED", label: "Not yet released" },
-  { value: "CANCELLED", label: "Cancelled" },
-  { value: "HIATUS", label: "Hiatus" },
+  { value: MediaStatus.Finished, label: "Finished" },
+  { value: MediaStatus.Releasing, label: "Releasing" },
+  { value: MediaStatus.Not_yet_released, label: "Not yet released" },
+  { value: MediaStatus.Cancelled, label: "Cancelled" },
+  { value: MediaStatus.Hiatus, label: "Hiatus" },
 ];
 
 export const FORMATS = [
-  { value: "TV", label: "TV" },
-  { value: "TV_SHORT", label: "TV Short" },
-  { value: "MOVIE", label: "Movie" },
-  { value: "SPECIAL", label: "Special" },
-  { value: "OVA", label: "OVA" },
-  { value: "ONA", label: "ONA" },
-  { value: "MUSIC", label: "Music" },
-  { value: "MANGA", label: "Manga" },
+  { value: MediaFormat.Tv, label: "TV" },
+  { value: MediaFormat.Tv_short, label: "TV Short" },
+  { value: MediaFormat.Movie, label: "Movie" },
+  { value: MediaFormat.Special, label: "Special" },
+  { value: MediaFormat.Ova, label: "OVA" },
+  { value: MediaFormat.Ona, label: "ONA" },
+  { value: MediaFormat.Music, label: "Music" },
+  { value: MediaFormat.Manga, label: "Manga" },
 ];
 
 export const ANIME_SORTS = [
-  { value: "popularity", label: "Popularity" },
-  { value: "trending", label: "Trending" },
-  { value: "favourites", label: "Favourites" },
-  { value: "averageScore", label: "Average Score" },
-  { value: "episodeUpdatedAt", label: "Latest Episode" },
+  { value: MediaSort.Popularity_desc, label: "Popularity" },
+  { value: MediaSort.Trending_desc, label: "Trending" },
+  { value: MediaSort.Favourites_desc, label: "Favourites" },
+  { value: MediaSort.Score_desc, label: "Average Score" },
+  { value: MediaSort.Updated_at_desc, label: "Recently updated" },
 ];
 
 export const MANGA_SORTS = [
-  { value: "popularity", label: "Popularity" },
-  { value: "trending", label: "Trending" },
-  { value: "favourites", label: "Favourites" },
-  { value: "averageScore", label: "Average Score" },
-  { value: "chapterUpdatedAt", label: "Latest Episode" },
+  { value: MediaSort.Popularity_desc, label: "Popularity" },
+  { value: MediaSort.Trending_desc, label: "Trending" },
+  { value: MediaSort.Favourites_desc, label: "Favourites" },
+  { value: MediaSort.Score_desc, label: "Average Score" },
+  { value: MediaSort.Updated_at_desc, label: "Recently updated" },
 ];
 
 export const GENRES = [
@@ -194,9 +201,9 @@ export const COUNTRIES = [
 ];
 
 export const CHARACTERS_ROLES = [
-  { value: "MAIN", label: "Main" },
-  { value: "SUPPORTING", label: "Supporting" },
-  { value: "BACKGROUND", label: "Background" },
+  { value: CharacterRole.Main, label: "Main" },
+  { value: CharacterRole.Supporting, label: "Supporting" },
+  { value: CharacterRole.Background, label: "Background" },
 ];
 
 export const WATCH_STATUS = [

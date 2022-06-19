@@ -13,29 +13,33 @@ import ShouldWatch from "@/components/shared/ShouldWatch";
 import { REVALIDATE_TIME } from "@/constants";
 import useDevice from "@/hooks/useDevice";
 import dayjs from "@/lib/dayjs";
-import supabase from "@/lib/supabase";
-import { AiringSchedule, Anime } from "@/types";
-import { getSeason } from "@/utils";
+import {
+  getAllAiringSchedules,
+  getMedia,
+  getRecommendations,
+} from "@/services/anilist";
+import { AiringSchedule, Media, MediaSort, MediaType } from "@/types/anilist";
+import { getSeason, prodSleep, randomElement } from "@/utils";
 import classNames from "classnames";
 import { GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import React, { useMemo } from "react";
 
 interface HomeProps {
-  trendingAnime: Anime[];
-  randomAnime: Anime;
-  recentlyUpdatedAnime: Anime[];
+  trendingAnime: Media[];
+  randomAnime: Media;
+  recentlyUpdated: Media[];
   schedulesAnime: AiringSchedule[];
-  popularSeason: Anime[];
-  popularAllTime: Anime[];
-  favouriteSeason: Anime[];
-  favouriteAllTime: Anime[];
+  popularSeason: Media[];
+  popularAllTime: Media[];
+  favouriteSeason: Media[];
+  favouriteAllTime: Media[];
 }
 
 const Home: NextPage<HomeProps> = ({
   trendingAnime,
   randomAnime,
-  recentlyUpdatedAnime,
+  recentlyUpdated,
   schedulesAnime,
   favouriteAllTime,
   favouriteSeason,
@@ -52,7 +56,7 @@ const Home: NextPage<HomeProps> = ({
 
       <ClientOnly>
         <div className="pb-8">
-          <HomeBanner type="anime" data={trendingAnime} />
+          <HomeBanner type={MediaType.Anime} data={trendingAnime} />
 
           <div className="space-y-8">
             <WatchedSection />
@@ -61,34 +65,34 @@ const Home: NextPage<HomeProps> = ({
             <Section className="flex flex-col md:flex-row items-center md:space-between space-y-4 space-x-0 md:space-y-0 md:space-x-4">
               <ColumnSection
                 title={t("most_popular_season", { ns: "common" })}
-                type="anime"
+                type={MediaType.Anime}
                 data={popularSeason}
                 viewMoreHref={`/browse?sort=popularity&type=anime&season=${currentSeason.season}&seasonYear=${currentSeason.year}`}
               />
               <ColumnSection
                 title={t("most_popular", { ns: "common" })}
-                type="anime"
+                type={MediaType.Anime}
                 data={popularAllTime}
                 viewMoreHref="/browse?sort=popularity&type=anime"
               />
               <ColumnSection
                 title={t("most_favourite_season", { ns: "common" })}
-                type="anime"
+                type={MediaType.Anime}
                 data={favouriteSeason}
                 viewMoreHref={`/browse?sort=favourites&type=anime&season=${currentSeason.season}&seasonYear=${currentSeason.year}`}
               />
               <ColumnSection
                 title={t("most_favourite", { ns: "common" })}
-                type="anime"
+                type={MediaType.Anime}
                 data={favouriteAllTime}
                 viewMoreHref="/browse?sort=favourites&type=anime"
               />
             </Section>
 
-            <NewestComments type="anime" />
+            <NewestComments type={MediaType.Anime} />
 
             <Section title={t("newly_added", { ns: "common" })}>
-              <CardSwiper type="anime" data={recentlyUpdatedAnime} />
+              <CardSwiper data={recentlyUpdated} />
             </Section>
 
             <div
@@ -101,7 +105,7 @@ const Home: NextPage<HomeProps> = ({
                 title={t("should_watch_today", { ns: "anime_home" })}
                 className="w-full md:w-[80%] md:!pr-0"
               >
-                <ShouldWatch type="anime" data={randomAnime} />
+                <ShouldWatch type={MediaType.Anime} data={randomAnime} />
               </Section>
 
               <Section
@@ -124,78 +128,83 @@ const Home: NextPage<HomeProps> = ({
 
 export const getStaticProps: GetStaticProps = async () => {
   const currentSeason = getSeason();
-  const firstDayOfWeek = dayjs().startOf("week");
-  const lastDayOfWeek = dayjs().endOf("week");
+  const firstDayOfWeek = dayjs().startOf("week").unix();
+  const lastDayOfWeek = dayjs().endOf("week").unix();
 
-  const { data: schedulesAnime } = await supabase
-    .from<AiringSchedule>("kaguya_airing_schedules")
-    .select(
-      "*, media:mediaId(coverImage, genres, averageScore, favourites, title, vietnameseTitle, id)"
-    )
-    .lte("airingAt", lastDayOfWeek.unix())
-    .gte("airingAt", firstDayOfWeek.unix());
+  await prodSleep(2500);
 
-  const { data: trendingAnime } = await supabase
-    .from<Anime>("kaguya_anime")
-    .select("*")
-    .order("trending", { ascending: false })
-    .not("bannerImage", "is", null)
-    .limit(15);
+  const schedulesAnime = await getAllAiringSchedules({
+    airingAt_greater: firstDayOfWeek,
+    airingAt_lesser: lastDayOfWeek,
+    perPage: 50,
+    notYetAired: true,
+  });
 
-  const { data: recentlyUpdatedAnime } = await supabase
-    .from<Anime>("kaguya_anime")
-    .select(
-      "coverImage, genres, averageScore, favourites, title, vietnameseTitle, id"
-    )
-    .order("episodeUpdatedAt", { ascending: false })
-    .limit(15);
+  await prodSleep(2500);
 
-  const { data: randomAnime } = await supabase
-    .rpc<Anime>("anime_random")
-    .limit(1)
-    .not("bannerImage", "is", null)
-    .single();
+  const trendingAnime = await getMedia({
+    type: MediaType.Anime,
+    sort: [MediaSort.Trending_desc, MediaSort.Popularity_desc],
+  });
 
-  const { data: popularSeason } = await supabase
-    .from<Anime>("kaguya_anime")
-    .select(
-      "id, coverImage, genres, title, vietnameseTitle, format, season, seasonYear, status"
-    )
-    .order("popularity", { ascending: false })
-    .eq("season", currentSeason.season)
-    .eq("seasonYear", currentSeason.year)
-    .limit(5);
+  await prodSleep(2500);
 
-  const { data: popularAllTime } = await supabase
-    .from<Anime>("kaguya_anime")
-    .select(
-      "id, coverImage, genres, title, vietnameseTitle, format, season, seasonYear, status"
-    )
-    .order("popularity", { ascending: false })
-    .limit(5);
+  const popularSeason = await getMedia({
+    type: MediaType.Anime,
+    sort: [MediaSort.Popularity_desc],
+    season: currentSeason.season,
+    seasonYear: currentSeason.year,
+    perPage: 5,
+  });
 
-  const { data: favouriteSeason } = await supabase
-    .from<Anime>("kaguya_anime")
-    .select(
-      "id, coverImage, genres, title, vietnameseTitle, format, season, seasonYear, status"
-    )
-    .order("favourites", { ascending: false })
-    .eq("season", currentSeason.season)
-    .eq("seasonYear", currentSeason.year)
-    .limit(5);
+  await prodSleep(2500);
 
-  const { data: favouriteAllTime } = await supabase
-    .from<Anime>("kaguya_anime")
-    .select(
-      "id, coverImage, genres, title, vietnameseTitle, format, season, seasonYear, status"
-    )
-    .order("favourites", { ascending: false })
-    .limit(5);
+  const popularAllTime = await getMedia({
+    type: MediaType.Anime,
+    sort: [MediaSort.Popularity_desc],
+    perPage: 5,
+  });
+
+  await prodSleep(2500);
+
+  const favouriteSeason = await getMedia({
+    type: MediaType.Anime,
+    sort: [MediaSort.Favourites_desc],
+    season: currentSeason.season,
+    seasonYear: currentSeason.year,
+    perPage: 5,
+  });
+
+  await prodSleep(2500);
+
+  const favouriteAllTime = await getMedia({
+    type: MediaType.Anime,
+    sort: [MediaSort.Favourites_desc],
+    perPage: 5,
+  });
+
+  await prodSleep(2500);
+
+  const recommendationsAnime = await getRecommendations({
+    mediaId: randomElement(trendingAnime).id,
+  });
+
+  await prodSleep(2500);
+
+  const recentlyUpdated = await getMedia({
+    type: MediaType.Anime,
+    sort: [MediaSort.Updated_at_desc],
+    isAdult: false,
+  });
+
+  await prodSleep(2500);
+
+  const randomAnime = randomElement(recommendationsAnime).media;
 
   return {
     props: {
       trendingAnime,
-      recentlyUpdatedAnime,
+      recentlyUpdated,
       randomAnime,
       schedulesAnime,
       popularSeason,
@@ -203,7 +212,6 @@ export const getStaticProps: GetStaticProps = async () => {
       favouriteAllTime,
       favouriteSeason,
     },
-
     revalidate: REVALIDATE_TIME,
   };
 };

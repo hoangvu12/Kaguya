@@ -1,22 +1,22 @@
-import { Anime, Manga } from "@/types";
+import { Media, MediaType } from "@/types/anilist";
 import Link from "next/link";
 import React from "react";
 import { MdArrowForwardIos } from "react-icons/md";
 import HorizontalCard from "./HorizontalCard";
 
-interface ColumnSectionProps<T> {
-  data: T extends "anime" ? Anime[] : Manga[];
-  type: T;
+interface ColumnSectionProps {
+  data: Media[];
   title?: string;
   viewMoreHref?: string;
+  type: MediaType;
 }
 
-const ColumnSection = <T extends "manga" | "anime">({
+const ColumnSection: React.FC<ColumnSectionProps> = ({
   data,
-  type,
   title,
   viewMoreHref,
-}: ColumnSectionProps<T>) => {
+  type,
+}) => {
   return (
     <div className="w-full grow-0 bg-background-800 pt-4">
       {title && (

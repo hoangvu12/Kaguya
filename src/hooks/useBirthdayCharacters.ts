@@ -1,30 +1,17 @@
-import dayjs from "@/lib/dayjs";
-import supabase from "@/lib/supabase";
-import { Character } from "@/types";
-import { useSupabaseQuery } from "@/utils/supabase";
+import { getCharacters } from "@/services/anilist";
+import { CharacterSort } from "@/types/anilist";
+import { useQuery } from "react-query";
 
 const useBirthdayCharacters = () => {
-  const day = dayjs();
+  return useQuery(["characters birthday"], async () => {
+    const data = await getCharacters({
+      isBirthday: true,
+      perPage: 30,
+      sort: [CharacterSort.Favourites_desc],
+    });
 
-  return useSupabaseQuery(
-    ["characters birthday"],
-    () => {
-      return (
-        supabase
-          .from<Character>("kaguya_characters")
-          .select("*")
-          // @ts-ignore
-          .eq("dateOfBirth->day", day.date())
-          // @ts-ignore
-          .eq("dateOfBirth->month", day.month() + 1)
-          .limit(30)
-          .order("favourites", { ascending: false })
-      );
-    },
-    {
-      retry: 0,
-    }
-  );
+    return data;
+  });
 };
 
 export default useBirthdayCharacters;

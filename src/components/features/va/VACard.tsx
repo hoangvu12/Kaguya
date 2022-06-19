@@ -1,10 +1,10 @@
-import { VoiceActor } from "@/types";
 import Image from "@/components/shared/Image";
 import React from "react";
 import Link from "next/link";
+import { Staff } from "@/types/anilist";
 
 interface VACardProps {
-  voiceActor: VoiceActor;
+  voiceActor: Staff;
 }
 
 const VACard: React.FC<VACardProps> = ({ voiceActor }) => {

@@ -1,13 +1,11 @@
 import { useUser } from "@/contexts/AuthContext";
 import supabase from "@/lib/supabase";
-import { Anime, Manga } from "@/types";
+import { Media } from "@/types/anilist";
 import { useQuery } from "react-query";
-
-type Source<T> = T extends "anime" ? Anime : Manga;
 
 const useIsSubscribed = <T extends "anime" | "manga">(
   type: T,
-  source: Source<T>
+  source: Media
 ) => {
   const user = useUser();
   const tableName =

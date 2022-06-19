@@ -1,11 +1,12 @@
 import { useUser } from "@/contexts/AuthContext";
 import supabase from "@/lib/supabase";
-import { Anime, Manga, SourceStatus } from "@/types";
+import { SourceStatus } from "@/types";
+import { Media } from "@/types/anilist";
 import { useSupabaseSingleQuery } from "@/utils/supabase";
 
 const useSourceStatus = <T extends "anime" | "manga">(
   type: T,
-  source: T extends "anime" ? Anime : Manga
+  source: Media
 ) => {
   const tableName =
     type === "anime" ? "kaguya_watch_status" : "kaguya_read_status";

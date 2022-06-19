@@ -1,5 +1,6 @@
 import supabase from "@/lib/supabase";
-import { Anime } from "@/types";
+import { getMedia } from "@/services/anilist";
+import { Media, MediaType } from "@/types/anilist";
 import axios from "axios";
 import { ImageType } from "react-images-uploading";
 import { useMutation } from "react-query";
@@ -23,7 +24,7 @@ interface RawTraceImageResponse {
 }
 
 export interface TraceImageResult {
-  anime: Anime;
+  anime: Media;
   filename: string;
   episode: number;
   from: number;
@@ -43,11 +44,11 @@ const apiUrl = "https://api.trace.moe/search?cutBorders";
 
 const composeData = (
   traceData: RawTraceImageResponse,
-  supabaseData: Anime[]
+  anilistData: Media[]
 ): TraceImageResponse => {
   const newResult = traceData.result
     .map((traceResult) => {
-      const anime = supabaseData.find((a) => a.id === traceResult.anilist);
+      const anime = anilistData.find((a) => a.id === traceResult.anilist);
 
       if (!anime) return null;
 
@@ -98,12 +99,12 @@ export const useTraceImage = () => {
 
       const anilistIds = data.result.map((result) => result.anilist);
 
-      const { data: supabaseData } = await supabase
-        .from<Anime>("kaguya_anime")
-        .select("*")
-        .in("id", anilistIds);
+      const anilistData = await getMedia({
+        id_in: anilistIds,
+        type: MediaType.Anime,
+      });
 
-      const newData = composeData(data, supabaseData);
+      const newData = composeData(data, anilistData);
 
       return newData;
     },

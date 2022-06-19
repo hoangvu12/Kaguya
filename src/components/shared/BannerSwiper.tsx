@@ -1,14 +1,14 @@
 import PlainCard from "@/components/shared/PlainCard";
 import Swiper, { SwiperProps, SwiperSlide } from "@/components/shared/Swiper";
 import useDevice from "@/hooks/useDevice";
-import { Anime, Manga } from "@/types";
+import { Media } from "@/types/anilist";
 import { getTitle } from "@/utils/data";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 import React from "react";
 
 interface BannerSwiperProps extends SwiperProps {
-  data: Anime[] | Manga[];
+  data: Media[];
 }
 
 const BannerSwiper: React.FC<BannerSwiperProps> = ({ data, ...props }) => {

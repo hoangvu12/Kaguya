@@ -1,86 +1,60 @@
-import { MediaFormat } from "@/anilist";
-import supabase from "@/lib/supabase";
-import { MediaStatus } from "@/anilist";
-import { Manga } from "@/types";
-import { useSupaInfiniteQuery } from "@/utils/supabase";
-import { PostgrestFilterBuilder } from "@supabase/postgrest-js";
+import { getPageMedia } from "@/services/anilist";
+import {
+  MediaFormat,
+  MediaSort,
+  MediaStatus,
+  MediaType,
+} from "@/types/anilist";
+import { useInfiniteQuery } from "react-query";
 
 export interface UseBrowseOptions {
   keyword?: string;
   genres?: string[];
   format?: MediaFormat;
-  select?: string;
   limit?: number;
   tags?: string[];
-  sort?: keyof Manga;
-  countries?: string[];
+  sort?: MediaSort;
+  country?: string;
   status?: MediaStatus;
 }
 
 const useBrowse = (options: UseBrowseOptions) => {
-  return useSupaInfiniteQuery(["browse", options], (from, to) => {
-    const {
-      format,
-      countries,
-      genres,
-      keyword,
-      select,
-      sort,
-      limit,
-      tags,
-      status,
-    } = options;
+  const {
+    format,
+    genres,
+    keyword,
+    sort,
+    limit = 30,
+    tags,
+    country,
+    status,
+  } = options;
 
-    let db: PostgrestFilterBuilder<Manga>;
+  return useInfiniteQuery(
+    ["browse-manga", options],
+    async ({ pageParam = 1 }) => {
+      const data = await getPageMedia({
+        type: MediaType.Manga,
+        format,
+        perPage: limit,
+        countryOfOrigin: country,
+        sort: [sort],
+        status,
+        page: pageParam,
+        ...(tags?.length && { tag_in: tags }),
+        ...(genres?.length && { genre_in: genres }),
+        ...(keyword && { search: keyword }),
+      });
 
-    if (keyword) {
-      db = supabase
-        .rpc("manga_search", {
-          string: keyword,
-        })
-        .select(select || "*");
-    } else {
-      db = supabase
-        .from("kaguya_manga")
-        .select(select || "*", { count: "exact" });
+      return data;
+    },
+    {
+      getNextPageParam: (lastPage) =>
+        lastPage.pageInfo.hasNextPage
+          ? lastPage.pageInfo.currentPage + 1
+          : null,
     }
-
-    if (genres?.length) {
-      db = db.contains("genres", genres);
-    }
-
-    if (format) {
-      db = db.eq("format", format);
-    }
-
-    if (tags?.length) {
-      // db = db.in("tags", tags);
-      db = db.contains("tags", tags);
-    }
-
-    if (countries?.length) {
-      db = db.in("countryOfOrigin", countries);
-    }
-
-    if (sort) {
-      db = db.order(sort, { ascending: false });
-    }
-
-    if (limit) {
-      db = db.limit(limit);
-    }
-
-    if (status) {
-      db = db.eq("status", status);
-    }
-
-    // https://stackoverflow.com/questions/13580826/postgresql-repeating-rows-from-limit-offset
-    db = db.order("id", { ascending: false });
-
-    db = db.range(from, to);
-
-    return db;
-  });
+  );
 };
 
 export default useBrowse;

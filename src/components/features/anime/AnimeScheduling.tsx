@@ -2,7 +2,7 @@ import Card from "@/components/shared/Card";
 import CardSwiper from "@/components/shared/CardSwiper";
 import DotList from "@/components/shared/DotList";
 import dayjs from "@/lib/dayjs";
-import { AiringSchedule } from "@/types";
+import { AiringSchedule, MediaType } from "@/types/anilist";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
@@ -35,6 +35,8 @@ const AnimeScheduling: React.FC<AnimeSchedulingProps> = ({ schedules }) => {
 
         const dayIndex = day.day();
         const dayName = daysOfWeek[dayIndex];
+
+        console.log(dayIndex);
 
         if (!(dayName in acc)) {
           acc[dayName] = [];
@@ -81,7 +83,6 @@ const AnimeScheduling: React.FC<AnimeSchedulingProps> = ({ schedules }) => {
                   data={schedules.map(
                     (schedule: AiringSchedule) => schedule.media
                   )}
-                  type="anime"
                   onEachCard={(card) => {
                     const cardWithSchedule = schedules.find(
                       (schedule) => schedule.media.id === card.id
@@ -94,7 +95,6 @@ const AnimeScheduling: React.FC<AnimeSchedulingProps> = ({ schedules }) => {
                     return (
                       <Card
                         data={card}
-                        type="anime"
                         imageEndSlot={
                           <React.Fragment>
                             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60"></div>

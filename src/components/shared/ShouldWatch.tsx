@@ -2,7 +2,7 @@ import CircleButton from "@/components/shared/CircleButton";
 import DotList from "@/components/shared/DotList";
 import Image from "@/components/shared/Image";
 import TextIcon from "@/components/shared/TextIcon";
-import { Anime, Manga } from "@/types";
+import { Media, MediaType } from "@/types/anilist";
 import { numberWithCommas } from "@/utils";
 import { convert, getDescription, getTitle } from "@/utils/data";
 import Link from "next/link";
@@ -12,15 +12,12 @@ import { AiFillHeart, AiFillPlayCircle } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
 import Description from "./Description";
 
-interface ShouldWatchProps<T> {
-  data: T extends "anime" ? Anime : Manga;
-  type: T;
+interface ShouldWatchProps {
+  data: Media;
+  type: MediaType;
 }
 
-const ShouldWatch = <T extends "anime" | "manga">({
-  data,
-  type,
-}: ShouldWatchProps<T>) => {
+const ShouldWatch: React.FC<ShouldWatchProps> = ({ data, type }) => {
   const { locale } = useRouter();
   const title = useMemo(() => getTitle(data, locale), [data, locale]);
   const description = useMemo(
@@ -30,7 +27,7 @@ const ShouldWatch = <T extends "anime" | "manga">({
 
   const redirectUrl = useMemo(
     () =>
-      type === "anime"
+      type === MediaType.Anime
         ? `/anime/details/${data.id}`
         : `/manga/details/${data.id}`,
     [data.id, type]

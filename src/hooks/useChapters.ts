@@ -1,37 +1,34 @@
 import supabase from "@/lib/supabase";
-import { Manga } from "@/types";
+import { MangaSourceConnection } from "@/types";
 import { sortMediaUnit } from "@/utils/data";
-import { useSupabaseSingleQuery } from "@/utils/supabase";
+import { useSupabaseQuery } from "@/utils/supabase";
 import { useMemo } from "react";
 
 const query = `
-sourceConnections:kaguya_manga_source!mediaId(
-    *,
-    chapters:kaguya_chapters(
-        *,
-        source:kaguya_sources(
-            id,
-            name,
-            locales
-        )
-    )
-)
+  *,
+  chapters:kaguya_chapters(
+      *,
+      source:kaguya_sources(
+          id,
+          name,
+          locales
+      )
+  )
 `;
 
 const useChapters = (mediaId: number) => {
-  const { data, isLoading, ...rest } = useSupabaseSingleQuery(
+  const { data, isLoading, ...rest } = useSupabaseQuery(
     ["chapters", mediaId],
     () =>
       supabase
-        .from<Manga>("kaguya_manga")
+        .from<MangaSourceConnection>("kaguya_manga_source")
         .select(query)
-        .eq("id", mediaId)
-        .single()
+        .eq("mediaId", mediaId)
   );
 
   const chapters = useMemo(
-    () => data?.sourceConnections?.flatMap((connection) => connection.chapters),
-    [data?.sourceConnections]
+    () => data?.flatMap((connection) => connection.chapters),
+    [data]
   );
 
   const sortedChapters = useMemo(
