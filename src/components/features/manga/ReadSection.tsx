@@ -19,7 +19,7 @@ const ReadSection = () => {
 
   return (
     <Section title={t("recently_read")}>
-      <CardSwiper data={data.map((read) => read.media)} type="manga" />
+      <CardSwiper data={data.map((read) => read.media)} />
     </Section>
   );
 };

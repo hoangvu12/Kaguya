@@ -11,9 +11,9 @@ import { useTranslation } from "next-i18next";
 const composeData = (data: Read, locale?: string) => {
   const title = getTitle(data.media, locale);
 
-  const recommendations = data.media?.recommendations?.map(
-    ({ media }) => media
-  );
+  const recommendations = data.media?.recommendations?.nodes.map((node) => {
+    return node.mediaRecommendation;
+  });
 
   return {
     title,
@@ -38,7 +38,7 @@ const RecommendedMangaSection = () => {
 
   return composedData?.list?.length ? (
     <Section title={`${t("because_you_read")} "${composedData.title}"`}>
-      <CardSwiper data={composedData.list} type="manga" />
+      <CardSwiper data={composedData.list} />
     </Section>
   ) : null;
 };

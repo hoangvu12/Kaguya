@@ -19,22 +19,24 @@ import { useUser } from "@/contexts/AuthContext";
 import withRedirect from "@/hocs/withRedirect";
 import useEpisodes from "@/hooks/useEpisodes";
 import dayjs from "@/lib/dayjs";
-import supabase from "@/lib/supabase";
-import { Anime } from "@/types";
+import { getMediaDetails } from "@/services/anilist";
+import { getTranslations, TMDBTranlations } from "@/services/tmdb";
+import { Media, MediaType } from "@/types/anilist";
 import { numberWithCommas, vietnameseSlug } from "@/utils";
 import { convert, getDescription, getTitle } from "@/utils/data";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useMemo } from "react";
+import { useMemo, Fragment } from "react";
 import { BsFillPlayFill } from "react-icons/bs";
 
 interface DetailsPageProps {
-  anime: Anime;
+  anime: Media;
+  translations: TMDBTranlations.Translation[];
 }
 
-const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
+const DetailsPage: NextPage<DetailsPageProps> = ({ anime, translations }) => {
   const user = useUser();
   const { locale } = useRouter();
   const { t } = useTranslation("anime_details");
@@ -43,10 +45,10 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
 
   const nextAiringSchedule = useMemo(
     () =>
-      anime?.airingSchedules
+      anime?.airingSchedule?.nodes
         ?.sort((a, b) => a.episode - b.episode)
         .find((schedule) => dayjs.unix(schedule.airingAt).isAfter(dayjs())),
-    [anime?.airingSchedules]
+    [anime?.airingSchedule]
   );
 
   const nextAiringScheduleTime = useMemo(() => {
@@ -55,10 +57,13 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
     return dayjs.unix(nextAiringSchedule.airingAt).locale(locale).fromNow();
   }, [nextAiringSchedule?.airingAt, locale]);
 
-  const title = useMemo(() => getTitle(anime, locale), [anime, locale]);
+  const title = useMemo(
+    () => getTitle(anime, locale, translations),
+    [anime, locale, translations]
+  );
   const description = useMemo(
-    () => getDescription(anime, locale),
-    [anime, locale]
+    () => getDescription(anime, locale, translations),
+    [anime, locale, translations]
   );
 
   return (
@@ -88,21 +93,28 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
             <div className="flex flex-col items-center justify-between py-4 mt-4 text-center md:text-left md:items-start md:-mt-16 space-y-4">
               <div className="flex flex-col md:items-start items-center space-y-4">
                 <div className="flex items-center flex-wrap gap-2 mb-4">
-                  <Link href={`/anime/watch/${anime.id}`}>
-                    <a>
-                      <Button primary LeftIcon={BsFillPlayFill}>
-                        <p>{t("common:watch_now")}</p>
-                      </Button>
-                    </a>
-                  </Link>
+                  {episodes?.length ? (
+                    <Fragment>
+                      <Link href={`/anime/watch/${anime.id}`}>
+                        <a>
+                          <Button primary LeftIcon={BsFillPlayFill}>
+                            <p>{t("common:watch_now")}</p>
+                          </Button>
+                        </a>
+                      </Link>
 
-                  <Link href={`/wwf/create/${anime.id}`}>
-                    <a>
-                      <Button className="text-black" LeftIcon={BsFillPlayFill}>
-                        <p>{t("watch_with_friends")}</p>
-                      </Button>
-                    </a>
-                  </Link>
+                      <Link href={`/wwf/create/${anime.id}`}>
+                        <a>
+                          <Button
+                            className="text-black"
+                            LeftIcon={BsFillPlayFill}
+                          >
+                            <p>{t("watch_with_friends")}</p>
+                          </Button>
+                        </a>
+                      </Link>
+                    </Fragment>
+                  ) : null}
                 </div>
 
                 <p className="mb-2 text-3xl font-semibold">{title}</p>
@@ -129,7 +141,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                 />
                 <InfoItem
                   title={t("common:total_episodes")}
-                  value={anime.totalEpisodes}
+                  value={anime.episodes}
                 />
 
                 {anime.duration && (
@@ -187,11 +199,11 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
 
               <InfoItem
                 title="Studio"
-                value={anime.studios.map((studio) => (
-                  <p key={studio.studioId}>
-                    <Link href={`/studios/${studio.studioId}`}>
+                value={anime.studios.nodes.map((studio) => (
+                  <p key={studio.id}>
+                    <Link href={`/studios/${studio.id}`}>
                       <a className="hover:text-primary-300 transition duration-300">
-                        {studio.studio.name}
+                        {studio.name}
                       </a>
                     </Link>
                   </p>
@@ -218,13 +230,13 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                   <Link
                     href={{
                       pathname: "/browse",
-                      query: { type: "anime", tags: tag },
+                      query: { type: "anime", tags: tag.name },
                     }}
-                    key={tag}
+                    key={tag.id}
                   >
                     <a className="block">
                       <li className="p-2 rounded-md bg-background-900 hover:text-primary-300 transition duration-300">
-                        {tag}
+                        {tag.name}
                       </li>
                     </a>
                   </Link>
@@ -246,37 +258,36 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
               )}
             </DetailsSection>
 
-            {!!anime?.characters?.length && (
+            {!!anime?.characters?.edges?.length && (
               <DetailsSection
                 title={t("characters_section")}
                 className="grid w-full grid-cols-1 gap-4 md:grid-cols-2"
               >
-                {anime.characters.map((character, index) => (
+                {anime.characters.edges.map((characterEdge, index) => (
                   <CharacterConnectionCard
-                    characterConnection={character}
+                    characterEdge={characterEdge}
                     key={index}
-                    type="anime"
                   />
                 ))}
               </DetailsSection>
             )}
 
-            {!!anime?.relations?.length && (
+            {!!anime?.relations?.nodes?.length && (
               <DetailsSection title={t("relations_section")}>
-                <List data={anime.relations.map((relation) => relation.media)}>
-                  {(anime) => <Card type="anime" data={anime} />}
+                <List data={anime.relations.nodes}>
+                  {(node) => <Card data={node} />}
                 </List>
               </DetailsSection>
             )}
 
-            {!!anime?.recommendations?.length && (
+            {!!anime?.recommendations?.nodes?.length && (
               <DetailsSection title={t("recommendations_section")}>
                 <List
-                  data={anime.recommendations.map(
-                    (recommendation) => recommendation.media
+                  data={anime.recommendations.nodes.map(
+                    (node) => node.mediaRecommendation
                   )}
                 >
-                  {(anime) => <Card type="anime" data={anime} />}
+                  {(node) => <Card data={node} />}
                 </List>
               </DetailsSection>
             )}
@@ -294,47 +305,30 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
 export const getStaticProps: GetStaticProps = async ({
   params: { params },
 }) => {
-  const { data, error } = await supabase
-    .from("kaguya_anime")
-    .select(
-      `
-        *,
-        studios:kaguya_studio_connections!mediaId(*, studio:kaguya_studios(*)),
-        airingSchedules:kaguya_airing_schedules(*),
-        characters:kaguya_anime_characters!mediaId(*, character:characterId(*)),
-        recommendations:kaguya_anime_recommendations!originalId(media:recommendationId(*)),
-        relations:kaguya_anime_relations!originalId(media:relationId(*))
-      `
-    )
-    .eq("id", Number(params[0]))
-    .single();
+  try {
+    const media = await getMediaDetails({
+      type: MediaType.Anime,
+      id: Number(params[0]),
+    });
 
-  if (error) {
-    console.log(error);
+    const translations = await getTranslations(media);
+
+    return {
+      props: {
+        anime: media as Media,
+        translations,
+      },
+      revalidate: REVALIDATE_TIME,
+    };
+  } catch (err) {
+    console.log(err);
 
     return { notFound: true, revalidate: REVALIDATE_TIME };
   }
-
-  return {
-    props: {
-      anime: data as Anime,
-    },
-    revalidate: REVALIDATE_TIME,
-  };
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const { data } = await supabase
-    .from<Anime>("kaguya_anime")
-    .select("id")
-    .order("trending", { ascending: false })
-    .limit(5);
-
-  const paths = data.map((anime: Anime) => ({
-    params: { params: [anime.id.toString()] },
-  }));
-
-  return { paths, fallback: "blocking" };
+  return { paths: [], fallback: "blocking" };
 };
 
 export default withRedirect(DetailsPage, (router, props) => {

@@ -9,19 +9,15 @@ import useFetchImages from "@/hooks/useFetchImages";
 import useSavedRead from "@/hooks/useSavedRead";
 import useSaveRead from "@/hooks/useSaveRead";
 import supabase from "@/lib/supabase";
-import { Chapter, Manga } from "@/types";
+import { getMediaDetails } from "@/services/anilist";
+import { Chapter, MangaSourceConnection } from "@/types";
+import { Media, MediaType } from "@/types/anilist";
 import { getTitle, sortMediaUnit } from "@/utils/data";
 import { GetServerSideProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 const ReadPanel = dynamic(
   () => import("@/components/features/manga/Reader/ReadPanel"),
@@ -31,10 +27,11 @@ const ReadPanel = dynamic(
 );
 
 interface ReadPageProps {
-  manga: Manga;
+  manga: Media;
+  chapters: Chapter[];
 }
 
-const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
+const ReadPage: NextPage<ReadPageProps> = ({ manga, chapters }) => {
   const router = useRouter();
   const [showReadOverlay, setShowReadOverlay] = useState(false);
   const [declinedReread, setDeclinedReread] = useState(false);
@@ -45,13 +42,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
 
   const title = useMemo(() => getTitle(manga, locale), [manga, locale]);
 
-  const chapters = useMemo(
-    () =>
-      sortMediaUnit(
-        manga.sourceConnections.flatMap((connection) => connection.chapters)
-      ),
-    [manga]
-  );
+  const sortedChapters = useMemo(() => sortMediaUnit(chapters), [chapters]);
 
   const { params } = router.query;
   const [
@@ -67,8 +58,8 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
   } = useSavedRead(Number(mangaId));
 
   const sourceChapters = useMemo(
-    () => chapters.filter((chapter) => chapter.sourceId === sourceId),
-    [chapters, sourceId]
+    () => sortedChapters.filter((chapter) => chapter.sourceId === sourceId),
+    [sortedChapters, sourceId]
   );
 
   const currentChapter = useMemo(
@@ -269,31 +260,63 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga }) => {
 export const getServerSideProps: GetServerSideProps = async ({
   params: { params },
 }) => {
-  const { data, error } = await supabase
-    .from<Manga>("kaguya_manga")
-    .select(
-      `
-        title,
-        sourceConnections:kaguya_manga_source!mediaId(*, chapters:kaguya_chapters(*, source:kaguya_sources(id, name, locales))),
-        bannerImage,
-        coverImage,
-        vietnameseTitle
-      `
-    )
-    .eq("id", Number(params[0]))
-    .single();
+  try {
+    const sourceConnectionPromise = supabase
+      .from<MangaSourceConnection>("kaguya_manga_source")
+      .select(
+        `
+        chapters:kaguya_chapters(*, source:kaguya_sources(id, name, locales))
+        `
+      )
+      .eq("mediaId", Number(params[0]));
 
-  if (error) {
-    console.log(error);
+    const fields = `
+      id
+      idMal
+      title {
+        userPreferred
+        romaji
+        native
+        english
+      }
+      description
+      bannerImage
+      coverImage {
+        extraLarge
+        large
+        medium
+        color
+      }
+    `;
+
+    const mediaPromise = getMediaDetails(
+      {
+        id: Number(params[0]),
+        type: MediaType.Manga,
+      },
+      fields
+    );
+
+    const [{ data, error }, media] = await Promise.all([
+      sourceConnectionPromise,
+      mediaPromise,
+    ]);
+
+    if (error) {
+      throw error;
+    }
+
+    return {
+      props: {
+        manga: media,
+        chapters: data.flatMap((connection) => connection.chapters),
+      },
+    };
+  } catch (err) {
+    console.log(err);
 
     return { notFound: true };
   }
-
-  return {
-    props: {
-      manga: data,
-    },
-  };
 };
 
 // @ts-ignore

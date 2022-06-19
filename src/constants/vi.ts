@@ -1,45 +1,52 @@
+import {
+  CharacterRole,
+  MediaFormat,
+  MediaSeason,
+  MediaSort,
+  MediaStatus,
+} from "@/types/anilist";
 import { I18n } from "netplayer";
 
 export const SEASONS = [
-  { value: "WINTER", label: "Mùa đông" },
-  { value: "SPRING", label: "Mùa xuân" },
-  { value: "SUMMER", label: "Mùa hạ" },
-  { value: "FALL", label: "Mùa thu" },
+  { value: MediaSeason.Winter, label: "Mùa đông" },
+  { value: MediaSeason.Spring, label: "Mùa xuân" },
+  { value: MediaSeason.Summer, label: "Mùa hạ" },
+  { value: MediaSeason.Fall, label: "Mùa thu" },
 ];
 
 export const STATUS = [
-  { value: "FINISHED", label: "Hoàn thành" },
-  { value: "RELEASING", label: "Đang phát hành" },
-  { value: "NOT_YET_RELEASED", label: "Sắp chiếu" },
-  { value: "CANCELLED", label: "Đã hủy bỏ" },
-  { value: "HIATUS", label: "Tạm hoãn" },
+  { value: MediaStatus.Finished, label: "Hoàn thành" },
+  { value: MediaStatus.Releasing, label: "Đang phát hành" },
+  { value: MediaStatus.Not_yet_released, label: "Sắp chiếu" },
+  { value: MediaStatus.Cancelled, label: "Đã hủy bỏ" },
+  { value: MediaStatus.Hiatus, label: "Tạm hoãn" },
 ];
 
 export const FORMATS = [
-  { value: "TV", label: "TV" },
-  { value: "TV_SHORT", label: "TV Short" },
-  { value: "MOVIE", label: "Movie" },
-  { value: "SPECIAL", label: "Đặc biệt" },
-  { value: "OVA", label: "OVA" },
-  { value: "ONA", label: "ONA" },
-  { value: "MUSIC", label: "Music" },
-  { value: "MANGA", label: "Manga" },
+  { value: MediaFormat.Tv, label: "TV" },
+  { value: MediaFormat.Tv_short, label: "TV Short" },
+  { value: MediaFormat.Movie, label: "Movie" },
+  { value: MediaFormat.Movie, label: "Đặc biệt" },
+  { value: MediaFormat.Ova, label: "OVA" },
+  { value: MediaFormat.Ona, label: "ONA" },
+  { value: MediaFormat.Music, label: "Music" },
+  { value: MediaFormat.Manga, label: "Manga" },
 ];
 
 export const ANIME_SORTS = [
-  { value: "popularity", label: "Nổi bật" },
-  { value: "trending", label: "Xu hướng" },
-  { value: "favourites", label: "Yêu thích" },
-  { value: "averageScore", label: "Đánh giá" },
-  { value: "episodeUpdatedAt", label: "Mới cập nhật" },
+  { value: MediaSort.Popularity_desc, label: "Nổi bật" },
+  { value: MediaSort.Trending_desc, label: "Xu hướng" },
+  { value: MediaSort.Favourites_desc, label: "Yêu thích" },
+  { value: MediaSort.Score_desc, label: "Đánh giá" },
+  { value: MediaSort.Updated_at_desc, label: "Mới cập nhật" },
 ];
 
 export const MANGA_SORTS = [
-  { value: "popularity", label: "Nổi bật" },
-  { value: "trending", label: "Xu hướng" },
-  { value: "favourites", label: "Yêu thích" },
-  { value: "averageScore", label: "Đánh giá" },
-  { value: "chapterUpdatedAt", label: "Mới cập nhật" },
+  { value: MediaSort.Popularity_desc, label: "Nổi bật" },
+  { value: MediaSort.Trending_desc, label: "Xu hướng" },
+  { value: MediaSort.Favourites_desc, label: "Yêu thích" },
+  { value: MediaSort.Score_desc, label: "Đánh giá" },
+  { value: MediaSort.Updated_at_desc, label: "Mới cập nhật" },
 ];
 
 export const GENRES = [
@@ -194,9 +201,9 @@ export const COUNTRIES = [
 ];
 
 export const CHARACTERS_ROLES = [
-  { value: "MAIN", label: "Nhân vật chính" },
-  { value: "SUPPORTING", label: "Nhân vật phụ" },
-  { value: "BACKGROUND", label: "Nhân vật nền" },
+  { value: CharacterRole.Main, label: "Nhân vật chính" },
+  { value: CharacterRole.Supporting, label: "Nhân vật phụ" },
+  { value: CharacterRole.Background, label: "Nhân vật nền" },
 ];
 
 export const WATCH_STATUS = [

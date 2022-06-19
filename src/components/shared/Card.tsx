@@ -2,7 +2,7 @@ import DotList from "@/components/shared/DotList";
 import Image from "@/components/shared/Image";
 import TextIcon from "@/components/shared/TextIcon";
 import useDevice from "@/hooks/useDevice";
-import { Anime, Manga } from "@/types";
+import { Media, MediaType } from "@/types/anilist";
 import { isColorVisible, numberWithCommas } from "@/utils";
 import { convert, getTitle } from "@/utils/data";
 import classNames from "classnames";
@@ -13,9 +13,8 @@ import React, { useMemo } from "react";
 import { AiFillHeart } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
 
-interface AnimeCardProps<T> {
-  type: T;
-  data: T extends "anime" ? Anime : Manga;
+interface AnimeCardProps {
+  data: Media;
   className?: string;
   containerEndSlot?: React.ReactNode;
   imageEndSlot?: React.ReactNode;
@@ -51,14 +50,13 @@ const slotVariants: Variants = {
   exit: { opacity: 1 },
 };
 
-const Card = <T extends "anime" | "manga">(props: AnimeCardProps<T>) => {
+const Card: React.FC<AnimeCardProps> = (props) => {
   const {
     data,
     className,
-    type,
     containerEndSlot,
     imageEndSlot,
-    redirectUrl = type === "anime"
+    redirectUrl = data.type === MediaType.Anime
       ? `/anime/details/${data.id}`
       : `/manga/details/${data.id}`,
   } = props;

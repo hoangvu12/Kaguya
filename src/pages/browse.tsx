@@ -1,4 +1,4 @@
-import { MediaFormat } from "@/anilist";
+import { MediaFormat, MediaSort } from "@/types/anilist";
 import AnimeBrowseList from "@/components/features/anime/AnimeBrowseList";
 import CharacterBrowseList from "@/components/features/characters/CharacterBrowseList";
 import MangaBrowseList from "@/components/features/manga/MangaBrowseList";
@@ -6,7 +6,6 @@ import VABrowseList from "@/components/features/va/VABrowseList";
 import Head from "@/components/shared/Head";
 import Select from "@/components/shared/Select";
 import useConstantTranslation from "@/hooks/useConstantTranslation";
-import { Anime } from "@/types";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
@@ -79,7 +78,7 @@ const BrowsePage = ({ query: baseQuery }) => {
     countries: convertQueryToArray<string>(countries),
     season: season as string,
     seasonYear: seasonYear as string,
-    sort: sort as keyof Anime,
+    sort: sort as MediaSort,
   };
 
   const handleTypeChange = (type: typeof TYPES[number]) => {

@@ -4,7 +4,7 @@ import DotList from "@/components/shared/DotList";
 import Image from "@/components/shared/Image";
 import Swiper, { SwiperProps, SwiperSlide } from "@/components/shared/Swiper";
 import TextIcon from "@/components/shared/TextIcon";
-import { Anime, Manga } from "@/types";
+import { Media, MediaType } from "@/types/anilist";
 import { numberWithCommas } from "@/utils";
 import { convert, getDescription, getTitle } from "@/utils/data";
 import classNames from "classnames";
@@ -22,12 +22,12 @@ import { BrowserView, MobileView } from "react-device-detect";
 import { AiFillHeart, AiFillPlayCircle } from "react-icons/ai";
 import { BsFillVolumeMuteFill, BsFillVolumeUpFill } from "react-icons/bs";
 import { MdTagFaces } from "react-icons/md";
-import YouTube, { YouTubeProps } from "react-youtube";
+import YouTube from "react-youtube";
 import Description from "./Description";
 
-interface HomeBannerProps<T> {
-  data: T extends "anime" ? Anime[] : Manga[];
-  type: T;
+interface HomeBannerProps {
+  data: Media[];
+  type: MediaType;
 }
 
 const bannerVariants = {
@@ -38,10 +38,7 @@ const bannerVariants = {
 
 const transition = [0.33, 1, 0.68, 1];
 
-const HomeBanner = <T extends "anime" | "manga">({
-  data,
-  type,
-}: HomeBannerProps<T>) => {
+const HomeBanner: React.FC<HomeBannerProps> = ({ data, type }) => {
   return (
     <React.Fragment>
       <BrowserView>
@@ -55,15 +52,14 @@ const HomeBanner = <T extends "anime" | "manga">({
   );
 };
 
-const MobileHomeBanner = <T extends "anime" | "manga">({
-  data,
-  type,
-}: HomeBannerProps<T>) => {
+const MobileHomeBanner: React.FC<HomeBannerProps> = ({ data, type }) => {
   const { locale } = useRouter();
 
   const getRedirectUrl = useCallback(
     (id: number) => {
-      return type === "anime" ? `/anime/details/${id}` : `/manga/details/${id}`;
+      return type === MediaType.Anime
+        ? `/anime/details/${id}`
+        : `/manga/details/${id}`;
     },
     [type]
   );
@@ -76,7 +72,7 @@ const MobileHomeBanner = <T extends "anime" | "manga">({
       slidesPerView={1}
       loop
     >
-      {data.map((slide: Anime | Manga, index: number) => {
+      {data.map((slide: Media, index: number) => {
         const title = getTitle(slide, locale);
 
         return (
@@ -135,10 +131,7 @@ const MobileHomeBanner = <T extends "anime" | "manga">({
   );
 };
 
-const DesktopHomeBanner = <T extends "anime" | "manga">({
-  data,
-  type,
-}: HomeBannerProps<T>) => {
+const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data, type }) => {
   const [index, setIndex] = useState<number>(0);
   const [showTrailer, setShowTrailer] = useState(false);
   const [player, setPlayer] =
@@ -158,7 +151,9 @@ const DesktopHomeBanner = <T extends "anime" | "manga">({
 
   const getRedirectUrl = useCallback(
     (id: number) => {
-      return type === "anime" ? `/anime/details/${id}` : `/manga/details/${id}`;
+      return type === MediaType.Anime
+        ? `/anime/details/${id}`
+        : `/manga/details/${id}`;
     },
     [type]
   );
@@ -215,47 +210,49 @@ const DesktopHomeBanner = <T extends "anime" | "manga">({
             </motion.div>
           )}
 
-          {type === "anime" && (activeSlide as Anime)?.trailer && (
-            <YouTube
-              videoId={(activeSlide as Anime).trailer}
-              onReady={({ target }) => {
-                setPlayer(target);
-              }}
-              onPlay={({ target }) => {
-                setShowTrailer(true);
+          {type === MediaType.Anime &&
+            activeSlide?.trailer &&
+            activeSlide.trailer?.site === "youtube" && (
+              <YouTube
+                videoId={activeSlide.trailer.id}
+                onReady={({ target }) => {
+                  setPlayer(target);
+                }}
+                onPlay={({ target }) => {
+                  setShowTrailer(true);
 
-                if (!isRanOnce.current) {
-                  setIsMuted(true);
-                } else if (!isMuted) {
-                  setIsMuted(false);
+                  if (!isRanOnce.current) {
+                    setIsMuted(true);
+                  } else if (!isMuted) {
+                    setIsMuted(false);
 
-                  target.unMute();
-                }
+                    target.unMute();
+                  }
 
-                isRanOnce.current = true;
-              }}
-              onEnd={() => {
-                setShowTrailer(false);
-              }}
-              onError={() => {
-                setShowTrailer(false);
-              }}
-              containerClassName={classNames(
-                "relative w-full overflow-hidden aspect-w-16 aspect-h-9 h-[300%] -top-[100%]",
-                !showTrailer && "hidden"
-              )}
-              className="absolute inset-0 w-full h-full"
-              opts={{
-                playerVars: {
-                  autoplay: 1,
-                  modestbranding: 1,
-                  controls: 0,
-                  mute: 1,
-                  origin: "https://kaguya.live",
-                },
-              }}
-            />
-          )}
+                  isRanOnce.current = true;
+                }}
+                onEnd={() => {
+                  setShowTrailer(false);
+                }}
+                onError={() => {
+                  setShowTrailer(false);
+                }}
+                containerClassName={classNames(
+                  "relative w-full overflow-hidden aspect-w-16 aspect-h-9 h-[300%] -top-[100%]",
+                  !showTrailer && "hidden"
+                )}
+                className="absolute inset-0 w-full h-full"
+                opts={{
+                  playerVars: {
+                    autoplay: 1,
+                    modestbranding: 1,
+                    controls: 0,
+                    mute: 1,
+                    origin: "https://kaguya.live",
+                  },
+                }}
+              />
+            )}
         </AnimatePresence>
 
         <div className="absolute inset-0 flex flex-col justify-center px-4 banner__overlay md:px-12"></div>

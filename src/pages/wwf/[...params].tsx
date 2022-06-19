@@ -9,7 +9,10 @@ import { RoomStateContextProvider } from "@/contexts/RoomStateContext";
 import withRedirect from "@/hocs/withRedirect";
 import useRoom from "@/hooks/useRoom";
 import supabase from "@/lib/supabase";
-import { Room } from "@/types";
+import { getMediaDetails } from "@/services/anilist";
+import { mediaDefaultFields } from "@/services/anilist/queries";
+import { AnimeSourceConnection, Room } from "@/types";
+import { MediaType } from "@/types/anilist";
 import { vietnameseSlug } from "@/utils";
 import { getTitle } from "@/utils/data";
 import { GetServerSideProps, NextPage } from "next";
@@ -94,41 +97,65 @@ RoomPage.getLayout = (children) => (
 export const getServerSideProps: GetServerSideProps = async ({
   params: { params },
 }) => {
-  const { data, error } = await supabase
-    .from<Room>("kaguya_rooms")
-    .select(
-      `
-      *,
-      media:mediaId(
+  try {
+    const { data: room, error } = await supabase
+      .from<Room>("kaguya_rooms")
+      .select(
+        `
         *,
-        sourceConnections:kaguya_anime_source!mediaId(
-          *,
-          episodes:kaguya_episodes(
-            *,
-            source:kaguya_sources(id, name, locales)
-          )
-        )
-      ),
-      episode:episodeId(*),
-      users:kaguya_room_users(id),
-      hostUser:hostUserId(*)
-    `
-    )
-    .eq("id", Number(params[0]))
-    .limit(1)
-    .single();
+        episode:episodeId(*),
+        users:kaguya_room_users(id),
+        hostUser:hostUserId(*)
+      `
+      )
+      .eq("id", params[0])
+      .limit(1)
+      .single();
 
-  if (error) {
+    if (error) throw error;
+
+    const sourceConnectionPromise = supabase
+      .from<AnimeSourceConnection>("kaguya_anime_source")
+      .select(
+        `
+          episodes:kaguya_episodes(*, source:kaguya_sources(id, name, locales))
+        `
+      )
+      .eq("mediaId", room.mediaId);
+
+    const mediaPromise = getMediaDetails(
+      {
+        id: room.mediaId,
+        type: MediaType.Anime,
+      },
+      mediaDefaultFields
+    );
+
+    const [
+      { data: sourceConnectionData, error: sourceConnectionError },
+      media,
+    ] = await Promise.all([sourceConnectionPromise, mediaPromise]);
+
+    if (sourceConnectionError) {
+      throw sourceConnectionError;
+    }
+
+    const episodes = sourceConnectionData.flatMap(
+      (connection) => connection.episodes
+    );
+
+    return {
+      props: {
+        room: { ...room, media, episodes },
+      },
+    };
+  } catch (err) {
+    console.log(err);
+
     return {
       notFound: true,
     };
   }
-
-  return {
-    props: {
-      room: data,
-    },
-  };
 };
 
 const RoomPageWithRedirect = withRedirect(RoomPage, (router, props) => {

@@ -1,30 +1,23 @@
 import supabase from "@/lib/supabase";
-import { Room } from "@/types";
-import { useSupabaseSingleQuery } from "@/utils/supabase";
+import { getMediaDetails } from "@/services/anilist";
+import { mediaDefaultFields } from "@/services/anilist/queries";
+import { AnimeSourceConnection, Room } from "@/types";
+import { MediaType } from "@/types/anilist";
 import { useMemo } from "react";
+import { useQuery } from "react-query";
 import { toast } from "react-toastify";
 
 const useRoom = (roomId: number, initialData: Room) => {
   const queryKey = useMemo(() => ["room", roomId], [roomId]);
 
-  return useSupabaseSingleQuery(
+  return useQuery(
     queryKey,
-    () =>
-      supabase
+    async () => {
+      const { data: room, error } = await supabase
         .from<Room>("kaguya_rooms")
         .select(
           `
             *,
-            media:mediaId(
-              *,
-              sourceConnections:kaguya_anime_source!mediaId(
-                *,
-                episodes:kaguya_episodes(
-                  *,
-                  source:kaguya_sources(id, name, locales)
-                )
-              )
-            ),
             episode:episodeId(*),
             users:kaguya_room_users(id),
             hostUser:hostUserId(*)
@@ -32,9 +25,45 @@ const useRoom = (roomId: number, initialData: Room) => {
         )
         .eq("id", roomId)
         .limit(1)
-        .single(),
+        .single();
+
+      if (error) throw error;
+
+      const sourceConnectionPromise = supabase
+        .from<AnimeSourceConnection>("kaguya_anime_source")
+        .select(
+          `
+            episodes:kaguya_episodes(*, source:kaguya_sources(id, name, locales))
+          `
+        )
+        .eq("mediaId", room.mediaId);
+
+      const mediaPromise = getMediaDetails(
+        {
+          id: room.mediaId,
+          type: MediaType.Anime,
+        },
+        mediaDefaultFields
+      );
+
+      const [
+        { data: sourceConnectionData, error: sourceConnectionError },
+        media,
+      ] = await Promise.all([sourceConnectionPromise, mediaPromise]);
+
+      if (sourceConnectionError) {
+        throw sourceConnectionError;
+      }
+
+      const episodes = sourceConnectionData.flatMap(
+        (connection) => connection.episodes
+      );
+
+      return { ...room, media, episodes };
+    },
+
     {
-      onError: (error) => {
+      onError: (error: Error) => {
         toast.error(error.message);
       },
       initialData,

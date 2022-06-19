@@ -1,5 +1,5 @@
 import Image from "@/components/shared/Image";
-import { Character } from "@/types";
+import { Character } from "@/types/anilist";
 import Link from "next/link";
 import React from "react";
 

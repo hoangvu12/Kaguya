@@ -11,14 +11,18 @@ import useConstantTranslation from "@/hooks/useConstantTranslation";
 import dayjs from "@/lib/dayjs";
 import supabase from "@/lib/supabase";
 import {
-  Anime,
-  Character,
-  CharacterConnection,
-  Manga,
-  VoiceActor,
-  VoiceActorConnection,
-} from "@/types";
-import { isFalsy, numberWithCommas, vietnameseSlug } from "@/utils";
+  getCharacterDetails,
+  getCharacters,
+  getMedia,
+} from "@/services/anilist";
+import { Character, CharacterSort, MediaType } from "@/types/anilist";
+
+import {
+  isFalsy,
+  numberWithCommas,
+  removeArrayOfObjectDup,
+  vietnameseSlug,
+} from "@/utils";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import React, { useMemo } from "react";
@@ -36,14 +40,8 @@ const KeyValue: React.FC<{ property: string; value: string }> = ({
   </div>
 );
 
-interface AdvancedCharacter extends Character {
-  mangaConnections: CharacterConnection<Manga>[];
-  animeConnections: CharacterConnection<Anime>[];
-  voiceActorConnections: VoiceActorConnection[];
-}
-
 interface DetailsPageProps {
-  character: AdvancedCharacter;
+  character: Character;
 }
 
 const DetailsPage: NextPage<DetailsPageProps> = ({ character }) => {
@@ -88,6 +86,27 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ character }) => {
 
     return date.date() === birthday.day && date.month() === birthday.month - 1;
   }, [character.dateOfBirth]);
+
+  const voiceActors = useMemo(() => {
+    return removeArrayOfObjectDup(
+      character.media.edges.flatMap((edge) => edge.voiceActors),
+      "id"
+    );
+  }, [character.media.edges]);
+
+  const media = useMemo(() => {
+    return character.media.edges.map((edge) => edge.node);
+  }, [character.media.edges]);
+
+  const anime = useMemo(
+    () => media.filter((media) => media.type === MediaType.Anime),
+    [media]
+  );
+
+  const manga = useMemo(
+    () => media.filter((media) => media.type === MediaType.Manga),
+    [media]
+  );
 
   return (
     <>
@@ -138,39 +157,23 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ character }) => {
         </div>
 
         <div className="px-4 sm:px-12 space-y-8">
-          {!!character.voiceActorConnections?.length && (
+          {!!voiceActors?.length && (
             <DetailsSection title={t("voice_actors_section")}>
-              <List
-                data={character.voiceActorConnections.map(
-                  (connection) => connection.voiceActor
-                )}
-              >
+              <List data={voiceActors}>
                 {(voiceActor) => <VACard voiceActor={voiceActor} />}
               </List>
             </DetailsSection>
           )}
 
-          {!!character.animeConnections?.length && (
+          {!!anime?.length && (
             <DetailsSection title={t("anime_section")}>
-              <List
-                data={character.animeConnections.map(
-                  (connection) => connection.media
-                )}
-              >
-                {(anime) => <Card type="anime" data={anime} />}
-              </List>
+              <List data={anime}>{(anime) => <Card data={anime} />}</List>
             </DetailsSection>
           )}
 
-          {!!character.mangaConnections?.length && (
+          {!!manga?.length && (
             <DetailsSection title={t("manga_section")}>
-              <List
-                data={character.mangaConnections.map(
-                  (connection) => connection.media
-                )}
-              >
-                {(manga) => <Card type="manga" data={manga} />}
-              </List>
+              <List data={manga}>{(manga) => <Card data={manga} />}</List>
             </DetailsSection>
           )}
         </div>
@@ -182,45 +185,26 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ character }) => {
 export const getStaticProps: GetStaticProps = async ({
   params: { params },
 }) => {
-  const { data, error } = await supabase
-    .from("kaguya_characters")
-    .select(
-      `
-        *,
-        voiceActorConnections:kaguya_voice_actor_connections(voiceActor:voiceActorId(*), character:characterId(*)),
-        mangaConnections:kaguya_manga_characters!characterId(media:mediaId(*)),
-        animeConnections:kaguya_anime_characters!characterId(media:mediaId(*))
-      `
-    )
-    .eq("id", Number(params[0]))
-    .single();
+  try {
+    const data = await getCharacterDetails({
+      id: Number(params[0]),
+    });
 
-  if (error) {
+    return {
+      props: {
+        character: data,
+      },
+      revalidate: REVALIDATE_TIME,
+    };
+  } catch (error) {
     console.log(error);
 
     return { notFound: true, revalidate: REVALIDATE_TIME };
   }
-
-  return {
-    props: {
-      character: data as AdvancedCharacter,
-    },
-    revalidate: REVALIDATE_TIME,
-  };
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const { data } = await supabase
-    .from<Character>("kaguya_characters")
-    .select("id")
-    .order("favourites", { ascending: false })
-    .limit(5);
-
-  const paths = data.map((manga) => ({
-    params: { params: [manga.id.toString()] },
-  }));
-
-  return { paths, fallback: "blocking" };
+  return { paths: [], fallback: "blocking" };
 };
 
 export default withRedirect(DetailsPage, (router, props) => {

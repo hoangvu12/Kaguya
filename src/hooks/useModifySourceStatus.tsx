@@ -1,6 +1,7 @@
 import { useUser } from "@/contexts/AuthContext";
 import supabase from "@/lib/supabase";
-import { Anime, Manga, SourceStatus } from "@/types";
+import { SourceStatus } from "@/types";
+import { Media } from "@/types/anilist";
 import { getTitle } from "@/utils/data";
 import { PostgrestError } from "@supabase/supabase-js";
 import { useTranslation } from "next-i18next";
@@ -12,7 +13,7 @@ import useConstantTranslation from "./useConstantTranslation";
 
 const useModifySourceStatus = <T extends "anime" | "manga">(
   type: T,
-  source: T extends "anime" ? Anime : Manga
+  source: Media
 ) => {
   const { WATCH_STATUS, READ_STATUS } = useConstantTranslation();
 

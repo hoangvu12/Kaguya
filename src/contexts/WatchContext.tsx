@@ -1,8 +1,9 @@
-import { Anime, Episode, VideoSource } from "@/types";
+import { Episode, VideoSource } from "@/types";
+import { Media } from "@/types/anilist";
 import React from "react";
 
 interface ContextProps {
-  anime: Anime;
+  anime: Media;
   episodes: Episode[];
   currentEpisode: Episode;
   currentEpisodeIndex: number;

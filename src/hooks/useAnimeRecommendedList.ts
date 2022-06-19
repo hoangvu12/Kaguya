@@ -1,29 +1,52 @@
 import { useUser } from "@/contexts/AuthContext";
 import supabase from "@/lib/supabase";
+import { getMedia, getMediaDetails } from "@/services/anilist";
+import { mediaDefaultFields } from "@/services/anilist/queries";
 import { Watched } from "@/types";
-import { useSupabaseSingleQuery } from "@/utils/supabase";
+import { useQuery } from "react-query";
 
 const useAnimeRecommendedList = () => {
   const user = useUser();
 
-  return useSupabaseSingleQuery(
+  return useQuery<Watched>(
     ["anime", "recommended"],
-    () => {
-      return supabase
+    async () => {
+      const { data, error } = await supabase
         .from<Watched>("kaguya_watched")
-        .select(
-          `
-            media:mediaId(
-                title,
-                vietnameseTitle,
-                recommendations:kaguya_anime_recommendations!originalId(media:recommendationId(*))
-            )
-          `
-        )
+        .select("mediaId")
         .eq("userId", user.id)
         .order("updated_at", { ascending: false })
         .limit(1)
         .single();
+
+      if (error) throw error;
+
+      const anilistMedia = await getMediaDetails(
+        {
+          id: data.mediaId,
+          perPage: 1,
+        },
+        `
+        title {
+          romaji
+          english
+          native
+          userPreferred
+        }
+        recommendations(sort: [RATING_DESC, ID]) {
+          nodes {
+            mediaRecommendation {
+              ${mediaDefaultFields}
+            }
+          }
+        }
+        `
+      );
+
+      return {
+        ...data,
+        media: anilistMedia,
+      };
     },
     { enabled: !!user }
   );

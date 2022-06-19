@@ -20,7 +20,8 @@ import { useUser } from "@/contexts/AuthContext";
 import withRedirect from "@/hocs/withRedirect";
 import useChapters from "@/hooks/useChapters";
 import supabase from "@/lib/supabase";
-import { Manga } from "@/types";
+import { getMedia, getMediaDetails } from "@/services/anilist";
+import { Media, MediaSort, MediaType } from "@/types/anilist";
 import { numberWithCommas, vietnameseSlug } from "@/utils";
 import { convert, getDescription, getTitle } from "@/utils/data";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
@@ -31,14 +32,14 @@ import React, { useMemo } from "react";
 import { BsFillPlayFill } from "react-icons/bs";
 
 interface DetailsPageProps {
-  manga: Manga;
+  manga: Media;
 }
 
 const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
   const user = useUser();
   const { locale } = useRouter();
   const { t } = useTranslation("manga_details");
-  const { data: chapters, isLoading, isError } = useChapters(manga.id);
+  const { data: chapters, isLoading } = useChapters(manga.id);
 
   const title = useMemo(() => getTitle(manga, locale), [manga, locale]);
   const description = useMemo(
@@ -108,10 +109,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
                   value={convert(manga.status, "status", { locale })}
                 />
 
-                <InfoItem
-                  title={t("total_chapters")}
-                  value={manga.totalChapters}
-                />
+                <InfoItem title={t("total_chapters")} value={manga.chapters} />
 
                 <InfoItem
                   title={t("common:age_rated")}
@@ -155,13 +153,13 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
                   <Link
                     href={{
                       pathname: "/browse",
-                      query: { type: "manga", tags: tag },
+                      query: { type: "manga", tags: tag.name },
                     }}
-                    key={tag}
+                    key={tag.id}
                   >
                     <a className="block">
                       <li className="p-2 rounded-md bg-background-900 hover:text-primary-300 transition duration-300">
-                        {tag}
+                        {tag.name}
                       </li>
                     </a>
                   </Link>
@@ -181,37 +179,36 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
               )}
             </DetailsSection>
 
-            {!!manga?.characters?.length && (
+            {!!manga?.characters?.edges.length && (
               <DetailsSection
                 title={t("characters_section")}
                 className="w-full grid md:grid-cols-2 grid-cols-1 gap-4"
               >
-                {manga.characters.map((character, index) => (
+                {manga.characters.edges.map((characterEdge, index) => (
                   <CharacterConnectionCard
-                    type="manga"
-                    characterConnection={character}
+                    characterEdge={characterEdge}
                     key={index}
                   />
                 ))}
               </DetailsSection>
             )}
 
-            {!!manga?.relations?.length && (
+            {!!manga?.relations?.nodes?.length && (
               <DetailsSection title={t("relations_section")}>
-                <List data={manga.relations.map((relation) => relation.media)}>
-                  {(manga) => <Card type="manga" data={manga} />}
+                <List data={manga.relations.nodes}>
+                  {(node) => <Card data={node} />}
                 </List>
               </DetailsSection>
             )}
 
-            {!!manga?.recommendations?.length && (
+            {!!manga?.recommendations?.nodes.length && (
               <DetailsSection title={t("recommendations_section")}>
                 <List
-                  data={manga.recommendations.map(
-                    (recommendation) => recommendation.media
+                  data={manga.recommendations.nodes.map(
+                    (node) => node.mediaRecommendation
                   )}
                 >
-                  {(manga) => <Card type="manga" data={manga} />}
+                  {(node) => <Card data={node} />}
                 </List>
               </DetailsSection>
             )}
@@ -229,46 +226,25 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
 export const getStaticProps: GetStaticProps = async ({
   params: { params },
 }) => {
-  const { data, error } = await supabase
-    .from("kaguya_manga")
-    .select(
-      `
-        *,
-        characters:kaguya_manga_characters!mediaId(*, character:characterId(*)),
-        recommendations:kaguya_manga_recommendations!originalId(media:recommendationId(*)),
-        relations:kaguya_manga_relations!originalId(media:relationId(*)),
-        sourceConnections:kaguya_manga_source!mediaId(*, chapters:kaguya_chapters(*, source:kaguya_sources(id, name, locales)))
-      `
-    )
-    .eq("id", Number(params[0]))
-    .single();
+  try {
+    const media = await getMediaDetails({
+      type: MediaType.Manga,
+      id: Number(params[0]),
+    });
 
-  if (error) {
-    console.log(error);
-
+    return {
+      props: {
+        manga: media as Media,
+      },
+      revalidate: REVALIDATE_TIME,
+    };
+  } catch (err) {
     return { notFound: true, revalidate: REVALIDATE_TIME };
   }
-
-  return {
-    props: {
-      manga: data as Manga,
-    },
-    revalidate: REVALIDATE_TIME,
-  };
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const { data } = await supabase
-    .from<Manga>("kaguya_manga")
-    .select("id")
-    .order("trending", { ascending: false })
-    .limit(5);
-
-  const paths = data.map((manga) => ({
-    params: { params: [manga.id.toString()] },
-  }));
-
-  return { paths, fallback: "blocking" };
+  return { paths: [], fallback: "blocking" };
 };
 
 export default withRedirect(DetailsPage, (router, props) => {

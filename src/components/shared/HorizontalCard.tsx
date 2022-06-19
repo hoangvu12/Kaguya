@@ -1,4 +1,4 @@
-import { Anime, Manga } from "@/types";
+import { Media, MediaType } from "@/types/anilist";
 import { convert, getTitle } from "@/utils/data";
 import classNames from "classnames";
 import Link from "next/link";
@@ -8,8 +8,8 @@ import DotList from "./DotList";
 import PlainCard from "./PlainCard";
 
 interface HorizontalCardProps<T> extends React.HTMLAttributes<HTMLDivElement> {
-  data: T extends "anime" ? Anime : Manga;
-  type?: T;
+  data: Media;
+  type?: MediaType;
 }
 
 const HorizontalCard = <T extends "anime" | "manga">({
@@ -20,7 +20,7 @@ const HorizontalCard = <T extends "anime" | "manga">({
 }: HorizontalCardProps<T>) => {
   const redirectUrl = useMemo(
     () =>
-      type === "anime"
+      type === MediaType.Anime
         ? `/anime/details/${data.id}`
         : `/manga/details/${data.id}`,
     [data.id, type]

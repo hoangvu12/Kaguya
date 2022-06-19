@@ -13,7 +13,9 @@ import useConstantTranslation from "@/hooks/useConstantTranslation";
 import useCreateRoom from "@/hooks/useCreateRoom";
 import useDevice from "@/hooks/useDevice";
 import supabase from "@/lib/supabase";
-import { Anime, Episode } from "@/types";
+import { getMedia, getMediaDetails } from "@/services/anilist";
+import { AnimeSourceConnection, Episode } from "@/types";
+import { Media, MediaSort } from "@/types/anilist";
 import { convert, getDescription, getTitle, sortMediaUnit } from "@/utils/data";
 import classNames from "classnames";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
@@ -23,7 +25,8 @@ import React, { useCallback, useMemo, useState } from "react";
 import { MdOutlineTitle } from "react-icons/md";
 
 interface CreateRoomPageProps {
-  media: Anime;
+  media: Media;
+  episodes: Episode[];
 }
 
 type Visibility = "public" | "private";
@@ -32,7 +35,7 @@ type VisibilityOption = {
   value: Visibility;
 };
 
-const CreateRoomPage: NextPage<CreateRoomPageProps> = ({ media }) => {
+const CreateRoomPage: NextPage<CreateRoomPageProps> = ({ media, episodes }) => {
   const { isMobile } = useDevice();
   const [roomTitle, setRoomTitle] = useState("");
   const { VISIBILITY_MODES } = useConstantTranslation();
@@ -43,17 +46,6 @@ const CreateRoomPage: NextPage<CreateRoomPageProps> = ({ media }) => {
   const { t } = useTranslation("wwf");
 
   const { mutate, isLoading } = useCreateRoom();
-
-  const episodes = useMemo(
-    () =>
-      media.sourceConnections.flatMap((connection) =>
-        connection.episodes.map((episode) => ({
-          ...episode,
-          sourceConnection: connection,
-        }))
-      ),
-    [media.sourceConnections]
-  );
 
   const sortedEpisodes = useMemo(() => sortMediaUnit(episodes), [episodes]);
 
@@ -76,14 +68,14 @@ const CreateRoomPage: NextPage<CreateRoomPageProps> = ({ media }) => {
 
   const handleCreateRoom = useCallback(() => {
     mutate({
-      episodeId: `${chosenEpisode.sourceId}-${chosenEpisode.sourceEpisodeId}`,
+      episodeId: `${chosenEpisode?.sourceId}-${chosenEpisode?.sourceEpisodeId}`,
       mediaId: media.id,
       visibility,
       title: roomTitle,
     });
   }, [
-    chosenEpisode.sourceEpisodeId,
-    chosenEpisode.sourceId,
+    chosenEpisode?.sourceEpisodeId,
+    chosenEpisode?.sourceId,
     media.id,
     mutate,
     visibility,
@@ -197,48 +189,71 @@ const CreateRoomPage: NextPage<CreateRoomPageProps> = ({ media }) => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const { data, error } = await supabase
-    .from("kaguya_anime")
-    .select(
-      `
-        id,
-        vietnameseTitle,
-        title,
-        genres,
-        description,
-        coverImage,
-        sourceConnections:kaguya_anime_source!mediaId(*, episodes:kaguya_episodes(*, source:kaguya_sources(id, name, locales)))
-    `
-    )
-    .eq("id", Number(params.id))
-    .single();
+  try {
+    const sourcePromise = supabase
+      .from<AnimeSourceConnection>("kaguya_anime_source")
+      .select(
+        `
+          *,
+          episodes:kaguya_episodes(*, source:kaguya_sources(id, name, locales))
+        `
+      )
+      .eq("mediaId", Number(params.id));
 
-  if (error) {
-    console.log(error);
+    const fields = `
+        id
+        idMal
+        title {
+          userPreferred
+          romaji
+          native
+          english
+        }
+        description
+        bannerImage
+        coverImage {
+          extraLarge
+          large
+          medium
+          color
+        }
+        genres
+      `;
+
+    const mediaPromise = getMediaDetails(
+      {
+        id: Number(params.id),
+      },
+      fields
+    );
+
+    const [{ data, error }, media] = await Promise.all([
+      sourcePromise,
+      mediaPromise,
+    ]);
+
+    if (error) {
+      throw error;
+    }
+
+    const episodes = data.flatMap((connection) => connection.episodes);
+
+    return {
+      props: {
+        media,
+        episodes,
+      },
+      revalidate: REVALIDATE_TIME,
+    };
+  } catch (error) {
+    console.log("error", error);
 
     return { notFound: true, revalidate: REVALIDATE_TIME };
   }
-
-  return {
-    props: {
-      media: data as Anime,
-    },
-    revalidate: REVALIDATE_TIME,
-  };
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const { data } = await supabase
-    .from<Anime>("kaguya_anime")
-    .select("id")
-    .order("updated_at", { ascending: false })
-    .limit(20);
-
-  const paths = data.map((anime: Anime) => ({
-    params: { id: anime.id.toString() },
-  }));
-
-  return { paths, fallback: "blocking" };
+  return { paths: [], fallback: "blocking" };
 };
 
 export default withAuthRedirect(CreateRoomPage, { url: "/login" });

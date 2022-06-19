@@ -3,6 +3,7 @@ import Section from "@/components/shared/Section";
 import Swiper, { SwiperSlide } from "@/components/shared/Swiper";
 import useNewestComments from "@/hooks/useNewestComments";
 import dayjs from "@/lib/dayjs";
+import { MediaType } from "@/types/anilist";
 import { getTitle } from "@/utils/data";
 import { useTranslation } from "next-i18next";
 import Link from "next/link";
@@ -11,18 +12,16 @@ import React, { PropsWithChildren, useMemo } from "react";
 import CommentsSwiperSkeleton from "../skeletons/CommentsSwiperSkeleton";
 import EmojiText from "./EmojiText";
 
-interface NewestCommentsProps<T> {
-  type: T;
+interface NewestCommentsProps {
+  type: MediaType;
 }
 
-const NewestComments = <T extends "anime" | "manga">(
-  props: PropsWithChildren<NewestCommentsProps<T>>
-) => {
+const NewestComments: React.FC<NewestCommentsProps> = (props) => {
   const { data, isLoading } = useNewestComments(props.type);
   const { t } = useTranslation("common");
   const { locale } = useRouter();
 
-  const isAnime = useMemo(() => props.type === "anime", [props.type]);
+  const isAnime = useMemo(() => props.type === MediaType.Anime, [props.type]);
 
   if (isLoading) {
     return <CommentsSwiperSkeleton />;
@@ -55,11 +54,10 @@ const NewestComments = <T extends "anime" | "manga">(
       >
         {data.map((comment) => {
           const user = comment?.user?.user_metadata;
-          const source = isAnime ? comment.anime : comment.manga;
           const redirectUrl = isAnime
-            ? `/anime/details/${source?.id}`
-            : `/manga/details/${source?.id}`;
-          const title = getTitle(source, locale);
+            ? `/anime/details/${comment.media?.id}`
+            : `/manga/details/${comment.media?.id}`;
+          const title = getTitle(comment.media, locale);
 
           return (
             <SwiperSlide key={comment.id}>
