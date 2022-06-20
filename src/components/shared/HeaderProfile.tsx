@@ -2,14 +2,14 @@ import Avatar from "@/components/shared/Avatar";
 import Button from "@/components/shared/Button";
 import Popup from "@/components/shared/Popup";
 import TextIcon from "@/components/shared/TextIcon";
-import { useUser } from "@/contexts/AuthContext";
-import supabase from "@/lib/supabase";
+import { useUser } from "@supabase/auth-helpers-react";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { useTranslation } from "next-i18next";
 import React from "react";
 import { HiOutlineLogout } from "react-icons/hi";
 
 const HeaderProfile = () => {
-  const user = useUser();
+  const { user } = useUser();
   const { t } = useTranslation("header");
 
   if (!user) return null;

@@ -12,11 +12,12 @@ import withAuthRedirect from "@/hocs/withAuthRedirect";
 import useConstantTranslation from "@/hooks/useConstantTranslation";
 import useCreateRoom from "@/hooks/useCreateRoom";
 import useDevice from "@/hooks/useDevice";
-import supabase from "@/lib/supabase";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { getMedia, getMediaDetails } from "@/services/anilist";
 import { AnimeSourceConnection, Episode } from "@/types";
 import { Media, MediaSort } from "@/types/anilist";
 import { convert, getDescription, getTitle, sortMediaUnit } from "@/utils/data";
+import { withPageAuth } from "@supabase/auth-helpers-nextjs";
 import classNames from "classnames";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
@@ -188,72 +189,70 @@ const CreateRoomPage: NextPage<CreateRoomPageProps> = ({ media, episodes }) => {
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-  try {
-    const sourcePromise = supabase
-      .from<AnimeSourceConnection>("kaguya_anime_source")
-      .select(
-        `
-          *,
-          episodes:kaguya_episodes(*, source:kaguya_sources(id, name, locales))
-        `
-      )
-      .eq("mediaId", Number(params.id));
+export default CreateRoomPage;
 
-    const fields = `
-        id
-        idMal
-        title {
-          userPreferred
-          romaji
-          native
-          english
-        }
-        description
-        bannerImage
-        coverImage {
-          extraLarge
-          large
-          medium
-          color
-        }
-        genres
-      `;
+export const getServerSideProps = withPageAuth({
+  redirectTo: "/login",
+  async getServerSideProps({ params }) {
+    try {
+      const sourcePromise = supabase
+        .from<AnimeSourceConnection>("kaguya_anime_source")
+        .select(
+          `
+            *,
+            episodes:kaguya_episodes(*, source:kaguya_sources(id, name, locales))
+          `
+        )
+        .eq("mediaId", Number(params.id));
 
-    const mediaPromise = getMediaDetails(
-      {
-        id: Number(params.id),
-      },
-      fields
-    );
+      const fields = `
+          id
+          idMal
+          title {
+            userPreferred
+            romaji
+            native
+            english
+          }
+          description
+          bannerImage
+          coverImage {
+            extraLarge
+            large
+            medium
+            color
+          }
+          genres
+        `;
 
-    const [{ data, error }, media] = await Promise.all([
-      sourcePromise,
-      mediaPromise,
-    ]);
+      const mediaPromise = getMediaDetails(
+        {
+          id: Number(params.id),
+        },
+        fields
+      );
 
-    if (error) {
-      throw error;
+      const [{ data, error }, media] = await Promise.all([
+        sourcePromise,
+        mediaPromise,
+      ]);
+
+      if (error) {
+        throw error;
+      }
+
+      const episodes = data.flatMap((connection) => connection.episodes);
+
+      return {
+        props: {
+          media,
+          episodes,
+        },
+      };
+    } catch (error) {
+      console.log("error", error);
+
+      return { notFound: true };
     }
-
-    const episodes = data.flatMap((connection) => connection.episodes);
-
-    return {
-      props: {
-        media,
-        episodes,
-      },
-      revalidate: REVALIDATE_TIME,
-    };
-  } catch (error) {
-    console.log("error", error);
-
-    return { notFound: true, revalidate: REVALIDATE_TIME };
-  }
-};
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  return { paths: [], fallback: "blocking" };
-};
-
-export default withAuthRedirect(CreateRoomPage, { url: "/login" });
+  },
+});

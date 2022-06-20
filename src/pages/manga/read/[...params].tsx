@@ -8,7 +8,7 @@ import { ReadSettingsContextProvider } from "@/contexts/ReadSettingsContext";
 import useFetchImages from "@/hooks/useFetchImages";
 import useSavedRead from "@/hooks/useSavedRead";
 import useSaveRead from "@/hooks/useSaveRead";
-import supabase from "@/lib/supabase";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { getMediaDetails } from "@/services/anilist";
 import { Chapter, MangaSourceConnection } from "@/types";
 import { Media, MediaType } from "@/types/anilist";

@@ -15,7 +15,7 @@ import PlainCard from "@/components/shared/PlainCard";
 import SourceStatus from "@/components/shared/SourceStatus";
 import Spinner from "@/components/shared/Spinner";
 import { REVALIDATE_TIME } from "@/constants";
-import { useUser } from "@/contexts/AuthContext";
+import { useUser } from "@supabase/auth-helpers-react";
 import withRedirect from "@/hocs/withRedirect";
 import useEpisodes from "@/hooks/useEpisodes";
 import dayjs from "@/lib/dayjs";
@@ -37,7 +37,7 @@ interface DetailsPageProps {
 }
 
 const DetailsPage: NextPage<DetailsPageProps> = ({ anime, translations }) => {
-  const user = useUser();
+  const { user } = useUser();
   const { locale } = useRouter();
   const { t } = useTranslation("anime_details");
 

@@ -16,6 +16,8 @@
   "dependencies": {
     "@popperjs/core": "^2.10.2",
     "@sentry/nextjs": "^7.0.0",
+    "@supabase/auth-helpers-nextjs": "^0.2.0",
+    "@supabase/auth-helpers-react": "^0.2.0",
     "@supabase/supabase-js": "^1.29.1",
     "@tailwindcss/aspect-ratio": "^0.4.0",
     "@tailwindcss/line-clamp": "^0.3.1",

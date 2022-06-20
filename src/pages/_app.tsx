@@ -1,5 +1,4 @@
 import BaseLayout from "@/components/layouts/BaseLayout";
-import { AuthContextProvider } from "@/contexts/AuthContext";
 import { SubscriptionContextProvider } from "@/contexts/SubscriptionContext";
 import { GA_TRACKING_ID, pageview } from "@/lib/gtag";
 import "@/styles/index.css";
@@ -17,6 +16,8 @@ import "react-toastify/dist/ReactToastify.min.css";
 import * as Sentry from "@sentry/nextjs";
 import { ErrorBoundary } from "react-error-boundary";
 import { AppErrorFallback } from "@/components/shared/AppErrorFallback";
+import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { UserProvider } from "@supabase/auth-helpers-react";
 
 Router.events.on("routeChangeStart", NProgress.start);
 Router.events.on("routeChangeComplete", NProgress.done);
@@ -87,7 +88,7 @@ function App({ Component, pageProps, router, err }: WorkaroundAppProps) {
       />
 
       <QueryClientProvider client={queryClient}>
-        <AuthContextProvider>
+        <UserProvider supabaseClient={supabaseClient}>
           <SubscriptionContextProvider>
             <ErrorBoundary
               onError={(error, info) => {
@@ -105,8 +106,7 @@ function App({ Component, pageProps, router, err }: WorkaroundAppProps) {
               {getLayout(<Component {...pageProps} err={err} />)}
             </ErrorBoundary>
           </SubscriptionContextProvider>
-        </AuthContextProvider>
-
+        </UserProvider>
         {process.env.NODE_ENV === "development" && <ReactQueryDevtools />}
       </QueryClientProvider>
     </React.Fragment>

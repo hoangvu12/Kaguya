@@ -4,7 +4,7 @@ import HeaderProfile from "@/components/shared/HeaderProfile";
 import Logo from "@/components/shared/Logo";
 import NavItem from "@/components/shared/NavItem";
 import { DISCORD_URL, FACEBOOK_URL } from "@/constants";
-import { useUser } from "@/contexts/AuthContext";
+import { useUser } from "@supabase/auth-helpers-react";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
 import Link from "next/link";
@@ -42,7 +42,7 @@ const routes = [
 const Header = () => {
   const [isTop, setIsTop] = useState(true);
   const drawerRef = useRef<DrawerRef>();
-  const user = useUser();
+  const { user } = useUser();
   const router = useRouter();
   const { t } = useTranslation("header");
 

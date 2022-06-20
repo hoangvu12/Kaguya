@@ -4,7 +4,7 @@ import ClientOnly from "@/components/shared/ClientOnly";
 import EmojiPicker from "@/components/shared/EmojiPicker";
 import Input from "@/components/shared/Input";
 import TransLink from "@/components/shared/TransLink";
-import { useUser } from "@/contexts/AuthContext";
+import { useUser } from "@supabase/auth-helpers-react";
 import useDevice from "@/hooks/useDevice";
 import { insertTextAtCursor } from "@/utils";
 import classNames from "classnames";
@@ -40,7 +40,7 @@ const CommentInput: React.FC<CommentInputProps> = ({
   ),
   showAvatar = true,
 }) => {
-  const user = useUser();
+  const { user } = useUser();
   const [text, setText] = useState(defaultText);
   const inputRef = useRef<HTMLInputElement>();
   const { isDesktop } = useDevice();
