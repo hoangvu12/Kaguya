@@ -1,6 +1,6 @@
 import Avatar from "@/components/shared/Avatar";
 import EmojiText from "@/components/shared/EmojiText";
-import { useUser } from "@/contexts/AuthContext";
+import { useUser } from "@supabase/auth-helpers-react";
 import { ChatMessage } from "@/types";
 import classNames from "classnames";
 import React, { useMemo } from "react";
@@ -10,7 +10,7 @@ interface ChatMessageProps {
 }
 
 const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
-  const user = useUser();
+  const { user } = useUser();
 
   const isUserMessage = useMemo(
     () => user?.id === message.user.id,

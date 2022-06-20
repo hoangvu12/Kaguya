@@ -1,4 +1,4 @@
-import { useUser } from "@/contexts/AuthContext";
+import { useUser } from "@supabase/auth-helpers-react";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -24,7 +24,7 @@ const withAuthRedirect = <K,>(
 ) => {
   const WithAuthRedirectComponent: NextPage<K> = (props) => {
     const router = useRouter();
-    const user = useUser();
+    const { user } = useUser();
 
     useEffect(() => {
       if (!redirect) return;

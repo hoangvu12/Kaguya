@@ -10,7 +10,7 @@ import useEventListener from "@/hooks/useEventListener";
 import { useFetchSource } from "@/hooks/useFetchSource";
 import useSavedWatched from "@/hooks/useSavedWatched";
 import useSaveWatched from "@/hooks/useSaveWatched";
-import supabase from "@/lib/supabase";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { getMediaDetails } from "@/services/anilist";
 import { AnimeSourceConnection, Episode } from "@/types";
 import { Media } from "@/types/anilist";

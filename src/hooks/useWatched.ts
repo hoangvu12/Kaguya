@@ -1,12 +1,12 @@
-import { useUser } from "@/contexts/AuthContext";
-import supabase from "@/lib/supabase";
+import { useUser } from "@supabase/auth-helpers-react";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { getMedia } from "@/services/anilist";
 import { Watched } from "@/types";
 import { fulfilledPromises } from "@/utils";
 import { useQuery } from "react-query";
 
 const useWatched = () => {
-  const user = useUser();
+  const { user } = useUser();
 
   return useQuery<Watched[]>(
     "watched",

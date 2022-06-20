@@ -9,7 +9,7 @@ import { REVALIDATE_TIME } from "@/constants";
 import withRedirect from "@/hocs/withRedirect";
 import useConstantTranslation from "@/hooks/useConstantTranslation";
 import dayjs from "@/lib/dayjs";
-import supabase from "@/lib/supabase";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import {
   getCharacterDetails,
   getCharacters,

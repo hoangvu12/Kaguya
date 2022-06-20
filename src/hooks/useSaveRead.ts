@@ -1,5 +1,5 @@
-import { useUser } from "@/contexts/AuthContext";
-import supabase from "@/lib/supabase";
+import { useUser } from "@supabase/auth-helpers-react";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { Read } from "@/types";
 import axios from "axios";
 import { useMutation } from "react-query";
@@ -10,7 +10,7 @@ interface MutationInput {
 }
 
 const useSaveRead = () => {
-  const user = useUser();
+  const { user } = useUser();
 
   return useMutation(async (data: MutationInput) => {
     if (!user) return;

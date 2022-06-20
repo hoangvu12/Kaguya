@@ -1,10 +1,10 @@
-import { useUser } from "@/contexts/AuthContext";
+import { useUser } from "@supabase/auth-helpers-react";
 import { useSupabaseSingleQuery } from "@/utils/supabase";
-import supabase from "@/lib/supabase";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { Read } from "@/types";
 
 const useSavedRead = (mangaId: number) => {
-  const user = useUser();
+  const { user } = useUser();
 
   return useSupabaseSingleQuery(
     ["read", mangaId],

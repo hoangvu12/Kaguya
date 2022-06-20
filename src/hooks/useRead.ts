@@ -1,13 +1,13 @@
-import supabase from "@/lib/supabase";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { Read } from "@/types";
 import { useSupabaseQuery } from "@/utils/supabase";
-import { useUser } from "@/contexts/AuthContext";
+import { useUser } from "@supabase/auth-helpers-react";
 import { useQuery } from "react-query";
 import { getMedia } from "@/services/anilist";
 import { MediaType } from "@/types/anilist";
 
 const useRead = () => {
-  const user = useUser();
+  const { user } = useUser();
 
   return useQuery<Read[]>(
     "read",

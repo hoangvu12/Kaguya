@@ -1,4 +1,4 @@
-import supabase from "@/lib/supabase";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { MangaSourceConnection } from "@/types";
 import { sortMediaUnit } from "@/utils/data";
 import { useSupabaseQuery } from "@/utils/supabase";

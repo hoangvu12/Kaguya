@@ -1,10 +1,10 @@
-import { useUser } from "@/contexts/AuthContext";
-import supabase from "@/lib/supabase";
+import { useUser } from "@supabase/auth-helpers-react";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { PostgrestError } from "@supabase/supabase-js";
 import { useMutation } from "react-query";
 
 const useCreateSubscription = () => {
-  const user = useUser();
+  const { user } = useUser();
 
   return useMutation<any, PostgrestError, PushSubscription, any>(
     async (subscription) => {
