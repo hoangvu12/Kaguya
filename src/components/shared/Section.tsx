@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import React from "react";
 
-interface SectionProps {
+export interface SectionProps {
   title?: string;
   className?: string;
   children?: React.ReactNode;
