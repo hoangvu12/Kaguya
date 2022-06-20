@@ -1,5 +1,5 @@
-import { useUser } from "@/contexts/AuthContext";
-import supabase from "@/lib/supabase";
+import { useUser } from "@supabase/auth-helpers-react";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { Comment } from "@/types";
 import { PostgrestError } from "@supabase/postgrest-js";
 import { InfiniteData, useMutation, useQueryClient } from "react-query";
@@ -20,7 +20,7 @@ type QueryData = InfiniteData<{
 }>;
 
 export const useCreateComment = (options: UseCreateCommentOptions) => {
-  const user = useUser();
+  const { user } = useUser();
   const queryClient = useQueryClient();
   const queryKey =
     options.type === "new"

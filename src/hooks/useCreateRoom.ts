@@ -1,5 +1,5 @@
-import { useUser } from "@/contexts/AuthContext";
-import supabase from "@/lib/supabase";
+import { useUser } from "@supabase/auth-helpers-react";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { Room } from "@/types";
 import { PostgrestError } from "@supabase/supabase-js";
 import { useRouter } from "next/router";
@@ -14,7 +14,7 @@ interface CreateRoomBody {
 }
 
 const useCreateRoom = () => {
-  const user = useUser();
+  const { user } = useUser();
   const router = useRouter();
 
   return useMutation<Room, PostgrestError, CreateRoomBody, any>(

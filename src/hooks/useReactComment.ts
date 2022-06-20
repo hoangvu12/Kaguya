@@ -1,5 +1,5 @@
-import { useUser } from "@/contexts/AuthContext";
-import supabase from "@/lib/supabase";
+import { useUser } from "@supabase/auth-helpers-react";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { Comment, Reaction } from "@/types";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { useMutation, useQueryClient } from "react-query";
@@ -70,7 +70,7 @@ const handleReact = async (data: ReactProps) => {
 
 const useReactComment = (commentId: number) => {
   const queryClient = useQueryClient();
-  const user = useUser();
+  const { user } = useUser();
 
   return useMutation<any, AxiosError, Variables>(
     ({ emoji, type }) =>

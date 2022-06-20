@@ -1,4 +1,4 @@
-import supabase from "@/lib/supabase";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { Comment } from "@/types";
 import {
   InfiniteData,

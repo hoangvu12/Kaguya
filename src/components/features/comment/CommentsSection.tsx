@@ -2,7 +2,7 @@ import CommentComponent from "@/components/features/comment/Comment";
 import CommentInput from "@/components/features/comment/CommentInput";
 import InView from "@/components/shared/InView";
 import { useCreateComment } from "@/hooks/useCreateComment";
-import supabase from "@/lib/supabase";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { Comment } from "@/types";
 import { useSupaInfiniteQuery } from "@/utils/supabase";
 import { useTranslation } from "next-i18next";

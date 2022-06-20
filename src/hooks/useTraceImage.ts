@@ -1,4 +1,4 @@
-import supabase from "@/lib/supabase";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { getMedia } from "@/services/anilist";
 import { Media, MediaType } from "@/types/anilist";
 import axios from "axios";

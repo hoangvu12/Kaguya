@@ -1,4 +1,4 @@
-import supabase from "@/lib/supabase";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { Comment } from "@/types";
 import { PostgrestError, PostgrestResponse } from "@supabase/postgrest-js";
 import { useMutation, useQueryClient } from "react-query";

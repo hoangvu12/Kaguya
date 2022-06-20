@@ -1,5 +1,5 @@
-import { useUser } from "@/contexts/AuthContext";
-import supabase from "@/lib/supabase";
+import { useUser } from "@supabase/auth-helpers-react";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { SourceStatus } from "@/types";
 import { Media } from "@/types/anilist";
 import { getTitle } from "@/utils/data";
@@ -24,7 +24,7 @@ const useModifySourceStatus = <T extends "anime" | "manga">(
   const { locale } = useRouter();
   const queryClient = useQueryClient();
   const { t } = useTranslation("source_status");
-  const user = useUser();
+  const { user } = useUser();
   const mediaTitle = useMemo(() => getTitle(source, locale), [locale, source]);
 
   const tableName =
