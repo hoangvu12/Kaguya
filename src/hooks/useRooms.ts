@@ -1,4 +1,4 @@
-import supabase from "@/lib/supabase";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { getMedia } from "@/services/anilist";
 import { Room } from "@/types";
 import { useQuery } from "react-query";

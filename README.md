@@ -61,8 +61,7 @@ The official website is [kaguya.live](https://kaguya.live)
 ```
 # Supabase (See: https://github.com/hoangvu12/kaguya-database)
 NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_KEY=
-ADMIN_SUPABASE_KEY=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
 
 # Google Analytics
 NEXT_PUBLIC_GA_ID=

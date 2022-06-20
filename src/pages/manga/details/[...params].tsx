@@ -16,10 +16,10 @@ import PlainCard from "@/components/shared/PlainCard";
 import SourceStatus from "@/components/shared/SourceStatus";
 import Spinner from "@/components/shared/Spinner";
 import { REVALIDATE_TIME } from "@/constants";
-import { useUser } from "@/contexts/AuthContext";
+import { useUser } from "@supabase/auth-helpers-react";
 import withRedirect from "@/hocs/withRedirect";
 import useChapters from "@/hooks/useChapters";
-import supabase from "@/lib/supabase";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { getMedia, getMediaDetails } from "@/services/anilist";
 import { Media, MediaSort, MediaType } from "@/types/anilist";
 import { numberWithCommas, vietnameseSlug } from "@/utils";
@@ -36,7 +36,7 @@ interface DetailsPageProps {
 }
 
 const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
-  const user = useUser();
+  const { user } = useUser();
   const { locale } = useRouter();
   const { t } = useTranslation("manga_details");
   const { data: chapters, isLoading } = useChapters(manga.id);

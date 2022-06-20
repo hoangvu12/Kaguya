@@ -1,5 +1,5 @@
 import config from "@/config";
-import { useUser } from "@/contexts/AuthContext";
+import { useUser } from "@supabase/auth-helpers-react";
 import { useRoomInfo } from "@/contexts/RoomContext";
 import {
   RoomPlayerContextProvider,
@@ -230,7 +230,7 @@ const PlayerMobileOverlay = () => {
 const RoomPlayer = () => {
   const playerRef = useVideoSync();
   const { room, socket } = useRoomInfo();
-  const user = useUser();
+  const { user } = useUser();
   const { data, isLoading } = useFetchSource(room.episode);
 
   const isHost = useMemo(() => user?.id === room?.hostUserId, [user, room]);

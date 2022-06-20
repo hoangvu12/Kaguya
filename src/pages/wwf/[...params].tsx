@@ -3,12 +3,12 @@ import RoomWatchPanel from "@/components/features/wwf/RoomPage/RoomWatchPanel";
 import BaseLayout from "@/components/layouts/BaseLayout";
 import Head from "@/components/shared/Head";
 import config from "@/config";
-import { useUser } from "@/contexts/AuthContext";
+import { useUser } from "@supabase/auth-helpers-react";
 import { RoomContextProvider } from "@/contexts/RoomContext";
 import { RoomStateContextProvider } from "@/contexts/RoomStateContext";
 import withRedirect from "@/hocs/withRedirect";
 import useRoom from "@/hooks/useRoom";
-import supabase from "@/lib/supabase";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { getMediaDetails } from "@/services/anilist";
 import { mediaDefaultFields } from "@/services/anilist/queries";
 import { AnimeSourceConnection, Room } from "@/types";
@@ -30,7 +30,7 @@ const RoomPage: NextPage<RoomPageProps> = ({ room }) => {
   const [socket, setSocket] = useState<Socket>();
   const { data } = useRoom(room.id, room);
   const queryClient = useQueryClient();
-  const user = useUser();
+  const { user } = useUser();
   const { locale } = useRouter();
   const { t } = useTranslation("wwf");
 

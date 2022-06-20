@@ -1,5 +1,5 @@
-import { useUser } from "@/contexts/AuthContext";
-import supabase from "@/lib/supabase";
+import { useUser } from "@supabase/auth-helpers-react";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { getMedia, getMediaDetails } from "@/services/anilist";
 import { mediaDefaultFields } from "@/services/anilist/queries";
 import { Read } from "@/types";
@@ -8,7 +8,7 @@ import { useSupabaseSingleQuery } from "@/utils/supabase";
 import { useQuery } from "react-query";
 
 const useMangaRecommendedList = () => {
-  const user = useUser();
+  const { user } = useUser();
 
   return useQuery<Read>(
     ["manga", "recommended"],

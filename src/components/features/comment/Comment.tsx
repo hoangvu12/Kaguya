@@ -7,7 +7,7 @@ import Avatar from "@/components/shared/Avatar";
 import DotList from "@/components/shared/DotList";
 import EmojiPicker from "@/components/shared/EmojiPicker";
 import EmojiText from "@/components/shared/EmojiText";
-import { useUser } from "@/contexts/AuthContext";
+import { useUser } from "@supabase/auth-helpers-react";
 import useComment from "@/hooks/useComment";
 import { useCreateComment } from "@/hooks/useCreateComment";
 import useDeleteComment from "@/hooks/useDeleteComment";
@@ -30,7 +30,7 @@ const Comment: React.FC<CommentProps> = ({
   comment: initialComment,
   level = 1,
 }) => {
-  const user = useUser();
+  const { user } = useUser();
   const { t } = useTranslation("comment");
 
   const { data: comment } = useComment(initialComment.id, {

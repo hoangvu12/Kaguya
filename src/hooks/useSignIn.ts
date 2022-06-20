@@ -1,4 +1,4 @@
-import supabase from "@/lib/supabase";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { Provider } from "@supabase/gotrue-js";
 import { useMutation } from "react-query";
 

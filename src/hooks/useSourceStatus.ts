@@ -1,5 +1,5 @@
-import { useUser } from "@/contexts/AuthContext";
-import supabase from "@/lib/supabase";
+import { useUser } from "@supabase/auth-helpers-react";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { SourceStatus } from "@/types";
 import { Media } from "@/types/anilist";
 import { useSupabaseSingleQuery } from "@/utils/supabase";
@@ -11,7 +11,7 @@ const useSourceStatus = <T extends "anime" | "manga">(
   const tableName =
     type === "anime" ? "kaguya_watch_status" : "kaguya_read_status";
   const queryKey = [tableName, source.id];
-  const user = useUser();
+  const { user } = useUser();
 
   return useSupabaseSingleQuery<SourceStatus<T>>(
     queryKey,
