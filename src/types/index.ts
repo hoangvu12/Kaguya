@@ -2,19 +2,16 @@ import { SkeletonProps } from "@/components/shared/Skeleton";
 import { SupabaseQueryFunction, SupabaseQueryOptions } from "@/utils/supabase";
 import { User } from "@supabase/gotrue-js";
 import { QueryKey } from "react-query";
-import {
-  CharacterRole,
-  FuzzyDate,
-  Media,
-  MediaFormat,
-  MediaRelation,
-  MediaStatus,
-  MediaTitle as ALMediaTitle,
-} from "./anilist";
+import { Media, MediaTitle as ALMediaTitle } from "./anilist";
 
 export interface MediaTitle extends Partial<ALMediaTitle> {
   [key: string]: string;
 }
+
+export type AdditionalUser = User & {
+  authRole: string;
+  isVerified: boolean;
+};
 
 export type MediaDescription = Record<string, string>;
 
@@ -38,6 +35,8 @@ export type Source = {
   id: string;
   name: string;
   locales: string[];
+  addedUserId?: string;
+  addedUser?: AdditionalUser;
 };
 
 export type Episode = {
