@@ -7,6 +7,8 @@ export const WEBSITE_URL = "https://www.kaguya.live";
 export const DISCORD_URL = "https://discord.gg/382BEFfER6";
 export const FACEBOOK_URL = "https://www.facebook.com/kaguyaa.live";
 
+export const DISCORD_REG_URL = "https://discord.gg/62RkwWkvkP";
+
 export const REVALIDATE_TIME = 18000; // 5 hours
 export const SKIP_TIME = 90; // 1m30s
 
