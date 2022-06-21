@@ -1,9 +1,33 @@
-import { getUser, supabaseClient } from "@supabase/auth-helpers-nextjs";
-import { GetServerSideProps, GetServerSidePropsContext } from "next";
+import { AdditionalUser } from "@/types";
+import { getUser, supabaseClient, User } from "@supabase/auth-helpers-nextjs";
+import {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  GetServerSidePropsResult,
+  PreviewData,
+} from "next";
+import { ParsedUrlQuery } from "querystring";
+
+export type GetServerSidePropsWithUser<
+  P extends { [key: string]: any } = { [key: string]: any },
+  Q extends ParsedUrlQuery = ParsedUrlQuery,
+  D extends PreviewData = PreviewData
+> = (
+  context: GetServerSidePropsContext<Q, D>,
+  user: AdditionalUser
+) => Promise<GetServerSidePropsResult<P>>;
 
 interface WithAdditionalUserOptions {
-  getServerSideProps?: GetServerSideProps;
+  getServerSideProps?: GetServerSidePropsWithUser;
 }
+
+type WithAdditionalUserResult = {
+  props: {
+    user: AdditionalUser;
+    [key: string]: any;
+  };
+  [key: string]: any;
+};
 
 const withAdditionalUser =
   (options?: WithAdditionalUserOptions) =>
@@ -25,16 +49,29 @@ const withAdditionalUser =
         throw error;
       }
 
-      const serverSideProps = await options.getServerSideProps?.(ctx);
-
-      return {
-        ...serverSideProps,
+      let initialResult: WithAdditionalUserResult = {
         props: {
           user: additionalUser,
-          ...("props" in serverSideProps && serverSideProps.props),
         },
       };
-    } catch (_) {
+
+      const serverSideResult = await options?.getServerSideProps?.(
+        ctx,
+        additionalUser
+      );
+
+      if (serverSideResult) {
+        initialResult = {
+          ...serverSideResult,
+          props: {
+            user: additionalUser,
+            ...("props" in serverSideResult && serverSideResult.props),
+          },
+        };
+      }
+
+      return initialResult;
+    } catch (error) {
       return {
         redirect: {
           statusCode: 302,
