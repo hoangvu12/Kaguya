@@ -165,9 +165,7 @@ const getRecentlyUpdatedMedia = async (sourceId: string) => {
 };
 
 export const getServerSideProps = withAdditionalUser({
-  getServerSideProps: async (ctx) => {
-    const { user } = await getUser(ctx);
-
+  getServerSideProps: async (_, user) => {
     const { data: sourceAddedByUser, error } = await supabaseClient
       .from<Source>("kaguya_sources")
       .select("id")
