@@ -144,7 +144,9 @@ const UploadAnimePage: NextPage<UploadAnimePageProps> = ({
       title="Danh sách Anime đã upload"
       isVerified={user.isVerified}
     >
-      {!isLoading ? (
+      {isLoading ? (
+        <Loading />
+      ) : data?.media?.length ? (
         <ServerPaginateTable
           data={data.media}
           columns={columns}
@@ -155,7 +157,7 @@ const UploadAnimePage: NextPage<UploadAnimePageProps> = ({
           onPageIndexChange={handlePageIndexChange}
         />
       ) : (
-        <Loading />
+        <h1 className="text-3xl text-center">Bạn chưa đăng Anime nào</h1>
       )}
     </UploadSection>
   );
