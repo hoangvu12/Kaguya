@@ -107,29 +107,51 @@ const getTotalUploadedMedia = async (sourceId: string) => {
 };
 
 const getRecentlyUpdatedMedia = async (sourceId: string) => {
+  const episodeQuery = `
+    mediaId,
+    episodes:kaguya_episodes(
+        updated_at
+    )
+  `;
+
+  const chapterQuery = `
+    mediaId,
+    chapters:kaguya_chapters(
+        updated_at
+    )
+  `;
+
   const animeSourcePromise = supabaseClient
     .from<AnimeSourceConnection>("kaguya_anime_source")
-    .select("mediaId")
+    .select(episodeQuery)
     .eq("sourceId", sourceId)
-    .order("updated_at", { ascending: false })
+    .order("updated_at", { ascending: false, foreignTable: "kaguya_episodes" })
     .limit(5);
 
   const mangaSourcePromise = supabaseClient
     .from<MangaSourceConnection>("kaguya_manga_source")
-    .select("mediaId")
+    .select(chapterQuery)
     .eq("sourceId", sourceId)
-    .order("updated_at", { ascending: false })
+    .order("updated_at", { ascending: false, foreignTable: "kaguya_chapters" })
     .limit(5);
 
-  const [{ data: animeSources }, { data: mangaSources }] = await Promise.all([
-    animeSourcePromise,
-    mangaSourcePromise,
-  ]);
+  const [
+    { data: animeSources = [], error: animeError },
+    { data: mangaSources = [], error: mangaError },
+  ] = await Promise.all([animeSourcePromise, mangaSourcePromise]);
+
+  if (animeError) {
+    throw animeError;
+  }
+
+  if (mangaError) {
+    throw mangaError;
+  }
 
   const animeIds = animeSources.map((source) => source.mediaId);
   const mangaIds = mangaSources.map((source) => source.mediaId);
 
-  const mediaPromises = [];
+  const mediaPromises: Promise<Media[]>[] = [];
 
   if (animeIds.length) {
     const animePromise = getMedia({
@@ -156,11 +178,23 @@ const getRecentlyUpdatedMedia = async (sourceId: string) => {
     };
   }
 
-  const [anime = 0, manga = 0] = await Promise.all(mediaPromises);
+  const [anime, manga] = await Promise.all(mediaPromises);
+
+  const sortedAnimeList = animeSources.map((connection) => {
+    const media = anime.find((a) => a.id === connection.mediaId);
+
+    return media;
+  });
+
+  const sortedMangaList = mangaSources.map((connection) => {
+    const media = manga.find((a) => a.id === connection.mediaId);
+
+    return media;
+  });
 
   return {
-    anime,
-    manga,
+    anime: sortedAnimeList,
+    manga: sortedMangaList,
   };
 };
 

@@ -19,7 +19,6 @@ interface UseUploadedMediaOptions<T> {
 const episodeQuery = `
   mediaId,
   episodes:kaguya_episodes(
-      id,
       updated_at
   )
 `;
@@ -27,7 +26,6 @@ const episodeQuery = `
 const chapterQuery = `
   mediaId,
   chapters:kaguya_chapters(
-      id,
       updated_at
   )
 `;
