@@ -148,8 +148,8 @@ const getRecentlyUpdatedMedia = async (sourceId: string) => {
     throw mangaError;
   }
 
-  const animeIds = animeSources.map((source) => source.mediaId);
-  const mangaIds = mangaSources.map((source) => source.mediaId);
+  const animeIds = animeSources.map((source) => source?.mediaId);
+  const mangaIds = mangaSources.map((source) => source?.mediaId);
 
   const mediaPromises: Promise<Media[]>[] = [];
 
@@ -160,6 +160,9 @@ const getRecentlyUpdatedMedia = async (sourceId: string) => {
     });
 
     mediaPromises.push(animePromise);
+  } else {
+    // To keep promise position. [anime, manga]
+    mediaPromises.push(Promise.resolve(null));
   }
 
   if (mangaIds.length) {
@@ -173,28 +176,32 @@ const getRecentlyUpdatedMedia = async (sourceId: string) => {
 
   if (!mediaPromises?.length) {
     return {
-      anime: 0,
-      manga: 0,
+      anime: [],
+      manga: [],
     };
   }
 
-  const [anime, manga] = await Promise.all(mediaPromises);
+  const [anime = [], manga = []] = await Promise.all(mediaPromises);
 
-  const sortedAnimeList = animeSources.map((connection) => {
-    const media = anime.find((a) => a.id === connection.mediaId);
+  const sortedAnimeList = animeSources
+    .map((connection) => {
+      const media = anime.find((a) => a.id === connection.mediaId);
 
-    return media;
-  });
+      return media;
+    })
+    .filter((a) => a);
 
-  const sortedMangaList = mangaSources.map((connection) => {
-    const media = manga.find((a) => a.id === connection.mediaId);
+  const sortedMangaList = mangaSources
+    .map((connection) => {
+      const media = manga.find((a) => a.id === connection.mediaId);
 
-    return media;
-  });
+      return media;
+    })
+    .filter((a) => a);
 
   return {
-    anime: sortedAnimeList,
-    manga: sortedMangaList,
+    anime: sortedAnimeList || [],
+    manga: sortedMangaList || [],
   };
 };
 
