@@ -1,4 +1,5 @@
 import { SkeletonProps } from "@/components/shared/Skeleton";
+import { Attachment, FileInfo, VideoFileResponse } from "@/services/upload";
 import { SupabaseQueryFunction, SupabaseQueryOptions } from "@/utils/supabase";
 import { User } from "@supabase/gotrue-js";
 import { QueryKey } from "react-query";
@@ -41,6 +42,14 @@ export type Source = {
   addedUser?: AdditionalUser;
 };
 
+export type Video = {
+  fonts: Attachment[];
+  subtitles: Attachment[];
+  video: VideoFileResponse | FileInfo;
+  episodeId: string;
+  userId: string;
+};
+
 export type Episode = {
   name: string;
   sourceConnectionId?: string;
@@ -51,6 +60,7 @@ export type Episode = {
   source: Source;
   slug: string;
   thumbnailImage?: string;
+  video: Video;
 };
 
 export type Chapter = {
@@ -220,4 +230,10 @@ export interface AnimeTheme {
   episode: string;
   sources: VideoSource[];
   anilistId?: number;
+}
+
+export interface UploadSubtitle {
+  file: File;
+  name: string;
+  locale: string;
 }

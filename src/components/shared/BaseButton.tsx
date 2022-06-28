@@ -67,11 +67,13 @@ const BaseButton = React.forwardRef<HTMLButtonElement, BaseButtonProps>(
 
     return (
       <button
+        type="button"
         className={classNames(
           "transition duration-300",
           (isLoading || disabled) && "text-gray-300 cursor-not-allowed",
           className,
-          buttonClassName
+          buttonClassName,
+          (LeftIcon || RightIcon || isLoading) && "gap-x-2"
         )}
         onClick={(e) => {
           if (disabled) return;
