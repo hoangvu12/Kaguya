@@ -1,5 +1,5 @@
 import { SkeletonProps } from "@/components/shared/Skeleton";
-import { Attachment, FileInfo, VideoFileResponse } from "@/services/upload";
+import { Attachment, FileInfo } from "@/services/upload";
 import { SupabaseQueryFunction, SupabaseQueryOptions } from "@/utils/supabase";
 import { User } from "@supabase/gotrue-js";
 import { QueryKey } from "react-query";
@@ -45,7 +45,7 @@ export type Source = {
 export type Video = {
   fonts: Attachment[];
   subtitles: Attachment[];
-  video: VideoFileResponse | FileInfo;
+  video: FileInfo;
   episodeId: string;
   userId: string;
 };
@@ -60,7 +60,7 @@ export type Episode = {
   source: Source;
   slug: string;
   thumbnailImage?: string;
-  video: Video;
+  video: Video[];
 };
 
 export type Chapter = {
