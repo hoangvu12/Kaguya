@@ -72,7 +72,7 @@ const useCreateEpisode = (args: UseCreateEpisodeArgs) => {
         isLoading: true,
       });
 
-      let uploadedVideo: VideoFileResponse | FileInfo;
+      let uploadedVideo: FileInfo;
 
       if (typeof video === "string") {
         const remote = await remoteUploadVideo(video);

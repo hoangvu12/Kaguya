@@ -1,9 +1,10 @@
-import FileUploading from "@/components/shared/FileUploading";
+import FileUploading, {
+  FileUploadingProps,
+} from "@/components/shared/FileUploading";
 import { supportedUploadFontFormats } from "@/constants";
 import React from "react";
-import { FileUploadingPropsType } from "react-files-uploading";
 
-const FontUpload: React.FC<Partial<FileUploadingPropsType>> = (props) => {
+const FontUpload: React.FC<Partial<FileUploadingProps>> = (props) => {
   return (
     <FileUploading
       multiple

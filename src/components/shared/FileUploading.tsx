@@ -25,7 +25,10 @@ interface FileUploadingUIProps extends ExportInterface {
 }
 
 interface FileBoxProps {
-  file: File;
+  file: {
+    name: string;
+    size: number;
+  };
   index: number;
   onFileRemove?: (index: number) => void;
   onFileUpdate?: (index: number) => void;
@@ -144,7 +147,7 @@ const FileUploading: React.FC<FileUploadingProps> = ({
   onChange,
   ...props
 }) => {
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<File[]>(initialFiles);
 
   const handleChange = (fileList: File[], addUpdatedIndex?: Array<number>) => {
     setFiles(fileList);

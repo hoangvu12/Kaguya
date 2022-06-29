@@ -1,11 +1,15 @@
-import Input from "@/components/shared/Input";
+import Input, { InputProps } from "@/components/shared/Input";
 import React, { useState } from "react";
 
 interface EpisodeNameUploadProps {
   onChange: (episodeName: string) => void;
+  inputProps?: Omit<InputProps, "ref">;
 }
 
-const EpisodeNameUpload: React.FC<EpisodeNameUploadProps> = ({ onChange }) => {
+const EpisodeNameUpload: React.FC<EpisodeNameUploadProps> = ({
+  onChange,
+  inputProps,
+}) => {
   const [episodeName, setEpisodeName] = useState("");
 
   return (
@@ -23,6 +27,7 @@ const EpisodeNameUpload: React.FC<EpisodeNameUploadProps> = ({ onChange }) => {
         onBlur={() => {
           onChange?.(episodeName);
         }}
+        {...inputProps}
       />
     </div>
   );
