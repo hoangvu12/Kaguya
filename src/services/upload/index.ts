@@ -46,7 +46,7 @@ export type Attachment = {
   url: string;
   proxy_url: string;
   content_type: string;
-  ctx?: object;
+  ctx?: Record<string, any>;
 };
 
 export type UploadFileResponse = {
@@ -102,8 +102,8 @@ export type UpsertEpisodeArgs = {
 };
 
 const client = axios.create({
-  // baseURL: config.nodeServerUrl,
-  baseURL: "http://localhost:3001/kaguya",
+  baseURL: config.nodeServerUrl,
+  // baseURL: "http://localhost:3001/kaguya",
 });
 
 client.interceptors.request.use((config) => {
@@ -151,7 +151,11 @@ export const uploadVideo = async (file: File) => {
 
   if (!data.success) throw new Error("Upload failed");
 
-  return data.video;
+  const { video } = data;
+
+  const videoInfo = await getVideoStatus(video.hashid);
+
+  return videoInfo;
 };
 
 export const getRemoteStatus = async (remoteId: number) => {

@@ -2,6 +2,8 @@ import dayjs from "@/lib/dayjs";
 import { MediaSeason } from "@/types/anilist";
 import axios from "axios";
 import { toast } from "react-toastify";
+import mime from "mime";
+import config from "@/config";
 
 export const randomElement = <T>(array: T[]): T => {
   const index = Math.floor(Math.random() * array.length);
@@ -390,4 +392,28 @@ export const randomString = (length: number) => {
     str += chars[Math.floor(Math.random() * chars.length)];
   }
   return str;
+};
+
+export const createFileFromUrl = async (url: string, filename: string) => {
+  const { data } = await axios.get<Blob>(url, { responseType: "blob" });
+
+  const extension = url.split(".").pop();
+
+  const metadata = {
+    type: mime.getType(extension) || "text/plain",
+  };
+
+  const file = new File([data], filename, metadata);
+
+  return file;
+};
+
+export const createProxyUrl = (url: string, sourceId: string) => {
+  return `${config.proxyServerUrl}?url=${encodeURIComponent(
+    url
+  )}&source_id=${sourceId}`;
+};
+
+export const createAttachmentUrl = (url: string) => {
+  return `${config.nodeServerUrl}/file/${url}`;
 };

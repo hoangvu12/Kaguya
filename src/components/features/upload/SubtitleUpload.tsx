@@ -2,13 +2,13 @@ import BaseButton from "@/components/shared/BaseButton";
 import FileUploading, {
   FileBox,
   FileUploader,
+  FileUploadingProps,
 } from "@/components/shared/FileUploading";
 import Input from "@/components/shared/Input";
 import { supportedUploadSubtitleFormats } from "@/constants";
 import { randomString } from "@/utils";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { FileUploadingPropsType } from "react-files-uploading";
 import { AiFillFileAdd } from "react-icons/ai";
 
 export interface SubtitleFile {
@@ -17,23 +17,30 @@ export interface SubtitleFile {
   locale: string;
 }
 
-interface SubtitleUploadProps extends Omit<FileUploadingPropsType, "onChange"> {
+interface SubtitleUploadProps extends Omit<FileUploadingProps, "onChange"> {
   onChange: (files: SubtitleFile[]) => void;
+  initialSubtitles?: SubtitleFile[];
 }
 
 const SubtitleUpload: React.FC<Partial<SubtitleUploadProps>> = ({
   onChange,
+  initialSubtitles,
   ...props
 }) => {
   const { locale } = useRouter();
-  const [filesCtx, setFilesCtx] = useState<SubtitleFile[]>([]);
+  const [filesCtx, setFilesCtx] = useState<SubtitleFile[]>(initialSubtitles);
+  const [files, setFiles] = useState<File[]>(
+    initialSubtitles.map((subtitle) => subtitle.file)
+  );
 
-  const handleChange = () => {
+  const handleChange = (files: File[]) => {
+    setFiles(files);
     onChange?.(filesCtx);
   };
 
   return (
     <FileUploading
+      value={files}
       multiple
       acceptType={supportedUploadSubtitleFormats}
       onChange={handleChange}

@@ -15,6 +15,7 @@ const moduleExports = withPWA({
       "lh3.googleusercontent.com",
       "platform-lookaside.fbsbx.com",
       "i.ibb.co",
+      "cdn.streamlare.com",
     ],
     minimumCacheTTL: 604800, // a week,
   },
