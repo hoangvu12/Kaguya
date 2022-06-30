@@ -4,7 +4,7 @@ import FontUpload from "@/components/features/upload/FontUpload";
 import SubtitleUpload, {
   SubtitleFile,
 } from "@/components/features/upload/SubtitleUpload";
-import UploadSection from "@/components/features/upload/UploadSection";
+import UploadContainer from "@/components/features/upload/UploadContainer";
 import VideoUpload from "@/components/features/upload/VideoUpload";
 import UploadLayout from "@/components/layouts/UploadLayout";
 import {
@@ -18,6 +18,7 @@ import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { NextPage } from "next";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import UploadSection from "@/components/features/upload/UploadSection";
 
 interface UploadCreateEpisodePageProps {
   user: AdditionalUser;
@@ -51,62 +52,62 @@ const UploadCreateEpisodePage: NextPage<UploadCreateEpisodePageProps> = ({
   };
 
   return (
-    <UploadSection isVerified={user.isVerified}>
+    <UploadContainer isVerified={user.isVerified}>
       <form className="space-y-16" onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex justify-between gap-x-32">
-          <div className="w-1/3 grow-0">
+        <UploadSection>
+          <UploadSection.Left>
             <label className="font-semibold text-2xl">Tập phim</label>
-          </div>
+          </UploadSection.Left>
 
-          <div className="w-2/3 shrink-0">
+          <UploadSection.Right>
             <EpisodeNameUpload onChange={setEpisodeName} />
-          </div>
-        </div>
+          </UploadSection.Right>
+        </UploadSection>
 
-        <div className="flex justify-between gap-x-32">
-          <div className="w-1/3 grow-0">
+        <UploadSection>
+          <UploadSection.Left>
             <label className="font-semibold text-2xl">Video</label>
             <p className="text-sm text-gray-300">
               Hỗ trợ {supportedUploadVideoFormats.join(", ")}
             </p>
-          </div>
+          </UploadSection.Left>
 
-          <div className="w-2/3 shrink-0">
+          <UploadSection.Right>
             <VideoUpload onChange={setVideo} />
-          </div>
-        </div>
+          </UploadSection.Right>
+        </UploadSection>
 
-        <div className="flex justify-between gap-x-32">
-          <div className="w-1/3 grow-0">
+        <UploadSection>
+          <UploadSection.Left>
             <label className="font-semibold text-2xl">Subtitles</label>
             <p className="text-sm text-gray-300">
               Hỗ trợ {supportedUploadSubtitleFormats.join(", ")}
             </p>
-          </div>
+          </UploadSection.Left>
 
-          <div className="w-2/3 shrink-0">
+          <UploadSection.Right>
             <SubtitleUpload onChange={setSubtitles} />
-          </div>
-        </div>
+          </UploadSection.Right>
+        </UploadSection>
 
-        <div className="flex justify-between gap-x-32">
-          <div className="w-1/3 grow-0">
+        <UploadSection>
+          <UploadSection.Left>
             <label className="font-semibold text-2xl">Fonts</label>
             <p className="text-sm text-gray-300">
               Fonts chỉ dành cho subtitle .ass
             </p>
-          </div>
+          </UploadSection.Left>
 
-          <div className="w-2/3 shrink-0">
+          <UploadSection.Right>
             <FontUpload onChange={setFonts} />
-          </div>
-        </div>
+          </UploadSection.Right>
+        </UploadSection>
 
         <Button type="submit" className="ml-auto" primary>
           Upload
         </Button>
       </form>
-    </UploadSection>
+    </UploadContainer>
   );
 };
 

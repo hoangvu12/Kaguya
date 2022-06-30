@@ -1,6 +1,7 @@
 import EpisodeNameUpdate from "@/components/features/upload/EpisodeNameUpdate";
 import FontUpdate from "@/components/features/upload/FontUpdate";
 import SubtitleUpdate from "@/components/features/upload/SubtitleUpdate";
+import UploadContainer from "@/components/features/upload/UploadContainer";
 import UploadSection from "@/components/features/upload/UploadSection";
 import VideoUpdate from "@/components/features/upload/VideoUpdate";
 import UploadLayout from "@/components/layouts/UploadLayout";
@@ -17,7 +18,6 @@ import useVideoStatus from "@/hooks/useVideoStatus";
 import { AdditionalUser, Source } from "@/types";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { NextPage } from "next";
-import { useRouter } from "next/router";
 import React from "react";
 
 interface UploadEpisodeEditPageProps {
@@ -36,38 +36,38 @@ const UploadEpisodeEditPage: NextPage<UploadEpisodeEditPageProps> = ({
   const { VIDEO_STATUS_TRANSLATIONS } = useConstantTranslation();
   const { data, isLoading } = useUploadedEpisode(episodeSlug);
   const { data: videoStatus, isLoading: videoStatusLoading } = useVideoStatus(
-    data.video[0].video.hashid
+    data?.video?.[0]?.video?.hashid
   );
 
   return (
-    <UploadSection isVerified={user.isVerified}>
+    <UploadContainer isVerified={user.isVerified}>
       <UploadMediaProvider value={{ mediaId, sourceId }}>
-        {isLoading ? (
+        {isLoading || videoStatusLoading ? (
           <Loading />
         ) : (
           <div className="space-y-16">
-            <div className="flex justify-between gap-x-32">
-              <div className="w-1/3 grow-0">
+            <UploadSection>
+              <UploadSection.Left>
                 <label className="font-semibold text-2xl">Tập phim</label>
-              </div>
+              </UploadSection.Left>
 
-              <div className="w-2/3 shrink-0">
+              <UploadSection.Right>
                 <EpisodeNameUpdate
                   initialName={data.name}
                   episodeSlug={data.slug}
                 />
-              </div>
-            </div>
+              </UploadSection.Right>
+            </UploadSection>
 
-            <div className="flex justify-between gap-x-32">
-              <div className="w-1/3 grow-0">
+            <UploadSection>
+              <UploadSection.Left>
                 <label className="font-semibold text-2xl">Video</label>
                 <p className="text-sm text-gray-300">
                   Hỗ trợ {supportedUploadVideoFormats.join(", ")}
                 </p>
-              </div>
+              </UploadSection.Left>
 
-              <div className="w-2/3 shrink-0">
+              <UploadSection.Right className="space-y-1">
                 <p>
                   Tình trạng video:{" "}
                   {videoStatusLoading
@@ -76,47 +76,47 @@ const UploadEpisodeEditPage: NextPage<UploadEpisodeEditPageProps> = ({
                 </p>
 
                 <VideoUpdate
-                  initialVideo={data.video[0].video}
+                  initialVideo={videoStatus}
                   episodeSlug={episodeSlug}
                 />
-              </div>
-            </div>
+              </UploadSection.Right>
+            </UploadSection>
 
-            <div className="flex justify-between gap-x-32">
-              <div className="w-1/3 grow-0">
+            <UploadSection>
+              <UploadSection.Left>
                 <label className="font-semibold text-2xl">Subtitles</label>
                 <p className="text-sm text-gray-300">
                   Hỗ trợ {supportedUploadSubtitleFormats.join(", ")}
                 </p>
-              </div>
+              </UploadSection.Left>
 
-              <div className="relative w-2/3 shrink-0">
+              <UploadSection.Right className="relative">
                 <SubtitleUpdate
                   episodeSlug={episodeSlug}
                   initialSubtitles={data.video[0].subtitles}
                 />
-              </div>
-            </div>
+              </UploadSection.Right>
+            </UploadSection>
 
-            <div className="flex justify-between gap-x-32">
-              <div className="w-1/3 grow-0">
+            <UploadSection>
+              <UploadSection.Left>
                 <label className="font-semibold text-2xl">Fonts</label>
                 <p className="text-sm text-gray-300">
                   Fonts chỉ dành cho subtitle .ass
                 </p>
-              </div>
+              </UploadSection.Left>
 
-              <div className="w-2/3 shrink-0">
+              <UploadSection.Right className="relative">
                 <FontUpdate
                   episodeSlug={episodeSlug}
                   initialFonts={data.video[0].fonts}
                 />
-              </div>
-            </div>
+              </UploadSection.Right>
+            </UploadSection>
           </div>
         )}
       </UploadMediaProvider>
-    </UploadSection>
+    </UploadContainer>
   );
 };
 

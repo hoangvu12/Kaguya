@@ -1,4 +1,4 @@
-import UploadSection from "@/components/features/upload/UploadSection";
+import UploadContainer from "@/components/features/upload/UploadContainer";
 import UploadLayout from "@/components/layouts/UploadLayout";
 import HorizontalCard from "@/components/shared/HorizontalCard";
 import Section from "@/components/shared/Section";
@@ -12,7 +12,7 @@ import {
   Source,
 } from "@/types";
 import { Media, MediaType } from "@/types/anilist";
-import { getUser, supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { NextPage } from "next";
 import { AiOutlineVideoCamera } from "react-icons/ai";
 import { BiImage } from "react-icons/bi";
@@ -33,7 +33,7 @@ const UploadPage: NextPage<UploadPageProps> = ({
   recentlyUpdatedManga = [],
 }) => {
   return (
-    <UploadSection
+    <UploadContainer
       title={`Hi, ${user.user_metadata.name}!`}
       isVerified={user.isVerified}
       className="space-y-4"
@@ -75,7 +75,7 @@ const UploadPage: NextPage<UploadPageProps> = ({
           </div>
         </Section>
       </div>
-    </UploadSection>
+    </UploadContainer>
   );
 };
 
