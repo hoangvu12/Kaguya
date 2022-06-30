@@ -30,6 +30,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo, Fragment } from "react";
 import { BsFillPlayFill } from "react-icons/bs";
+import { AiOutlineUpload } from "react-icons/ai";
 
 interface DetailsPageProps {
   anime: Media;
@@ -109,6 +110,17 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime, translations }) => {
                           LeftIcon={BsFillPlayFill}
                         >
                           <p>{t("watch_with_friends")}</p>
+                        </Button>
+                      </a>
+                    </Link>
+
+                    <Link href={`/upload/anime/${anime.id}`}>
+                      <a>
+                        <Button
+                          className="text-black"
+                          LeftIcon={AiOutlineUpload}
+                        >
+                          <p>Upload</p>
                         </Button>
                       </a>
                     </Link>
