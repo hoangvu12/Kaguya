@@ -8004,6 +8004,11 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
+libass-wasm@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/libass-wasm/-/libass-wasm-4.0.0.tgz#c1c120482ae4b5f63ee4f2a6303ff8ad733e3f0a"
+  integrity sha512-+fCkT3fP3b6wGg3s+VrUrFcW7IScFjVWlJq1aGu0gtiIw0RIPKMVdHqOHba2zkSYrfeJooB4Zn20fTORoY9brg==
+
 lie@3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/lie/-/lie-3.1.1.tgz#9a436b2cc7746ca59de7a41fa469b3efb76bd87e"
@@ -8645,10 +8650,10 @@ nested-error-stacks@^2.0.0, nested-error-stacks@^2.1.0:
   resolved "https://registry.yarnpkg.com/nested-error-stacks/-/nested-error-stacks-2.1.0.tgz#0fbdcf3e13fe4994781280524f8b96b0cdff9c61"
   integrity sha512-AO81vsIO1k1sM4Zrd6Hu7regmJN1NSiAja10gc4bX3F0wd+9rQmcuHQaHVQCYIEC8iFXnE+mavh23GOt7wBgug==
 
-netplayer@^1.2.14:
-  version "1.2.14"
-  resolved "https://registry.yarnpkg.com/netplayer/-/netplayer-1.2.14.tgz#fc01d2fa8fa4dd448edd94d181f82e03a355aaff"
-  integrity sha512-1arwayIpFHoVQfPkvhnv43keqJez3pdR3fJfd9sQ0x/2h69Bg+125Y7Ke8Pb3qPPo2mkxyqLhkO6KCy7FxxTwQ==
+netplayer@^1.2.15:
+  version "1.2.15"
+  resolved "https://registry.yarnpkg.com/netplayer/-/netplayer-1.2.15.tgz#02b832a46e480a4605452ebdbe0e7ba7f3d5c9c2"
+  integrity sha512-4CjKZUXSJQRpQsceIMdJwKASRaDiA9kdIdor5XZNo1f6yoVN/NiAC0xI8QSt6GnPctotosBW2+luJF6Ng0+Ghg==
   dependencies:
     "@plussub/srt-vtt-parser" "^1.1.0"
     load-script "^2.0.0"
