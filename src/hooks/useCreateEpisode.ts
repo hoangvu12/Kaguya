@@ -14,6 +14,7 @@ import { Episode, UploadSubtitle } from "@/types";
 import { randomString, sleep } from "@/utils";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useUser } from "@supabase/auth-helpers-react";
+import { useRouter } from "next/router";
 import { useMutation } from "react-query";
 import { toast } from "react-toastify";
 
@@ -40,6 +41,7 @@ const useCreateEpisode = (args: UseCreateEpisodeArgs) => {
   const { sourceId, mediaId } = args;
 
   const { user } = useUser();
+  const router = useRouter();
 
   const id = "create-episode-id";
   const episodeId = randomString(8);
@@ -204,6 +206,10 @@ const useCreateEpisode = (args: UseCreateEpisodeArgs) => {
         });
 
         toast.success("Upload successfully", { autoClose: 3000 });
+
+        router.push(
+          `/upload/anime/${mediaId}/episodes/${sourceId}-${episodeId}`
+        );
       },
     }
   );
