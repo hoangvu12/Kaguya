@@ -7,6 +7,8 @@ import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { useTranslation } from "next-i18next";
 import React from "react";
 import { HiOutlineLogout } from "react-icons/hi";
+import Link from "next/link";
+import { AiOutlineUpload } from "react-icons/ai";
 
 const HeaderProfile = () => {
   const { user } = useUser();
@@ -32,6 +34,14 @@ const HeaderProfile = () => {
       </div>
 
       <div className="space-y-2">
+        <Link href="/upload">
+          <a>
+            <Button className="w-full" secondary>
+              <TextIcon LeftIcon={AiOutlineUpload}>Upload</TextIcon>
+            </Button>
+          </a>
+        </Link>
+
         <Button
           className="w-full !bg-transparent hover:!bg-white/20"
           onClick={() => {
