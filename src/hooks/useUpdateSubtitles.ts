@@ -9,8 +9,15 @@ const useUpdateSubtitles = (episodeSlug: string) => {
 
   return useMutation<Attachment[], Error, SubtitleFile[]>(
     async (subtitles) => {
-      if (!subtitles) {
-        throw new Error("Subtitles are required");
+      if (!subtitles?.length) {
+        const { error } = await supabaseClient
+          .from("kaguya_videos")
+          .update({ subtitles: [] }, { returning: "minimal" })
+          .match({ episodeId: episodeSlug });
+
+        if (error) {
+          throw new Error("Deleting subtitles failed");
+        }
       }
 
       toast.loading("Uploading subtitles...", { toastId: id });
