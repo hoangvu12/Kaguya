@@ -19,7 +19,7 @@ export type FileInfo = {
   size: number;
   views: number;
   poster: string;
-  status: string;
+  status: VideoFileStatus;
   created_at: Date;
 };
 
