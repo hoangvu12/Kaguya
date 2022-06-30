@@ -24,7 +24,7 @@ interface SubtitleUploadProps extends Omit<FileUploadingProps, "onChange"> {
 
 const SubtitleUpload: React.FC<Partial<SubtitleUploadProps>> = ({
   onChange,
-  initialSubtitles,
+  initialSubtitles = [],
   ...props
 }) => {
   const { locale } = useRouter();

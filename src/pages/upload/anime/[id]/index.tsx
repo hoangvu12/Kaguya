@@ -1,5 +1,5 @@
 import MediaDetails from "@/components/features/upload/MediaDetails";
-import UploadSection from "@/components/features/upload/UploadSection";
+import UploadContainer from "@/components/features/upload/UploadContainer";
 import UploadLayout from "@/components/layouts/UploadLayout";
 import BaseButton from "@/components/shared/BaseButton";
 import Button from "@/components/shared/Button";
@@ -38,7 +38,7 @@ const UploadAnimePage: NextPage<UploadAnimePageProps> = ({
     });
 
   return (
-    <UploadSection isVerified={user.isVerified}>
+    <UploadContainer isVerified={user.isVerified}>
       {mediaLoading || episodesLoading ? (
         <Loading />
       ) : (
@@ -77,7 +77,7 @@ const UploadAnimePage: NextPage<UploadAnimePageProps> = ({
           </div>
         </UploadMediaProvider>
       )}
-    </UploadSection>
+    </UploadContainer>
   );
 };
 

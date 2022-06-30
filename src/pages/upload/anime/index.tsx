@@ -1,4 +1,4 @@
-import UploadSection from "@/components/features/upload/UploadSection";
+import UploadContainer from "@/components/features/upload/UploadContainer";
 import UploadLayout from "@/components/layouts/UploadLayout";
 import CircleButton from "@/components/shared/CircleButton";
 import Description from "@/components/shared/Description";
@@ -140,7 +140,7 @@ const UploadAnimePage: NextPage<UploadAnimePageProps> = ({
   };
 
   return (
-    <UploadSection
+    <UploadContainer
       title="Danh sách Anime đã upload"
       isVerified={user.isVerified}
     >
@@ -159,7 +159,7 @@ const UploadAnimePage: NextPage<UploadAnimePageProps> = ({
       ) : (
         <h1 className="text-3xl text-center">Bạn chưa đăng Anime nào</h1>
       )}
-    </UploadSection>
+    </UploadContainer>
   );
 };
 
