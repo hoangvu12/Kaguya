@@ -44,6 +44,7 @@ const useUploadedEpisodes = ({
           queryClient.setQueryData(["uploaded-episode", episode.slug], episode);
         });
       },
+      refetchOnMount: true
     }
   );
 };
