@@ -20,7 +20,7 @@ const FontUpdate: React.FC<FontUpdateProps> = ({
 
   const { data: initialFiles, isLoading: initialFilesLoading } = useQuery<
     File[]
-  >(["uploaded-subtitle-files", initialFonts], async () => {
+  >(["uploaded-font-files", initialFonts], async () => {
     if (!initialFonts?.length) return [];
 
     return Promise.all<File>(
