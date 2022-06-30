@@ -11,10 +11,13 @@ import {
 } from "@/constants";
 import { UploadMediaProvider } from "@/contexts/UploadMediaContext";
 import withAdditionalUser from "@/hocs/withAdditionalUser";
+import useConstantTranslation from "@/hooks/useConstantTranslation";
 import useUploadedEpisode from "@/hooks/useUploadedEpisode";
+import useVideoStatus from "@/hooks/useVideoStatus";
 import { AdditionalUser, Source } from "@/types";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { NextPage } from "next";
+import { useRouter } from "next/router";
 import React from "react";
 
 interface UploadEpisodeEditPageProps {
@@ -30,7 +33,11 @@ const UploadEpisodeEditPage: NextPage<UploadEpisodeEditPageProps> = ({
   episodeSlug,
   user,
 }) => {
+  const { VIDEO_STATUS_TRANSLATIONS } = useConstantTranslation();
   const { data, isLoading } = useUploadedEpisode(episodeSlug);
+  const { data: videoStatus, isLoading: videoStatusLoading } = useVideoStatus(
+    data.video[0].video.hashid
+  );
 
   return (
     <UploadSection isVerified={user.isVerified}>
@@ -61,6 +68,13 @@ const UploadEpisodeEditPage: NextPage<UploadEpisodeEditPageProps> = ({
               </div>
 
               <div className="w-2/3 shrink-0">
+                <p>
+                  Tình trạng video:{" "}
+                  {videoStatusLoading
+                    ? "Vui lòng chờ"
+                    : VIDEO_STATUS_TRANSLATIONS[videoStatus.status]}
+                </p>
+
                 <VideoUpdate
                   initialVideo={data.video[0].video}
                   episodeSlug={episodeSlug}
