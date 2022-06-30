@@ -142,6 +142,10 @@ export type Subtitle = {
   language: string;
 };
 
+export type Font = {
+  file: string;
+};
+
 export type VideoSource = {
   file: string;
   label?: string;

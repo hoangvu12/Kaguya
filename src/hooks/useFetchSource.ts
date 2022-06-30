@@ -1,5 +1,5 @@
 import config from "@/config";
-import { Episode, Subtitle, VideoSource } from "@/types";
+import { Episode, Font, Subtitle, VideoSource } from "@/types";
 import axios, { AxiosError } from "axios";
 import { useQuery, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
@@ -8,6 +8,7 @@ interface ReturnSuccessType {
   success: true;
   sources: VideoSource[];
   subtitles?: Subtitle[];
+  fonts?: Font[];
 }
 
 interface ReturnFailType {
