@@ -7,7 +7,10 @@ const UploadSection = ({
 }: React.HTMLAttributes<HTMLDivElement>) => {
   return (
     <div
-      className={classNames("flex justify-between gap-x-32", className)}
+      className={classNames(
+        "flex flex-col gap-y-4 md:flex-row md:justify-between md:gap-x-32",
+        className
+      )}
       {...props}
     ></div>
   );
@@ -18,7 +21,7 @@ const UploadSectionLeft: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   className,
   ...props
 }) => (
-  <div className={classNames("w-1/3 grow-0", className)} {...props}>
+  <div className={classNames("w-full md:w-1/3 grow-0", className)} {...props}>
     {children}
   </div>
 );
@@ -28,7 +31,7 @@ const UploadSectionRight: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
   className,
   ...props
 }) => (
-  <div className={classNames("w-2/3 shrink-0", className)} {...props}>
+  <div className={classNames("w-full md:w-2/3 shrink-0", className)} {...props}>
     {children}
   </div>
 );

@@ -42,11 +42,14 @@ const VideoUpdate: React.FC<VideoUpdateProps> = ({
         height={90}
         src={`https://cdn.streamlare.com/${initialVideo.poster}`}
         alt="uploaded video"
+        containerClassName="shrink-0"
       />
 
       <div className="pb-2 flex flex-col justify-between">
         <div>
-          <p className="text-lg">{initialVideo.name}</p>
+          <p className="text-lg break-all line-clamp-1 md:line-clamp-none">
+            {initialVideo.name}
+          </p>
 
           <p className="text-sm text-gray-300">
             {humanFileSize(initialVideo.size)}

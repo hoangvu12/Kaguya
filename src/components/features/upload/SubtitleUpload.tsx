@@ -67,7 +67,10 @@ const SubtitleUpload: React.FC<Partial<SubtitleUploadProps>> = ({
               const fileContext = filesCtx[index];
 
               return (
-                <div className="flex gap-8 flex-wrap" key={fileKey}>
+                <div
+                  className="flex flex-col gap-4 md:flex-row md:gap-8 flex-wrap"
+                  key={fileKey}
+                >
                   <FileBox
                     file={file}
                     index={index}
