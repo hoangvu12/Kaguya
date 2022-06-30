@@ -8,8 +8,15 @@ const useUpdateFonts = (episodeSlug: string) => {
 
   return useMutation<Attachment[], Error, File[]>(
     async (fonts) => {
-      if (!fonts) {
-        throw new Error("Subtitles are required");
+      if (!fonts?.length) {
+        const { error } = await supabaseClient
+          .from("kaguya_videos")
+          .update({ fonts: [] }, { returning: "minimal" })
+          .match({ episodeId: episodeSlug });
+
+        if (error) {
+          throw new Error("Deleting fonts failed");
+        }
       }
 
       toast.loading("Uploading fonts...", { toastId: id });
