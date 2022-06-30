@@ -146,26 +146,24 @@ const UploadAnimePage: NextPage<UploadAnimePageProps> = ({
       title="Danh sách Anime đã upload"
       isVerified={user.isVerified}
     >
+      <Button primary className="absolute -top-2 right-4 md:right-12">
+        <Link href="/upload/anime/create">
+          <a>Tìm anime</a>
+        </Link>
+      </Button>
+
       {isLoading ? (
         <Loading />
       ) : data?.media?.length ? (
-        <React.Fragment>
-          <Button primary className="absolute -top-2 right-4 md:right-12">
-            <Link href="/upload/anime/create">
-              <a>Tìm anime</a>
-            </Link>
-          </Button>
-
-          <ServerPaginateTable
-            data={data.media}
-            columns={columns}
-            totalCount={data.total}
-            pageIndex={pageIndex}
-            pageSize={pageSize}
-            onPageSizeChange={handlePageSizeChange}
-            onPageIndexChange={handlePageIndexChange}
-          />
-        </React.Fragment>
+        <ServerPaginateTable
+          data={data.media}
+          columns={columns}
+          totalCount={data.total}
+          pageIndex={pageIndex}
+          pageSize={pageSize}
+          onPageSizeChange={handlePageSizeChange}
+          onPageIndexChange={handlePageIndexChange}
+        />
       ) : (
         <h1 className="text-3xl text-center">Bạn chưa đăng Anime nào</h1>
       )}
