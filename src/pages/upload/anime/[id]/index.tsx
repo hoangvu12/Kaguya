@@ -10,9 +10,11 @@ import useMediaDetails from "@/hooks/useMediaDetails";
 import useUploadedEpisodes from "@/hooks/useUploadedEpisodes";
 import { AdditionalUser, Source } from "@/types";
 import { MediaType } from "@/types/anilist";
+import { sortMediaUnit } from "@/utils/data";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { NextPage } from "next";
 import Link from "next/link";
+import { useMemo } from "react";
 import { IoIosAddCircleOutline } from "react-icons/io";
 
 interface UploadAnimePageProps {
@@ -37,6 +39,12 @@ const UploadAnimePage: NextPage<UploadAnimePageProps> = ({
       sourceId,
     });
 
+  const sortedEpisodes = useMemo(() => {
+    if (episodesLoading) return [];
+
+    return sortMediaUnit(uploadedEpisodes);
+  }, [episodesLoading, uploadedEpisodes]);
+
   return (
     <UploadContainer isVerified={user.isVerified}>
       {mediaLoading || episodesLoading ? (
@@ -60,12 +68,12 @@ const UploadAnimePage: NextPage<UploadAnimePageProps> = ({
               </Link>
 
               <div className="space-y-2">
-                {uploadedEpisodes.map((episode) => (
+                {sortedEpisodes.map((episode) => (
                   <Link
                     key={episode.slug}
                     href={`/upload/anime/${mediaId}/episodes/${episode.slug}`}
                   >
-                    <a>
+                    <a className="block">
                       <BaseButton className="p-3 w-full !bg-background-900 hover:!bg-white/20 rounded-md">
                         {episode.name}
                       </BaseButton>
