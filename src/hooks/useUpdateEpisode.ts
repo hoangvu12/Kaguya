@@ -12,7 +12,7 @@ export const useUpdateEpisode = (episodeSlug: string) => {
       const { data, error } = await supabaseClient
         .from<Episode>("kaguya_episodes")
         .update(updateValue)
-        .eq("slug", episodeSlug);
+        .match({ slug: episodeSlug });
 
       if (error) throw error;
 
