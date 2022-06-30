@@ -64,7 +64,6 @@ export const getUploadedMedia = async <T extends MediaType>({
     })
     // @ts-ignore
     .eq("sourceId", sourceId)
-    // @ts-ignore
     .order("updated_at", { ascending: false, foreignTable: sortTable })
     .range(from, to);
 

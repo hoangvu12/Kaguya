@@ -1,3 +1,4 @@
+import React from "react";
 import UploadContainer from "@/components/features/upload/UploadContainer";
 import UploadLayout from "@/components/layouts/UploadLayout";
 import CircleButton from "@/components/shared/CircleButton";
@@ -20,6 +21,7 @@ import { useEffect, useState } from "react";
 import { AiOutlineEdit } from "react-icons/ai";
 import { useQueryClient } from "react-query";
 import { Column } from "react-table";
+import Button from "@/components/shared/Button";
 
 interface UploadAnimePageProps {
   user: AdditionalUser;
@@ -147,15 +149,23 @@ const UploadAnimePage: NextPage<UploadAnimePageProps> = ({
       {isLoading ? (
         <Loading />
       ) : data?.media?.length ? (
-        <ServerPaginateTable
-          data={data.media}
-          columns={columns}
-          totalCount={data.total}
-          pageIndex={pageIndex}
-          pageSize={pageSize}
-          onPageSizeChange={handlePageSizeChange}
-          onPageIndexChange={handlePageIndexChange}
-        />
+        <React.Fragment>
+          <Button primary className="absolute -top-2 right-4 md:right-12">
+            <Link href="/upload/anime/create">
+              <a>Tìm anime</a>
+            </Link>
+          </Button>
+
+          <ServerPaginateTable
+            data={data.media}
+            columns={columns}
+            totalCount={data.total}
+            pageIndex={pageIndex}
+            pageSize={pageSize}
+            onPageSizeChange={handlePageSizeChange}
+            onPageIndexChange={handlePageIndexChange}
+          />
+        </React.Fragment>
       ) : (
         <h1 className="text-3xl text-center">Bạn chưa đăng Anime nào</h1>
       )}
