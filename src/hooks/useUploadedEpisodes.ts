@@ -1,35 +1,51 @@
 import { AnimeSourceConnection } from "@/types";
 import { MediaType } from "@/types/anilist";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 
 interface UseUploadedEpisodesOptions {
   mediaId: number;
   sourceId: string;
 }
 
-const useUploadedEpisodes = (options: UseUploadedEpisodesOptions) => {
-  return useQuery(["uploaded-episodes", { options }], async () => {
-    const { data, error } = await supabaseClient
-      .from<AnimeSourceConnection>("kaguya_anime_source")
-      .select(
-        `
+const useUploadedEpisodes = ({
+  mediaId,
+  sourceId,
+}: UseUploadedEpisodesOptions) => {
+  const queryClient = useQueryClient();
+
+  return useQuery(
+    ["uploaded-episodes", { mediaId, sourceId }],
+    async () => {
+      const { data, error } = await supabaseClient
+        .from<AnimeSourceConnection>("kaguya_anime_source")
+        .select(
+          `
             mediaId,
             episodes:kaguya_episodes(
-                *
+                *,
+                video:kaguya_videos(*)
             )
         `
-      )
-      .eq("sourceId", options.sourceId)
-      .eq("mediaId", options.mediaId)
-      .single();
+        )
+        .eq("sourceId", sourceId)
+        .eq("mediaId", mediaId)
+        .single();
 
-    if (error) {
-      return [];
+      if (error) {
+        return [];
+      }
+
+      return data?.episodes || [];
+    },
+    {
+      onSuccess(data) {
+        data.forEach((episode) => {
+          queryClient.setQueryData(["uploaded-episode", episode.slug], episode);
+        });
+      },
     }
-
-    return data?.episodes || [];
-  });
+  );
 };
 
 export default useUploadedEpisodes;
