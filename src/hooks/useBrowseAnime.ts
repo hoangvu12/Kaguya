@@ -4,6 +4,7 @@ import {
   MediaSeason,
   MediaSort,
   MediaStatus,
+  MediaType,
 } from "@/types/anilist";
 import { useInfiniteQuery } from "react-query";
 
@@ -47,9 +48,11 @@ const useBrowse = (options: UseBrowseOptions) => {
         sort: [sort],
         status,
         page: pageParam,
+        type: MediaType.Anime,
         ...(tags?.length && { tag_in: tags }),
         ...(genres?.length && { genre_in: genres }),
         ...(keyword && { search: keyword }),
+        ...(!keyword && { isAdult: false }),
       });
 
       return data;
