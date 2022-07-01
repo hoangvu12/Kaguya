@@ -1,9 +1,11 @@
 import Button from "@/components/shared/Button";
 import Image from "@/components/shared/Image";
+import { useUploadMediaInfo } from "@/contexts/UploadMediaContext";
 import { useUpdateVideo } from "@/hooks/useUpdateVideo";
 import { FileInfo, VideoFileResponse } from "@/services/upload";
 import { humanFileSize } from "@/utils";
-import React, { useState } from "react";
+import Link from "next/link";
+import React, { useMemo, useState } from "react";
 import VideoUpload from "./VideoUpload";
 
 interface VideoUpdateProps {
@@ -18,6 +20,7 @@ const VideoUpdate: React.FC<VideoUpdateProps> = ({
   const [isUpdating, setIsUpdating] = useState(false);
   const [file, setFile] = useState<File | string>(null);
   const { mutate: updateVideo, isLoading } = useUpdateVideo(episodeSlug);
+  const { mediaId, sourceId } = useUploadMediaInfo();
 
   const handleStartUpdating = () => {
     setIsUpdating(true);
@@ -35,6 +38,8 @@ const VideoUpdate: React.FC<VideoUpdateProps> = ({
     });
   };
 
+  const episodeId = useMemo(() => episodeSlug.split("-")[1], [episodeSlug]);
+
   return !isUpdating ? (
     <div className="flex gap-2">
       <Image
@@ -48,9 +53,13 @@ const VideoUpdate: React.FC<VideoUpdateProps> = ({
 
       <div className="pb-2 flex flex-col justify-between">
         <div>
-          <p className="text-lg break-all line-clamp-1 md:line-clamp-none">
-            {initialVideo.name}
-          </p>
+          <Link href={`/anime/watch/${mediaId}/${sourceId}/${episodeId}`}>
+            <a>
+              <p className="text-lg break-all line-clamp-1 hover:text-primary-300 md:line-clamp-none">
+                {initialVideo.name}
+              </p>
+            </a>
+          </Link>
 
           <p className="text-sm text-gray-300">
             {humanFileSize(initialVideo.size)}
