@@ -17,6 +17,8 @@ const useUpdateFonts = (episodeSlug: string) => {
         if (error) {
           throw new Error("Deleting fonts failed");
         }
+
+        return;
       }
 
       toast.loading("Uploading fonts...", { toastId: id });
