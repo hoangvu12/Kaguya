@@ -5,7 +5,9 @@ import UploadContainer from "@/components/features/upload/UploadContainer";
 import UploadSection from "@/components/features/upload/UploadSection";
 import VideoUpdate from "@/components/features/upload/VideoUpdate";
 import UploadLayout from "@/components/layouts/UploadLayout";
+import Button from "@/components/shared/Button";
 import Loading from "@/components/shared/Loading";
+import Section from "@/components/shared/Section";
 import {
   supportedUploadSubtitleFormats,
   supportedUploadVideoFormats,
@@ -17,6 +19,8 @@ import useVideoStatus from "@/hooks/useVideoStatus";
 import { AdditionalUser, Source } from "@/types";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { NextPage } from "next";
+import Link from "next/link";
+import { useMemo } from "react";
 
 interface UploadEpisodeEditPageProps {
   user: AdditionalUser;
@@ -36,9 +40,11 @@ const UploadEpisodeEditPage: NextPage<UploadEpisodeEditPageProps> = ({
     data?.video?.[0]?.video?.id
   );
 
+  const episodeId = useMemo(() => episodeSlug.split("-")[1], [episodeSlug]);
+
   return (
-    <UploadContainer isVerified={user.isVerified}>
-      <UploadMediaProvider value={{ mediaId, sourceId }}>
+    <UploadMediaProvider value={{ mediaId, sourceId }}>
+      <UploadContainer className="pb-8" isVerified={user.isVerified}>
         {isLoading || videoStatusLoading ? (
           <Loading />
         ) : (
@@ -110,8 +116,22 @@ const UploadEpisodeEditPage: NextPage<UploadEpisodeEditPageProps> = ({
             </UploadSection>
           </div>
         )}
-      </UploadMediaProvider>
-    </UploadContainer>
+      </UploadContainer>
+
+      <Section className="py-3 flex justify-end gap-2 items-center fixed bottom-0 w-full md:w-4/5 bg-background-800">
+        <Link href={`/upload/anime/${mediaId}/episodes/create`}>
+          <a>
+            <Button secondary>Tạo tập mới</Button>
+          </a>
+        </Link>
+
+        <Link href={`/anime/watch/${mediaId}/${sourceId}/${episodeId}`}>
+          <a>
+            <Button primary>Xem tập phim</Button>
+          </a>
+        </Link>
+      </Section>
+    </UploadMediaProvider>
   );
 };
 
