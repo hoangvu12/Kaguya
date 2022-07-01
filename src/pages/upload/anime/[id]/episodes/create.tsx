@@ -1,12 +1,14 @@
-import Button from "@/components/shared/Button";
 import EpisodeNameUpload from "@/components/features/upload/EpisodeNameUpload";
 import FontUpload from "@/components/features/upload/FontUpload";
 import SubtitleUpload, {
   SubtitleFile,
 } from "@/components/features/upload/SubtitleUpload";
 import UploadContainer from "@/components/features/upload/UploadContainer";
+import UploadSection from "@/components/features/upload/UploadSection";
 import VideoUpload from "@/components/features/upload/VideoUpload";
 import UploadLayout from "@/components/layouts/UploadLayout";
+import Button from "@/components/shared/Button";
+import Section from "@/components/shared/Section";
 import {
   supportedUploadSubtitleFormats,
   supportedUploadVideoFormats,
@@ -16,9 +18,7 @@ import useCreateEpisode from "@/hooks/useCreateEpisode";
 import { AdditionalUser, Source } from "@/types";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { NextPage } from "next";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import UploadSection from "@/components/features/upload/UploadSection";
+import React, { useState } from "react";
 
 interface UploadCreateEpisodePageProps {
   user: AdditionalUser;
@@ -31,7 +31,6 @@ const UploadCreateEpisodePage: NextPage<UploadCreateEpisodePageProps> = ({
   sourceId,
   user,
 }) => {
-  const { handleSubmit } = useForm();
   const [video, setVideo] = useState<string | File>(null);
   const [subtitles, setSubtitles] = useState<SubtitleFile[]>([]);
   const [fonts, setFonts] = useState<File[]>([]);
@@ -52,62 +51,66 @@ const UploadCreateEpisodePage: NextPage<UploadCreateEpisodePageProps> = ({
   };
 
   return (
-    <UploadContainer isVerified={user.isVerified}>
-      <form className="space-y-16" onSubmit={handleSubmit(onSubmit)}>
-        <UploadSection>
-          <UploadSection.Left>
-            <label className="font-semibold text-2xl">Tập phim</label>
-          </UploadSection.Left>
+    <React.Fragment>
+      <UploadContainer className="pb-12" isVerified={user.isVerified}>
+        <div className="space-y-16">
+          <UploadSection>
+            <UploadSection.Left>
+              <label className="font-semibold text-2xl">Tập phim</label>
+            </UploadSection.Left>
 
-          <UploadSection.Right>
-            <EpisodeNameUpload onChange={setEpisodeName} />
-          </UploadSection.Right>
-        </UploadSection>
+            <UploadSection.Right>
+              <EpisodeNameUpload onChange={setEpisodeName} />
+            </UploadSection.Right>
+          </UploadSection>
 
-        <UploadSection>
-          <UploadSection.Left>
-            <label className="font-semibold text-2xl">Video</label>
-            <p className="text-sm text-gray-300">
-              Hỗ trợ {supportedUploadVideoFormats.join(", ")}
-            </p>
-          </UploadSection.Left>
+          <UploadSection>
+            <UploadSection.Left>
+              <label className="font-semibold text-2xl">Video</label>
+              <p className="text-sm text-gray-300">
+                Hỗ trợ {supportedUploadVideoFormats.join(", ")}
+              </p>
+            </UploadSection.Left>
 
-          <UploadSection.Right>
-            <VideoUpload onChange={setVideo} />
-          </UploadSection.Right>
-        </UploadSection>
+            <UploadSection.Right>
+              <VideoUpload onChange={setVideo} />
+            </UploadSection.Right>
+          </UploadSection>
 
-        <UploadSection>
-          <UploadSection.Left>
-            <label className="font-semibold text-2xl">Subtitles</label>
-            <p className="text-sm text-gray-300">
-              Hỗ trợ {supportedUploadSubtitleFormats.join(", ")}
-            </p>
-          </UploadSection.Left>
+          <UploadSection>
+            <UploadSection.Left>
+              <label className="font-semibold text-2xl">Subtitles</label>
+              <p className="text-sm text-gray-300">
+                Hỗ trợ {supportedUploadSubtitleFormats.join(", ")}
+              </p>
+            </UploadSection.Left>
 
-          <UploadSection.Right>
-            <SubtitleUpload onChange={setSubtitles} />
-          </UploadSection.Right>
-        </UploadSection>
+            <UploadSection.Right>
+              <SubtitleUpload onChange={setSubtitles} />
+            </UploadSection.Right>
+          </UploadSection>
 
-        <UploadSection>
-          <UploadSection.Left>
-            <label className="font-semibold text-2xl">Fonts</label>
-            <p className="text-sm text-gray-300">
-              Fonts chỉ dành cho subtitle .ass
-            </p>
-          </UploadSection.Left>
+          <UploadSection>
+            <UploadSection.Left>
+              <label className="font-semibold text-2xl">Fonts</label>
+              <p className="text-sm text-gray-300">
+                Fonts chỉ dành cho subtitle .ass
+              </p>
+            </UploadSection.Left>
 
-          <UploadSection.Right>
-            <FontUpload onChange={setFonts} />
-          </UploadSection.Right>
-        </UploadSection>
+            <UploadSection.Right>
+              <FontUpload onChange={setFonts} />
+            </UploadSection.Right>
+          </UploadSection>
+        </div>
+      </UploadContainer>
 
-        <Button type="submit" className="ml-auto" primary>
+      <Section className="py-3 flex justify-end gap-2 items-center fixed bottom-0 w-full md:w-4/5 bg-background-800">
+        <Button onClick={onSubmit} primary>
           Upload
         </Button>
-      </form>
-    </UploadContainer>
+      </Section>
+    </React.Fragment>
   );
 };
 
