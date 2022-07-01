@@ -57,7 +57,7 @@ const useUpdateSubtitles = (episodeSlug: string) => {
           autoClose: 3000,
         });
 
-        toast.error("Upload failed: " + error.message, { autoClose: 3000 });
+        toast.error(error.message, { autoClose: 3000 });
       },
       onSuccess: () => {
         toast.update(id, {
