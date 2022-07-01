@@ -5,6 +5,7 @@
 
 const { withSentryConfig } = require("@sentry/nextjs");
 const withPWA = require("next-pwa");
+const defaultRuntimeCaching = require("./cache");
 const { i18n } = require("./next-i18next.config");
 
 const moduleExports = withPWA({
@@ -26,8 +27,10 @@ const moduleExports = withPWA({
       /_middleware\.js$/,
       /_middleware\.js\.map$/,
       /middleware-runtime\.js$/,
+      /middleware-runtime\.js\.map$/,
     ],
     disable: process.env.NODE_ENV === "development",
+    runtimeCaching: defaultRuntimeCaching,
   },
   i18n,
 });
