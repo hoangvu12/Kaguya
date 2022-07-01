@@ -6,7 +6,7 @@ import {
   remoteUploadVideo,
   uploadVideo,
 } from "@/services/upload";
-import { sleep } from "@/utils";
+import { humanFileSize, sleep } from "@/utils";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { PostgrestError } from "@supabase/supabase-js";
 import { useMutation, useQueryClient } from "react-query";
@@ -36,20 +36,24 @@ export const useUpdateVideo = (episodeSlug: string) => {
         const waitRemoteUntilDownloaded = async (): Promise<RemoteStatus> => {
           const remoteStatus = await getRemoteStatus(remote.id);
 
-          if (remoteStatus.status === "downloaded") {
+          if (remoteStatus.status === "finished") {
             return remoteStatus;
           }
 
           if (
             remoteStatus.status !== "downloading" &&
-            remoteStatus.status !== "pending"
+            remoteStatus.status !== "new"
           ) {
             throw new Error("Upload failed");
           }
 
           if (remoteStatus.status === "downloading") {
+            const bytesLoaded = humanFileSize(remoteStatus.bytes_loaded);
+            const bytesTotal = humanFileSize(remoteStatus.bytes_total);
+
             toast.update(id, {
-              render: `Downloading video... (${remoteStatus.data.percentage}%)`,
+              render: `Downloading video... (${bytesLoaded} of ${bytesTotal}})`,
+              type: "info",
               isLoading: true,
             });
           }
@@ -61,7 +65,7 @@ export const useUpdateVideo = (episodeSlug: string) => {
 
         const remoteStatus = await waitRemoteUntilDownloaded();
 
-        uploadedVideo = await getVideoStatus(remoteStatus.data.fileId);
+        uploadedVideo = await getVideoStatus(remoteStatus.linkid);
       } else if (video instanceof File) {
         uploadedVideo = await uploadVideo(video);
       }

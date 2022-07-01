@@ -307,15 +307,6 @@ export const PLAYER_TRANSLATIONS: I18n = {
   },
 };
 
-export const VIDEO_STATUS_TRANSLATIONS = {
-  converted: "Converted",
-  onqueue: "On queue",
-  processing: "Processing",
-  failed: "Failed",
-  transferring: "Transferring",
-  converting: "Converting",
-};
-
 const translations = {
   SEASONS,
   FORMATS,
@@ -333,7 +324,6 @@ const translations = {
   GENDERS,
   EMOJI_GROUP,
   PLAYER_TRANSLATIONS,
-  VIDEO_STATUS_TRANSLATIONS,
 };
 
 export default translations;

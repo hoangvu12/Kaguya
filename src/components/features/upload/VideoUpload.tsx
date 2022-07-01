@@ -36,7 +36,7 @@ const VideoUpload: React.FC<VideoUploadProps> = ({ onChange }) => {
           ref={textAreaRef}
           onBlur={handleTextAreaBlur}
           className="mt-2 p-2 w-full h-36 bg-background-900 text-white border-gray-300 border"
-          placeholder="Nhập URL muốn upload (VD: https://example.com/video.mp4 hay https://drive.google.com/file/d/1UQocyl69gjAOMLKdV0PV6NBXr9re66A6)"
+          placeholder="Nhập URL muốn upload (VD: https://example.com/video.mp4)"
         />
       </TabPanel>
     </Tabs>
