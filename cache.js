@@ -156,7 +156,7 @@ module.exports = [
   },
   {
     urlPattern: ({ url }) => {
-      const blacklistOrigins = [process.env.NEXT_PUBLIC_PROXY_SERVER_URL];
+      const blacklistOrigins = ["proxy"];
 
       const isSameOrigin = self.origin === url.origin;
 
