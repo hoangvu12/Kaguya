@@ -18,6 +18,8 @@ const useUpdateSubtitles = (episodeSlug: string) => {
         if (error) {
           throw new Error("Deleting subtitles failed");
         }
+
+        return;
       }
 
       toast.loading("Uploading subtitles...", { toastId: id });
