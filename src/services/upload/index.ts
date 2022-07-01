@@ -99,7 +99,6 @@ export type UpsertEpisodeArgs = {
 
 const client = axios.create({
   baseURL: config.nodeServerUrl,
-  // baseURL: "http://localhost:3001/kaguya",
 });
 
 client.interceptors.request.use((config) => {
@@ -108,6 +107,15 @@ client.interceptors.request.use((config) => {
 
   return config;
 });
+
+client.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    return Promise.reject(
+      new Error(error?.response?.data?.error || "Something went wrong")
+    );
+  }
+);
 
 export const upsertEpisode = async (args: UpsertEpisodeArgs) => {
   const { sourceId, episode, mediaId } = args;
@@ -141,7 +149,7 @@ export const uploadVideo = async (file: File) => {
   formData.append("file", file);
 
   const { data } = await client.post<UploadVideoResponse>(
-    "/upload/video",
+    "/upload/vide",
     formData
   );
 
