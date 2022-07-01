@@ -307,15 +307,6 @@ export const PLAYER_TRANSLATIONS: I18n = {
   },
 };
 
-export const VIDEO_STATUS_TRANSLATIONS = {
-  converted: "Đã chuyển đổi",
-  onqueue: "Đang chờ",
-  processing: "Đang xử lý",
-  failed: "Lỗi",
-  transferring: "Đang chuyển",
-  converting: "Đang chuyển đổi",
-};
-
 const translations = {
   SEASONS,
   FORMATS,
@@ -333,7 +324,6 @@ const translations = {
   GENDERS,
   EMOJI_GROUP,
   PLAYER_TRANSLATIONS,
-  VIDEO_STATUS_TRANSLATIONS,
 };
 
 export default translations;

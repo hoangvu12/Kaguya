@@ -40,9 +40,10 @@ const VideoUpdate: React.FC<VideoUpdateProps> = ({
       <Image
         width={150}
         height={90}
-        src={`https://cdn.streamlare.com/${initialVideo.poster}`}
+        src={initialVideo.thumb || "/error.png"}
         alt="uploaded video"
         containerClassName="shrink-0"
+        objectFit="cover"
       />
 
       <div className="pb-2 flex flex-col justify-between">

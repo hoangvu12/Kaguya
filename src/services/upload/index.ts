@@ -14,13 +14,12 @@ enum VideoFileStatus {
 }
 
 export type FileInfo = {
-  hashid: string;
+  id: string;
+  status: number;
   name: string;
   size: number;
-  views: number;
-  poster: string;
-  status: VideoFileStatus;
-  created_at: Date;
+  converted: boolean;
+  thumb: string;
 };
 
 export type VideoStatusResponse = {
@@ -29,14 +28,12 @@ export type VideoStatusResponse = {
 };
 
 export type VideoFileResponse = {
-  hashid: string;
-  folder?: any;
+  url: string;
+  sha256: string;
   name: string;
-  ext: string;
-  mimeType: string;
-  size: number;
-  status: VideoFileStatus;
-  uploaded_at: Date;
+  size: string;
+  content_type: string;
+  id: string;
 };
 
 export type Attachment = {
@@ -62,24 +59,23 @@ export type UploadVideoResponse = {
 export type RemoteVideoUploadResponse = {
   success: boolean;
   remote: {
-    id: number;
-    url: string;
-    name: string;
+    id: string;
+    folderid: string;
   };
 };
 
 export type RemoteStatus = {
-  id: number;
-  url: string;
-  name: string;
-  data: {
-    fileId: string;
-    percentage: number;
-    size: number;
-  };
+  id: string;
+  remoteurl: string;
   status: string;
-  created_at: Date;
-  updated_at: Date;
+  bytes_loaded?: any;
+  bytes_total?: any;
+  folderid: string;
+  added: string;
+  last_update: string;
+  extid: boolean;
+  url: boolean;
+  linkid: string;
 };
 
 export type RemoteStatusResponse = {
@@ -153,12 +149,12 @@ export const uploadVideo = async (file: File) => {
 
   const { video } = data;
 
-  const videoInfo = await getVideoStatus(video.hashid);
+  const videoInfo = await getVideoStatus(video.id);
 
   return videoInfo;
 };
 
-export const getRemoteStatus = async (remoteId: number) => {
+export const getRemoteStatus = async (remoteId: string) => {
   const { data } = await client.get<RemoteStatusResponse>(
     `/upload/video/remote/${remoteId}/status`
   );
