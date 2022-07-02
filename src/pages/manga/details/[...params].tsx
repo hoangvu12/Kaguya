@@ -30,6 +30,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { BsFillPlayFill } from "react-icons/bs";
+import { AiOutlineUpload } from "react-icons/ai";
 
 interface DetailsPageProps {
   manga: Media;
@@ -82,6 +83,14 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
                         className="mb-4"
                       >
                         <p>{t("read_now")}</p>
+                      </Button>
+                    </a>
+                  </Link>
+
+                  <Link href={`/upload/manga/${manga.id}`}>
+                    <a>
+                      <Button className="text-black" LeftIcon={AiOutlineUpload}>
+                        <p>Upload</p>
                       </Button>
                     </a>
                   </Link>
