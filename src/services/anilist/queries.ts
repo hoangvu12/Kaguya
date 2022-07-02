@@ -73,7 +73,7 @@ query Media(
   $duration: Int
   $chapters: Int
   $volumes: Int
-  $isAdult: Boolean = false
+  $isAdult: Boolean
   $genre: String
   $tag: String
   $minimumTagRank: Int
@@ -363,7 +363,7 @@ query Media(
   $duration: Int
   $chapters: Int
   $volumes: Int
-  $isAdult: Boolean = false
+  $isAdult: Boolean
   $genre: String
   $tag: String
   $minimumTagRank: Int
