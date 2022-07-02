@@ -1,5 +1,6 @@
 import UploadContainer from "@/components/features/upload/UploadContainer";
 import UploadLayout from "@/components/layouts/UploadLayout";
+import Button from "@/components/shared/Button";
 import CircleButton from "@/components/shared/CircleButton";
 import Description from "@/components/shared/Description";
 import Loading from "@/components/shared/Loading";
@@ -144,6 +145,12 @@ const UploadAnimePage: NextPage<UploadAnimePageProps> = ({
       title="Danh sách Manga đã upload"
       isVerified={user.isVerified}
     >
+      <Button primary className="absolute -top-2 right-4 md:right-12">
+        <Link href="/upload/manga/create">
+          <a>Tìm manga</a>
+        </Link>
+      </Button>
+
       {isLoading ? (
         <Loading />
       ) : data?.media?.length ? (
