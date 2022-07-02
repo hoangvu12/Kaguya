@@ -36,9 +36,9 @@ const UploadPage: NextPage<UploadPageProps> = ({
     <UploadContainer
       title={`Hi, ${user.user_metadata.name}!`}
       isVerified={user.isVerified}
-      className="space-y-4"
+      className="space-y-8"
     >
-      <div className="flex gap-4">
+      <div className="flex flex-col md:flex-row gap-4">
         <StatisticBox
           title="Số Anime đã upload"
           Icon={AiOutlineVideoCamera}
@@ -51,7 +51,7 @@ const UploadPage: NextPage<UploadPageProps> = ({
         />
       </div>
 
-      <div className="flex gap-4">
+      <div className="flex flex-col md:flex-row gap-8 md:gap-4">
         <Section hasPadding={false} className="flex-1" title="Anime gần đây">
           <div className="bg-background-900 p-4">
             {recentlyUpdatedAnime.length ? (
