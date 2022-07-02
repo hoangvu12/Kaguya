@@ -72,6 +72,9 @@ export type Chapter = {
   sourceMediaId: string;
   source: Source;
   slug: string;
+  images: {
+    images: Attachment[];
+  }[];
 };
 
 export interface Section<T> {

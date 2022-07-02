@@ -1,16 +1,19 @@
 import BaseButton from "@/components/shared/BaseButton";
 import Button from "@/components/shared/Button";
-import FileUploading, { FileUploader } from "@/components/shared/FileUploading";
+import FileUploading, {
+  FileUploader,
+  FileUploadingProps,
+} from "@/components/shared/FileUploading";
 import Image from "@/components/shared/Image";
 import { supportedUploadImageFormats } from "@/constants";
 import { randomString } from "@/utils";
 import { AiFillFileAdd, AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 
-interface ImageUploadProps {
+interface ImageUploadProps extends FileUploadingProps {
   onChange?: (images: File[]) => void;
 }
 
-const ImageUpload: React.FC<ImageUploadProps> = ({ onChange }) => {
+const ImageUpload: React.FC<ImageUploadProps> = ({ onChange, ...props }) => {
   const handleFileChange = (fileList: File[]) => {
     onChange?.(fileList);
   };
@@ -20,6 +23,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onChange }) => {
       onChange={handleFileChange}
       acceptType={supportedUploadImageFormats}
       multiple
+      {...props}
     >
       {(props) => {
         if (!props.fileList?.length) return <FileUploader {...props} />;
