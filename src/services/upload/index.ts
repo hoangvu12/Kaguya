@@ -1,5 +1,5 @@
 import config from "@/config";
-import { Episode } from "@/types";
+import { Chapter, Episode } from "@/types";
 import { serialize } from "@/utils";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import axios from "axios";
@@ -88,9 +88,23 @@ export type UpsertEpisodeResponse = {
   episode: Episode;
 };
 
+export type UpsertChapterResponse = {
+  success: boolean;
+  chapter: Chapter;
+};
+
 export type UpsertEpisodeArgs = {
   sourceId: string;
   episode: {
+    name: string;
+    id: string;
+  };
+  mediaId: number;
+};
+
+export type UpsertChapterArgs = {
+  sourceId: string;
+  chapter: {
     name: string;
     id: string;
   };
@@ -131,6 +145,22 @@ export const upsertEpisode = async (args: UpsertEpisodeArgs) => {
   if (!data.success) throw new Error("Upsert episode failed");
 
   return data.episode;
+};
+
+export const upsertChapter = async (args: UpsertChapterArgs) => {
+  const { sourceId, chapter, mediaId } = args;
+  const { data } = await client.post<UpsertChapterResponse>(
+    `/upload/chapters/${mediaId}`,
+    serialize({
+      chapterName: chapter.name,
+      chapterId: chapter.id,
+      sourceId,
+    })
+  );
+
+  if (!data.success) throw new Error("Upsert chapter failed");
+
+  return data.chapter;
 };
 
 export const getVideoStatus = async (hashid: string) => {
