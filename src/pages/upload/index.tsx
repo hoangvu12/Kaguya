@@ -56,7 +56,11 @@ const UploadPage: NextPage<UploadPageProps> = ({
           <div className="bg-background-900 p-4">
             {recentlyUpdatedAnime.length ? (
               recentlyUpdatedAnime.map((media) => (
-                <HorizontalCard key={media.id} data={media} />
+                <HorizontalCard
+                  redirectUrl={`/upload/anime/${media.id}`}
+                  key={media.id}
+                  data={media}
+                />
               ))
             ) : (
               <p className="text-center text-gray-300">Không có dữ liệu</p>
@@ -67,7 +71,11 @@ const UploadPage: NextPage<UploadPageProps> = ({
           <div className="bg-background-900 p-4">
             {recentlyUpdatedManga.length ? (
               recentlyUpdatedManga.map((media) => (
-                <HorizontalCard key={media.id} data={media} />
+                <HorizontalCard
+                  redirectUrl={`/upload/manga/${media.id}`}
+                  key={media.id}
+                  data={media}
+                />
               ))
             ) : (
               <p className="text-center text-gray-300">Không có dữ liệu</p>
