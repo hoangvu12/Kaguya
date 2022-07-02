@@ -43,7 +43,12 @@ const ImageUpdate: React.FC<ImageUpdateProps> = ({
     <div className="space-y-4">
       <ImageUpload initialFiles={initialFiles} onChange={setFiles} />
 
-      <Button isLoading={isUpdateLoading} onClick={handleUpdate} primary>
+      <Button
+        className="ml-auto"
+        isLoading={isUpdateLoading}
+        onClick={handleUpdate}
+        primary
+      >
         Cập nhật
       </Button>
     </div>
