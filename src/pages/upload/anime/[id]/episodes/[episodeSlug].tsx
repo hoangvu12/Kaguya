@@ -6,6 +6,7 @@ import UploadSection from "@/components/features/upload/UploadSection";
 import VideoUpdate from "@/components/features/upload/VideoUpdate";
 import UploadLayout from "@/components/layouts/UploadLayout";
 import Button from "@/components/shared/Button";
+import DeleteConfirmation from "@/components/shared/DeleteConfirmation";
 import Loading from "@/components/shared/Loading";
 import Section from "@/components/shared/Section";
 import {
@@ -14,12 +15,14 @@ import {
 } from "@/constants";
 import { UploadMediaProvider } from "@/contexts/UploadMediaContext";
 import withAdditionalUser from "@/hocs/withAdditionalUser";
+import useEpisodeDelete from "@/hooks/useEpisodeDelete";
 import useUploadedEpisode from "@/hooks/useUploadedEpisode";
 import useVideoStatus from "@/hooks/useVideoStatus";
 import { AdditionalUser, Source } from "@/types";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { NextPage } from "next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useMemo } from "react";
 
 interface UploadEpisodeEditPageProps {
@@ -36,11 +39,22 @@ const UploadEpisodeEditPage: NextPage<UploadEpisodeEditPageProps> = ({
   user,
 }) => {
   const { data, isLoading } = useUploadedEpisode(episodeSlug);
+  const { mutate: deleteEpisode, isLoading: deleteLoading } =
+    useEpisodeDelete(episodeSlug);
   const { data: videoStatus, isLoading: videoStatusLoading } = useVideoStatus(
     data?.video?.[0]?.video?.id
   );
+  const router = useRouter();
 
   const episodeId = useMemo(() => episodeSlug.split("-")[1], [episodeSlug]);
+
+  const handleDelete = () => {
+    deleteEpisode(null, {
+      onSuccess: () => {
+        router.replace(`/upload/anime/${mediaId}`);
+      },
+    });
+  };
 
   return (
     <UploadMediaProvider value={{ mediaId, sourceId }}>
@@ -118,19 +132,39 @@ const UploadEpisodeEditPage: NextPage<UploadEpisodeEditPageProps> = ({
         )}
       </UploadContainer>
 
-      <Section className="py-3 flex justify-end gap-2 items-center fixed bottom-0 w-full md:w-4/5 bg-background-800">
-        <Link href={`/upload/anime/${mediaId}/episodes/create`}>
-          <a>
-            <Button secondary>Tạo tập mới</Button>
-          </a>
-        </Link>
+      {!isLoading && (
+        <Section className="py-3 flex justify-between items-center fixed bottom-0 w-full md:w-4/5 bg-background-800">
+          <DeleteConfirmation
+            isLoading={deleteLoading}
+            onConfirm={handleDelete}
+            className="space-y-4"
+            confirmString={data.name}
+          >
+            <h1 className="text-2xl font-semibold">
+              Bạn có chắc chắn xóa không?
+            </h1>
 
-        <Link href={`/anime/watch/${mediaId}/${sourceId}/${episodeId}`}>
-          <a>
-            <Button primary>Xem tập phim</Button>
-          </a>
-        </Link>
-      </Section>
+            <p>
+              Một khi đã xóa, bạn sẽ không thể khôi phục lại. Điều này sẽ xóa
+              hoàn toàn bất kỳ dữ liệu nào liên quan đến tập này.
+            </p>
+          </DeleteConfirmation>
+
+          <div className="flex gap-2 items-center">
+            <Link href={`/upload/anime/${mediaId}/episodes/create`}>
+              <a>
+                <Button secondary>Tạo tập mới</Button>
+              </a>
+            </Link>
+
+            <Link href={`/anime/watch/${mediaId}/${sourceId}/${episodeId}`}>
+              <a>
+                <Button primary>Xem tập phim</Button>
+              </a>
+            </Link>
+          </div>
+        </Section>
+      )}
     </UploadMediaProvider>
   );
 };
