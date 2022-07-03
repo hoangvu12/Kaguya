@@ -15,7 +15,7 @@ import { getTitle } from "@/utils/data";
 import classNames from "classnames";
 import { motion, Variants } from "framer-motion";
 import { useRouter } from "next/router";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
@@ -92,6 +92,14 @@ const Sidebar = () => {
   const handleChangeChapterIndex = (index: number) => () => {
     setChapter(sourceChapters[index]);
   };
+
+  useEffect(() => {
+    const currentChapterEl = document.querySelector(".active-chapter");
+
+    if (!currentChapterEl) return;
+
+    currentChapterEl.scrollIntoView();
+  }, [currentChapter]);
 
   return (
     <motion.div
@@ -287,22 +295,28 @@ const Sidebar = () => {
         </BrowserView>
 
         <BrowserView renderWithFragment>
-          <ul className="h-full overflow-auto space-y-2 bg-background-900 p-2">
-            {filteredChapters.map((chapter) => (
-              <li
-                className="relative p-2 cursor-pointer hover:bg-white/20 transition duration-300"
-                key={chapter.sourceChapterId}
-                onClick={() => setChapter(chapter)}
-              >
-                {chapter.name}
+          <ul className="h-full overflow-auto bg-background-900">
+            {filteredChapters.map((chapter) => {
+              const isActive =
+                chapter.sourceChapterId === currentChapter.sourceChapterId;
 
-                {chapter.sourceChapterId === currentChapter.sourceChapterId && (
-                  <p className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-primary-500 rounded-md">
-                    {t("reading")}
-                  </p>
-                )}
-              </li>
-            ))}
+              return (
+                <li
+                  className={classNames(
+                    "relative px-4 py-2 cursor-pointer hover:bg-white/20 transition duration-300",
+                    isActive && "active-chapter"
+                  )}
+                  key={chapter.sourceChapterId}
+                  onClick={() => setChapter(chapter)}
+                >
+                  {chapter.name}
+
+                  {isActive && (
+                    <div className="absolute left-0 top-0 h-full w-1 bg-primary-500"></div>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </BrowserView>
       </div>
