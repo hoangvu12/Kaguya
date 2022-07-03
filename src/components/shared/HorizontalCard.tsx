@@ -7,25 +7,21 @@ import React, { useMemo } from "react";
 import DotList from "./DotList";
 import PlainCard from "./PlainCard";
 
-interface HorizontalCardProps<T> extends React.HTMLAttributes<HTMLDivElement> {
+interface HorizontalCardProps extends React.HTMLAttributes<HTMLDivElement> {
   data: Media;
   type?: MediaType;
+  redirectUrl?: string;
 }
 
-const HorizontalCard = <T extends "anime" | "manga">({
+const HorizontalCard = ({
   data,
   type,
   className,
+  redirectUrl = type === MediaType.Anime
+    ? `/anime/details/${data.id}`
+    : `/manga/details/${data.id}`,
   ...props
-}: HorizontalCardProps<T>) => {
-  const redirectUrl = useMemo(
-    () =>
-      type === MediaType.Anime
-        ? `/anime/details/${data.id}`
-        : `/manga/details/${data.id}`,
-    [data.id, type]
-  );
-
+}: HorizontalCardProps) => {
   const { locale } = useRouter();
 
   const title = useMemo(() => getTitle(data, locale), [data, locale]);

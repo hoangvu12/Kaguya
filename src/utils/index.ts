@@ -2,6 +2,8 @@ import dayjs from "@/lib/dayjs";
 import { MediaSeason } from "@/types/anilist";
 import axios from "axios";
 import { toast } from "react-toastify";
+import mime from "mime";
+import config from "@/config";
 
 export const randomElement = <T>(array: T[]): T => {
   const index = Math.floor(Math.random() * array.length);
@@ -361,4 +363,57 @@ export const prodSleep = (ms: number) => {
   }
 
   return Promise.resolve();
+};
+
+// https://stackoverflow.com/questions/10420352/converting-file-size-in-bytes-to-human-readable-string
+export const humanFileSize = (size: number) => {
+  const i = Math.floor(Math.log(size) / Math.log(1024));
+
+  // @ts-ignore
+  const convertedNumber = (size / Math.pow(1024, i)).toFixed(2) * 1;
+  const units = ["B", "KB", "MB", "GB", "TB"];
+  const unit = units[i];
+
+  return `${convertedNumber} ${unit}`;
+};
+
+// https://stackoverflow.com/questions/6860853/generate-random-string-for-div-id
+export const randomString = (length: number) => {
+  const chars =
+    "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghiklmnopqrstuvwxyz".split("");
+
+  if (!length) {
+    length = Math.floor(Math.random() * chars.length);
+  }
+
+  let str = "";
+
+  for (var i = 0; i < length; i++) {
+    str += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return str;
+};
+
+export const createFileFromUrl = async (url: string, filename: string) => {
+  const { data } = await axios.get<Blob>(url, { responseType: "blob" });
+
+  const extension = url.split(".").pop();
+
+  const metadata = {
+    type: mime.getType(extension) || "text/plain",
+  };
+
+  const file = new File([data], filename, metadata);
+
+  return file;
+};
+
+export const createProxyUrl = (url: string, sourceId: string) => {
+  return `${config.proxyServerUrl}?url=${encodeURIComponent(
+    url
+  )}&source_id=${sourceId}`;
+};
+
+export const createAttachmentUrl = (url: string) => {
+  return `${config.nodeServerUrl}/file/${url}`;
 };
