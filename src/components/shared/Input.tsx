@@ -5,7 +5,7 @@ interface Icon {
   className?: string;
 }
 
-interface InputProps extends React.HTMLProps<HTMLInputElement> {
+export interface InputProps extends React.HTMLProps<HTMLInputElement> {
   containerClassName?: string;
   containerInputClassName?: string;
   labelClassName?: string;

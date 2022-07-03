@@ -1,20 +1,18 @@
 import { SkeletonProps } from "@/components/shared/Skeleton";
+import { Attachment, FileInfo } from "@/services/upload";
 import { SupabaseQueryFunction, SupabaseQueryOptions } from "@/utils/supabase";
 import { User } from "@supabase/gotrue-js";
 import { QueryKey } from "react-query";
-import {
-  CharacterRole,
-  FuzzyDate,
-  Media,
-  MediaFormat,
-  MediaRelation,
-  MediaStatus,
-  MediaTitle as ALMediaTitle,
-} from "./anilist";
+import { Media, MediaTitle as ALMediaTitle } from "./anilist";
 
 export interface MediaTitle extends Partial<ALMediaTitle> {
   [key: string]: string;
 }
+
+export type AdditionalUser = User & {
+  authRole: string;
+  isVerified: boolean;
+};
 
 export type MediaDescription = Record<string, string>;
 
@@ -24,6 +22,8 @@ export type SourceConnection = {
   sourceMediaId: string;
   mediaId: number;
   source: Source;
+  created_at?: string;
+  updated_at?: string;
 };
 
 export interface AnimeSourceConnection extends SourceConnection {
@@ -38,6 +38,16 @@ export type Source = {
   id: string;
   name: string;
   locales: string[];
+  addedUserId?: string;
+  addedUser?: AdditionalUser;
+};
+
+export type Video = {
+  fonts: Attachment[];
+  subtitles: Attachment[];
+  video: FileInfo;
+  episodeId: string;
+  userId: string;
 };
 
 export type Episode = {
@@ -50,6 +60,7 @@ export type Episode = {
   source: Source;
   slug: string;
   thumbnailImage?: string;
+  video: Video[];
 };
 
 export type Chapter = {
@@ -61,6 +72,9 @@ export type Chapter = {
   sourceMediaId: string;
   source: Source;
   slug: string;
+  images: {
+    images: Attachment[];
+  }[];
 };
 
 export interface Section<T> {
@@ -129,6 +143,10 @@ export type Subtitle = {
   file: string;
   lang: string;
   language: string;
+};
+
+export type Font = {
+  file: string;
 };
 
 export type VideoSource = {
@@ -219,4 +237,10 @@ export interface AnimeTheme {
   episode: string;
   sources: VideoSource[];
   anilistId?: number;
+}
+
+export interface UploadSubtitle {
+  file: File;
+  name: string;
+  locale: string;
 }
