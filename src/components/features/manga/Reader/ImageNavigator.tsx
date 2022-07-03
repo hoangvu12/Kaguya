@@ -18,7 +18,9 @@ const ImageNavigator = () => {
     if (direction === "vertical") return;
 
     const newIndex =
-      activeImageIndex === images.length - 1 ? 0 : activeImageIndex + 1;
+      activeImageIndex === images.length - 1
+        ? activeImageIndex
+        : activeImageIndex + 1;
 
     setState((prev) => ({ ...prev, activeImageIndex: newIndex }));
   }, [direction, activeImageIndex, images?.length, setState]);
@@ -26,11 +28,10 @@ const ImageNavigator = () => {
   const previousImage = useCallback(() => {
     if (direction === "vertical") return;
 
-    const newIndex =
-      activeImageIndex === 0 ? images.length - 1 : activeImageIndex - 1;
+    const newIndex = activeImageIndex === 0 ? 0 : activeImageIndex - 1;
 
     setState((prev) => ({ ...prev, activeImageIndex: newIndex }));
-  }, [direction, activeImageIndex, images?.length, setState]);
+  }, [direction, activeImageIndex, setState]);
 
   const handleLeft = useCallback(() => {
     if (direction === "ltr") {

@@ -1,7 +1,6 @@
 import HeadlessSwiper, {
   SwiperSlide,
 } from "@/components/shared/HeadlessSwiper";
-import { useViewPanel } from "@/contexts/ReadContainerContext";
 import { useReadInfo } from "@/contexts/ReadContext";
 import { useReadPanel } from "@/contexts/ReadPanelContext";
 import { useReadSettings } from "@/contexts/ReadSettingsContext";
@@ -12,6 +11,13 @@ import "swiper/swiper.min.css";
 import type SwiperClass from "swiper/types/swiper-class";
 import ReadImage from "./ReadImage";
 
+const swiperOptions: SwiperOptions = {
+  direction: "horizontal",
+  slidesPerView: 1,
+  spaceBetween: 0,
+  loop: false,
+};
+
 const HorizontalContainer: React.FC = () => {
   const { state, setState } = useReadPanel();
   const swiperRef = useRef<SwiperClass>();
@@ -21,16 +27,6 @@ const HorizontalContainer: React.FC = () => {
   const activeImage = useMemo(
     () => images[state.activeImageIndex],
     [state.activeImageIndex, images]
-  );
-
-  const swiperOptions: SwiperOptions = useMemo(
-    () => ({
-      direction: "horizontal",
-      slidesPerView: 1,
-      spaceBetween: 0,
-      loop: true,
-    }),
-    []
   );
 
   const handleSlideChange = useCallback((swiper: SwiperClass) => {
@@ -48,7 +44,7 @@ const HorizontalContainer: React.FC = () => {
   useEffect(() => {
     if (!swiperRef.current) return;
 
-    swiperRef.current.slideToLoop(state.activeImageIndex);
+    swiperRef.current.slideTo(state.activeImageIndex);
 
     return;
   }, [state.activeImageIndex]);
