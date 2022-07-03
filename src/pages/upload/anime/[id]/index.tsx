@@ -1,3 +1,5 @@
+import React from "react";
+
 import MediaDetails from "@/components/features/upload/MediaDetails";
 import UploadContainer from "@/components/features/upload/UploadContainer";
 import UploadLayout from "@/components/layouts/UploadLayout";
@@ -7,6 +9,7 @@ import Loading from "@/components/shared/Loading";
 import Section from "@/components/shared/Section";
 import { UploadMediaProvider } from "@/contexts/UploadMediaContext";
 import withAdditionalUser from "@/hocs/withAdditionalUser";
+import useAnimeSourceDelete from "@/hooks/useAnimeSourceDelete";
 import useMangaSourceDelete from "@/hooks/useMangaSourceDelete";
 import useMediaDetails from "@/hooks/useMediaDetails";
 import useUploadedEpisodes from "@/hooks/useUploadedEpisodes";
@@ -19,6 +22,7 @@ import Link from "next/link";
 import { useMemo } from "react";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { useQueryClient } from "react-query";
+import DeleteConfirmation from "@/components/shared/DeleteConfirmation";
 
 interface UploadAnimePageProps {
   user: AdditionalUser;
@@ -38,8 +42,8 @@ const UploadAnimePage: NextPage<UploadAnimePageProps> = ({
 
   const queryClient = useQueryClient();
 
-  const { mutateAsync: mangaSourceDelete, isLoading: deleteLoading } =
-    useMangaSourceDelete(`${sourceId}-${mediaId}`);
+  const { mutateAsync: animeSourceDelete, isLoading: deleteLoading } =
+    useAnimeSourceDelete(`${sourceId}-${mediaId}`);
 
   const { data: uploadedEpisodes, isLoading: episodesLoading } =
     useUploadedEpisodes({
@@ -53,11 +57,11 @@ const UploadAnimePage: NextPage<UploadAnimePageProps> = ({
     return sortMediaUnit(uploadedEpisodes);
   }, [episodesLoading, uploadedEpisodes]);
 
-  const handleDelete = async () => {
-    await mangaSourceDelete(null, {
+  const handleConfirm = async () => {
+    await animeSourceDelete(null, {
       onSuccess: () => {
         queryClient.invalidateQueries([
-          "uploaded-chapters",
+          "uploaded-episodes",
           { mediaId, sourceId },
         ]);
       },
@@ -65,52 +69,67 @@ const UploadAnimePage: NextPage<UploadAnimePageProps> = ({
   };
 
   return (
-    <UploadContainer isVerified={user.isVerified}>
-      {mediaLoading || episodesLoading ? (
-        <Loading />
-      ) : (
-        <UploadMediaProvider value={{ sourceId, mediaId }}>
-          <div className="space-y-8">
-            <MediaDetails media={anime} />
+    <React.Fragment>
+      <UploadContainer className="pb-12" isVerified={user.isVerified}>
+        {mediaLoading || episodesLoading ? (
+          <Loading />
+        ) : (
+          <UploadMediaProvider value={{ sourceId, mediaId }}>
+            <div className="space-y-8">
+              <MediaDetails media={anime} />
 
-            <div className="mt-8">
-              <Link href={`/upload/anime/${mediaId}/episodes/create`}>
-                <a>
-                  <Button
-                    LeftIcon={IoIosAddCircleOutline}
-                    primary
-                    className="ml-auto mb-4"
-                  >
-                    Tập mới
-                  </Button>
-                </a>
-              </Link>
+              <div className="mt-8">
+                <Link href={`/upload/anime/${mediaId}/episodes/create`}>
+                  <a>
+                    <Button
+                      LeftIcon={IoIosAddCircleOutline}
+                      primary
+                      className="ml-auto mb-4"
+                    >
+                      Tập mới
+                    </Button>
+                  </a>
+                </Link>
 
-              <div className="space-y-2">
-                {sortedEpisodes.map((episode) => (
-                  <Link
-                    key={episode.slug}
-                    href={`/upload/anime/${mediaId}/episodes/${episode.slug}`}
-                  >
-                    <a className="block">
-                      <BaseButton className="p-3 w-full !bg-background-900 hover:!bg-white/20 rounded-md">
-                        {episode.name}
-                      </BaseButton>
-                    </a>
-                  </Link>
-                ))}
+                <div className="space-y-2">
+                  {sortedEpisodes.map((episode) => (
+                    <Link
+                      key={episode.slug}
+                      href={`/upload/anime/${mediaId}/episodes/${episode.slug}`}
+                    >
+                      <a className="block">
+                        <BaseButton className="p-3 w-full !bg-background-900 hover:!bg-white/20 rounded-md">
+                          {episode.name}
+                        </BaseButton>
+                      </a>
+                    </Link>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-        </UploadMediaProvider>
-      )}
+          </UploadMediaProvider>
+        )}
+      </UploadContainer>
 
-      <Section className="py-3 flex justify-end gap-2 items-center fixed bottom-0 w-full md:w-4/5 bg-background-800">
-        <Button isLoading={deleteLoading} onClick={handleDelete} secondary>
-          Xóa
-        </Button>
-      </Section>
-    </UploadContainer>
+      {!mediaLoading && (
+        <Section className="fixed bottom-0 py-3 flex justify-end gap-2 items-center bg-background-800 w-full md:w-4/5">
+          <DeleteConfirmation
+            onConfirm={handleConfirm}
+            className="space-y-4"
+            confirmString={anime.title.userPreferred}
+          >
+            <h1 className="text-2xl font-semibold">
+              Bạn có chắc chắn xóa không?
+            </h1>
+
+            <p>
+              Một khi đã xóa, bạn sẽ không thể khôi phục lại. Điều này sẽ xóa
+              hoàn toàn bất kỳ dữ liệu nào liên quan đến anime này.
+            </p>
+          </DeleteConfirmation>
+        </Section>
+      )}
+    </React.Fragment>
   );
 };
 
