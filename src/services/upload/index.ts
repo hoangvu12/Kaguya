@@ -179,7 +179,7 @@ export const uploadVideo = async (file: File) => {
   formData.append("file", file);
 
   const { data } = await client.post<UploadVideoResponse>(
-    "/upload/vide",
+    "/upload/video",
     formData
   );
 
