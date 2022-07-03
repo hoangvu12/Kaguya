@@ -75,13 +75,18 @@ const ImageNavigator = () => {
 
     if (!container) return;
 
-    const handleClick = (e: MouseEvent) => {
-      const widthPercent = 25;
-      const width = (window.innerWidth * widthPercent) / 100;
+    const { width: containerWidth, x: containerX } =
+      container.getBoundingClientRect();
 
-      if (e.clientX < width) {
+    const handleClick = (e: MouseEvent) => {
+      const widthPercent = 10;
+      const width = (containerWidth * widthPercent) / 100;
+
+      const clickedX = e.clientX - containerX;
+
+      if (clickedX < width) {
         handleLeft();
-      } else if (e.clientX > window.innerWidth - width) {
+      } else if (clickedX > containerWidth - width) {
         handleRight();
       }
     };
