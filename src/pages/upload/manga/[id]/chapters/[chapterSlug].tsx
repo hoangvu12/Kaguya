@@ -4,16 +4,19 @@ import UploadContainer from "@/components/features/upload/UploadContainer";
 import UploadSection from "@/components/features/upload/UploadSection";
 import UploadLayout from "@/components/layouts/UploadLayout";
 import Button from "@/components/shared/Button";
+import DeleteConfirmation from "@/components/shared/DeleteConfirmation";
 import Loading from "@/components/shared/Loading";
 import Section from "@/components/shared/Section";
 import { supportedUploadImageFormats } from "@/constants";
 import { UploadMediaProvider } from "@/contexts/UploadMediaContext";
 import withAdditionalUser from "@/hocs/withAdditionalUser";
+import useChapterDelete from "@/hooks/useChapterDelete";
 import useUploadedChapter from "@/hooks/useUploadedChapter";
 import { AdditionalUser, Source } from "@/types";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { NextPage } from "next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useMemo } from "react";
 
 interface UploadChapterEditPageProps {
@@ -30,8 +33,19 @@ const UploadChapterEditPage: NextPage<UploadChapterEditPageProps> = ({
   user,
 }) => {
   const { data, isLoading } = useUploadedChapter(chapterSlug);
+  const { mutate: deleteChapter, isLoading: deleteLoading } =
+    useChapterDelete(chapterSlug);
+  const router = useRouter();
 
   const chapterId = useMemo(() => chapterSlug.split("-")[1], [chapterSlug]);
+
+  const handleDelete = () => {
+    deleteChapter(null, {
+      onSuccess: () => {
+        router.replace(`/upload/manga/${mediaId}`);
+      },
+    });
+  };
 
   return (
     <UploadMediaProvider value={{ mediaId, sourceId }}>
@@ -72,19 +86,39 @@ const UploadChapterEditPage: NextPage<UploadChapterEditPageProps> = ({
         )}
       </UploadContainer>
 
-      <Section className="py-3 flex justify-end gap-2 items-center fixed bottom-0 w-full md:w-4/5 bg-background-800">
-        <Link href={`/upload/manga/${mediaId}/chapters/create`}>
-          <a>
-            <Button secondary>Tạo chương mới</Button>
-          </a>
-        </Link>
+      {!isLoading && (
+        <Section className="py-3 flex justify-between items-center fixed bottom-0 w-full md:w-4/5 bg-background-800">
+          <DeleteConfirmation
+            isLoading={deleteLoading}
+            onConfirm={handleDelete}
+            className="space-y-4"
+            confirmString={data.name}
+          >
+            <h1 className="text-2xl font-semibold">
+              Bạn có chắc chắn xóa không?
+            </h1>
 
-        <Link href={`/manga/read/${mediaId}/${sourceId}/${chapterId}`}>
-          <a>
-            <Button primary>Xem chương</Button>
-          </a>
-        </Link>
-      </Section>
+            <p>
+              Một khi đã xóa, bạn sẽ không thể khôi phục lại. Điều này sẽ xóa
+              hoàn toàn bất kỳ dữ liệu nào liên quan đến chương này.
+            </p>
+          </DeleteConfirmation>
+
+          <div className="flex gap-2 items-center">
+            <Link href={`/upload/manga/${mediaId}/chapters/create`}>
+              <a>
+                <Button secondary>Tạo chương mới</Button>
+              </a>
+            </Link>
+
+            <Link href={`/manga/read/${mediaId}/${sourceId}/${chapterId}`}>
+              <a>
+                <Button primary>Xem chương</Button>
+              </a>
+            </Link>
+          </div>
+        </Section>
+      )}
     </UploadMediaProvider>
   );
 };
