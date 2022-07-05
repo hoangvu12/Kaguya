@@ -56,22 +56,8 @@ const useCreateEpisode = (args: UseCreateEpisodeArgs) => {
         throw new Error("Video is required");
       }
 
-      toast.loading("Creating episode...", {
+      toast.loading("Uploading video...", {
         toastId: id,
-      });
-
-      const upsertedEpisode = await upsertEpisode({
-        episode: { name: episodeName, id: episodeId },
-        mediaId,
-        sourceId,
-      });
-
-      if (!upsertedEpisode) throw new Error("Upsert episode failed");
-
-      toast.update(id, {
-        render: "Uploading video...",
-        type: "info",
-        isLoading: true,
       });
 
       let uploadedVideo: FileInfo;
@@ -162,6 +148,20 @@ const useCreateEpisode = (args: UseCreateEpisodeArgs) => {
       }
 
       toast.update(id, {
+        render: "Creating episode...",
+        type: "info",
+        isLoading: true,
+      });
+
+      const upsertedEpisode = await upsertEpisode({
+        episode: { name: episodeName, id: episodeId },
+        mediaId,
+        sourceId,
+      });
+
+      if (!upsertedEpisode) throw new Error("Upsert episode failed");
+
+      toast.update(id, {
         render: "Uploading to database...",
         type: "info",
         isLoading: true,
@@ -195,11 +195,6 @@ const useCreateEpisode = (args: UseCreateEpisodeArgs) => {
         });
 
         toast.error(error.message, { autoClose: 3000 });
-
-        supabaseClient
-          .from("kaguya_episodes")
-          .delete({ returning: "minimal" })
-          .match({ sourceEpisodeId: episodeId });
       },
       onSuccess: () => {
         toast.update(id, {
