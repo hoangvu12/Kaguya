@@ -13,6 +13,7 @@ interface ReadImageProps
   onVisible?: () => void;
   image: ImageSource;
   loadingClassName?: string;
+  containerClassName?: string;
 }
 
 const ReadImage: React.FC<ReadImageProps> = ({
@@ -21,6 +22,7 @@ const ReadImage: React.FC<ReadImageProps> = ({
   loadingClassName,
   onLoad,
   onVisible,
+  containerClassName,
   ...props
 }) => {
   const [loaded, setLoaded] = useState(false);
@@ -81,6 +83,7 @@ const ReadImage: React.FC<ReadImageProps> = ({
           animate: { opacity: 1, display: "block" },
           initial: { opacity: 0, display: "none" },
         }}
+        className={containerClassName}
       >
         {/* eslint-disable-next-line */}
         <img
