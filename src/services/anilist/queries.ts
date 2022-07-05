@@ -502,6 +502,7 @@ airingAt
 episode
 mediaId
 media {
+  type
   id
   title {
     userPreferred
