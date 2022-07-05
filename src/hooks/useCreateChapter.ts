@@ -41,8 +41,20 @@ const useCreateChapter = (args: UseCreateChapterArgs) => {
         throw new Error("Images is required");
       }
 
-      toast.loading("Creating chapter...", {
+      toast.loading("Uploading images...", {
         toastId: id,
+      });
+
+      const uploadedImages = await uploadFile(images);
+
+      if (!uploadedImages?.length) {
+        throw new Error("Upload images failed");
+      }
+
+      toast.update(id, {
+        render: "Creating chapter...",
+        type: "info",
+        isLoading: true,
       });
 
       const upsertedChapter = await upsertChapter({
@@ -52,18 +64,6 @@ const useCreateChapter = (args: UseCreateChapterArgs) => {
       });
 
       if (!upsertedChapter) throw new Error("Upsert chapter failed");
-
-      toast.update(id, {
-        render: "Uploading images...",
-        type: "info",
-        isLoading: true,
-      });
-
-      const uploadedImages = await uploadFile(images);
-
-      if (!uploadedImages?.length) {
-        throw new Error("Upload images failed");
-      }
 
       toast.update(id, {
         render: "Uploading to database...",
@@ -95,11 +95,6 @@ const useCreateChapter = (args: UseCreateChapterArgs) => {
         });
 
         toast.error(error.message, { autoClose: 3000 });
-
-        supabaseClient
-          .from("kaguya_chapters")
-          .delete({ returning: "minimal" })
-          .match({ sourceEpisodeId: chapterId });
       },
       onSuccess: () => {
         toast.update(id, {
