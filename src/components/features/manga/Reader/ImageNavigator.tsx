@@ -80,6 +80,14 @@ const ImageNavigator = () => {
       container.getBoundingClientRect();
 
     const handleClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+
+      if (
+        target instanceof HTMLButtonElement ||
+        target.parentNode instanceof HTMLButtonElement
+      )
+        return;
+
       const widthPercent = 10;
       const width = (containerWidth * widthPercent) / 100;
 
