@@ -37,7 +37,7 @@ const BaseButton = React.forwardRef<HTMLButtonElement, BaseButtonProps>(
       if (!shortcutKey) return;
 
       window.addEventListener("keypress", (e) => {
-        if (isHotKey(shortcutKey, e)) {
+        if (isHotKey(shortcutKey, { byKey: true })(e)) {
           onClick?.(null);
         }
       });
