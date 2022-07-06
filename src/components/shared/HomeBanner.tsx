@@ -206,7 +206,7 @@ const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data, type }) => {
 
   return (
     <React.Fragment>
-      <div className="group relative w-full h-[450px] overflow-hidden">
+      <div className="group relative w-full md:h-[450px] xl:h-[500px] 2xl:h-[550px] overflow-hidden">
         <AnimatePresence>
           {isValidUrl(activeSlide.bannerImage) && !showTrailer && (
             <motion.div
@@ -342,7 +342,10 @@ const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data, type }) => {
 
 const DesktopHomeBannerSkeleton = () => (
   <Skeleton className="w-full">
-    <SkeletonItem className="relative h-[450px] w-full" container>
+    <SkeletonItem
+      className="relative md:h-[450px] xl:h-[500px] 2xl:h-[550px] w-full"
+      container
+    >
       <SkeletonItem
         className="absolute left-4 md:left-12 lg:left-20 xl:left-28 2xl:left-36 top-1/2 -translate-y-1/2 w-full md:w-[45%]"
         container
