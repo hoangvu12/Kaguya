@@ -177,7 +177,7 @@ const PlayerMobileOverlay = React.memo(() => {
 
       {anime.idMal && (
         <TimestampSkipButton
-          className="absolute right-4 bottom-32"
+          className="absolute right-4 bottom-20"
           episode={parseNumberFromString(currentEpisode.name)}
           malId={anime.idMal}
         />
