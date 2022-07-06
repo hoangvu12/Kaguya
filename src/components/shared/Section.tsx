@@ -14,7 +14,10 @@ const Section = React.forwardRef<HTMLDivElement, SectionProps>(
     return (
       <div
         ref={ref}
-        className={classNames(hasPadding && "px-4 md:px-12", className)}
+        className={classNames(
+          hasPadding && "px-4 md:px-12 lg:px-20 xl:px-28 2xl:px-36",
+          className
+        )}
       >
         {title && (
           <h1 className="uppercase text-2xl font-semibold mb-4">{title}</h1>

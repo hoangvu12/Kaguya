@@ -24,6 +24,9 @@ const BannerSwiper: React.FC<BannerSwiperProps> = ({ data, ...props }) => {
       slidesPerView={2}
       spaceBetween={20}
       breakpoints={{
+        1536: {
+          slidesPerView: 7,
+        },
         1280: {
           slidesPerView: 6,
         },
