@@ -31,6 +31,7 @@ import { useRouter } from "next/router";
 import { useMemo, Fragment } from "react";
 import { BsFillPlayFill } from "react-icons/bs";
 import { AiOutlineUpload } from "react-icons/ai";
+import Section from "@/components/shared/Section";
 
 interface DetailsPageProps {
   anime: Media;
@@ -78,7 +79,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime, translations }) => {
       <div className="pb-8">
         <DetailsBanner image={anime.bannerImage} />
 
-        <div className="relative px-4 pb-4 sm:px-12 bg-background-900">
+        <Section className="relative pb-4 bg-background-900">
           <div className="flex flex-col md:flex-row md:space-x-8">
             <div className="shrink-0 relative left-1/2 -translate-x-1/2 md:static md:left-0 md:-translate-x-0 w-[186px] -mt-20 space-y-6">
               <PlainCard src={anime.coverImage.extraLarge} alt={title} />
@@ -184,9 +185,9 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime, translations }) => {
               </div>
             </div>
           </div>
-        </div>
+        </Section>
 
-        <div className="w-full min-h-screen gap-8 px-4 mt-8 space-y-8 md:space-y-0 md:grid md:grid-cols-10 sm:px-12">
+        <Section className="w-full min-h-screen gap-8 mt-8 space-y-8 md:space-y-0 md:grid md:grid-cols-10 sm:px-12">
           <div className="md:col-span-2 xl:h-[max-content] space-y-4">
             <div className="bg-background-900 rounded-md p-4 space-y-4">
               <InfoItem
@@ -308,7 +309,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime, translations }) => {
               <CommentsSection anime_id={anime.id} />
             </DetailsSection>
           </div>
-        </div>
+        </Section>
       </div>
     </>
   );
