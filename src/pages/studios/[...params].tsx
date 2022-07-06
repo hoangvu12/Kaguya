@@ -3,6 +3,7 @@ import DetailsSection from "@/components/shared/DetailsSection";
 import Head from "@/components/shared/Head";
 import InView from "@/components/shared/InView";
 import List from "@/components/shared/List";
+import Section from "@/components/shared/Section";
 import TextIcon from "@/components/shared/TextIcon";
 import ListSkeleton from "@/components/skeletons/ListSkeleton";
 import { REVALIDATE_TIME } from "@/constants";
@@ -50,7 +51,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ studio: initialStudio }) => {
       <Head title={`${initialStudio.name} - Kaguya`} />
 
       <div className="pb-8">
-        <div className="pt-24 px-4 sm:px-12 z-10 pb-4 mb-8">
+        <Section className="pt-24 px-4 sm:px-12 z-10 pb-4 mb-8">
           <div className="flex flex-col md:flex-row items-center gap-4">
             <h1 className="text-3xl font-semibold">{initialStudio.name}</h1>
 
@@ -58,9 +59,9 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ studio: initialStudio }) => {
               <p>{numberWithCommas(initialStudio.favourites)}</p>
             </TextIcon>
           </div>
-        </div>
+        </Section>
 
-        <div className="px-4 sm:px-12">
+        <Section className="px-4 sm:px-12">
           {/* Using flex column reverse because the object is not sortable */}
           <div className="flex flex-col-reverse gap-y-8">
             {Object.entries(anime).map(([year, medias]) => (
@@ -85,7 +86,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ studio: initialStudio }) => {
           {!hasNextPage && !!anime.length && (
             <p className="mt-8 text-2xl text-center">Hết rồi...</p>
           )}
-        </div>
+        </Section>
       </div>
     </>
   );
