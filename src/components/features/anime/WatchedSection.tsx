@@ -24,6 +24,11 @@ const WatchedSection = () => {
         slidesPerView={5}
         slidesPerGroup={5}
         breakpoints={{
+          1536: {
+            slidesPerView: 5,
+            slidesPerGroup: 5,
+            spaceBetween: 20,
+          },
           1280: {
             slidesPerView: 4,
             slidesPerGroup: 4,

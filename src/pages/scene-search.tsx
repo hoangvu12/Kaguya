@@ -10,6 +10,7 @@ import { CgArrowLongRight } from "react-icons/cg";
 import { MdOutlineRestartAlt } from "react-icons/md";
 import { ImageType } from "react-images-uploading";
 import { useTranslation } from "react-i18next";
+import Section from "@/components/shared/Section";
 
 const TracePage = () => {
   const [traceResult, setTraceResult] = useState<TraceImageResponse>(null);
@@ -38,7 +39,7 @@ const TracePage = () => {
     <React.Fragment>
       <Head title={`${t("tab_title")} - Kaguya`} />
 
-      <div className="pt-20 px-4 md:px-12 space-y-16 flex flex-col items-center justify-center">
+      <Section className="pt-20 space-y-16 flex flex-col items-center justify-center">
         <div className="text-center">
           <h1 className="text-3xl font-bold mb-1">{t("heading")}</h1>
 
@@ -107,7 +108,7 @@ const TracePage = () => {
         ) : (
           <TraceImageSearch onSearch={handleOnSearch} />
         )}
-      </div>
+      </Section>
     </React.Fragment>
   );
 };

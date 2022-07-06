@@ -279,7 +279,7 @@ const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data, type }) => {
           animate="animate"
           initial="initial"
           key={title}
-          className="absolute left-12 top-1/2 -translate-y-1/2 w-full md:w-[45%]"
+          className="absolute left-4 md:left-12 lg:left-20 xl:left-28 2xl:left-36 top-1/2 -translate-y-1/2 w-full md:w-[45%]"
           transition={{ ease: transition, duration: 1 }}
         >
           <h1 className="text-2xl font-bold uppercase md:text-4xl line-clamp-2 sm:line-clamp-3 md:line-clamp-4">
@@ -344,7 +344,7 @@ const DesktopHomeBannerSkeleton = () => (
   <Skeleton className="w-full">
     <SkeletonItem className="relative h-[450px] w-full" container>
       <SkeletonItem
-        className="absolute left-12 top-1/2 -translate-y-1/2 w-full md:w-[45%]"
+        className="absolute left-4 md:left-12 lg:left-20 xl:left-28 2xl:left-36 top-1/2 -translate-y-1/2 w-full md:w-[45%]"
         container
       >
         <SkeletonItem className="h-12 w-5/6" />

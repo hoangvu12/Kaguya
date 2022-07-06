@@ -40,6 +40,11 @@ const Swiper: React.FC<SwiperProps> = ({
         className
       )}
       breakpoints={{
+        1536: {
+          slidesPerView: 7,
+          slidesPerGroup: 7,
+          spaceBetween: 20,
+        },
         1280: {
           slidesPerView: 6,
           slidesPerGroup: 6,

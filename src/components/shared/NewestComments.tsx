@@ -33,6 +33,10 @@ const NewestComments: React.FC<NewestCommentsProps> = (props) => {
         hideNavigation
         slidesPerGroup={1}
         breakpoints={{
+          1536: {
+            slidesPerView: 6,
+            spaceBetween: 20,
+          },
           1280: {
             slidesPerView: 5,
             spaceBetween: 20,
