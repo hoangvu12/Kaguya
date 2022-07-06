@@ -9,6 +9,7 @@ import useConstantTranslation from "@/hooks/useConstantTranslation";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
+import Section from "@/components/shared/Section";
 
 const components = {
   anime: AnimeBrowseList,
@@ -103,7 +104,7 @@ const BrowsePage = ({ query: baseQuery }) => {
   );
 
   return (
-    <div className="py-20 px-4 md:px-12">
+    <Section className="py-20">
       <Head title={`Tìm kiếm ${chosenType.label} - Kaguya`} />
 
       <div className="mb-8 flex items-center space-x-2">
@@ -123,7 +124,7 @@ const BrowsePage = ({ query: baseQuery }) => {
       </div>
 
       <BrowseComponent defaultQuery={query} />
-    </div>
+    </Section>
   );
 };
 
