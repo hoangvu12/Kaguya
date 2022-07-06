@@ -4,18 +4,14 @@ import DetailsSection from "@/components/shared/DetailsSection";
 import Head from "@/components/shared/Head";
 import List from "@/components/shared/List";
 import PlainCard from "@/components/shared/PlainCard";
+import Section from "@/components/shared/Section";
 import TextIcon from "@/components/shared/TextIcon";
 import { REVALIDATE_TIME } from "@/constants";
 import withRedirect from "@/hocs/withRedirect";
 import useConstantTranslation from "@/hooks/useConstantTranslation";
 import dayjs from "@/lib/dayjs";
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
-import {
-  getCharacterDetails,
-  getCharacters,
-  getMedia,
-} from "@/services/anilist";
-import { Character, CharacterSort, MediaType } from "@/types/anilist";
+import { getCharacterDetails } from "@/services/anilist";
+import { Character, MediaType } from "@/types/anilist";
 
 import {
   isFalsy,
@@ -118,7 +114,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ character }) => {
       <div className="pb-8">
         <div className="w-full h-[200px] bg-background"></div>
 
-        <div className="relative px-4 sm:px-12 z-10 bg-background-900 pb-4 mb-8">
+        <Section className="relative z-10 bg-background-900 pb-4 mb-8">
           <div className="flex flex-col md:flex-row md:space-x-8">
             <div className="shrink-0 relative left-1/2 -translate-x-1/2 md:static md:left-0 md:-translate-x-0 w-[186px] -mt-20 space-y-6">
               <PlainCard
@@ -154,9 +150,9 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ character }) => {
               </div>
             </div>
           </div>
-        </div>
+        </Section>
 
-        <div className="px-4 sm:px-12 space-y-8">
+        <Section className="space-y-8">
           {!!voiceActors?.length && (
             <DetailsSection title={t("voice_actors_section")}>
               <List data={voiceActors}>
@@ -176,7 +172,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ character }) => {
               <List data={manga}>{(manga) => <Card data={manga} />}</List>
             </DetailsSection>
           )}
-        </div>
+        </Section>
       </div>
     </>
   );
