@@ -3,7 +3,6 @@ import LocaleChapterSelector from "@/components/features/manga/LocaleChapterSele
 import Button from "@/components/shared/Button";
 import Card from "@/components/shared/Card";
 import CharacterConnectionCard from "@/components/shared/CharacterConnectionCard";
-import Description from "@/components/shared/Description";
 import DetailsBanner from "@/components/shared/DetailsBanner";
 import DetailsSection from "@/components/shared/DetailsSection";
 import DotList from "@/components/shared/DotList";
@@ -13,24 +12,24 @@ import List from "@/components/shared/List";
 import MediaDescription from "@/components/shared/MediaDescription";
 import NotificationButton from "@/components/shared/NotificationButton";
 import PlainCard from "@/components/shared/PlainCard";
+import Section from "@/components/shared/Section";
 import SourceStatus from "@/components/shared/SourceStatus";
 import Spinner from "@/components/shared/Spinner";
 import { REVALIDATE_TIME } from "@/constants";
-import { useUser } from "@supabase/auth-helpers-react";
 import withRedirect from "@/hocs/withRedirect";
 import useChapters from "@/hooks/useChapters";
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
-import { getMedia, getMediaDetails } from "@/services/anilist";
-import { Media, MediaSort, MediaType } from "@/types/anilist";
+import { getMediaDetails } from "@/services/anilist";
+import { Media, MediaType } from "@/types/anilist";
 import { numberWithCommas, vietnameseSlug } from "@/utils";
 import { convert, getDescription, getTitle } from "@/utils/data";
+import { useUser } from "@supabase/auth-helpers-react";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useMemo } from "react";
-import { BsFillPlayFill } from "react-icons/bs";
+import { useMemo } from "react";
 import { AiOutlineUpload } from "react-icons/ai";
+import { BsFillPlayFill } from "react-icons/bs";
 
 interface DetailsPageProps {
   manga: Media;
@@ -59,7 +58,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
       <div className="pb-8">
         <DetailsBanner image={manga.bannerImage} />
 
-        <div className="relative px-4 sm:px-12 z-10 bg-background-900 pb-4">
+        <Section className="relative z-10 bg-background-900 pb-4">
           <div className="flex flex-col md:flex-row md:space-x-8">
             <div className="shrink-0 relative left-1/2 -translate-x-1/2 md:static md:left-0 md:-translate-x-0 w-[186px] -mt-20 space-y-6">
               <PlainCard src={manga.coverImage.extraLarge} alt={title} />
@@ -136,9 +135,9 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
               </div>
             </div>
           </div>
-        </div>
+        </Section>
 
-        <div className="space-y-8 md:space-y-0 px-4 md:grid md:grid-cols-10 w-full min-h-screen mt-8 sm:px-12 gap-8">
+        <Section className="space-y-8 md:space-y-0 md:grid md:grid-cols-10 w-full min-h-screen mt-8 sm:px-12 gap-8">
           <div className="md:col-span-2 h-[max-content] space-y-4">
             <div className="bg-background-900 rounded-md p-4 space-y-4">
               <InfoItem title="English" value={manga.title.english} />
@@ -235,7 +234,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
               <CommentsSection manga_id={manga.id} />
             </DetailsSection>
           </div>
-        </div>
+        </Section>
       </div>
     </>
   );
