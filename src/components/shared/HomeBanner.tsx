@@ -5,7 +5,7 @@ import Image from "@/components/shared/Image";
 import Swiper, { SwiperProps, SwiperSlide } from "@/components/shared/Swiper";
 import TextIcon from "@/components/shared/TextIcon";
 import { Media, MediaType } from "@/types/anilist";
-import { numberWithCommas } from "@/utils";
+import { isValidUrl, numberWithCommas } from "@/utils";
 import { convert, getDescription, getTitle } from "@/utils/data";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
@@ -208,7 +208,7 @@ const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data, type }) => {
     <React.Fragment>
       <div className="group relative w-full h-[450px] overflow-hidden">
         <AnimatePresence>
-          {activeSlide.bannerImage && !showTrailer && (
+          {isValidUrl(activeSlide.bannerImage) && !showTrailer && (
             <motion.div
               variants={bannerVariants}
               animate="animate"
