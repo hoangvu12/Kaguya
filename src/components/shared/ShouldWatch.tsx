@@ -40,14 +40,16 @@ const ShouldWatch: React.FC<ShouldWatchProps> = ({ data, type, isLoading }) => {
     <Link href={redirectUrl}>
       <a>
         <div className="cursor-pointer group relative z-0 w-full h-[200px] md:h-[400px] rounded-md">
-          <Image
-            src={data.bannerImage}
-            layout="fill"
-            objectFit="cover"
-            objectPosition="50% 35%"
-            alt="Details banner"
-            className="rounded-md"
-          />
+          {data.bannerImage && (
+            <Image
+              src={data.bannerImage}
+              layout="fill"
+              objectFit="cover"
+              objectPosition="50% 35%"
+              alt="Details banner"
+              className="rounded-md"
+            />
+          )}
 
           <div className="absolute z-10 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
             <CircleButton
