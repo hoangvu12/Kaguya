@@ -1,11 +1,9 @@
-import config from "@/config";
 import { useWatchPlayer } from "@/contexts/WatchContext";
-import { VideoSource } from "@/types";
 import { parseNumberFromString } from "@/utils";
 import classNames from "classnames";
 import { NetPlayerProps, useInteract } from "netplayer";
 import { useRouter } from "next/router";
-import React, { useCallback, useMemo } from "react";
+import React, { useMemo } from "react";
 import { BsArrowLeft } from "react-icons/bs";
 import Player from "./Player";
 import Controls from "./Player/Controls";
@@ -202,19 +200,6 @@ const WatchPlayer: React.FC<WatchPlayerProps> = ({ videoRef, ...props }) => {
     [currentEpisodeIndex, sourceEpisodes]
   );
 
-  const proxyBuilder = useCallback(
-    (url: string, source: VideoSource) => {
-      if (url.includes(config.proxyServerUrl) || !source.useProxy) return url;
-
-      const encodedUrl = encodeURIComponent(url);
-
-      const requestUrl = `${config.proxyServerUrl}/?url=${encodedUrl}&source_id=${sourceId}`;
-
-      return requestUrl;
-    },
-    [sourceId]
-  );
-
   const hotkeys = useMemo(
     () => [
       {
@@ -246,7 +231,6 @@ const WatchPlayer: React.FC<WatchPlayerProps> = ({ videoRef, ...props }) => {
       components={components}
       hotkeys={hotkeys}
       autoPlay
-      changeSourceUrl={proxyBuilder}
       {...props}
     />
   );

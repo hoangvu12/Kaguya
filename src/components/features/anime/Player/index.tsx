@@ -2,7 +2,8 @@ import config from "@/config";
 import { SKIP_TIME } from "@/constants";
 import { CustomVideoStateContextProvider } from "@/contexts/CustomVideoStateContext";
 import useConstantTranslation from "@/hooks/useConstantTranslation";
-import { Font } from "@/types";
+import { Font, VideoSource } from "@/types";
+import { createProxyUrl } from "@/utils";
 import SubtitlesOctopus from "libass-wasm";
 import NetPlayer, { NetPlayerProps } from "netplayer";
 import React, { useCallback, useMemo, useRef } from "react";
@@ -88,6 +89,16 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
       [fonts, subtitles]
     );
 
+    const proxyBuilder = useCallback((url: string, source: VideoSource) => {
+      if (url.includes(config.proxyServerUrl) || !source.useProxy) return url;
+
+      const requestUrl = createProxyUrl(url, source.proxy);
+
+      console.log("Proxying", url, "to", requestUrl);
+
+      return requestUrl;
+    }, []);
+
     return (
       <CustomVideoStateContextProvider>
         <NetPlayer
@@ -98,6 +109,7 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
           components={playerComponents}
           subtitles={notAssSubtitles}
           onInit={handleVideoInit}
+          changeSourceUrl={proxyBuilder}
           {...props}
         >
           {props.children}

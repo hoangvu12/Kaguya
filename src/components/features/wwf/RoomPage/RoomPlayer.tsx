@@ -1,5 +1,3 @@
-import config from "@/config";
-import { useUser } from "@supabase/auth-helpers-react";
 import { useRoomInfo } from "@/contexts/RoomContext";
 import {
   RoomPlayerContextProvider,
@@ -7,9 +5,10 @@ import {
 } from "@/contexts/RoomPlayerContext";
 import { useFetchSource } from "@/hooks/useFetchSource";
 import useVideoSync from "@/hooks/useVideoSync";
-import { Episode, VideoSource } from "@/types";
+import { Episode } from "@/types";
 import { parseNumberFromString } from "@/utils";
 import { sortMediaUnit } from "@/utils/data";
+import { useUser } from "@supabase/auth-helpers-react";
 import classNames from "classnames";
 import { useInteract } from "netplayer";
 import { useRouter } from "next/router";
@@ -273,19 +272,6 @@ const RoomPlayer = () => {
     [socket]
   );
 
-  const proxyBuilder = useCallback(
-    (url: string, source: VideoSource) => {
-      if (url.includes(config.proxyServerUrl) || !source.useProxy) return url;
-
-      const encodedUrl = encodeURIComponent(url);
-
-      const requestUrl = `${config.proxyServerUrl}/?url=${encodedUrl}&source_id=${room.episode.sourceId}`;
-
-      return requestUrl;
-    },
-    [room.episode.sourceId]
-  );
-
   const components = useMemo(
     () => ({
       Controls: PlayerControls,
@@ -336,7 +322,6 @@ const RoomPlayer = () => {
             sources={isLoading ? blankVideo : data.sources}
             subtitles={data?.subtitles || []}
             className="object-contain w-full h-full"
-            changeSourceUrl={proxyBuilder}
             components={components}
             hotkeys={hotkeys}
             autoPlay

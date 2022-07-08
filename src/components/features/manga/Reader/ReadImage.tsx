@@ -1,8 +1,7 @@
-import config from "@/config";
-import { useReadInfo } from "@/contexts/ReadContext";
 import { useReadSettings } from "@/contexts/ReadSettingsContext";
 import useIntersectionObserver from "@/hooks/useIntersectionObserver";
 import { ImageSource } from "@/types";
+import { createProxyUrl } from "@/utils";
 import classNames from "classnames";
 import { motion } from "framer-motion";
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -26,7 +25,6 @@ const ReadImage: React.FC<ReadImageProps> = ({
   ...props
 }) => {
   const [loaded, setLoaded] = useState(false);
-  const { currentChapter } = useReadInfo();
   const { fitMode } = useReadSettings();
   const ref = useRef<HTMLImageElement>(null);
 
@@ -50,11 +48,7 @@ const ReadImage: React.FC<ReadImageProps> = ({
 
   const src = useMemo(
     () =>
-      image.useProxy
-        ? `${config.proxyServerUrl}?url=${encodeURIComponent(
-            image.image
-          )}&source_id=${currentChapter.sourceId}`
-        : image.image,
+      image.useProxy ? createProxyUrl(image.image, image.proxy) : image.image,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [image.image]
   );
