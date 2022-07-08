@@ -2,11 +2,11 @@ import Button from "@/components/shared/Button";
 import Image from "@/components/shared/Image";
 import { useUploadMediaInfo } from "@/contexts/UploadMediaContext";
 import { useUpdateVideo } from "@/hooks/useUpdateVideo";
-import { FileInfo, VideoFileResponse } from "@/services/upload";
+import { FileInfo } from "@/services/upload";
 import { humanFileSize } from "@/utils";
 import Link from "next/link";
 import React, { useMemo, useState } from "react";
-import VideoUpload from "./VideoUpload";
+import VideoUpload, { VideoState, VideoUploadOnChange } from "./VideoUpload";
 
 interface VideoUpdateProps {
   initialVideo: FileInfo;
@@ -18,7 +18,7 @@ const VideoUpdate: React.FC<VideoUpdateProps> = ({
   episodeSlug,
 }) => {
   const [isUpdating, setIsUpdating] = useState(false);
-  const [file, setFile] = useState<File | string>(null);
+  const [videoState, setVideoState] = useState<VideoState>(null);
   const { mutate: updateVideo, isLoading } = useUpdateVideo(episodeSlug);
   const { mediaId, sourceId } = useUploadMediaInfo();
 
@@ -31,11 +31,15 @@ const VideoUpdate: React.FC<VideoUpdateProps> = ({
   };
 
   const handleUpdate = () => {
-    updateVideo(file, {
+    updateVideo(videoState, {
       onSuccess() {
         setIsUpdating(false);
       },
     });
+  };
+
+  const handleVideoChange: VideoUploadOnChange = (state) => {
+    setVideoState(state);
   };
 
   const episodeId = useMemo(() => episodeSlug.split("-")[1], [episodeSlug]);
@@ -45,7 +49,7 @@ const VideoUpdate: React.FC<VideoUpdateProps> = ({
       <Image
         width={150}
         height={90}
-        src={initialVideo.thumb || "/error.png"}
+        src={initialVideo.thumbnail || "/error.png"}
         alt="uploaded video"
         containerClassName="shrink-0"
         objectFit="cover"
@@ -76,7 +80,7 @@ const VideoUpdate: React.FC<VideoUpdateProps> = ({
     </div>
   ) : (
     <div className="space-y-4">
-      <VideoUpload onChange={setFile} />
+      <VideoUpload onChange={handleVideoChange} />
 
       <div className="flex items-center gap-2 justify-end">
         <Button isLoading={isLoading} onClick={handleCancelUpdating} secondary>

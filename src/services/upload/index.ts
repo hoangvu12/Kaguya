@@ -4,36 +4,19 @@ import { serialize } from "@/utils";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import axios from "axios";
 
-enum VideoFileStatus {
-  Onqueue = "onqueue",
-  Processing = "processing",
-  Converted = "converted",
-  Failed = "failed",
-  Transferring = "transferring",
-  Converting = "converting",
-}
-
 export type FileInfo = {
-  id: string;
-  status: number;
-  name: string;
+  id?: string | number;
   size: number;
+  name: string;
   converted: boolean;
-  thumb: string;
+  progress?: number;
+  thumbnail?: string;
+  error?: boolean;
 };
 
 export type VideoStatusResponse = {
   success: boolean;
   video: FileInfo;
-};
-
-export type VideoFileResponse = {
-  url: string;
-  sha256: string;
-  name: string;
-  size: string;
-  content_type: string;
-  id: string;
 };
 
 export type Attachment = {
@@ -53,29 +36,20 @@ export type UploadFileResponse = {
 
 export type UploadVideoResponse = {
   success: boolean;
-  video: VideoFileResponse;
+  videoId: string | number;
 };
 
 export type RemoteVideoUploadResponse = {
   success: boolean;
-  remote: {
-    id: string;
-    folderid: string;
-  };
+  remoteId: string | number;
 };
 
 export type RemoteStatus = {
-  id: string;
-  remoteurl: string;
-  status: string;
-  bytes_loaded?: any;
-  bytes_total?: any;
-  folderid: string;
-  added: string;
-  last_update: string;
-  extid: boolean;
-  url: boolean;
-  linkid: string;
+  id?: string | number;
+  progress?: number;
+  fileId: string | number;
+  downloaded: boolean;
+  error: boolean;
 };
 
 export type RemoteStatusResponse = {
@@ -131,6 +105,65 @@ client.interceptors.response.use(
   }
 );
 
+export const createUploadService = (hostingId: string) => {
+  const getVideoStatus = async (videoId: string | number) => {
+    const { data } = await client.get<VideoStatusResponse>(
+      `/upload/video/${hostingId}/${videoId}/status`
+    );
+
+    if (!data.success) throw new Error("Get video status failed");
+
+    return data.video;
+  };
+
+  const uploadVideo = async (file: File) => {
+    const formData = new FormData();
+
+    formData.append("file", file);
+
+    const { data } = await client.post<UploadVideoResponse>(
+      `/upload/video/${hostingId}`,
+      formData
+    );
+
+    if (!data.success) throw new Error("Upload failed");
+
+    const { videoId } = data;
+
+    const videoInfo = await getVideoStatus(videoId);
+
+    return videoInfo;
+  };
+
+  const getRemoteStatus = async (remoteId: string | number) => {
+    const { data } = await client.get<RemoteStatusResponse>(
+      `/upload/video/${hostingId}/remote/${remoteId}/status`
+    );
+
+    if (!data.success) throw new Error("Remote video status failed");
+
+    return data.remote;
+  };
+
+  const remoteUploadVideo = async (url: string) => {
+    const { data } = await client.post<RemoteVideoUploadResponse>(
+      `/upload/video/${hostingId}/remote`,
+      serialize({ file: url })
+    );
+
+    if (!data.success) throw new Error("Upload failed");
+
+    return data.remoteId;
+  };
+
+  return {
+    getVideoStatus,
+    uploadVideo,
+    getRemoteStatus,
+    remoteUploadVideo,
+  };
+};
+
 export const upsertEpisode = async (args: UpsertEpisodeArgs) => {
   const { sourceId, episode, mediaId } = args;
   const { data } = await client.post<UpsertEpisodeResponse>(
@@ -161,56 +194,6 @@ export const upsertChapter = async (args: UpsertChapterArgs) => {
   if (!data.success) throw new Error("Upsert chapter failed");
 
   return data.chapter;
-};
-
-export const getVideoStatus = async (hashid: string) => {
-  const { data } = await client.get<VideoStatusResponse>(
-    `/upload/video/${hashid}/status`
-  );
-
-  if (!data.success) throw new Error("Get video status failed");
-
-  return data.video;
-};
-
-export const uploadVideo = async (file: File) => {
-  const formData = new FormData();
-
-  formData.append("file", file);
-
-  const { data } = await client.post<UploadVideoResponse>(
-    "/upload/video",
-    formData
-  );
-
-  if (!data.success) throw new Error("Upload failed");
-
-  const { video } = data;
-
-  const videoInfo = await getVideoStatus(video.id);
-
-  return videoInfo;
-};
-
-export const getRemoteStatus = async (remoteId: string) => {
-  const { data } = await client.get<RemoteStatusResponse>(
-    `/upload/video/remote/${remoteId}/status`
-  );
-
-  if (!data.success) throw new Error("Remote video status failed");
-
-  return data.remote;
-};
-
-export const remoteUploadVideo = async (url: string) => {
-  const { data } = await client.post<RemoteVideoUploadResponse>(
-    "/upload/video/remote",
-    serialize({ file: url })
-  );
-
-  if (!data.success) throw new Error("Upload failed");
-
-  return data.remote;
 };
 
 export const uploadFile = async (
