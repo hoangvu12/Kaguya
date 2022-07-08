@@ -426,17 +426,13 @@ export const createProxyUrl = (url: string, proxy: Proxy) => {
     composeHeaders(appendResHeaders)
   );
 
-  console.log(modifiedAppendReqHeaders, modifiedAppendResHeaders);
-
   const params = stringify({
     appendReqHeaders: modifiedAppendReqHeaders,
     appendResHeaders: modifiedAppendResHeaders,
     ...rest,
   });
 
-  console.log(params);
-
-  return `${config.proxyServerUrl}?url=${encodeURIComponent(url)}&${params}`;
+  return `${config.proxyServerUrl}/?url=${encodeURIComponent(url)}&${params}`;
 };
 
 export const createAttachmentUrl = (url: string) => {
