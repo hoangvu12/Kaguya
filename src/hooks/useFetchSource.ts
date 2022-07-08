@@ -1,5 +1,6 @@
 import config from "@/config";
 import { Episode, Font, Subtitle, VideoSource } from "@/types";
+import { createProxyUrl } from "@/utils";
 import axios, { AxiosError } from "axios";
 import { useQuery, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
@@ -17,12 +18,10 @@ interface ReturnFailType {
   errorMessage: string;
 }
 
-const convertSources = (sources: VideoSource[], sourceId: string) =>
+const convertSources = (sources: VideoSource[]) =>
   sources.map((source) => {
-    if (source.useProxy && !source.file.includes("m3u8")) {
-      source.file = `${config.proxyServerUrl}?url=${encodeURIComponent(
-        source.file
-      )}&source_id=${sourceId}`;
+    if (source.useProxy) {
+      source.file = createProxyUrl(source.file, source.proxy);
     }
 
     return source;
@@ -44,7 +43,7 @@ export const useFetchSource = (
         },
       })
       .then(({ data }) => {
-        data.sources = convertSources(data.sources, episode.sourceId);
+        data.sources = convertSources(data.sources);
 
         return data;
       });

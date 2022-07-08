@@ -4,6 +4,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import mime from "mime";
 import config from "@/config";
+import { Proxy } from "@/types";
+import { stringify } from "querystring";
 
 export const randomElement = <T>(array: T[]): T => {
   const index = Math.floor(Math.random() * array.length);
@@ -408,10 +410,33 @@ export const createFileFromUrl = async (url: string, filename: string) => {
   return file;
 };
 
-export const createProxyUrl = (url: string, sourceId: string) => {
-  return `${config.proxyServerUrl}?url=${encodeURIComponent(
-    url
-  )}&source_id=${sourceId}`;
+export const createProxyUrl = (url: string, proxy: Proxy) => {
+  const composeHeaders = (
+    headers: Record<string, string>
+  ): [string, string][] => {
+    return Object.entries(headers).map(([key, value]) => [key, value]);
+  };
+
+  const { appendReqHeaders = {}, appendResHeaders = {}, ...rest } = proxy;
+
+  const modifiedAppendReqHeaders = JSON.stringify(
+    composeHeaders(appendReqHeaders)
+  );
+  const modifiedAppendResHeaders = JSON.stringify(
+    composeHeaders(appendResHeaders)
+  );
+
+  console.log(modifiedAppendReqHeaders, modifiedAppendResHeaders);
+
+  const params = stringify({
+    appendReqHeaders: modifiedAppendReqHeaders,
+    appendResHeaders: modifiedAppendResHeaders,
+    ...rest,
+  });
+
+  console.log(params);
+
+  return `${config.proxyServerUrl}?url=${encodeURIComponent(url)}&${params}`;
 };
 
 export const createAttachmentUrl = (url: string) => {

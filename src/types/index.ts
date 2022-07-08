@@ -159,11 +159,13 @@ export type VideoSource = {
   file: string;
   label?: string;
   useProxy?: boolean;
+  proxy?: Proxy;
 };
 
 export type ImageSource = {
   image: string;
   useProxy?: boolean;
+  proxy?: Proxy;
 };
 
 export type Room = {
@@ -249,4 +251,15 @@ export interface UploadSubtitle {
   file: File;
   name: string;
   locale: string;
+}
+
+export interface Proxy {
+  ignoreReqHeaders?: boolean;
+  followRedirect?: boolean;
+  redirectWithProxy?: boolean;
+  decompress?: boolean;
+  appendReqHeaders?: Record<string, string>;
+  appendResHeaders?: Record<string, string>;
+  deleteReqHeaders?: string[];
+  deleteResHeaders?: string[];
 }
