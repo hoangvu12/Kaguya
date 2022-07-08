@@ -48,6 +48,12 @@ export type Video = {
   video: FileInfo;
   episodeId: string;
   userId: string;
+  hostingId: string;
+};
+
+export type Hosting = {
+  id: string;
+  name: string;
 };
 
 export type Episode = {

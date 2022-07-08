@@ -1,17 +1,13 @@
 import {
   Attachment,
+  createUploadService,
   FileInfo,
-  getRemoteStatus,
-  getVideoStatus,
   RemoteStatus,
-  remoteUploadVideo,
   uploadFile,
-  uploadVideo,
   upsertEpisode,
-  VideoFileResponse,
 } from "@/services/upload";
 import { Episode, UploadSubtitle } from "@/types";
-import { humanFileSize, randomString, sleep } from "@/utils";
+import { randomString, sleep } from "@/utils";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useUser } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
@@ -28,10 +24,11 @@ interface CreateEpisodeInput {
   subtitles: UploadSubtitle[];
   fonts: File[];
   episodeName: string;
+  hostingId: string;
 }
 
 interface CreateEpisodeResponse {
-  video: VideoFileResponse | FileInfo;
+  video: FileInfo;
   subtitles: Attachment[];
   fonts: Attachment[];
   episode: Episode;
@@ -47,13 +44,24 @@ const useCreateEpisode = (args: UseCreateEpisodeArgs) => {
   const episodeId = randomString(8);
 
   return useMutation<CreateEpisodeResponse, Error, CreateEpisodeInput>(
-    async ({ episodeName, fonts, subtitles, video }) => {
+    async ({ episodeName, fonts, subtitles, video, hostingId }) => {
+      const {
+        getRemoteStatus,
+        getVideoStatus,
+        remoteUploadVideo,
+        uploadVideo,
+      } = createUploadService(hostingId);
+
       if (!episodeName) {
         throw new Error("Episode name is required");
       }
 
       if (!video) {
         throw new Error("Video is required");
+      }
+
+      if (!hostingId) {
+        throw new Error("Hosting is required");
       }
 
       toast.loading("Uploading video...", {
@@ -63,36 +71,30 @@ const useCreateEpisode = (args: UseCreateEpisodeArgs) => {
       let uploadedVideo: FileInfo;
 
       if (typeof video === "string") {
-        const remote = await remoteUploadVideo(video);
+        const remoteId = await remoteUploadVideo(video);
 
-        if (!remote.id) {
+        if (!remoteId) {
           throw new Error("Upload failed");
         }
 
         const waitRemoteUntilDownloaded = async (): Promise<RemoteStatus> => {
-          const remoteStatus = await getRemoteStatus(remote.id);
+          const remoteStatus = await getRemoteStatus(remoteId);
 
-          if (remoteStatus.status === "finished") {
+          if (remoteStatus.downloaded) {
             return remoteStatus;
           }
 
-          if (
-            remoteStatus.status !== "downloading" &&
-            remoteStatus.status !== "new"
-          ) {
+          if (remoteStatus.error) {
             throw new Error("Upload failed");
           }
 
-          if (remoteStatus.status === "downloading") {
-            const bytesLoaded = humanFileSize(remoteStatus.bytes_loaded);
-            const bytesTotal = humanFileSize(remoteStatus.bytes_total);
-
-            toast.update(id, {
-              render: `Downloading video... (${bytesLoaded} of ${bytesTotal}})`,
-              type: "info",
-              isLoading: true,
-            });
-          }
+          toast.update(id, {
+            render: `Downloading video... ${
+              remoteStatus.progress >= 0 && `(${remoteStatus.progress}%)`
+            }`,
+            type: "info",
+            isLoading: true,
+          });
 
           await sleep(2000);
 
@@ -101,7 +103,7 @@ const useCreateEpisode = (args: UseCreateEpisodeArgs) => {
 
         const remoteStatus = await waitRemoteUntilDownloaded();
 
-        uploadedVideo = await getVideoStatus(remoteStatus.linkid);
+        uploadedVideo = await getVideoStatus(remoteStatus.fileId);
       } else if (video instanceof File) {
         uploadedVideo = await uploadVideo(video);
       }
@@ -173,6 +175,7 @@ const useCreateEpisode = (args: UseCreateEpisodeArgs) => {
         fonts: uploadedFonts,
         episodeId: upsertedEpisode.slug,
         userId: user.id,
+        hostingId,
       });
 
       if (error) {

@@ -1,23 +1,28 @@
-import {
-  FileInfo,
-  getRemoteStatus,
-  getVideoStatus,
-  RemoteStatus,
-  remoteUploadVideo,
-  uploadVideo,
-} from "@/services/upload";
+import { createUploadService, FileInfo, RemoteStatus } from "@/services/upload";
 import { humanFileSize, sleep } from "@/utils";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { PostgrestError } from "@supabase/supabase-js";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 
+interface UseUpdateVideoInput {
+  video: File | string;
+  hostingId: string;
+}
+
 export const useUpdateVideo = (episodeSlug: string) => {
   const id = "update-video-id";
   const client = useQueryClient();
 
-  return useMutation<FileInfo, PostgrestError, File | string>(
-    async (video) => {
+  return useMutation<FileInfo, PostgrestError, UseUpdateVideoInput>(
+    async ({ video, hostingId }) => {
+      const {
+        getRemoteStatus,
+        getVideoStatus,
+        remoteUploadVideo,
+        uploadVideo,
+      } = createUploadService(hostingId);
+
       if (!video) {
         throw new Error("Video is required");
       }
@@ -27,36 +32,30 @@ export const useUpdateVideo = (episodeSlug: string) => {
       let uploadedVideo: FileInfo;
 
       if (typeof video === "string") {
-        const remote = await remoteUploadVideo(video);
+        const remoteId = await remoteUploadVideo(video);
 
-        if (!remote.id) {
+        if (!remoteId) {
           throw new Error("Upload failed");
         }
 
         const waitRemoteUntilDownloaded = async (): Promise<RemoteStatus> => {
-          const remoteStatus = await getRemoteStatus(remote.id);
+          const remoteStatus = await getRemoteStatus(remoteId);
 
-          if (remoteStatus.status === "finished") {
+          if (remoteStatus.downloaded) {
             return remoteStatus;
           }
 
-          if (
-            remoteStatus.status !== "downloading" &&
-            remoteStatus.status !== "new"
-          ) {
+          if (remoteStatus.error) {
             throw new Error("Upload failed");
           }
 
-          if (remoteStatus.status === "downloading") {
-            const bytesLoaded = humanFileSize(remoteStatus.bytes_loaded);
-            const bytesTotal = humanFileSize(remoteStatus.bytes_total);
-
-            toast.update(id, {
-              render: `Downloading video... (${bytesLoaded} of ${bytesTotal}})`,
-              type: "info",
-              isLoading: true,
-            });
-          }
+          toast.update(id, {
+            render: `Downloading video... ${
+              remoteStatus.progress >= 0 && `(${remoteStatus.progress}%)`
+            }`,
+            type: "info",
+            isLoading: true,
+          });
 
           await sleep(2000);
 
@@ -65,7 +64,7 @@ export const useUpdateVideo = (episodeSlug: string) => {
 
         const remoteStatus = await waitRemoteUntilDownloaded();
 
-        uploadedVideo = await getVideoStatus(remoteStatus.linkid);
+        uploadedVideo = await getVideoStatus(remoteStatus.fileId);
       } else if (video instanceof File) {
         uploadedVideo = await uploadVideo(video);
       }
@@ -74,6 +73,7 @@ export const useUpdateVideo = (episodeSlug: string) => {
         .from("kaguya_videos")
         .update({
           video: uploadedVideo,
+          hostingId,
         })
         .match({ episodeId: episodeSlug });
 

@@ -5,7 +5,9 @@ import SubtitleUpload, {
 } from "@/components/features/upload/SubtitleUpload";
 import UploadContainer from "@/components/features/upload/UploadContainer";
 import UploadSection from "@/components/features/upload/UploadSection";
-import VideoUpload from "@/components/features/upload/VideoUpload";
+import VideoUpload, {
+  VideoState,
+} from "@/components/features/upload/VideoUpload";
 import UploadLayout from "@/components/layouts/UploadLayout";
 import Button from "@/components/shared/Button";
 import Section from "@/components/shared/Section";
@@ -31,7 +33,7 @@ const UploadCreateEpisodePage: NextPage<UploadCreateEpisodePageProps> = ({
   sourceId,
   user,
 }) => {
-  const [video, setVideo] = useState<string | File>(null);
+  const [videoState, setVideoState] = useState<VideoState>(null);
   const [subtitles, setSubtitles] = useState<SubtitleFile[]>([]);
   const [fonts, setFonts] = useState<File[]>([]);
   const [episodeName, setEpisodeName] = useState("");
@@ -42,11 +44,14 @@ const UploadCreateEpisodePage: NextPage<UploadCreateEpisodePageProps> = ({
   });
 
   const onSubmit = () => {
+    console.log(videoState);
+
     createEpisode({
       episodeName,
       fonts,
       subtitles,
-      video,
+      video: videoState.video,
+      hostingId: videoState.hostingId,
     });
   };
 
@@ -73,7 +78,7 @@ const UploadCreateEpisodePage: NextPage<UploadCreateEpisodePageProps> = ({
             </UploadSection.Left>
 
             <UploadSection.Right>
-              <VideoUpload onChange={setVideo} />
+              <VideoUpload onChange={setVideoState} />
             </UploadSection.Right>
           </UploadSection>
 

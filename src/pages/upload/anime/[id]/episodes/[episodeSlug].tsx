@@ -42,7 +42,8 @@ const UploadEpisodeEditPage: NextPage<UploadEpisodeEditPageProps> = ({
   const { mutate: deleteEpisode, isLoading: deleteLoading } =
     useEpisodeDelete(episodeSlug);
   const { data: videoStatus, isLoading: videoStatusLoading } = useVideoStatus(
-    data?.video?.[0]?.video?.id
+    data?.video?.[0]?.video?.id,
+    data?.video?.[0]?.hostingId
   );
   const router = useRouter();
 
