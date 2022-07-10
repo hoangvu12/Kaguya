@@ -5,10 +5,7 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
-          <meta
-            httpEquiv="Content-Security-Policy"
-            content="upgrade-insecure-requests"
-          />
+          <meta httpEquiv="Cache-Control" content="max-age=200" />
         </Head>
         <body>
           <Main />
