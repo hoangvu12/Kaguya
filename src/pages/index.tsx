@@ -20,6 +20,7 @@ import { getSeason, randomElement } from "@/utils";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
 import React, { useMemo } from "react";
+import { isMobile } from "react-device-detect";
 
 const Home = () => {
   const currentSeason = useMemo(getSeason, []);
@@ -29,6 +30,7 @@ const Home = () => {
   const { data: trendingAnime, isLoading: trendingLoading } = useMedia({
     type: MediaType.Anime,
     sort: [MediaSort.Trending_desc, MediaSort.Popularity_desc],
+    perPage: isMobile ? 5 : 10,
   });
 
   const { data: popularSeason, isLoading: popularSeasonLoading } = useMedia({
@@ -67,6 +69,7 @@ const Home = () => {
       type: MediaType.Anime,
       sort: [MediaSort.Updated_at_desc],
       isAdult: false,
+      perPage: isMobile ? 5 : 10,
     }
   );
 

@@ -18,6 +18,7 @@ import { randomElement } from "@/utils";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
 import React, { useMemo } from "react";
+import { isMobile } from "react-device-detect";
 
 const Home = () => {
   const { isDesktop } = useDevice();
@@ -26,6 +27,7 @@ const Home = () => {
   const { data: trendingManga, isLoading: trendingLoading } = useMedia({
     type: MediaType.Manga,
     sort: [MediaSort.Trending_desc, MediaSort.Popularity_desc],
+    perPage: isMobile ? 5 : 10,
   });
 
   const { data: popularManga, isLoading: popularMangaLoading } = useMedia({
@@ -45,6 +47,7 @@ const Home = () => {
       type: MediaType.Manga,
       sort: [MediaSort.Updated_at_desc],
       isAdult: false,
+      perPage: isMobile ? 5 : 10,
     }
   );
 
