@@ -1,8 +1,8 @@
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { getMedia } from "@/services/anilist";
 import { Comment } from "@/types";
 import { MediaType } from "@/types/anilist";
-import { useSupabaseQuery } from "@/utils/supabase";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
+import { isMobile } from "react-device-detect";
 import { useQuery } from "react-query";
 
 const mangaQuery = `
@@ -24,7 +24,7 @@ const useNewestComments = (type: MediaType) => {
       .select(isAnime ? animeQuery : mangaQuery)
       .not(isAnime ? "anime_id" : "manga_id", "is", null)
       .order("created_at", { ascending: false })
-      .limit(15);
+      .limit(isMobile ? 5 : 10);
 
     if (error) throw error;
 

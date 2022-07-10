@@ -8,7 +8,7 @@ import { getTitle } from "@/utils/data";
 import { useTranslation } from "next-i18next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { PropsWithChildren, useMemo } from "react";
+import React, { useMemo } from "react";
 import CommentsSwiperSkeleton from "../skeletons/CommentsSwiperSkeleton";
 import EmojiText from "./EmojiText";
 
