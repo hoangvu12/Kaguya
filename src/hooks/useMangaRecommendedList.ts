@@ -1,10 +1,10 @@
-import { useUser } from "@supabase/auth-helpers-react";
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
-import { getMedia, getMediaDetails } from "@/services/anilist";
+import { getMediaDetails } from "@/services/anilist";
 import { mediaDefaultFields } from "@/services/anilist/queries";
 import { Read } from "@/types";
 import { MediaType } from "@/types/anilist";
-import { useSupabaseSingleQuery } from "@/utils/supabase";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
+import { useUser } from "@supabase/auth-helpers-react";
+import { isMobile } from "react-device-detect";
 import { useQuery } from "react-query";
 
 const useMangaRecommendedList = () => {
@@ -36,7 +36,9 @@ const useMangaRecommendedList = () => {
           native
           userPreferred
         }
-        recommendations(sort: [RATING_DESC, ID]) {
+        recommendations(sort: [RATING_DESC, ID], perPage: ${
+          isMobile ? 5 : 10
+        }) {
           nodes {
             mediaRecommendation {
               ${mediaDefaultFields}

@@ -5,6 +5,7 @@ import { useUser } from "@supabase/auth-helpers-react";
 import { useQuery } from "react-query";
 import { getMedia } from "@/services/anilist";
 import { MediaType } from "@/types/anilist";
+import { isMobile } from "react-device-detect";
 
 const useRead = () => {
   const { user } = useUser();
@@ -19,7 +20,7 @@ const useRead = () => {
         )
         .eq("userId", user.id)
         .order("updated_at", { ascending: false })
-        .limit(15);
+        .limit(isMobile ? 5 : 10);
 
       if (error) throw error;
 

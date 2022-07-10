@@ -4,6 +4,7 @@ import { getMedia } from "@/services/anilist";
 import { Watched } from "@/types";
 import { fulfilledPromises } from "@/utils";
 import { useQuery } from "react-query";
+import { isMobile } from "react-device-detect";
 
 const useWatched = () => {
   const { user } = useUser();
@@ -18,7 +19,7 @@ const useWatched = () => {
         )
         .eq("userId", user.id)
         .order("updated_at", { ascending: false })
-        .limit(15);
+        .limit(isMobile ? 5 : 10);
 
       if (error) throw error;
 
