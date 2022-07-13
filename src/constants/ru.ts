@@ -17,7 +17,7 @@ export const SEASONS = [
 export const STATUS = [
   { value: MediaStatus.Finished, label: "Вышло" },
   { value: MediaStatus.Releasing, label: "Выходит" },
-  { value: MediaStatus.Not_yet_released, label: "Еще не вышло" },
+  { value: MediaStatus.Not_yet_released, label: "Анонс" },
   { value: MediaStatus.Cancelled, label: "Отменено" },
   { value: MediaStatus.Hiatus, label: "Hiatus" }, // cant translate
 ];
@@ -100,7 +100,7 @@ export const GENRES = [
   },
   {
     value: "Mahou Shoujo",
-    label: "Mahou Shoujo", // idk how to translate this
+    label: "Седзе",
     thumbnail:
       "https://s4.anilist.co/file/anilistcdn/media/anime/banner/9756-d5M8NffgJJHB.jpg",
   },
@@ -142,7 +142,7 @@ export const GENRES = [
   },
   {
     value: "Slice of Life",
-    label: "Slice of Life",
+    label: "Повседневность",
     thumbnail:
       "https://s4.anilist.co/file/anilistcdn/media/anime/banner/124080-ARyLAHHgikRq.jpg",
   },
