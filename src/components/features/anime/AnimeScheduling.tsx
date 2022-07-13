@@ -11,6 +11,7 @@ import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 
 const daysOfWeek_vi = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
 const daysOfWeek_en = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const daysOfWeek_ru = ["Вос", "Пон", "Вт", "Ср", "Чт", "Пт", "Сб"];
 
 interface AnimeSchedulingProps {
   schedules: AiringSchedule[];
