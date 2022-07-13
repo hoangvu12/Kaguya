@@ -16,6 +16,7 @@ import {
 import { UploadMediaProvider } from "@/contexts/UploadMediaContext";
 import withAdditionalUser from "@/hocs/withAdditionalUser";
 import useEpisodeDelete from "@/hooks/useEpisodeDelete";
+import usePublishEpisode from "@/hooks/usePublishEpisode";
 import useUploadedEpisode from "@/hooks/useUploadedEpisode";
 import useVideoStatus from "@/hooks/useVideoStatus";
 import { AdditionalUser, Source } from "@/types";
@@ -24,6 +25,7 @@ import { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
+import { useQueryClient } from "react-query";
 
 interface UploadEpisodeEditPageProps {
   user: AdditionalUser;
@@ -41,11 +43,14 @@ const UploadEpisodeEditPage: NextPage<UploadEpisodeEditPageProps> = ({
   const { data, isLoading } = useUploadedEpisode(episodeSlug);
   const { mutate: deleteEpisode, isLoading: deleteLoading } =
     useEpisodeDelete(episodeSlug);
+  const { mutate: publishEpisode, isLoading: publishLoading } =
+    usePublishEpisode(episodeSlug);
   const { data: videoStatus, isLoading: videoStatusLoading } = useVideoStatus(
     data?.video?.[0]?.video?.id,
     data?.video?.[0]?.hostingId
   );
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const episodeId = useMemo(() => episodeSlug.split("-")[1], [episodeSlug]);
 
@@ -53,6 +58,14 @@ const UploadEpisodeEditPage: NextPage<UploadEpisodeEditPageProps> = ({
     deleteEpisode(null, {
       onSuccess: () => {
         router.replace(`/upload/anime/${mediaId}`);
+      },
+    });
+  };
+
+  const handlePublish = () => {
+    publishEpisode(null, {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["uploaded-episode", episodeSlug]);
       },
     });
   };
@@ -133,7 +146,7 @@ const UploadEpisodeEditPage: NextPage<UploadEpisodeEditPageProps> = ({
         )}
       </UploadContainer>
 
-      {!isLoading && (
+      {!isLoading && !videoStatusLoading && (
         <Section className="py-3 flex justify-between items-center fixed bottom-0 w-full md:w-4/5 bg-background-800">
           <DeleteConfirmation
             isLoading={deleteLoading}
@@ -152,17 +165,34 @@ const UploadEpisodeEditPage: NextPage<UploadEpisodeEditPageProps> = ({
           </DeleteConfirmation>
 
           <div className="flex gap-2 items-center">
+            <p>
+              Tình trạng tập phim: {data.published ? "Đã đăng" : "Chưa đăng"}
+            </p>
+
             <Link href={`/upload/anime/${mediaId}/episodes/create`}>
               <a>
-                <Button secondary>Tạo tập mới</Button>
+                <Button className="!bg-gray-600 hover:!bg-opacity-80">
+                  Tạo tập mới
+                </Button>
               </a>
             </Link>
 
-            <Link href={`/anime/watch/${mediaId}/${sourceId}/${episodeId}`}>
-              <a>
-                <Button primary>Xem tập phim</Button>
-              </a>
-            </Link>
+            {data.published ? (
+              <Link href={`/anime/watch/${mediaId}/${sourceId}/${episodeId}`}>
+                <a>
+                  <Button primary>Xem tập phim</Button>
+                </a>
+              </Link>
+            ) : (
+              <Button
+                isLoading={publishLoading}
+                primary
+                disabled={!videoStatus.converted}
+                onClick={handlePublish}
+              >
+                Đăng tập phim
+              </Button>
+            )}
           </div>
         </Section>
       )}
