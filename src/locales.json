@@ -3,5 +3,6 @@
     "locale": "vi",
     "name": "Tiếng Việt"
   },
-  { "locale": "en", "name": "English" }
+  { "locale": "en", "name": "English" },
+  { "locale": "ru", "name": "Русский" }
 ]
