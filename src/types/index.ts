@@ -67,6 +67,7 @@ export type Episode = {
   slug: string;
   thumbnailImage?: string;
   video: Video[];
+  published: boolean;
 };
 
 export type Chapter = {
@@ -81,6 +82,7 @@ export type Chapter = {
   images: {
     images: Attachment[];
   }[];
+  published: boolean;
 };
 
 export interface Section<T> {
