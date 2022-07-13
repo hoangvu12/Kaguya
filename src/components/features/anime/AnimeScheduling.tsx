@@ -1,17 +1,13 @@
 import Card from "@/components/shared/Card";
 import CardSwiper from "@/components/shared/CardSwiper";
 import DotList from "@/components/shared/DotList";
+import useConstantTranslation from "@/hooks/useConstantTranslation";
 import dayjs from "@/lib/dayjs";
-import { AiringSchedule, MediaType } from "@/types/anilist";
+import { AiringSchedule } from "@/types/anilist";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
-import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
-
-const daysOfWeek_vi = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
-const daysOfWeek_en = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-const daysOfWeek_ru = ["Вос", "Пон", "Вт", "Ср", "Чт", "Пт", "Сб"];
 
 interface AnimeSchedulingProps {
   schedules: AiringSchedule[];
@@ -19,15 +15,10 @@ interface AnimeSchedulingProps {
 
 const AnimeScheduling: React.FC<AnimeSchedulingProps> = ({ schedules }) => {
   const { t } = useTranslation("anime_home");
-  const { locale } = useRouter();
+  const { DAYSOFWEEK } = useConstantTranslation();
 
   const today = dayjs();
   const todayIndex = today.day();
-
-  const daysOfWeek = useMemo(
-    () => (locale === "en" ? daysOfWeek_en : daysOfWeek_vi),
-    [locale]
-  );
 
   const chunks = useMemo(
     () =>
@@ -35,9 +26,7 @@ const AnimeScheduling: React.FC<AnimeSchedulingProps> = ({ schedules }) => {
         const day = dayjs.unix(cur.airingAt);
 
         const dayIndex = day.day();
-        const dayName = daysOfWeek[dayIndex];
-
-        console.log(dayIndex);
+        const dayName = DAYSOFWEEK[dayIndex];
 
         if (!(dayName in acc)) {
           acc[dayName] = [];
@@ -47,13 +36,13 @@ const AnimeScheduling: React.FC<AnimeSchedulingProps> = ({ schedules }) => {
 
         return acc;
       }, {}),
-    [daysOfWeek, schedules]
+    [DAYSOFWEEK, schedules]
   );
 
   return (
     <Tabs defaultIndex={todayIndex} selectedTabClassName="bg-white !text-black">
       <TabList className="w-5/6 mx-auto flex items-center justify-center flex-wrap gap-x-4 lg:gap-x-8">
-        {daysOfWeek.map((day, index) => {
+        {DAYSOFWEEK.map((day, index) => {
           const isToday = todayIndex === index;
 
           return (
@@ -71,7 +60,7 @@ const AnimeScheduling: React.FC<AnimeSchedulingProps> = ({ schedules }) => {
       </TabList>
 
       <div className="mt-20">
-        {daysOfWeek.map((day) => {
+        {DAYSOFWEEK.map((day) => {
           const hasSchedules = day in chunks;
           const schedules: AiringSchedule[] = chunks[day];
 

@@ -307,6 +307,8 @@ export const PLAYER_TRANSLATIONS: I18n = {
   },
 };
 
+const DAYSOFWEEK = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
+
 const translations = {
   SEASONS,
   FORMATS,
@@ -324,6 +326,7 @@ const translations = {
   GENDERS,
   EMOJI_GROUP,
   PLAYER_TRANSLATIONS,
+  DAYSOFWEEK,
 };
 
 export default translations;
