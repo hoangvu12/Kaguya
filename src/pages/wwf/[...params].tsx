@@ -140,9 +140,9 @@ export const getServerSideProps: GetServerSideProps = async ({
       throw sourceConnectionError;
     }
 
-    const episodes = sourceConnectionData.flatMap(
-      (connection) => connection.episodes
-    );
+    const episodes = sourceConnectionData
+      .flatMap((connection) => connection.episodes)
+      .filter((episode) => episode.published);
 
     return {
       props: {

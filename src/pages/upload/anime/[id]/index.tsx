@@ -5,12 +5,12 @@ import UploadContainer from "@/components/features/upload/UploadContainer";
 import UploadLayout from "@/components/layouts/UploadLayout";
 import BaseButton from "@/components/shared/BaseButton";
 import Button from "@/components/shared/Button";
+import DeleteConfirmation from "@/components/shared/DeleteConfirmation";
 import Loading from "@/components/shared/Loading";
 import Section from "@/components/shared/Section";
 import { UploadMediaProvider } from "@/contexts/UploadMediaContext";
 import withAdditionalUser from "@/hocs/withAdditionalUser";
 import useAnimeSourceDelete from "@/hooks/useAnimeSourceDelete";
-import useMangaSourceDelete from "@/hooks/useMangaSourceDelete";
 import useMediaDetails from "@/hooks/useMediaDetails";
 import useUploadedEpisodes from "@/hooks/useUploadedEpisodes";
 import { AdditionalUser, Source } from "@/types";
@@ -22,7 +22,6 @@ import Link from "next/link";
 import { useMemo } from "react";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { useQueryClient } from "react-query";
-import DeleteConfirmation from "@/components/shared/DeleteConfirmation";
 
 interface UploadAnimePageProps {
   user: AdditionalUser;
@@ -97,10 +96,16 @@ const UploadAnimePage: NextPage<UploadAnimePageProps> = ({
                       key={episode.slug}
                       href={`/upload/anime/${mediaId}/episodes/${episode.slug}`}
                     >
-                      <a className="block">
+                      <a className="relative block">
                         <BaseButton className="p-3 w-full !bg-background-900 hover:!bg-white/20 rounded-md">
                           {episode.name}
                         </BaseButton>
+
+                        {!episode.published && (
+                          <span className="rounded-md top-1/2 -translate-y-1/2 px-2 py-1 bg-primary-700 absolute right-5">
+                            Chưa đăng tải
+                          </span>
+                        )}
                       </a>
                     </Link>
                   ))}
@@ -117,6 +122,7 @@ const UploadAnimePage: NextPage<UploadAnimePageProps> = ({
             onConfirm={handleConfirm}
             className="space-y-4"
             confirmString={anime.title.userPreferred}
+            isLoading={deleteLoading}
           >
             <h1 className="text-2xl font-semibold">
               Bạn có chắc chắn xóa không?

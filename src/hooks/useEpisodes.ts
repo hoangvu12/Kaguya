@@ -32,7 +32,10 @@ const useEpisodes = (mediaId: number) => {
   );
 
   const sortedEpisodes = useMemo(
-    () => (isLoading ? [] : sortMediaUnit(episodes)),
+    () =>
+      isLoading
+        ? []
+        : sortMediaUnit(episodes.filter((episode) => episode.published)),
     [episodes, isLoading]
   );
 
