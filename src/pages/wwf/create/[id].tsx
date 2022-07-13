@@ -241,7 +241,9 @@ export const getServerSideProps = withPageAuth({
         throw error;
       }
 
-      const episodes = data.flatMap((connection) => connection.episodes);
+      const episodes = data
+        .flatMap((connection) => connection.episodes)
+        .filter((episode) => episode.published);
 
       return {
         props: {

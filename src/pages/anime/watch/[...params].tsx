@@ -415,7 +415,9 @@ export const getServerSideProps: GetServerSideProps = async ({
     return {
       props: {
         anime: media,
-        episodes: data.flatMap((connection) => connection.episodes),
+        episodes: data
+          .flatMap((connection) => connection.episodes)
+          .filter((episode) => episode.published),
       },
     };
   } catch (err) {

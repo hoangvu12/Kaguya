@@ -6,6 +6,7 @@ import { MediaType } from "@/types/anilist";
 import { useMemo } from "react";
 import { useQuery } from "react-query";
 import { toast } from "react-toastify";
+import EpisodeNameUpdate from "@/components/features/upload/EpisodeNameUpdate";
 
 const useRoom = (roomId: number, initialData: Room) => {
   const queryKey = useMemo(() => ["room", roomId], [roomId]);
@@ -55,9 +56,9 @@ const useRoom = (roomId: number, initialData: Room) => {
         throw sourceConnectionError;
       }
 
-      const episodes = sourceConnectionData.flatMap(
-        (connection) => connection.episodes
-      );
+      const episodes = sourceConnectionData
+        .flatMap((connection) => connection.episodes)
+        .filter((episode) => episode.published);
 
       return { ...room, media, episodes };
     },
