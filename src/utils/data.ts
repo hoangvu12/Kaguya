@@ -1,5 +1,6 @@
 import enTranslations from "@/constants/en";
 import viTranslations from "@/constants/vi";
+import ruTranslations from "@/constants/ru";
 import { TMDBTranlations } from "@/services/tmdb";
 import { Chapter, Episode } from "@/types";
 import { Media } from "@/types/anilist";
@@ -36,6 +37,8 @@ export const getConstantTranslation = (locale: string) => {
       return viTranslations;
     case "en":
       return enTranslations;
+    case "ru":
+      return ruTranslations;
     default:
       return enTranslations;
   }
