@@ -37,6 +37,13 @@ const VideoUpload: React.FC<VideoUploadProps> = ({ onChange }) => {
     onChange?.({ video: textAreaRef.current.value, hostingId });
   };
 
+  const selectedHosting = useMemo(() => {
+    if (isLoading) return null;
+    if (!hostingId) return null;
+
+    return data.find((hosting) => hosting.id === hostingId);
+  }, [data, hostingId, isLoading]);
+
   return (
     <div className="relative">
       {isLoading ? (
@@ -57,7 +64,10 @@ const VideoUpload: React.FC<VideoUploadProps> = ({ onChange }) => {
             ref={textAreaRef}
             onBlur={handleTextAreaBlur}
             className="mt-2 p-2 w-full h-36 bg-background-900 text-white border-gray-300 border"
-            placeholder="Nhập URL muốn upload (VD: https://example.com/video.mp4)"
+            placeholder={
+              selectedHosting?.supportedUrlFormats?.join("\n") ||
+              "Nhập url video ở đây."
+            }
           />
         </React.Fragment>
       )}
