@@ -54,6 +54,7 @@ export type Video = {
 export type Hosting = {
   id: string;
   name: string;
+  supportedUrlFormats: string[];
 };
 
 export type Episode = {
