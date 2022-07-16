@@ -48,8 +48,6 @@ const SourceEpisodeSelector: React.FC<SourceEpisodeSelectorProps> = ({
     defaultActiveSource || Object.keys(sources)[0]
   );
 
-  console.log(defaultActiveSource, Object.keys(sources)[0]);
-
   const sourceEpisodes = useMemo(
     () => sources[activeSource],
     [sources, activeSource]

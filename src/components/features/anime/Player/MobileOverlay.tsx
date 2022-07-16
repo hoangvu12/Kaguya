@@ -30,7 +30,7 @@ const MobileOverlay: React.FC<MobileOverlayProps> = ({ children }) => {
     <div
       className={classNames(
         "mobile-overlay",
-        "w-full h-full bg-black/80 transition-all duration-300 relative",
+        "z-40 w-full h-full bg-black/80 transition-all duration-300 relative",
         !shouldOverlayVisible ? "invisible opacity-0" : "visible opacity-100"
       )}
     >
