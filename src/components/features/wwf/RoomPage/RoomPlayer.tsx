@@ -217,7 +217,7 @@ const PlayerMobileOverlay = () => {
 
       {anime.idMal && (
         <TimestampSkipButton
-          className="absolute right-4 bottom-20"
+          className="z-50 absolute right-4 bottom-24"
           episode={parseNumberFromString(currentEpisode.name)}
           malId={anime.idMal}
         />
@@ -321,6 +321,7 @@ const RoomPlayer = () => {
             ref={playerRef}
             sources={isLoading ? blankVideo : data.sources}
             subtitles={data?.subtitles || []}
+            fonts={data?.fonts || []}
             className="object-contain w-full h-full"
             components={components}
             hotkeys={hotkeys}
