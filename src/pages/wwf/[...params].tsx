@@ -3,12 +3,15 @@ import RoomWatchPanel from "@/components/features/wwf/RoomPage/RoomWatchPanel";
 import BaseLayout from "@/components/layouts/BaseLayout";
 import Head from "@/components/shared/Head";
 import config from "@/config";
-import { useUser } from "@supabase/auth-helpers-react";
 import { RoomContextProvider } from "@/contexts/RoomContext";
 import { RoomStateContextProvider } from "@/contexts/RoomStateContext";
 import withRedirect from "@/hocs/withRedirect";
 import useRoom from "@/hooks/useRoom";
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
+import {
+  getUser,
+  supabaseClient as supabase,
+  User,
+} from "@supabase/auth-helpers-nextjs";
 import { getMediaDetails } from "@/services/anilist";
 import { mediaDefaultFields } from "@/services/anilist/queries";
 import { AnimeSourceConnection, Room } from "@/types";
@@ -24,13 +27,13 @@ import { io, Socket } from "socket.io-client";
 
 interface RoomPageProps {
   room: Room;
+  user: User;
 }
 
-const RoomPage: NextPage<RoomPageProps> = ({ room }) => {
+const RoomPage: NextPage<RoomPageProps> = ({ room, user }) => {
   const [socket, setSocket] = useState<Socket>();
   const { data } = useRoom(room.id, room);
   const queryClient = useQueryClient();
-  const { user } = useUser();
   const { locale } = useRouter();
   const { t } = useTranslation("wwf");
 
@@ -43,22 +46,22 @@ const RoomPage: NextPage<RoomPageProps> = ({ room }) => {
   useEffect(() => {
     const { pathname, origin } = new URL(config.socketServerUrl);
 
-    const socket = io(origin, {
+    const newSocket = io(origin, {
       path: `${pathname}/socket.io`,
     });
 
-    socket.emit("join", room.id, user);
+    newSocket.emit("join", room.id, user);
 
-    socket.on("invalidate", () => {
+    newSocket.on("invalidate", () => {
       queryClient.invalidateQueries(["room", room.id], {
         refetchInactive: true,
       });
     });
 
-    setSocket(socket);
+    setSocket(newSocket);
 
     return () => {
-      socket?.disconnect();
+      newSocket?.disconnect();
     };
   }, [queryClient, room.id, user]);
 
@@ -94,10 +97,14 @@ RoomPage.getLayout = (children) => (
   <BaseLayout showFooter={false}>{children}</BaseLayout>
 );
 
-export const getServerSideProps: GetServerSideProps = async ({
-  params: { params },
-}) => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
+    const { user } = await getUser(ctx);
+
+    const {
+      params: { params },
+    } = ctx;
+
     const { data: room, error } = await supabase
       .from<Room>("kaguya_rooms")
       .select(
@@ -147,6 +154,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     return {
       props: {
         room: { ...room, media, episodes },
+        user,
       },
     };
   } catch (err) {
