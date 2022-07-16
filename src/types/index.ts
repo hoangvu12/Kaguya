@@ -180,7 +180,7 @@ export type Room = {
   created_at?: string;
   episode: Episode;
   episodeId: string;
-  users: User[];
+  users: { user: User }[];
   title?: string;
   episodes: Episode[];
   visibility: "public" | "private";
