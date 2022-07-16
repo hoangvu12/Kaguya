@@ -23,7 +23,7 @@ const ChooseAnimePage = () => {
     isFetchingNextPage,
     hasNextPage,
     isError,
-  } = useBrowseAnime({ keyword, sort: MediaSort.Id_desc });
+  } = useBrowseAnime({ keyword, sort: MediaSort.Trending_desc });
 
   const handleFetch = useCallback(() => {
     if (isFetchingNextPage || !hasNextPage) return;
