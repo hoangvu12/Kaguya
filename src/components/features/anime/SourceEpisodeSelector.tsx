@@ -1,20 +1,37 @@
-import ArrowSwiper, { SwiperSlide } from "@/components/shared/ArrowSwiper";
+import Select from "@/components/shared/Select";
 import { groupBy } from "@/utils";
-import classNames from "classnames";
 import React, { useMemo, useState } from "react";
 import EpisodeSelector, { EpisodeSelectorProps } from "./EpisodeSelector";
 
 export interface SourceEpisodeSelectorProps extends EpisodeSelectorProps {}
+
+const sourcesToOptions = (sources: string[]) =>
+  sources.map((source) => ({ value: source, label: source }));
 
 const SourceEpisodeSelector: React.FC<SourceEpisodeSelectorProps> = ({
   episodes,
   activeEpisode,
   ...episodeSelectorProps
 }) => {
-  const sources = useMemo(
-    () => groupBy(episodes, (episode) => episode.source.name),
-    [episodes]
-  );
+  const verifiedSources = useMemo(() => {
+    const verifiedEpisodes = episodes.filter(
+      (episode) => episode.source.isCustomSource
+    );
+
+    return groupBy(verifiedEpisodes, (episode) => episode.source.name);
+  }, [episodes]);
+
+  const nonVerifiedSources = useMemo(() => {
+    const nonVerifiedEpisodes = episodes.filter(
+      (episode) => !episode.source.isCustomSource
+    );
+
+    return groupBy(nonVerifiedEpisodes, (episode) => episode.source.name);
+  }, [episodes]);
+
+  const sources = useMemo(() => {
+    return { ...verifiedSources, ...nonVerifiedSources };
+  }, [nonVerifiedSources, verifiedSources]);
 
   const defaultActiveSource = useMemo(
     () =>
@@ -31,6 +48,8 @@ const SourceEpisodeSelector: React.FC<SourceEpisodeSelectorProps> = ({
     defaultActiveSource || Object.keys(sources)[0]
   );
 
+  console.log(defaultActiveSource, Object.keys(sources)[0]);
+
   const sourceEpisodes = useMemo(
     () => sources[activeSource],
     [sources, activeSource]
@@ -38,22 +57,25 @@ const SourceEpisodeSelector: React.FC<SourceEpisodeSelectorProps> = ({
 
   return (
     <React.Fragment>
-      <ArrowSwiper isOverflowHidden={false} className="w-11/12 mx-auto mb-8">
-        {Object.keys(sources).map((source) => (
-          <SwiperSlide onClick={() => setActiveSource(source)} key={source}>
-            <div
-              className={classNames(
-                "text-gray-300 cursor-pointer mx-auto rounded-[18px] px-2 py-1 w-[max-content] duration-300 transition",
-                activeSource === source
-                  ? "bg-white text-black"
-                  : "hover:text-white"
-              )}
-            >
-              {source}
-            </div>
-          </SwiperSlide>
-        ))}
-      </ArrowSwiper>
+      <div className="flex justify-end w-full mx-auto mb-8">
+        <Select
+          options={[
+            {
+              label: "Verified",
+              options: sourcesToOptions(Object.keys(verifiedSources)),
+            },
+            {
+              label: "Not verified",
+              options: sourcesToOptions(Object.keys(nonVerifiedSources)),
+            },
+          ]}
+          onChange={({ value }) => {
+            setActiveSource(value);
+          }}
+          defaultValue={{ value: activeSource, label: activeSource }}
+          isClearable={false}
+        />
+      </div>
 
       <EpisodeSelector
         episodes={sourceEpisodes}

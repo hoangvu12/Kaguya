@@ -9,9 +9,7 @@ const query = `
   episodes:kaguya_episodes(
       *,
       source:kaguya_sources(
-          id,
-          name,
-          locales
+          *
       )
   )
 `;

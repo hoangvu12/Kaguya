@@ -9,9 +9,7 @@ const query = `
   chapters:kaguya_chapters(
       *,
       source:kaguya_sources(
-          id,
-          name,
-          locales
+          *
       )
   )
 `;

@@ -40,6 +40,7 @@ export type Source = {
   locales: string[];
   addedUserId?: string;
   addedUser?: AdditionalUser;
+  isCustomSource: boolean;
 };
 
 export type Video = {
