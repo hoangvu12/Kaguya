@@ -265,7 +265,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       .from<MangaSourceConnection>("kaguya_manga_source")
       .select(
         `
-        chapters:kaguya_chapters(*, source:kaguya_sources(id, name, locales))
+        chapters:kaguya_chapters(*, source:kaguya_sources(*))
         `
       )
       .eq("mediaId", Number(params[0]));

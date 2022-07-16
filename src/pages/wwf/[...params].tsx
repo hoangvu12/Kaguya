@@ -125,7 +125,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       .from<AnimeSourceConnection>("kaguya_anime_source")
       .select(
         `
-          episodes:kaguya_episodes(*, source:kaguya_sources(id, name, locales))
+          episodes:kaguya_episodes(*, source:kaguya_sources(*))
         `
       )
       .eq("mediaId", room.mediaId);

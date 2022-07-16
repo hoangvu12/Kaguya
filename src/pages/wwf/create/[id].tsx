@@ -200,7 +200,7 @@ export const getServerSideProps = withPageAuth({
         .select(
           `
             *,
-            episodes:kaguya_episodes(*, source:kaguya_sources(id, name, locales))
+            episodes:kaguya_episodes(*, source:kaguya_sources(*))
           `
         )
         .eq("mediaId", Number(params.id));

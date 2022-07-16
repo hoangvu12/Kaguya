@@ -20,7 +20,7 @@ const useRoom = (roomId: number, initialData: Room) => {
           `
             *,
             episode:episodeId(*),
-            users:kaguya_room_users(id),
+            users:kaguya_room_users(user:userId(*)),
             hostUser:hostUserId(*)
           `
         )
@@ -34,7 +34,7 @@ const useRoom = (roomId: number, initialData: Room) => {
         .from<AnimeSourceConnection>("kaguya_anime_source")
         .select(
           `
-            episodes:kaguya_episodes(*, source:kaguya_sources(id, name, locales))
+            episodes:kaguya_episodes(*, source:kaguya_sources(*))
           `
         )
         .eq("mediaId", room.mediaId);
