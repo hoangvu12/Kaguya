@@ -1,11 +1,11 @@
 import { useWatchPlayer } from "@/contexts/WatchContext";
 import { parseNumberFromString } from "@/utils";
 import classNames from "classnames";
-import { NetPlayerProps, useInteract } from "netplayer";
+import { useInteract } from "netplayer";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { BsArrowLeft } from "react-icons/bs";
-import Player from "./Player";
+import Player, { PlayerProps } from "./Player";
 import Controls from "./Player/Controls";
 import EpisodesButton from "./Player/EpisodesButton";
 import LocaleEpisodeSelector from "./Player/LocaleEpisodeSelector";
@@ -17,7 +17,7 @@ import NextEpisodeButton from "./Player/NextEpisodeButton";
 import Overlay from "./Player/Overlay";
 import TimestampSkipButton from "./Player/TimestampSkipButton";
 
-export interface WatchPlayerProps extends NetPlayerProps {
+export interface WatchPlayerProps extends PlayerProps {
   videoRef?: React.ForwardedRef<HTMLVideoElement>;
 }
 

@@ -18,7 +18,7 @@ const skipOPEDHotkey = () => ({
   name: "skip-op/ed",
 });
 
-interface PlayerProps extends NetPlayerProps {
+export interface PlayerProps extends NetPlayerProps {
   fonts?: Font[];
 }
 

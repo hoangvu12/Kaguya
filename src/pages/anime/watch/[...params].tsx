@@ -249,6 +249,11 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime, episodes }) => {
     [data?.subtitles]
   );
 
+  const fonts = useMemo(
+    () => (!data?.fonts?.length ? [] : data.fonts),
+    [data?.fonts]
+  );
+
   return (
     <WatchContextProvider
       value={{
@@ -272,6 +277,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime, episodes }) => {
           ref={videoRef}
           sources={sources}
           subtitles={subtitles}
+          fonts={fonts}
           className="object-contain w-full h-full"
         />
 
