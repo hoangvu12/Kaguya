@@ -77,7 +77,7 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
         const options = {
           video: videoEl,
           subUrl: subtitles[0].file,
-          fonts,
+          fonts: fonts.map((font) => font?.file),
           workerUrl: "/subtitles-octopus-worker.js",
           legacyWorkerUrl: "/subtitles-octopus-worker-legacy.js",
         };
