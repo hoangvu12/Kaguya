@@ -15,162 +15,17 @@ import { useRouter } from "next/router";
 import React, { useCallback, useMemo } from "react";
 import { BsArrowLeft } from "react-icons/bs";
 import Player from "../../anime/Player";
-import Controls from "../../anime/Player/Controls";
-import EpisodesButton from "../../anime/Player/EpisodesButton";
-import LocaleEpisodeSelector from "../../anime/Player/LocaleEpisodeSelector";
-import MobileControls from "../../anime/Player/MobileControls";
-import MobileEpisodesButton from "../../anime/Player/MobileEpisodesButton";
-import MobileNextEpisode from "../../anime/Player/MobileNextEpisode";
 import MobileOverlay from "../../anime/Player/MobileOverlay";
-import NextEpisodeButton from "../../anime/Player/NextEpisodeButton";
 import Overlay from "../../anime/Player/Overlay";
 import TimestampSkipButton from "../../anime/Player/TimestampSkipButton";
+import RoomPlayerControls from "./RoomPlayerControls";
+import RoomPlayerMobileControls from "./RoomPlayerMobileControls";
 
 const blankVideo = [
   {
     file: "https://cdn.plyr.io/static/blank.mp4",
   },
 ];
-
-const PlayerControls = () => {
-  const {
-    setEpisode,
-    episodes,
-    currentEpisodeIndex,
-    sourceId,
-    anime,
-    currentEpisode,
-    isHost,
-  } = useRoomPlayer();
-
-  const sourceEpisodes = useMemo(
-    () => episodes.filter((episode) => episode.sourceId === sourceId),
-    [episodes, sourceId]
-  );
-
-  const nextEpisode = useMemo(
-    () => sourceEpisodes[currentEpisodeIndex + 1],
-    [currentEpisodeIndex, sourceEpisodes]
-  );
-
-  return (
-    <Controls
-      rightControlsSlot={
-        isHost ? (
-          <React.Fragment>
-            {currentEpisodeIndex < sourceEpisodes.length - 1 && (
-              <NextEpisodeButton onClick={() => setEpisode(nextEpisode)} />
-            )}
-
-            <EpisodesButton>
-              <div className="w-[70vw] overflow-hidden bg-background-900 p-4">
-                <LocaleEpisodeSelector
-                  mediaId={anime.id}
-                  episodes={episodes}
-                  activeEpisode={currentEpisode}
-                  episodeLinkProps={{ shallow: true, replace: true }}
-                  onEachEpisode={(episode) => (
-                    <button
-                      key={episode.sourceEpisodeId}
-                      className={classNames(
-                        "rounded-md bg-background-800 col-span-1 aspect-w-2 aspect-h-1 group",
-                        episode.sourceEpisodeId ===
-                          currentEpisode?.sourceEpisodeId && "text-primary-300"
-                      )}
-                      onClick={() => setEpisode(episode)}
-                    >
-                      <div className="flex items-center justify-center w-full h-full group-hover:bg-white/10 rounded-md transition duration-300">
-                        <p>{episode.name}</p>
-                      </div>
-                    </button>
-                  )}
-                />
-              </div>
-            </EpisodesButton>
-          </React.Fragment>
-        ) : null
-      }
-    />
-  );
-};
-
-const PlayerMobileControls = () => {
-  const {
-    setEpisode,
-    episodes,
-    currentEpisodeIndex,
-    sourceId,
-    anime,
-    currentEpisode,
-    isHost,
-  } = useRoomPlayer();
-
-  const sourceEpisodes = useMemo(
-    () => episodes.filter((episode) => episode.sourceId === sourceId),
-    [episodes, sourceId]
-  );
-
-  const nextEpisode = useMemo(
-    () => sourceEpisodes[currentEpisodeIndex + 1],
-    [currentEpisodeIndex, sourceEpisodes]
-  );
-
-  return (
-    <MobileControls
-      controlsSlot={
-        isHost ? (
-          <React.Fragment>
-            <MobileEpisodesButton>
-              {(isOpen, setIsOpen) =>
-                isOpen && (
-                  <div
-                    className={classNames(
-                      "w-full px-2 fixed inset-0 z-[9999] flex flex-col justify-center bg-background"
-                    )}
-                  >
-                    <BsArrowLeft
-                      className="absolute w-8 h-8 transition duration-300 cursor-pointer left-3 top-3 hover:text-gray-200"
-                      onClick={() => setIsOpen(false)}
-                    />
-
-                    <div>
-                      <LocaleEpisodeSelector
-                        mediaId={anime.id}
-                        episodes={episodes}
-                        activeEpisode={currentEpisode}
-                        episodeLinkProps={{ shallow: true, replace: true }}
-                        onEachEpisode={(episode) => (
-                          <button
-                            key={episode.sourceEpisodeId}
-                            className={classNames(
-                              "rounded-md bg-background-800 col-span-1 aspect-w-2 aspect-h-1 group",
-                              episode.sourceEpisodeId ===
-                                currentEpisode?.sourceEpisodeId &&
-                                "text-primary-300"
-                            )}
-                            onClick={() => setEpisode(episode)}
-                          >
-                            <div className="flex items-center justify-center w-full h-full group-hover:bg-white/10 rounded-md transition duration-300">
-                              <p>{episode.name}</p>
-                            </div>
-                          </button>
-                        )}
-                      />
-                    </div>
-                  </div>
-                )
-              }
-            </MobileEpisodesButton>
-
-            {currentEpisodeIndex < sourceEpisodes.length - 1 && (
-              <MobileNextEpisode onClick={() => setEpisode(nextEpisode)} />
-            )}
-          </React.Fragment>
-        ) : null
-      }
-    />
-  );
-};
 
 const PlayerOverlay = () => {
   const router = useRouter();
@@ -274,8 +129,8 @@ const RoomPlayer = () => {
 
   const components = useMemo(
     () => ({
-      Controls: PlayerControls,
-      MobileControls: PlayerMobileControls,
+      Controls: RoomPlayerControls,
+      MobileControls: RoomPlayerMobileControls,
       Overlay: PlayerOverlay,
       MobileOverlay: PlayerMobileOverlay,
     }),
