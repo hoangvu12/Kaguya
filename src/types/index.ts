@@ -70,6 +70,7 @@ export type Episode = {
   thumbnailImage?: string;
   video: Video[];
   published: boolean;
+  section: string;
 };
 
 export type Chapter = {
@@ -172,6 +173,16 @@ export type ImageSource = {
   proxy?: Proxy;
 };
 
+export type RoomUser = {
+  id: string; // Socket id
+  user: User;
+  roomId: number;
+  userId: string;
+  peerId: string;
+  isMicMuted: boolean;
+  isHeadphoneMuted: boolean;
+};
+
 export type Room = {
   id: number;
   hostUser: User;
@@ -181,7 +192,7 @@ export type Room = {
   created_at?: string;
   episode: Episode;
   episodeId: string;
-  users: { user: User }[];
+  users: RoomUser[];
   title?: string;
   episodes: Episode[];
   visibility: "public" | "private";
