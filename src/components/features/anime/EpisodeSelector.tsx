@@ -4,7 +4,7 @@ import ArrowSwiper, {
 } from "@/components/shared/ArrowSwiper";
 import useDevice from "@/hooks/useDevice";
 import { Episode } from "@/types";
-import { chunk } from "@/utils";
+import { chunk, groupBy } from "@/utils";
 import classNames from "classnames";
 import Link, { LinkProps } from "next/link";
 import React, { useMemo } from "react";
@@ -68,6 +68,11 @@ const EpisodeSelector: React.FC<EpisodeSelectorProps> = (props) => {
     [activeTabIndex, chunks.length]
   );
 
+  const sections = useMemo(
+    () => groupBy(chunks[realActiveTabIndex], (episode) => episode.section),
+    [chunks, realActiveTabIndex]
+  );
+
   return (
     <React.Fragment>
       <ArrowSwiper
@@ -105,8 +110,22 @@ const EpisodeSelector: React.FC<EpisodeSelectorProps> = (props) => {
         })}
       </ArrowSwiper>
 
-      <div className="mt-10 grid xl:grid-cols-8 lg:grid-cols-7 md:grid-cols-6 sm:grid-cols-5 grid-cols-4 gap-4">
-        {chunks[realActiveTabIndex].map(onEachEpisode)}
+      <div className="mt-10 space-y-4">
+        {Object.keys(sections).map((section) => {
+          const episodes = sections[section];
+
+          return (
+            <div className="space-y-1" key={section}>
+              {Object.keys(sections)?.length > 1 && (
+                <p className="font-semibold text-gray-300">{section}</p>
+              )}
+
+              <div className="grid xl:grid-cols-8 lg:grid-cols-7 md:grid-cols-6 sm:grid-cols-5 grid-cols-4 gap-4">
+                {episodes.map(onEachEpisode)}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </React.Fragment>
   );
