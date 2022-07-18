@@ -44,8 +44,6 @@ const UploadCreateEpisodePage: NextPage<UploadCreateEpisodePageProps> = ({
   });
 
   const onSubmit = () => {
-    console.log(videoState);
-
     createEpisode({
       episodeName,
       fonts,

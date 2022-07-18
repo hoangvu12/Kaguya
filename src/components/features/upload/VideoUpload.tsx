@@ -34,7 +34,7 @@ const VideoUpload: React.FC<VideoUploadProps> = ({ onChange }) => {
   const handleSelectChange = ({ value }: { value: string }) => {
     setHostingId(value);
 
-    onChange?.({ video: textAreaRef.current.value, hostingId });
+    onChange?.({ video: textAreaRef.current.value, hostingId: value });
   };
 
   const selectedHosting = useMemo(() => {
