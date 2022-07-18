@@ -70,6 +70,8 @@ const TimestampSkipButton: React.FC<TimestampSkipButtonProps> = ({
   );
   const [timestamp, setTimeStamp] = useState<SkipTimeStamp>(null);
 
+  console.log("rerender");
+
   useEffect(() => {
     if (!timestamps?.length) return null;
 
@@ -83,7 +85,8 @@ const TimestampSkipButton: React.FC<TimestampSkipButtonProps> = ({
       ...prev,
       timestamps: composedTimestamps,
     }));
-  }, [setState, timestamps]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [timestamps]);
 
   useEffect(() => {
     if (!timestamps?.length) return;
@@ -101,6 +104,10 @@ const TimestampSkipButton: React.FC<TimestampSkipButtonProps> = ({
     };
 
     videoEl.addEventListener("timeupdate", handleProgress);
+
+    return () => {
+      videoEl.removeEventListener("timeupdate", handleProgress);
+    };
   }, [episode, malId, timestamps, videoEl]);
 
   const timeStampName = useMemo(
