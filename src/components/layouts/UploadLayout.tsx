@@ -6,9 +6,15 @@ import classNames from "classnames";
 import { AnimatePresence, motion, Variants } from "framer-motion";
 import Link from "next/link";
 import React, { useState } from "react";
-import { AiOutlineHome, AiOutlineVideoCameraAdd } from "react-icons/ai";
+import {
+  AiOutlineHome,
+  AiOutlinePlus,
+  AiOutlineVideoCameraAdd,
+} from "react-icons/ai";
 import { BiImageAdd, BiLogOutCircle } from "react-icons/bi";
 import { GiHamburgerMenu } from "react-icons/gi";
+import Button from "../shared/Button";
+import Popup from "../shared/Popup";
 
 const routes = [
   {
@@ -63,9 +69,42 @@ const UploadLayout: React.FC = ({ children }) => {
           <div>
             <Logo />
 
-            <ul className="space-y-2">
+            <ul>
+              <Popup
+                type="click"
+                placement="bottom-end"
+                showArrow
+                reference={
+                  <Button
+                    className="w-full mb-4"
+                    iconClassName="w-8 h-8"
+                    primary
+                    LeftIcon={AiOutlinePlus}
+                  >
+                    Đăng tải
+                  </Button>
+                }
+              >
+                <div className="space-y-1">
+                  <Link href="/upload/anime/create">
+                    <a>
+                      <Button secondary>Đăng anime</Button>
+                    </a>
+                  </Link>
+                  <Link href="/upload/manga/create">
+                    <a>
+                      <Button secondary>Đăng manga</Button>
+                    </a>
+                  </Link>
+                </div>
+              </Popup>
+
               {routes.map((route) => (
-                <NavItem className="block" href={route.href} key={route.href}>
+                <NavItem
+                  className="block mb-2"
+                  href={route.href}
+                  key={route.href}
+                >
                   {({ isActive }) => (
                     <li
                       className={classNames(
