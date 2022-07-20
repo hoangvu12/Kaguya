@@ -28,5 +28,6 @@
   "sideBar.voiceChat": "Voice chat",
   "mediaBar.roomDetails": "Room details",
   "mediaBar.episodeSection": "Episodes",
-  "mediaBar.animeDetails": "Anime details"
+  "mediaBar.animeDetails": "Anime details",
+  "audioChat.connect": "Connect to use voice chat"
 }

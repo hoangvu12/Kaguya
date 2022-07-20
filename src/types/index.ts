@@ -187,6 +187,7 @@ export type RoomUser = {
   peerId: string;
   isMicMuted: boolean;
   isHeadphoneMuted: boolean;
+  useVoiceChat: boolean;
 } & BasicRoomUser;
 
 export type Room = {
