@@ -1,8 +1,7 @@
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { AnimeSourceConnection } from "@/types";
 import { sortMediaUnit } from "@/utils/data";
-import { useSupabaseSingleQuery } from "@/utils/supabase";
-import { useMemo } from "react";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
+import { useQuery } from "react-query";
 
 const query = `
   *,
@@ -15,29 +14,22 @@ const query = `
 `;
 
 const useEpisodes = (mediaId: number) => {
-  const { data, isLoading, ...rest } = useSupabaseSingleQuery(
-    ["episodes", mediaId],
-    () =>
-      supabase
-        .from<AnimeSourceConnection>("kaguya_anime_source")
-        .select(query)
-        .eq("mediaId", mediaId)
-  );
+  return useQuery(["episodes", mediaId], async () => {
+    const { data, error } = await supabase
+      .from<AnimeSourceConnection>("kaguya_anime_source")
+      .select(query)
+      .eq("mediaId", mediaId);
 
-  const episodes = useMemo(
-    () => data?.flatMap((connection) => connection.episodes),
-    [data]
-  );
+    if (error) throw error;
 
-  const sortedEpisodes = useMemo(
-    () =>
-      isLoading
-        ? []
-        : sortMediaUnit(episodes.filter((episode) => episode.published)),
-    [episodes, isLoading]
-  );
+    const episodes = data?.flatMap((connection) => connection.episodes);
 
-  return { data: sortedEpisodes, isLoading, ...rest };
+    const sortedEpisodes = sortMediaUnit(
+      episodes.filter((episode) => episode.published)
+    );
+
+    return sortedEpisodes;
+  });
 };
 
 export default useEpisodes;

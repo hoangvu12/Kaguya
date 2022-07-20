@@ -103,11 +103,7 @@ const useCreateEpisode = (args: UseCreateEpisodeArgs) => {
 
         const remoteStatus = await waitRemoteUntilDownloaded();
 
-        console.log(remoteStatus);
-
         uploadedVideo = await getVideoStatus(remoteStatus.fileId);
-
-        console.log("video status", uploadedVideo);
       } else if (video instanceof File) {
         uploadedVideo = await uploadVideo(video);
       }

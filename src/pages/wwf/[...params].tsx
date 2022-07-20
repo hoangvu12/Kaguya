@@ -1,5 +1,5 @@
-import ChatBar from "@/components/features/wwf/RoomPage/ChatBar";
-import RoomWatchPanel from "@/components/features/wwf/RoomPage/RoomWatchPanel";
+import GuestRegister from "@/components/features/wwf/RoomPage/GuestRegister";
+import Sidebar from "@/components/features/wwf/RoomPage/Sidebar";
 import BaseLayout from "@/components/layouts/BaseLayout";
 import Head from "@/components/shared/Head";
 import config from "@/config";
@@ -7,23 +7,31 @@ import { RoomContextProvider } from "@/contexts/RoomContext";
 import { RoomStateContextProvider } from "@/contexts/RoomStateContext";
 import withRedirect from "@/hocs/withRedirect";
 import useRoom from "@/hooks/useRoom";
+import { getMediaDetails } from "@/services/anilist";
+import { mediaDefaultFields } from "@/services/anilist/queries";
+import { AnimeSourceConnection, BasicRoomUser, ChatEvent, Room } from "@/types";
+import { MediaType } from "@/types/anilist";
+import { randomString, vietnameseSlug } from "@/utils";
+import { getTitle } from "@/utils/data";
 import {
   getUser,
   supabaseClient as supabase,
   User,
 } from "@supabase/auth-helpers-nextjs";
-import { getMediaDetails } from "@/services/anilist";
-import { mediaDefaultFields } from "@/services/anilist/queries";
-import { AnimeSourceConnection, Room } from "@/types";
-import { MediaType } from "@/types/anilist";
-import { vietnameseSlug } from "@/utils";
-import { getTitle } from "@/utils/data";
+import classNames from "classnames";
 import { GetServerSideProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
-import React, { useEffect, useMemo, useState } from "react";
+import { Peer } from "peerjs";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useQueryClient } from "react-query";
 import { io, Socket } from "socket.io-client";
+import dynamic from "next/dynamic";
+
+const RoomPlayer = dynamic(
+  () => import("@/components/features/wwf/RoomPage/RoomPlayer"),
+  { ssr: false }
+);
 
 interface RoomPageProps {
   room: Room;
@@ -32,10 +40,18 @@ interface RoomPageProps {
 
 const RoomPage: NextPage<RoomPageProps> = ({ room, user }) => {
   const [socket, setSocket] = useState<Socket>();
+  const [peer, setPeer] = useState<Peer>();
   const { data } = useRoom(room.id, room);
   const queryClient = useQueryClient();
   const { locale } = useRouter();
   const { t } = useTranslation("wwf");
+
+  const [roomUser, setRoomUser] = useState<BasicRoomUser>({
+    userId: user?.id,
+    avatarUrl: user?.user_metadata?.avatar_url,
+    name: user?.user_metadata?.name,
+    isGuest: false,
+  });
 
   const title = useMemo(() => data.title, [data.title]);
   const mediaTitle = useMemo(
@@ -43,27 +59,97 @@ const RoomPage: NextPage<RoomPageProps> = ({ room, user }) => {
     [data.media, locale]
   );
 
+  const handleGuestRegister = useCallback((name: string) => {
+    setRoomUser({
+      name,
+      userId: randomString(8),
+      avatarUrl: null,
+      isGuest: true,
+    });
+  }, []);
+
   useEffect(() => {
-    const { pathname, origin } = new URL(config.socketServerUrl);
+    let newSocket: Socket = null;
+    let newPeer: Peer = null;
 
-    const newSocket = io(origin, {
-      path: `${pathname}/socket.io`,
-    });
+    const createSocket = (peerId: string) => {
+      const { pathname, origin } = new URL(config.socketServerUrl);
 
-    newSocket.emit("join", room.id, user);
-
-    newSocket.on("invalidate", () => {
-      queryClient.invalidateQueries(["room", room.id], {
-        refetchInactive: true,
+      const socket = io(origin, {
+        path: `${pathname}/socket.io`,
       });
-    });
 
-    setSocket(newSocket);
+      const roomQuery = ["room", room.id];
+
+      socket.emit("join", room.id, peerId, roomUser);
+
+      socket.on("invalidate", () => {
+        queryClient.invalidateQueries(roomQuery, {
+          refetchInactive: true,
+        });
+      });
+
+      socket.on("event", (event: ChatEvent) => {
+        if (event.eventType === "join") {
+          queryClient.setQueryData<Room>(roomQuery, (data) => ({
+            ...data,
+            users: [...data.users, event.user],
+          }));
+        } else if (event.eventType === "leave") {
+          queryClient.setQueryData<Room>(roomQuery, (data) => ({
+            ...data,
+            users: data.users.filter(
+              (user) => user.userId !== event.user.userId
+            ),
+          }));
+        }
+      });
+
+      socket.on("changeEpisode", (episode) => {
+        queryClient.setQueryData<Room>(roomQuery, (data) => ({
+          ...data,
+          episode,
+        }));
+      });
+
+      setSocket(socket);
+
+      socket.on("disconnect", () => {
+        console.log("user disconnected");
+
+        createSocket(peerId);
+      });
+
+      newSocket = socket;
+
+      return socket;
+    };
+
+    const init = async () => {
+      const { default: Peer } = await import("peerjs");
+
+      if (!roomUser?.name) return;
+
+      const peer = new Peer(null, { debug: 3 });
+
+      peer.on("open", (id) => {
+        createSocket(id);
+      });
+
+      setPeer(peer);
+
+      newPeer = peer;
+    };
+
+    init();
 
     return () => {
+      newSocket?.off();
+
       newSocket?.disconnect();
+      newPeer?.disconnect();
     };
-  }, [queryClient, room.id, user]);
+  }, [queryClient, room.id, roomUser]);
 
   return (
     <React.Fragment>
@@ -76,17 +162,35 @@ const RoomPage: NextPage<RoomPageProps> = ({ room, user }) => {
         image={data.media.bannerImage || data.media.coverImage.extraLarge}
       />
 
-      {socket ? (
-        <RoomContextProvider value={{ room: data, socket }}>
+      {!roomUser?.name || !roomUser?.userId ? (
+        <GuestRegister onRegister={handleGuestRegister} />
+      ) : socket ? (
+        <RoomContextProvider
+          value={{
+            room: data,
+            basicRoomUser: roomUser,
+            socket,
+            peer,
+          }}
+        >
           <RoomStateContextProvider>
             <div className="pt-20 h-screen flex flex-col md:flex-row overflow-y-hidden">
-              <RoomWatchPanel />
-              <ChatBar />
+              <div
+                className={classNames(
+                  `shrink-0 w-full md:w-[75%] bg-background-900`
+                )}
+              >
+                <RoomPlayer />
+              </div>
+
+              <Sidebar />
             </div>
           </RoomStateContextProvider>
         </RoomContextProvider>
       ) : (
-        <div>...loading</div>
+        <div className="py-20 flex items-center justify-center w-full h-screen">
+          Loading...
+        </div>
       )}
     </React.Fragment>
   );
@@ -111,7 +215,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         `
         *,
         episode:episodeId(*),
-        users:kaguya_room_users(id),
+        users:kaguya_room_users(*),
         hostUser:hostUserId(*)
       `
       )

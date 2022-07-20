@@ -1,10 +1,13 @@
-import { Room } from "@/types";
+import { BasicRoomUser, Room, RoomUser } from "@/types";
+import Peer from "peerjs";
 import React from "react";
 import { Socket } from "socket.io-client";
 
 interface ContextProps {
   room: Room;
   socket: Socket;
+  basicRoomUser: BasicRoomUser;
+  peer: Peer;
 }
 
 interface ReactContextProviderProps {

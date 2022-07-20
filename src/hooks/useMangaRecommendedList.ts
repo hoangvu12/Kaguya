@@ -48,8 +48,6 @@ const useMangaRecommendedList = () => {
         `
       );
 
-      console.log(anilistMedia);
-
       return {
         ...data,
         media: anilistMedia,

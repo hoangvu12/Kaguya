@@ -13,7 +13,7 @@ const EventMessage: React.FC<EventMessageProps> = ({ event }) => {
 
   return (
     <p className="text-center italic text-gray-400 text-xs">
-      <strong>{event.user?.user_metadata?.name || t("guest")} </strong>
+      <strong>{event.user?.name || t("guest")} </strong>
 
       {CHAT_EVENT_TYPES[event.eventType]}
     </p>

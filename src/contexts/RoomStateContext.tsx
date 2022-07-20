@@ -1,7 +1,7 @@
 import React from "react";
 
 interface State {
-  isChatBarOpen: boolean;
+  isCommunicationBarOpen: boolean;
 }
 
 interface ContextProps {
@@ -12,7 +12,7 @@ interface ContextProps {
 const RoomStateContext = React.createContext<ContextProps>(null);
 
 const defaultState: State = {
-  isChatBarOpen: true,
+  isCommunicationBarOpen: true,
 };
 
 export const RoomStateContextProvider: React.FC = ({ children }) => {

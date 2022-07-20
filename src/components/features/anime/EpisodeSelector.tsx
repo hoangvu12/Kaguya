@@ -16,6 +16,7 @@ export interface EpisodeSelectorProps {
   chunkSwiperProps?: SwiperProps;
   episodeLinkProps?: Omit<LinkProps, "href">;
   onEachEpisode?: (episode: Episode) => React.ReactNode;
+  episodeChunk?: number;
 }
 
 const EpisodeSelector: React.FC<EpisodeSelectorProps> = (props) => {
@@ -26,6 +27,7 @@ const EpisodeSelector: React.FC<EpisodeSelectorProps> = (props) => {
     activeEpisode,
     chunkSwiperProps,
     episodeLinkProps,
+    episodeChunk = isMobile ? 6 : 18,
     onEachEpisode = (episode) => (
       <Link
         href={`/anime/watch/${props.mediaId}/${episode.sourceId}/${episode.sourceEpisodeId}`}
@@ -49,8 +51,8 @@ const EpisodeSelector: React.FC<EpisodeSelectorProps> = (props) => {
   } = props;
 
   const chunks = useMemo(
-    () => chunk(episodes, isMobile ? 6 : 18),
-    [episodes, isMobile]
+    () => chunk(episodes, episodeChunk),
+    [episodeChunk, episodes]
   );
 
   const [activeTabIndex, setActiveTabIndex] = React.useState(() => {

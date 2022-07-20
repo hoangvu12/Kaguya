@@ -67,10 +67,11 @@ export type Episode = {
   sourceMediaId: string;
   source: Source;
   slug: string;
-  thumbnailImage?: string;
+  thumbnail?: string;
   video: Video[];
   published: boolean;
   section: string;
+  title?: string;
 };
 
 export type Chapter = {
@@ -173,15 +174,20 @@ export type ImageSource = {
   proxy?: Proxy;
 };
 
+export type BasicRoomUser = {
+  name?: string | null;
+  avatarUrl?: string | null;
+  userId: string;
+  isGuest?: boolean;
+};
+
 export type RoomUser = {
   id: string; // Socket id
-  user: User;
   roomId: number;
-  userId: string;
   peerId: string;
   isMicMuted: boolean;
   isHeadphoneMuted: boolean;
-};
+} & BasicRoomUser;
 
 export type Room = {
   id: number;
@@ -200,18 +206,18 @@ export type Room = {
 
 export type Chat = {
   body?: string;
-  user: User;
+  user: RoomUser;
   type: "event" | "message";
   eventType?: string;
 };
 
 export type ChatMessage = {
   body: string;
-  user: User;
+  user: RoomUser;
 };
 
 export type ChatEvent = {
-  user: User;
+  user: RoomUser;
   eventType: string;
 };
 

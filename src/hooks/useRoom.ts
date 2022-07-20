@@ -1,12 +1,11 @@
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { getMediaDetails } from "@/services/anilist";
 import { mediaDefaultFields } from "@/services/anilist/queries";
 import { AnimeSourceConnection, Room } from "@/types";
 import { MediaType } from "@/types/anilist";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { useMemo } from "react";
 import { useQuery } from "react-query";
 import { toast } from "react-toastify";
-import EpisodeNameUpdate from "@/components/features/upload/EpisodeNameUpdate";
 
 const useRoom = (roomId: number, initialData: Room) => {
   const queryKey = useMemo(() => ["room", roomId], [roomId]);
@@ -20,7 +19,7 @@ const useRoom = (roomId: number, initialData: Room) => {
           `
             *,
             episode:episodeId(*),
-            users:kaguya_room_users(user:userId(*)),
+            users:kaguya_room_users(*),
             hostUser:hostUserId(*)
           `
         )
