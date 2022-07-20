@@ -28,5 +28,6 @@
   "sideBar.voiceChat": "Nói chuyện",
   "mediaBar.roomDetails": "Thông tin phòng",
   "mediaBar.episodeSection": "Tập phim",
-  "mediaBar.animeDetails": "Thông tin anime"
+  "mediaBar.animeDetails": "Thông tin anime",
+  "audioChat.connect": "Kết nối để trò chuyện"
 }

@@ -9,7 +9,13 @@ import withRedirect from "@/hocs/withRedirect";
 import useRoom from "@/hooks/useRoom";
 import { getMediaDetails } from "@/services/anilist";
 import { mediaDefaultFields } from "@/services/anilist/queries";
-import { AnimeSourceConnection, BasicRoomUser, ChatEvent, Room } from "@/types";
+import {
+  AnimeSourceConnection,
+  BasicRoomUser,
+  ChatEvent,
+  Room,
+  RoomUser,
+} from "@/types";
 import { MediaType } from "@/types/anilist";
 import { randomString, vietnameseSlug } from "@/utils";
 import { getTitle } from "@/utils/data";
@@ -91,18 +97,30 @@ const RoomPage: NextPage<RoomPageProps> = ({ room, user }) => {
 
       socket.on("event", (event: ChatEvent) => {
         if (event.eventType === "join") {
-          queryClient.setQueryData<Room>(roomQuery, (data) => ({
-            ...data,
-            users: [...data.users, event.user],
+          queryClient.setQueryData<Room>(roomQuery, (room) => ({
+            ...room,
+            users: [...room.users, event.user],
           }));
         } else if (event.eventType === "leave") {
-          queryClient.setQueryData<Room>(roomQuery, (data) => ({
-            ...data,
-            users: data.users.filter(
+          queryClient.setQueryData<Room>(roomQuery, (room) => ({
+            ...room,
+            users: room.users.filter(
               (user) => user.userId !== event.user.userId
             ),
           }));
         }
+      });
+
+      socket.on("connectVoiceChat", (roomUser: RoomUser) => {
+        queryClient.setQueryData<Room>(roomQuery, (room) => {
+          const user = room.users.find((u) => u.userId === roomUser.userId);
+
+          if (!user) return room;
+
+          user.useVoiceChat = true;
+
+          return room;
+        });
       });
 
       socket.on("changeEpisode", (episode) => {

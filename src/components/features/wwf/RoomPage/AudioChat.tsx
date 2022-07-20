@@ -1,4 +1,5 @@
 import Avatar from "@/components/shared/Avatar";
+import Button from "@/components/shared/Button";
 import { useRoomInfo } from "@/contexts/RoomContext";
 import { BasicRoomUser, Room } from "@/types";
 import { useTranslation } from "next-i18next";
@@ -17,12 +18,15 @@ type CommunicateEvent = {
 const AudioChat = () => {
   const { room, basicRoomUser, peer, socket } = useRoomInfo();
   const { t } = useTranslation("wwf");
+
   const connRefs = useRef<Record<string, MediaConnection>>({});
   const containerRef = useRef<HTMLDivElement>(null);
   const initialized = useRef(false);
   const communicateUpdateTimeout = useRef<NodeJS.Timeout>();
+
   const [audioStream, setAudioStream] = useState<MediaStream>();
   const [isAudioStreamError, setIsAudioStreamError] = useState<boolean>();
+
   const queryClient = useQueryClient();
 
   const meRoomUser = useMemo(() => {
@@ -40,12 +44,32 @@ const AudioChat = () => {
     [meRoomUser?.isHeadphoneMuted]
   );
 
+  const voiceChatUsers = room.users.filter((user) => user.useVoiceChat);
+
+  const isUsingVoiceChat = meRoomUser?.useVoiceChat;
+
   const handleToggleCommunicate = (event: CommunicateEvent) => () => {
     socket.emit("communicateToggle", {
       isMicMuted,
       isHeadphoneMuted,
       ...event,
     });
+  };
+
+  const handleConnectClick = async () => {
+    const newStream = await navigator.mediaDevices
+      .getUserMedia({
+        audio: true,
+      })
+      .catch(() => {
+        setIsAudioStreamError(true);
+      });
+
+    if (!newStream) return;
+
+    setAudioStream(newStream);
+
+    socket.emit("connectVoiceChat", meRoomUser);
   };
 
   useEffect(() => {
@@ -118,7 +142,9 @@ const AudioChat = () => {
     };
 
     const handlePeer = async () => {
-      if (!room?.users?.length) return;
+      if (!isUsingVoiceChat) return;
+
+      if (!room.users?.length) return;
 
       if (!peer) {
         setIsAudioStreamError(true);
@@ -126,48 +152,30 @@ const AudioChat = () => {
         return;
       }
 
-      setIsAudioStreamError(false);
-
-      let stream: MediaStream = audioStream;
-
-      if (!stream) {
-        const newStream = await navigator.mediaDevices
-          .getUserMedia({
-            audio: true,
-          })
-          .catch(() => {
-            setIsAudioStreamError(true);
-          });
-
-        if (!newStream) return;
-
-        stream = newStream;
-
-        setAudioStream(stream);
-      }
+      if (!audioStream) return;
 
       if (!initialized.current) {
         // Self-stream for audio indicator
-        handleAddAudioStream(basicRoomUser.userId, stream);
+        handleAddAudioStream(basicRoomUser.userId, audioStream);
 
         peer.on("call", (call) => {
           const userId: string = call.metadata.userId;
 
-          call.answer(stream);
+          call.answer(audioStream);
 
-          call.on("stream", (userVideoStream) => {
-            handleAddAudioStream(userId, userVideoStream);
+          call.on("stream", (userAudioStream) => {
+            handleAddAudioStream(userId, userAudioStream);
           });
         });
 
         initialized.current = true;
       }
 
-      room.users.forEach((roomUser) => {
+      voiceChatUsers.forEach((roomUser) => {
         if (roomUser.userId in connRefs.current) return;
         if (roomUser.userId === basicRoomUser.userId) return;
 
-        const call = peer.call(roomUser.peerId, stream, {
+        const call = peer.call(roomUser.peerId, audioStream, {
           metadata: {
             userId: basicRoomUser.userId,
           },
@@ -182,7 +190,15 @@ const AudioChat = () => {
     };
 
     handlePeer();
-  }, [audioStream, basicRoomUser.userId, isHeadphoneMuted, peer, room.users]);
+  }, [
+    audioStream,
+    basicRoomUser.userId,
+    isUsingVoiceChat,
+    isHeadphoneMuted,
+    peer,
+    room.users,
+    voiceChatUsers,
+  ]);
 
   useEffect(() => {
     if (!socket) return;
@@ -195,7 +211,7 @@ const AudioChat = () => {
       user: BasicRoomUser;
     }) => {
       queryClient.setQueryData<Room>(["room", room.id], (room) => {
-        const roomUser = room.users.find(
+        const roomUser = voiceChatUsers.find(
           (roomUser) => roomUser.userId === user.userId
         );
 
@@ -257,7 +273,7 @@ const AudioChat = () => {
     return () => {
       socket.off("communicateToggle", handleCommunicateToggle);
     };
-  }, [queryClient, room.id, socket]);
+  }, [queryClient, room.id, socket, voiceChatUsers]);
 
   useEffect(() => {
     const audios = containerRef.current.childNodes;
@@ -284,7 +300,7 @@ const AudioChat = () => {
   return (
     <div className="relative flex flex-col h-full">
       <div className="grow space-y-4 overflow-y-auto no-scrollbar">
-        {room.users.map((roomUser) => {
+        {voiceChatUsers.map((roomUser) => {
           const userId = roomUser.userId;
           const isHeadphoneMuted = roomUser.isHeadphoneMuted ?? false;
           const isMicMuted = roomUser.isMicMuted ?? true;
@@ -325,12 +341,18 @@ const AudioChat = () => {
         })}
       </div>
 
-      {isAudioStreamError ? (
+      {!isUsingVoiceChat && (
+        <Button onClick={handleConnectClick} className="mb-2 bg-background-700">
+          {t("audioChat.connect")}
+        </Button>
+      )}
+
+      {isUsingVoiceChat && isAudioStreamError ? (
         <p className="bg-background-800 p-2 text-semibold text-lg mb-2 text-primary-300">
           Không thể kết nối, vui lòng cho phép quyền truy cập microphone và thử
           lại
         </p>
-      ) : !audioStream ? (
+      ) : isUsingVoiceChat && !audioStream ? (
         <p className="bg-background-800 p-2 text-semibold text-lg mb-2 text-green-500">
           Đang kết nối...
         </p>
