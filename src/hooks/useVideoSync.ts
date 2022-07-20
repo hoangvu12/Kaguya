@@ -92,32 +92,12 @@ const useVideoSync = () => {
       underEstimates.current.push(latestUnderEstimate);
       underEstimate.current = median(underEstimates.current);
       correction.current = (underEstimate.current + overEstimate.current) / 2;
-
-      console.log(
-        `%c Updated val for under_estimate is ${underEstimate.current}`,
-        "color:green"
-      );
-
-      console.log(
-        `%c New correction time is ${correction.current} seconds`,
-        "color:red; font-size:12px"
-      );
     });
 
     socket.on("timeSync-forward", (latestOverEstimate: number) => {
       overEstimates.current.push(latestOverEstimate);
       overEstimate.current = median(overEstimates.current);
       correction.current = (underEstimate.current + overEstimate.current) / 2;
-
-      console.log(
-        `%c Updated val for over_estimate is ${overEstimate.current}`,
-        "color:green"
-      );
-
-      console.log(
-        `%c New correction time is ${correction.current} seconds`,
-        "color:red; font-size:12px"
-      );
     });
 
     return () => {
@@ -153,11 +133,6 @@ const useVideoSync = () => {
           getGlobalTime(correction.current);
 
         const gap = Math.abs(proposedTime - player.currentTime);
-
-        console.log(
-          `%cGap was ${proposedTime - player.currentTime}`,
-          "font-size:12px; color:purple"
-        );
 
         if (isPlaying.current) {
           if (gap > PLAYING_THRESH) {

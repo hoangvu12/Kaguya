@@ -133,14 +133,14 @@ const getRecentlyUpdatedMedia = async (sourceId: string) => {
     .from<AnimeSourceConnection>("kaguya_anime_source")
     .select(episodeQuery)
     .eq("sourceId", sourceId)
-    .order("updated_at", { ascending: false, foreignTable: "kaguya_episodes" })
+    .order("updated_at", { ascending: false, foreignTable: "episodes" })
     .limit(5);
 
   const mangaSourcePromise = supabaseClient
     .from<MangaSourceConnection>("kaguya_manga_source")
     .select(chapterQuery)
     .eq("sourceId", sourceId)
-    .order("updated_at", { ascending: false, foreignTable: "kaguya_chapters" })
+    .order("updated_at", { ascending: false, foreignTable: "chapters" })
     .limit(5);
 
   const [

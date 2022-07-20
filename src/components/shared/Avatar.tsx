@@ -7,7 +7,7 @@ interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
 }
 
-const Avatar: React.FC<AvatarProps> = ({ src, className }) => {
+const Avatar: React.FC<AvatarProps> = ({ src, className, ...props }) => {
   const [isLoadFailed, setIsLoadFailed] = useState(false);
 
   const handleImageError = () => {
@@ -20,10 +20,11 @@ const Avatar: React.FC<AvatarProps> = ({ src, className }) => {
         "shrink-0 relative w-10 h-10 rounded-full",
         className
       )}
+      {...props}
     >
       <Image
         onError={handleImageError}
-        src={isLoadFailed ? "/fallback_profile.png" : src}
+        src={isLoadFailed || !src ? "/fallback_profile.png" : src}
         alt="avatar"
         layout="fill"
         className="rounded-full"

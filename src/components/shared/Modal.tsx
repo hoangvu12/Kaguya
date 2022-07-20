@@ -5,8 +5,10 @@ import CircleButton from "./CircleButton";
 import Portal from "./Portal";
 
 export interface ModalProps {
-  reference: React.ReactNode;
+  reference?: React.ReactNode;
   className?: string;
+  closeOnClickOutside?: boolean;
+  defaultValue?: boolean;
 }
 
 export interface ModalRef {
@@ -15,8 +17,17 @@ export interface ModalRef {
 }
 
 const Modal = React.forwardRef<ModalRef, PropsWithChildren<ModalProps>>(
-  ({ reference, children, className = "" }, ref) => {
-    const [isOpen, setIsOpen] = useState(false);
+  (
+    {
+      reference,
+      children,
+      className = "",
+      closeOnClickOutside = true,
+      defaultValue = false,
+    },
+    ref
+  ) => {
+    const [isOpen, setIsOpen] = useState(defaultValue);
 
     let defaultClassName =
       "fixed left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 z-50 p-8 rounded-md bg-background-900";
@@ -47,20 +58,24 @@ const Modal = React.forwardRef<ModalRef, PropsWithChildren<ModalProps>>(
         <Portal>
           {isOpen && (
             <React.Fragment>
-              <div
-                className="fixed inset-0 z-40 bg-black/70"
-                onClick={handleOpenState(false)}
-              />
+              {closeOnClickOutside && (
+                <div
+                  className="fixed inset-0 z-40 bg-black/70"
+                  onClick={handleOpenState(false)}
+                />
+              )}
 
               <div className={defaultClassName}>
                 {children}
 
-                <CircleButton
-                  className="absolute top-2 right-2"
-                  secondary
-                  LeftIcon={CgClose}
-                  onClick={handleOpenState(false)}
-                />
+                {closeOnClickOutside && (
+                  <CircleButton
+                    className="absolute top-2 right-2"
+                    secondary
+                    LeftIcon={CgClose}
+                    onClick={handleOpenState(false)}
+                  />
+                )}
               </div>
             </React.Fragment>
           )}

@@ -70,8 +70,6 @@ const TimestampSkipButton: React.FC<TimestampSkipButtonProps> = ({
   );
   const [timestamp, setTimeStamp] = useState<SkipTimeStamp>(null);
 
-  console.log("rerender");
-
   useEffect(() => {
     if (!timestamps?.length) return null;
 

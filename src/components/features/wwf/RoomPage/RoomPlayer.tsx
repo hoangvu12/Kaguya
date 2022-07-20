@@ -5,7 +5,7 @@ import {
 } from "@/contexts/RoomPlayerContext";
 import { useFetchSource } from "@/hooks/useFetchSource";
 import useVideoSync from "@/hooks/useVideoSync";
-import { Episode } from "@/types";
+import { Episode, Room } from "@/types";
 import { parseNumberFromString } from "@/utils";
 import { sortMediaUnit } from "@/utils/data";
 import { useUser } from "@supabase/auth-helpers-react";
@@ -14,8 +14,10 @@ import { useInteract } from "netplayer";
 import { useRouter } from "next/router";
 import React, { useCallback, useMemo } from "react";
 import { BsArrowLeft } from "react-icons/bs";
+import { useQueryClient } from "react-query";
 import Player from "../../anime/Player";
 import MobileOverlay from "../../anime/Player/MobileOverlay";
+import NextEpisodeButton from "../../anime/Player/NextEpisodeButton";
 import Overlay from "../../anime/Player/Overlay";
 import TimestampSkipButton from "../../anime/Player/TimestampSkipButton";
 import RoomPlayerControls from "./RoomPlayerControls";
@@ -56,7 +58,24 @@ const PlayerOverlay = () => {
 const PlayerMobileOverlay = () => {
   const router = useRouter();
   const { isInteracting } = useInteract();
-  const { currentEpisode, anime } = useRoomPlayer();
+  const {
+    currentEpisode,
+    anime,
+    currentEpisodeIndex,
+    episodes,
+    sourceId,
+    setEpisode,
+  } = useRoomPlayer();
+
+  const sourceEpisodes = useMemo(
+    () => episodes.filter((episode) => episode.sourceId === sourceId),
+    [episodes, sourceId]
+  );
+
+  const nextEpisode = useMemo(
+    () => sourceEpisodes[currentEpisodeIndex + 1],
+    [currentEpisodeIndex, sourceEpisodes]
+  );
 
   return (
     <React.Fragment>
@@ -83,11 +102,13 @@ const PlayerMobileOverlay = () => {
 
 const RoomPlayer = () => {
   const playerRef = useVideoSync();
-  const { room, socket } = useRoomInfo();
-  const { user } = useUser();
+  const { room, socket, basicRoomUser } = useRoomInfo();
   const { data, isLoading } = useFetchSource(room.episode);
 
-  const isHost = useMemo(() => user?.id === room?.hostUserId, [user, room]);
+  const isHost = useMemo(
+    () => basicRoomUser?.userId === room?.hostUserId,
+    [basicRoomUser?.userId, room?.hostUserId]
+  );
 
   const sourceEpisodes = useMemo(
     () =>
@@ -117,10 +138,7 @@ const RoomPlayer = () => {
 
   const handleNavigateEpisode = useCallback(
     (episode: Episode) => {
-      socket.emit(
-        "changeEpisode",
-        `${episode.sourceId}-${episode.sourceEpisodeId}`
-      );
+      socket.emit("changeEpisode", episode);
 
       socket.emit("sendEvent", "changeEpisode");
     },
@@ -170,7 +188,7 @@ const RoomPlayer = () => {
         isHost,
       }}
     >
-      <div className="relative aspect-w-16 md:aspect-h-7 aspect-h-9">
+      <div className="relative aspect-w-16 aspect-h-9">
         <div>
           <Player
             ref={playerRef}

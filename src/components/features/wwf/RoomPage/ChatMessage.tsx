@@ -4,17 +4,18 @@ import { useUser } from "@supabase/auth-helpers-react";
 import { ChatMessage } from "@/types";
 import classNames from "classnames";
 import React, { useMemo } from "react";
+import { useRoomInfo } from "@/contexts/RoomContext";
 
 interface ChatMessageProps {
   message: ChatMessage;
 }
 
 const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
-  const { user } = useUser();
+  const { basicRoomUser } = useRoomInfo();
 
   const isUserMessage = useMemo(
-    () => user?.id === message.user.id,
-    [message.user.id, user?.id]
+    () => basicRoomUser.userId === message.user.userId,
+    [basicRoomUser.userId, message.user.userId]
   );
 
   return (
@@ -25,16 +26,13 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
       )}
     >
       {!isUserMessage && (
-        <Avatar
-          className="!w-8 !h-8"
-          src={message.user.user_metadata.avatar_url}
-        />
+        <Avatar className="!w-8 !h-8" src={message.user.avatarUrl} />
       )}
 
       <div className="space-y-1">
         {!isUserMessage && (
           <p className={classNames("font-light text-sm")}>
-            {message.user.user_metadata.name}
+            {message.user.name}
           </p>
         )}
 

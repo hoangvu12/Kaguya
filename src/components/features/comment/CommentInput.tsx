@@ -21,6 +21,7 @@ interface CommentInputProps {
   onEnter?: (text: string) => void;
   needLoginMessage?: React.ReactNode;
   showAvatar?: boolean;
+  needLogin?: boolean;
 }
 
 const CommentInput: React.FC<CommentInputProps> = ({
@@ -38,6 +39,7 @@ const CommentInput: React.FC<CommentInputProps> = ({
       </Trans>
     </p>
   ),
+  needLogin = true,
   showAvatar = true,
 }) => {
   const { user } = useUser();
@@ -92,7 +94,7 @@ const CommentInput: React.FC<CommentInputProps> = ({
 
   return (
     <ClientOnly>
-      {user ? (
+      {user || !needLogin ? (
         <div className="flex w-full space-x-2">
           {showAvatar && (
             <Avatar className="shrink-0" src={user.user_metadata.avatar_url} />
