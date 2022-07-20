@@ -25,8 +25,7 @@ const WatchedSwiper: React.FC<WatchedSwiperProps> = ({ data, ...props }) => {
                 <EpisodeCard
                   episode={{
                     ...episode,
-                    thumbnailImage:
-                      media.bannerImage || media.coverImage.extraLarge,
+                    thumbnail: media.bannerImage || media.coverImage.extraLarge,
                   }}
                   title={getTitle(media, locale)}
                 />
