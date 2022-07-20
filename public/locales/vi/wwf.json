@@ -29,5 +29,7 @@
   "mediaBar.roomDetails": "Thông tin phòng",
   "mediaBar.episodeSection": "Tập phim",
   "mediaBar.animeDetails": "Thông tin anime",
-  "audioChat.connect": "Kết nối để trò chuyện"
+  "audioChat.connect": "Kết nối để trò chuyện",
+  "audioChat.connectError": "Không thể kết nối, vui lòng cho phép quyền truy cập microphone và thử lại",
+  "audioChat.connecting": "Đang kết nối..."
 }
