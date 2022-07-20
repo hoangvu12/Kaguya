@@ -349,12 +349,11 @@ const AudioChat = () => {
 
       {isUsingVoiceChat && isAudioStreamError ? (
         <p className="bg-background-800 p-2 text-semibold text-lg mb-2 text-primary-300">
-          Không thể kết nối, vui lòng cho phép quyền truy cập microphone và thử
-          lại
+          {t("audioChat.connectError")}
         </p>
       ) : isUsingVoiceChat && !audioStream ? (
         <p className="bg-background-800 p-2 text-semibold text-lg mb-2 text-green-500">
-          Đang kết nối...
+          {t("audioChat.connecting")}
         </p>
       ) : null}
 
