@@ -1,3 +1,4 @@
+import useHorizontalScroll from "@/hooks/useHorizontalScroll";
 import { useTranslation } from "next-i18next";
 import React from "react";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
@@ -14,6 +15,8 @@ const Sidebar = () => {
     tabContainerRef.current.scrollTop = 0;
   };
 
+  const ref = useHorizontalScroll<HTMLDivElement>();
+
   return (
     <Tabs
       domRef={(node) => (tabContainerRef.current = node)}
@@ -24,16 +27,21 @@ const Sidebar = () => {
       selectedTabPanelClassName="!block"
     >
       <div className="p-2 bg-background-800">
-        <TabList className="z-50 sticky top-0 flex items-center gap-2 overflow-x-scroll no-scrollbar">
-          <Tab className="px-3 py-2 text-lg cursor-pointer shrink-0">
-            {t("sideBar.introduction")}
-          </Tab>
-          <Tab className="px-3 py-2 text-lg cursor-pointer shrink-0">
-            {t("sideBar.textChat")}
-          </Tab>
-          <Tab className="px-3 py-2 text-lg cursor-pointer shrink-0">
-            {t("sideBar.voiceChat")}
-          </Tab>
+        <TabList className="z-50 sticky top-0">
+          <div
+            ref={ref}
+            className="flex items-center gap-2 overflow-x-scroll no-scrollbar"
+          >
+            <Tab className="px-3 py-2 cursor-pointer">
+              {t("sideBar.introduction")}
+            </Tab>
+            <Tab className="px-3 py-2 cursor-pointer">
+              {t("sideBar.textChat")}
+            </Tab>
+            <Tab className="px-3 py-2 cursor-pointer">
+              {t("sideBar.voiceChat")}
+            </Tab>
+          </div>
         </TabList>
       </div>
 
