@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 import mime from "mime";
 import config from "@/config";
 import { Episode, Proxy } from "@/types";
-import { Episode as KitsuEpisode } from "@/types/kitsu";
 import { stringify } from "querystring";
 
 export const randomElement = <T>(array: T[]): T => {
@@ -440,20 +439,4 @@ export const createProxyUrl = (url: string, proxy: Proxy) => {
 
 export const createAttachmentUrl = (url: string) => {
   return `${config.nodeServerUrl}/file/${url}`;
-};
-
-export const mergeEpisodes = (
-  dbEpisodes: Episode[],
-  kitsuEpisodes: KitsuEpisode[],
-  locale = "en"
-): Episode[] => {
-  return dbEpisodes.map((dbEpisode, index) => {
-    const kitsuEpisode: KitsuEpisode = kitsuEpisodes[index];
-
-    return {
-      ...dbEpisode,
-      title: kitsuEpisode?.titles?.localized?.[locale],
-      thumbnail: kitsuEpisode?.thumbnail?.original?.url,
-    };
-  });
 };
