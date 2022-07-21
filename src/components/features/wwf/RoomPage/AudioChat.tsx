@@ -4,7 +4,7 @@ import { useRoomInfo } from "@/contexts/RoomContext";
 import { BasicRoomUser, Room } from "@/types";
 import { useTranslation } from "next-i18next";
 import { MediaConnection } from "peerjs";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { MdOutlineHeadphones, MdOutlineKeyboardVoice } from "react-icons/md";
 import { useQueryClient } from "react-query";
 import IconWithMuted from "./IconWithMuted";
@@ -48,7 +48,81 @@ const AudioChat = () => {
 
   const isUsingVoiceChat = meRoomUser?.useVoiceChat;
 
+  const optimisticUpdateRoom = (update: (room: Room) => Room) => {
+    const roomQuery = ["room", room.id];
+
+    queryClient.setQueryData(roomQuery, update);
+  };
+
+  const handleCommunicateStatus = useCallback(
+    ({ event, user }: { event: CommunicateEvent; user: BasicRoomUser }) => {
+      const roomUser = voiceChatUsers.find(
+        (roomUser) => roomUser.userId === user.userId
+      );
+
+      const isHeadphoneMuted = roomUser?.isHeadphoneMuted ?? false;
+      const isMicMuted = roomUser?.isMicMuted ?? true;
+
+      if (!roomUser)
+        return {
+          isMicMuted,
+          isHeadphoneMuted,
+        };
+
+      // headphone muted -> headphone and mic muted
+      // headphone unmuted -> headphone unmuted and mic uumuted
+      // mic muted -> mic muted
+      // mic unmuted -> mic unmuted and headphone unmuted
+
+      let updatedMicMuted = isMicMuted;
+      let updatedHeadphoneMuted = isHeadphoneMuted;
+
+      if (!isHeadphoneMuted && !isMicMuted) {
+        if (event.type === "mic") {
+          updatedMicMuted = true;
+          updatedHeadphoneMuted = false;
+        } else {
+          updatedMicMuted = true;
+          updatedHeadphoneMuted = true;
+        }
+      } else if (isMicMuted && !isHeadphoneMuted) {
+        if (event.type === "mic") {
+          updatedMicMuted = false;
+          updatedHeadphoneMuted = false;
+        } else {
+          updatedMicMuted = true;
+          updatedHeadphoneMuted = true;
+        }
+      } else {
+        updatedMicMuted = false;
+        updatedHeadphoneMuted = false;
+      }
+
+      return {
+        isMicMuted: updatedMicMuted,
+        isHeadphoneMuted: updatedHeadphoneMuted,
+      };
+    },
+    [voiceChatUsers]
+  );
+
   const handleToggleCommunicate = (event: CommunicateEvent) => () => {
+    optimisticUpdateRoom((room) => {
+      const { isHeadphoneMuted, isMicMuted } = handleCommunicateStatus({
+        event,
+        user: meRoomUser,
+      });
+
+      const user = room.users.find((user) => user.userId === meRoomUser.userId);
+
+      if (!user) return room;
+
+      user.isMicMuted = isMicMuted;
+      user.isHeadphoneMuted = isHeadphoneMuted;
+
+      return room;
+    });
+
     socket.emit("communicateToggle", {
       isMicMuted,
       isHeadphoneMuted,
@@ -68,6 +142,16 @@ const AudioChat = () => {
     if (!newStream) return;
 
     setAudioStream(newStream);
+
+    optimisticUpdateRoom((room) => {
+      const user = room.users.find((user) => user.userId === meRoomUser.userId);
+
+      if (!user) return room;
+
+      user.useVoiceChat = true;
+
+      return room;
+    });
 
     socket.emit("connectVoiceChat", meRoomUser);
   };
@@ -217,40 +301,13 @@ const AudioChat = () => {
 
         if (!roomUser) return room;
 
-        const isHeadphoneMuted = roomUser.isHeadphoneMuted ?? false;
-        const isMicMuted = roomUser.isMicMuted ?? true;
+        const { isHeadphoneMuted, isMicMuted } = handleCommunicateStatus({
+          event,
+          user: roomUser,
+        });
 
-        // headphone muted -> headphone and mic muted
-        // headphone unmuted -> headphone unmuted and mic uumuted
-        // mic muted -> mic muted
-        // mic unmuted -> mic unmuted and headphone unmuted
-
-        let updatedMicMuted = isMicMuted;
-        let updatedHeadphoneMuted = isHeadphoneMuted;
-
-        if (!isHeadphoneMuted && !isMicMuted) {
-          if (event.type === "mic") {
-            updatedMicMuted = true;
-            updatedHeadphoneMuted = false;
-          } else {
-            updatedMicMuted = true;
-            updatedHeadphoneMuted = true;
-          }
-        } else if (isMicMuted && !isHeadphoneMuted) {
-          if (event.type === "mic") {
-            updatedMicMuted = false;
-            updatedHeadphoneMuted = false;
-          } else {
-            updatedMicMuted = true;
-            updatedHeadphoneMuted = true;
-          }
-        } else {
-          updatedMicMuted = false;
-          updatedHeadphoneMuted = false;
-        }
-
-        roomUser.isMicMuted = updatedMicMuted;
-        roomUser.isHeadphoneMuted = updatedHeadphoneMuted;
+        roomUser.isMicMuted = isMicMuted;
+        roomUser.isHeadphoneMuted = isHeadphoneMuted;
 
         if (communicateUpdateTimeout.current) {
           clearTimeout(communicateUpdateTimeout.current);
@@ -259,8 +316,8 @@ const AudioChat = () => {
         // Debounce just in case multiple events are fired at the same time
         communicateUpdateTimeout.current = setTimeout(() => {
           socket.emit("communicateUpdate", {
-            isMicMuted: updatedMicMuted,
-            isHeadphoneMuted: updatedHeadphoneMuted,
+            isMicMuted: isMicMuted,
+            isHeadphoneMuted: isHeadphoneMuted,
           });
         }, 1000);
 
@@ -273,7 +330,14 @@ const AudioChat = () => {
     return () => {
       socket.off("communicateToggle", handleCommunicateToggle);
     };
-  }, [queryClient, room.id, socket, voiceChatUsers]);
+  }, [
+    handleCommunicateStatus,
+    meRoomUser,
+    queryClient,
+    room.id,
+    socket,
+    voiceChatUsers,
+  ]);
 
   useEffect(() => {
     const audios = containerRef.current.childNodes;

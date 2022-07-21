@@ -1,13 +1,11 @@
 import CommentInput from "@/components/features/comment/CommentInput";
 import { useRoomInfo } from "@/contexts/RoomContext";
 import { Chat as ChatType, ChatEvent, ChatMessage } from "@/types";
-import { useTranslation } from "next-i18next";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Chat from "./Chat";
 
 const ChatBar = () => {
-  const { t } = useTranslation("wwf");
-  const { socket } = useRoomInfo();
+  const { socket, basicRoomUser } = useRoomInfo();
   const [chats, setChats] = useState<ChatType[]>([]);
   const messageBottomRef = useRef<HTMLDivElement>();
 
@@ -21,11 +19,12 @@ const ChatBar = () => {
     const handleEvent = (event: ChatEvent) => {
       setChats((prev) => [...prev, { ...event, type: "event" }]);
 
+      console.log(event);
+
       messageBottomRef.current?.scrollIntoView();
     };
 
     socket.on("message", handleMessage);
-
     socket.on("event", handleEvent);
 
     return () => {
@@ -37,8 +36,13 @@ const ChatBar = () => {
   const handleSendMessage = useCallback(
     (text: string) => {
       socket.emit("sendMessage", text);
+
+      setChats((prev) => [
+        ...prev,
+        { type: "message", user: basicRoomUser, body: text },
+      ]);
     },
-    [socket]
+    [basicRoomUser, socket]
   );
 
   return (
