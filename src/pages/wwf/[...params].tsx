@@ -52,7 +52,7 @@ const RoomPage: NextPage<RoomPageProps> = ({ room, user }) => {
   const { locale } = useRouter();
   const { t } = useTranslation("wwf");
 
-  const [roomUser, setRoomUser] = useState<BasicRoomUser>({
+  const [basicRoomUser, setBasicRoomUser] = useState<BasicRoomUser>({
     userId: user?.id,
     avatarUrl: user?.user_metadata?.avatar_url,
     name: user?.user_metadata?.name,
@@ -66,7 +66,7 @@ const RoomPage: NextPage<RoomPageProps> = ({ room, user }) => {
   );
 
   const handleGuestRegister = useCallback((name: string) => {
-    setRoomUser({
+    setBasicRoomUser({
       name,
       userId: randomString(8),
       avatarUrl: null,
@@ -78,6 +78,12 @@ const RoomPage: NextPage<RoomPageProps> = ({ room, user }) => {
     let newSocket: Socket = null;
     let newPeer: Peer = null;
 
+    const roomQuery = ["room", room.id];
+
+    const optimisticUpdateRoom = (update: (room: Room) => Room) => {
+      queryClient.setQueryData(roomQuery, update);
+    };
+
     const createSocket = (peerId: string) => {
       const { pathname, origin } = new URL(config.socketServerUrl);
 
@@ -85,24 +91,34 @@ const RoomPage: NextPage<RoomPageProps> = ({ room, user }) => {
         path: `${pathname}/socket.io`,
       });
 
-      const roomQuery = ["room", room.id];
+      const roomUser = {
+        ...basicRoomUser,
+        id: socket.id,
+        roomId: room.id,
+        peerId,
+        isMicMuted: true,
+        isHeadphoneMuted: false,
+        useVoiceChat: false,
+      };
 
       socket.emit("join", room.id, peerId, roomUser);
 
-      socket.on("invalidate", () => {
-        queryClient.invalidateQueries(roomQuery, {
-          refetchInactive: true,
-        });
+      optimisticUpdateRoom((room) => {
+        room.users.push(roomUser);
+
+        return room;
       });
 
       socket.on("event", (event: ChatEvent) => {
+        if (event.user.id === roomUser.id) return;
+
         if (event.eventType === "join") {
-          queryClient.setQueryData<Room>(roomQuery, (room) => ({
+          optimisticUpdateRoom((room) => ({
             ...room,
             users: [...room.users, event.user],
           }));
         } else if (event.eventType === "leave") {
-          queryClient.setQueryData<Room>(roomQuery, (room) => ({
+          optimisticUpdateRoom((room) => ({
             ...room,
             users: room.users.filter(
               (user) => user.userId !== event.user.userId
@@ -112,7 +128,7 @@ const RoomPage: NextPage<RoomPageProps> = ({ room, user }) => {
       });
 
       socket.on("connectVoiceChat", (roomUser: RoomUser) => {
-        queryClient.setQueryData<Room>(roomQuery, (room) => {
+        optimisticUpdateRoom((room) => {
           const user = room.users.find((u) => u.userId === roomUser.userId);
 
           if (!user) return room;
@@ -124,7 +140,9 @@ const RoomPage: NextPage<RoomPageProps> = ({ room, user }) => {
       });
 
       socket.on("changeEpisode", (episode) => {
-        queryClient.setQueryData<Room>(roomQuery, (data) => ({
+        console.log("changeEpisde", episode);
+
+        optimisticUpdateRoom((data) => ({
           ...data,
           episode,
         }));
@@ -134,6 +152,12 @@ const RoomPage: NextPage<RoomPageProps> = ({ room, user }) => {
 
       socket.on("disconnect", (reason) => {
         console.log("user disconnected", reason);
+
+        optimisticUpdateRoom((room) => {
+          room.users = room.users.filter((user) => user.id !== socket.id);
+
+          return room;
+        });
 
         createSocket(peerId);
       });
@@ -164,7 +188,7 @@ const RoomPage: NextPage<RoomPageProps> = ({ room, user }) => {
     const init = async () => {
       const { default: Peer } = await import("peerjs");
 
-      if (!roomUser?.name) return;
+      if (!basicRoomUser?.name) return;
 
       const peer = new Peer(null, { debug: 3 });
 
@@ -191,7 +215,7 @@ const RoomPage: NextPage<RoomPageProps> = ({ room, user }) => {
       newSocket?.disconnect();
       newPeer?.disconnect();
     };
-  }, [queryClient, room.id, roomUser]);
+  }, [queryClient, room.id, basicRoomUser]);
 
   return (
     <React.Fragment>
@@ -204,13 +228,13 @@ const RoomPage: NextPage<RoomPageProps> = ({ room, user }) => {
         image={data.media.bannerImage || data.media.coverImage.extraLarge}
       />
 
-      {!roomUser?.name || !roomUser?.userId ? (
+      {!basicRoomUser?.name || !basicRoomUser?.userId ? (
         <GuestRegister onRegister={handleGuestRegister} />
       ) : socket ? (
         <RoomContextProvider
           value={{
             room: data,
-            basicRoomUser: roomUser,
+            basicRoomUser: basicRoomUser,
             socket,
             peer,
           }}
