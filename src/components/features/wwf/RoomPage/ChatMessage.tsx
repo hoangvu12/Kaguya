@@ -1,6 +1,5 @@
 import Avatar from "@/components/shared/Avatar";
 import EmojiText from "@/components/shared/EmojiText";
-import { useUser } from "@supabase/auth-helpers-react";
 import { ChatMessage } from "@/types";
 import classNames from "classnames";
 import React, { useMemo } from "react";

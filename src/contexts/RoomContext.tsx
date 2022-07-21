@@ -8,6 +8,7 @@ interface ContextProps {
   socket: Socket;
   basicRoomUser: BasicRoomUser;
   peer: Peer;
+  roomUser: RoomUser;
 }
 
 interface ReactContextProviderProps {
