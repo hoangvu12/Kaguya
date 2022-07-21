@@ -207,14 +207,14 @@ export type Room = {
 
 export type Chat = {
   body?: string;
-  user: BasicRoomUser;
+  user: RoomUser;
   type: "event" | "message";
   eventType?: string;
 };
 
 export type ChatMessage = {
   body: string;
-  user: BasicRoomUser;
+  user: RoomUser;
 };
 
 export type ChatEvent = {

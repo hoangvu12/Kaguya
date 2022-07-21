@@ -59,6 +59,8 @@ const RoomPage: NextPage<RoomPageProps> = ({ room, user }) => {
     isGuest: false,
   });
 
+  const [roomUser, setRoomUser] = useState<RoomUser>(null);
+
   const title = useMemo(() => data.title, [data.title]);
   const mediaTitle = useMemo(
     () => getTitle(data.media, locale),
@@ -100,6 +102,8 @@ const RoomPage: NextPage<RoomPageProps> = ({ room, user }) => {
         isHeadphoneMuted: false,
         useVoiceChat: false,
       };
+
+      setRoomUser(roomUser);
 
       socket.emit("join", room.id, peerId, roomUser);
 
@@ -237,6 +241,7 @@ const RoomPage: NextPage<RoomPageProps> = ({ room, user }) => {
             basicRoomUser: basicRoomUser,
             socket,
             peer,
+            roomUser,
           }}
         >
           <RoomStateContextProvider>

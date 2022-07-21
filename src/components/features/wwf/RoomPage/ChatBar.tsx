@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import Chat from "./Chat";
 
 const ChatBar = () => {
-  const { socket, basicRoomUser } = useRoomInfo();
+  const { socket, roomUser } = useRoomInfo();
   const [chats, setChats] = useState<ChatType[]>([]);
   const messageBottomRef = useRef<HTMLDivElement>();
 
@@ -18,8 +18,6 @@ const ChatBar = () => {
 
     const handleEvent = (event: ChatEvent) => {
       setChats((prev) => [...prev, { ...event, type: "event" }]);
-
-      console.log(event);
 
       messageBottomRef.current?.scrollIntoView();
     };
@@ -39,10 +37,10 @@ const ChatBar = () => {
 
       setChats((prev) => [
         ...prev,
-        { type: "message", user: basicRoomUser, body: text },
+        { type: "message", user: roomUser, body: text },
       ]);
     },
-    [basicRoomUser, socket]
+    [roomUser, socket]
   );
 
   return (
