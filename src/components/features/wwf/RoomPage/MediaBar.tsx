@@ -46,7 +46,7 @@ const MediaBar = () => {
   );
 
   return (
-    <div className="">
+    <div className="p-2">
       <div className="relative w-full flex flex-col gap-4">
         <h1 className="text-2xl font-semibold text-primary-300">
           {t("mediaBar.roomDetails")}
