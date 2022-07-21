@@ -132,10 +132,28 @@ const RoomPage: NextPage<RoomPageProps> = ({ room, user }) => {
 
       setSocket(socket);
 
-      socket.on("disconnect", () => {
-        console.log("user disconnected");
+      socket.on("disconnect", (reason) => {
+        console.log("user disconnected", reason);
 
         createSocket(peerId);
+      });
+
+      socket.on("reconnect", () => {
+        console.log("reconnected");
+      });
+
+      socket.on("reconnect_attempt", (attemp) => {
+        console.log("reconnecting attempt", attemp);
+      });
+
+      socket.on("reconnect_error", (error: Error) => {
+        console.log("reconnect error");
+
+        console.error(error);
+      });
+
+      socket.on("reconnect_failed", () => {
+        console.log("reconnect failed");
       });
 
       newSocket = socket;
@@ -152,6 +170,12 @@ const RoomPage: NextPage<RoomPageProps> = ({ room, user }) => {
 
       peer.on("open", (id) => {
         createSocket(id);
+      });
+
+      peer.on("close", () => {
+        console.log("peer closed");
+
+        peer.reconnect();
       });
 
       setPeer(peer);
