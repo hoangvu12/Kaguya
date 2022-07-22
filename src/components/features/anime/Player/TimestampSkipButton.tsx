@@ -87,7 +87,11 @@ const TimestampSkipButton: React.FC<TimestampSkipButtonProps> = ({
   }, [timestamps]);
 
   useEffect(() => {
-    if (!timestamps?.length) return;
+    if (!timestamps?.length) {
+      setTimeStamp(null);
+
+      return;
+    }
 
     const handleProgress = () => {
       const currentTime = videoEl?.currentTime;
