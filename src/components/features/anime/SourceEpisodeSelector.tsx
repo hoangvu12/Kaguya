@@ -72,6 +72,7 @@ const SourceEpisodeSelector: React.FC<SourceEpisodeSelectorProps> = ({
           }}
           defaultValue={{ value: activeSource, label: activeSource }}
           isClearable={false}
+          isSearchable={false}
         />
       </div>
 
