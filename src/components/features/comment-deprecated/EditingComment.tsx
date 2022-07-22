@@ -1,7 +1,7 @@
 import useEventListener from "@/hooks/useEventListener";
 import { Comment } from "@/types";
 import React from "react";
-import CommentInput from "@/components/features/comment/CommentInput";
+import CommentInput from "@/components/features/comment-deprecated/CommentInput";
 import { Trans } from "next-i18next";
 
 interface EditingCommentProps {

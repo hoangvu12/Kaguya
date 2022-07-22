@@ -1,5 +1,5 @@
 import LocaleEpisodeSelector from "@/components/features/anime/Player/LocaleEpisodeSelector";
-import CommentsSection from "@/components/features/comment/CommentsSection";
+import CommentsSection from "@/components/features/comment-deprecated/CommentsSection";
 import Button from "@/components/shared/Button";
 import Card from "@/components/shared/Card";
 import CharacterConnectionCard from "@/components/shared/CharacterConnectionCard";
@@ -306,7 +306,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime, translations }) => {
             )}
 
             <DetailsSection title={t("comments_section")}>
-              <CommentsSection anime_id={anime.id} />
+              {/* <CommentsSection anime_id={anime.id} /> */}
             </DetailsSection>
           </div>
         </Section>

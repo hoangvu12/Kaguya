@@ -135,20 +135,33 @@ export interface Reaction {
 export interface ReplyComment {
   comment: Comment;
 }
+// export interface Comment {
+//   updated_at?: string;
+//   created_at?: string;
+//   user_id?: string;
+//   user?: User;
+//   media?: Media;
+//   anime_id?: number;
+//   manga_id?: number;
+//   body: string;
+//   id?: number;
+//   reply_comments?: ReplyComment[];
+//   is_reply?: boolean;
+//   is_edited?: boolean;
+//   reactions?: Reaction[];
+// }
+
 export interface Comment {
-  updated_at?: string;
-  created_at?: string;
-  user_id?: string;
-  user?: User;
-  media?: Media;
-  anime_id?: number;
-  manga_id?: number;
-  body: string;
-  id?: number;
-  reply_comments?: ReplyComment[];
-  is_reply?: boolean;
-  is_edited?: boolean;
-  reactions?: Reaction[];
+  id: string;
+  user_id: string;
+  parent_id: string | null;
+  topic: string;
+  comment: string;
+  created_at: string;
+  replies_count: number;
+  reactions_metadata: CommentReactionMetadata[];
+  user: DisplayUser;
+  mentioned_user_ids: string[];
 }
 
 export type Subtitle = {

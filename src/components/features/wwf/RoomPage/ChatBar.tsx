@@ -1,4 +1,4 @@
-import CommentInput from "@/components/features/comment/CommentInput";
+import CommentInput from "@/components/features/comment-deprecated/CommentInput";
 import { useRoomInfo } from "@/contexts/RoomContext";
 import { Chat as ChatType, ChatEvent, ChatMessage } from "@/types";
 import React, { useCallback, useEffect, useRef, useState } from "react";
