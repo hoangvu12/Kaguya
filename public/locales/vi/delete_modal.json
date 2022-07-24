@@ -1,0 +1,5 @@
+{
+  "deleteRequirement": "Nhập <1>{{confirmString}}</1> để xóa.",
+  "deleteAccept": "Tôi chấp nhận.",
+  "deleteDefaultConfirmString": "Tôi chấp nhận"
+}

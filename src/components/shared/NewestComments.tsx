@@ -9,8 +9,8 @@ import { useTranslation } from "next-i18next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
+import Editor from "../features/comment/Editor";
 import CommentsSwiperSkeleton from "../skeletons/CommentsSwiperSkeleton";
-import EmojiText from "./EmojiText";
 
 interface NewestCommentsProps {
   type: MediaType;
@@ -56,12 +56,12 @@ const NewestComments: React.FC<NewestCommentsProps> = (props) => {
           },
         }}
       >
-        {data.map((comment) => {
-          const user = comment?.user?.user_metadata;
+        {data.map(({ comment, media }) => {
+          const user = comment?.user;
           const redirectUrl = isAnime
-            ? `/anime/details/${comment.media?.id}`
-            : `/manga/details/${comment.media?.id}`;
-          const title = getTitle(comment.media, locale);
+            ? `/anime/details/${media.id}`
+            : `/manga/details/${media.id}`;
+          const title = getTitle(media, locale);
 
           return (
             <SwiperSlide key={comment.id}>
@@ -69,7 +69,7 @@ const NewestComments: React.FC<NewestCommentsProps> = (props) => {
                 <div className="flex flex-col justify-between space-y-2 md:space-y-4 w-full h-full p-4">
                   <div className="space-y-4">
                     <div className="shrink-0 flex items-center space-x-2">
-                      <Avatar src={user?.avatar_url} />
+                      <Avatar src={user?.avatar} />
 
                       <div className="space-y-1 text-sm">
                         <p className="line-clamp-1">{user?.name}</p>
@@ -80,10 +80,7 @@ const NewestComments: React.FC<NewestCommentsProps> = (props) => {
                       </div>
                     </div>
 
-                    <EmojiText
-                      className="text-ellipsis overflow-hidden"
-                      text={comment.body}
-                    />
+                    <Editor readOnly defaultContent={comment.comment} />
                   </div>
 
                   <Link href={redirectUrl}>

@@ -1,4 +1,5 @@
 import classNames from "classnames";
+import { Trans, Translation, useTranslation } from "next-i18next";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import Button from "./Button";
@@ -6,20 +7,34 @@ import Input from "./Input";
 import Modal, { ModalRef } from "./Modal";
 
 interface DeleteConfirmationProps extends React.HTMLAttributes<HTMLDivElement> {
-  confirmString: string;
+  confirmString?: string;
   onConfirm?: () => void;
   isLoading?: boolean;
+  reference?: React.ReactNode;
 }
 
-const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
-  children,
-  confirmString,
-  onConfirm,
-  isLoading = false,
-  ...props
-}) => {
+const DeleteConfirmation: React.FC<DeleteConfirmationProps> = (props) => {
   const modalRef = useRef<ModalRef>(null);
   const [inputValue, setInputValue] = useState("");
+  const { t } = useTranslation("delete_modal");
+
+  const {
+    children,
+    confirmString = t("deleteDefaultConfirmString"),
+    onConfirm,
+    isLoading = false,
+    reference = (
+      <Button
+        LeftIcon={AiFillDelete}
+        isLoading={isLoading}
+        className="text-red-500 bg-red-500/20 hover:text-white hover:bg-red-500/80"
+      >
+        Xóa
+      </Button>
+    ),
+    className,
+    ...restProps
+  } = props;
 
   const isButtonDisable = useMemo(
     () => inputValue.toLowerCase() !== confirmString.toLowerCase(),
@@ -42,25 +57,18 @@ const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
   }, [isButtonDisable, onConfirm]);
 
   return (
-    <Modal
-      ref={modalRef}
-      className="md:w-1/3 w-11/12"
-      reference={
-        <Button
-          LeftIcon={AiFillDelete}
-          isLoading={isLoading}
-          className="text-red-500 bg-red-500/20 hover:text-white hover:bg-red-500/80"
-        >
-          Xóa
-        </Button>
-      }
-    >
-      <div {...props}>
+    <Modal ref={modalRef} className="md:w-1/3 w-11/12" reference={reference}>
+      <div className={classNames("space-y-4", className)} {...restProps}>
         {children}
 
-        <p>
+        <Trans
+          i18nKey="delete_modal:deleteRequirement"
+          values={{
+            confirmString,
+          }}
+        >
           Nhập <b>{confirmString}</b> để xác nhận xóa.
-        </p>
+        </Trans>
 
         <Input
           onChange={handleInputChange}
@@ -76,7 +84,7 @@ const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
           disabled={isButtonDisable}
           onClick={handleConfirm}
         >
-          Tôi chắc chắn
+          {t("deleteAccept")}
         </Button>
       </div>
     </Modal>

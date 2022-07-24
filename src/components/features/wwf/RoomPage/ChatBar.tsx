@@ -1,13 +1,15 @@
-import CommentInput from "@/components/features/comment/CommentInput";
+import Input from "@/components/shared/Input";
 import { useRoomInfo } from "@/contexts/RoomContext";
 import { Chat as ChatType, ChatEvent, ChatMessage } from "@/types";
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import isHotKey from "is-hotkey";
 import Chat from "./Chat";
 
 const ChatBar = () => {
   const { socket, roomUser } = useRoomInfo();
   const [chats, setChats] = useState<ChatType[]>([]);
   const messageBottomRef = useRef<HTMLDivElement>();
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const handleMessage = (message: ChatMessage) => {
@@ -43,6 +45,21 @@ const ChatBar = () => {
     [roomUser, socket]
   );
 
+  useEffect(() => {
+    const handleKeydown = (e: KeyboardEvent) => {
+      if (isHotKey("Enter", e)) {
+        handleSendMessage(message);
+        setMessage("");
+      }
+    };
+
+    window.addEventListener("keydown", handleKeydown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeydown);
+    };
+  }, [handleSendMessage, message]);
+
   return (
     <div className="relative flex flex-col h-full">
       <div className="grow pb-4 space-y-2 overflow-y-auto no-scrollbar">
@@ -54,11 +71,14 @@ const ChatBar = () => {
       </div>
 
       <div className="sticky bottom-0 w-full bg-background-900">
-        <CommentInput
+        <Input
           placeholder="Aa"
-          needLogin={false}
-          showAvatar={false}
-          onEnter={handleSendMessage}
+          className="bg-background-800"
+          onChange={(e) => {
+            const target = e.target as HTMLInputElement;
+
+            setMessage(target.value);
+          }}
         />
       </div>
     </div>

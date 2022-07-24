@@ -1,44 +1,41 @@
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { Comment } from "@/types";
-import {
-  InfiniteData,
-  useMutation,
-  UseMutationOptions,
-  useQueryClient,
-} from "react-query";
+import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { PostgrestError } from "@supabase/supabase-js";
+import { useMutation, useQueryClient } from "react-query";
+import { toast } from "react-toastify";
 
-const useDeleteComment = (
-  comment: Comment,
-  options?: Omit<
-    UseMutationOptions<Comment[], unknown, void, unknown>,
-    "mutationFn"
-  >
-) => {
+interface UseDeleteCommentProps {
+  parentId?: string;
+  topic: string;
+}
+
+const useDeleteComment = (props: UseDeleteCommentProps) => {
   const queryClient = useQueryClient();
-  const queryKey = ["comment", comment.id];
 
-  return useMutation(
-    async () => {
-      const { data, error } = await supabase
-        .from<Comment>("comments")
-        .delete({ returning: "minimal" })
-        .match({
-          id: comment.id,
-        });
+  return useMutation<Comment, PostgrestError, string, any>(
+    async (commentId: string) => {
+      const { data, error } = await supabaseClient
+        .from<Comment>("sce_comments")
+        .delete()
+        .match({ id: commentId })
+        .single();
 
       if (error) throw error;
 
       return data;
     },
     {
-      onMutate: () => {
-        queryClient.setQueryData(queryKey, {});
+      onMutate: (commentId) => {
+        queryClient.setQueryData<Comment[]>(["comments", props], (comments) =>
+          comments.filter((comment) => comment.id !== commentId)
+        );
       },
-
-      onError: () => {
-        queryClient.invalidateQueries(queryKey, { refetchInactive: true });
+      onSettled: () => {
+        queryClient.invalidateQueries(["comments", props]);
       },
-      ...options,
+      onError: (error) => {
+        toast.error(error.message);
+      },
     }
   );
 };
