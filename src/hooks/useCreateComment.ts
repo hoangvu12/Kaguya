@@ -1,122 +1,85 @@
-import { useUser } from "@supabase/auth-helpers-react";
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { Comment } from "@/types";
-import { PostgrestError } from "@supabase/postgrest-js";
-import { InfiniteData, useMutation, useQueryClient } from "react-query";
+import { randomString } from "@/utils";
+import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { useUser } from "@supabase/auth-helpers-react";
+import { PostgrestError } from "@supabase/supabase-js";
+import { useMutation, useQueryClient } from "react-query";
+import { toast } from "react-toastify";
 
-type UseCreateCommentOptions =
-  | {
-      type: "new";
-      anime_id?: number;
-      manga_id?: number;
-    }
-  | {
-      type: "reply";
-      comment: Comment;
-    };
+interface UseAddCommentPayload {
+  comment: string;
+  topic: string;
+  parentId: string | null;
+  mentionedUserIds: string[];
+}
 
-type QueryData = InfiniteData<{
-  data: Comment[];
-}>;
-
-export const useCreateComment = (options: UseCreateCommentOptions) => {
-  const { user } = useUser();
+const useCreateComment = () => {
   const queryClient = useQueryClient();
-  const queryKey =
-    options.type === "new"
-      ? ["comments", options.anime_id || options.manga_id]
-      : ["comment", options.comment.id];
+  const { user } = useUser();
 
-  return useMutation<Comment, PostgrestError, string, any>(
-    async (body) => {
-      const insertData: Comment = {
-        body,
-        user_id: user.id,
-        is_reply: options.type === "reply",
-        anime_id:
-          options.type === "new" ? options.anime_id : options.comment.anime_id,
-        manga_id:
-          options.type === "new" ? options.manga_id : options.comment.manga_id,
-      };
+  return useMutation<Comment, PostgrestError, UseAddCommentPayload, any>(
+    async ({
+      comment,
+      topic,
+      parentId,
+      mentionedUserIds,
+    }: UseAddCommentPayload) => {
+      if (!user) throw new Error("Please login to comment");
 
-      const { data: createdComment, error: commentError } = await supabase
-        .from<Comment>("comments")
-        .insert(insertData)
-        .limit(1)
+      const { data, error } = await supabaseClient
+        .from<Comment>("sce_comments")
+        .insert({
+          comment,
+          topic,
+          parent_id: parentId,
+          mentioned_user_ids: mentionedUserIds,
+          user_id: user?.id,
+        })
         .single();
 
-      if (commentError) {
-        throw commentError;
-      }
+      if (error) throw error;
 
-      if (options.type === "new") return createdComment;
-
-      const { error: replyError } = await supabase
-        .from("reply_comments")
-        .insert({
-          reply_id: createdComment.id,
-          original_id: options.comment.id,
-        });
-
-      if (replyError) {
-        const { error: deleteCommentError } = await supabase
-          .from("comments")
-          .delete({ returning: "minimal" })
-          .match({ id: createdComment.id });
-
-        if (deleteCommentError) {
-          throw deleteCommentError;
-        }
-
-        throw replyError;
-      }
-      return createdComment;
+      return data;
     },
     {
-      onMutate: (body) => {
-        if (options.type === "new") {
-          const data = queryClient.getQueryData<QueryData>(queryKey);
+      onMutate: (data) => {
+        queryClient.setQueryData<Comment[]>(
+          ["comments", { topic: data.topic, parentId: data.parentId }],
+          (comments) => {
+            comments.push({
+              comment: data.comment,
+              topic: data.topic,
+              parent_id: data.parentId,
+              user_id: user?.id,
+              mentioned_user_ids: data.mentionedUserIds,
+              created_at: new Date().toUTCString(),
+              id: randomString(9),
+              replies_count: 0,
+              user: {
+                avatar: user?.user_metadata.avatar_url,
+                name: user?.user_metadata.name,
+                id: user?.id,
+              },
+              reactions_metadata: [],
+            });
 
-          data.pages[0].data.push({
-            body,
-            user_id: user.id,
-            is_reply: false,
-            anime_id: options.anime_id,
-            manga_id: options.manga_id,
-            id: Math.floor(Math.random() * 1000000),
-            user,
-            created_at: new Date().toString(),
-          });
+            console.log(comments);
 
-          return queryClient.setQueryData<QueryData>(queryKey, data);
-        }
-
-        const comment = queryClient.getQueryData<Comment>(queryKey);
-
-        if (!comment) throw new Error("Comment not found");
-
-        if (!comment?.reply_comments?.length) {
-          comment.reply_comments = [];
-        }
-
-        comment.reply_comments.push({
-          comment: {
-            body,
-            user_id: user.id,
-            is_reply: true,
-            id: Math.floor(Math.random() * 1000000),
-            user,
-            created_at: new Date().toString(),
-          },
-        });
-
-        return queryClient.setQueryData<Comment>(queryKey, comment);
+            return comments;
+          }
+        );
       },
-      onSettled: () => {
-        queryClient.invalidateQueries(queryKey, {
-          refetchInactive: true,
-        });
+      onSuccess: (_, params) => {
+        queryClient.invalidateQueries([
+          "comments",
+          { topic: params.topic, parentId: params.parentId },
+        ]);
+      },
+      onError: (error) => {
+        toast.error(error.message);
       },
     }
   );
 };
+
+export default useCreateComment;

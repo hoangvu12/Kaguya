@@ -1,38 +1,19 @@
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
 import { Comment } from "@/types";
-import {
-  SupabaseSingleQueryOptions,
-  useSupabaseSingleQuery,
-} from "@/utils/supabase";
+import { useSupabaseSingleQuery } from "@/utils/supabase";
+import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 
-const useComment = (
-  commentId: number,
-  options?: SupabaseSingleQueryOptions<Comment>
-) => {
-  return useSupabaseSingleQuery<Comment>(
+const useComment = (commentId: string) => {
+  return useSupabaseSingleQuery(
     ["comment", commentId],
     () =>
-      supabase
-        .from<Comment>("comments")
+      supabaseClient
+        .from<Comment>("sce_comments_with_metadata")
         .select(
-          `
-          *,
-          user:user_id(*),
-          reply_comments!original_id(
-            comment:reply_id(
-              *,
-              user:user_id(*),
-              reactions:comment_reactions(*)
-            )
-          ),
-          reactions:comment_reactions(*)
-          `
+          "*,user:sce_display_users!user_id(*),reactions_metadata:sce_comment_reactions_metadata(*)"
         )
         .eq("id", commentId)
-        .limit(1)
         .single(),
-
-    options
+    { staleTime: Infinity }
   );
 };
 

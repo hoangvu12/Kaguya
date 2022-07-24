@@ -1,9 +1,8 @@
 import Avatar from "@/components/shared/Avatar";
-import EmojiText from "@/components/shared/EmojiText";
+import { useRoomInfo } from "@/contexts/RoomContext";
 import { ChatMessage } from "@/types";
 import classNames from "classnames";
 import React, { useMemo } from "react";
-import { useRoomInfo } from "@/contexts/RoomContext";
 
 interface ChatMessageProps {
   message: ChatMessage;
@@ -35,13 +34,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
           </p>
         )}
 
-        <EmojiText
-          className={classNames(
-            "rounded-md p-2 bg-background-500 max-w-max",
-            isUserMessage ? "ml-auto" : "mr-auto"
-          )}
-          text={message.body}
-        />
+        <p>{message.body}</p>
       </div>
     </div>
   );

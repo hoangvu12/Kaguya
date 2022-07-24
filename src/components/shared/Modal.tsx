@@ -1,5 +1,10 @@
 import classNames from "classnames";
-import React, { PropsWithChildren, useImperativeHandle, useState } from "react";
+import React, {
+  PropsWithChildren,
+  useCallback,
+  useImperativeHandle,
+  useState,
+} from "react";
 import { CgClose } from "react-icons/cg";
 import CircleButton from "./CircleButton";
 import Portal from "./Portal";
@@ -9,6 +14,7 @@ export interface ModalProps {
   className?: string;
   closeOnClickOutside?: boolean;
   defaultValue?: boolean;
+  onClose?: () => void;
 }
 
 export interface ModalRef {
@@ -24,6 +30,7 @@ const Modal = React.forwardRef<ModalRef, PropsWithChildren<ModalProps>>(
       className = "",
       closeOnClickOutside = true,
       defaultValue = false,
+      onClose,
     },
     ref
   ) => {
@@ -38,9 +45,16 @@ const Modal = React.forwardRef<ModalRef, PropsWithChildren<ModalProps>>(
       defaultClassName = classNames(defaultClassName, "w-11/12 md:w-2/3");
     }
 
-    const handleOpenState = (value: boolean) => () => {
-      setIsOpen(value);
-    };
+    const handleOpenState = useCallback(
+      (value: boolean) => () => {
+        if (!value) {
+          onClose?.();
+        }
+
+        setIsOpen(value);
+      },
+      [onClose]
+    );
 
     useImperativeHandle(
       ref,
@@ -48,7 +62,7 @@ const Modal = React.forwardRef<ModalRef, PropsWithChildren<ModalProps>>(
         open: handleOpenState(true),
         close: handleOpenState(false),
       }),
-      []
+      [handleOpenState]
     );
 
     return (
