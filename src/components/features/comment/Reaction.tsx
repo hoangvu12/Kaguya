@@ -23,6 +23,7 @@ const Reaction: React.FC<ReactionProps> = ({ type, className = "" }) => {
         <Loading className="w-6 h-6" />
       ) : (
         <Image
+          unoptimized
           className={"h-6 w-6"}
           src={data.url || ""}
           alt={data.label}
