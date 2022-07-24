@@ -36,11 +36,17 @@ const BaseButton = React.forwardRef<HTMLButtonElement, BaseButtonProps>(
     useEffect(() => {
       if (!shortcutKey) return;
 
-      window.addEventListener("keypress", (e) => {
+      const handleShortcutKey = (e: KeyboardEvent) => {
         if (isHotKey(shortcutKey, { byKey: true })(e)) {
           onClick?.(null);
         }
-      });
+      };
+
+      window.addEventListener("keypress", handleShortcutKey);
+
+      return () => {
+        window.removeEventListener("keypress", handleShortcutKey);
+      };
     }, [onClick, shortcutKey]);
 
     // If class name contains 'w-' or 'h-' then override default className

@@ -1,215 +1,215 @@
-import CommentAction, {
-  CommentActionType,
-} from "@/components/features/comment/CommentAction";
-import CommentInput from "@/components/features/comment/CommentInput";
-import EditingComment from "@/components/features/comment/EditingComment";
 import Avatar from "@/components/shared/Avatar";
+import Button from "@/components/shared/Button";
+import DeleteConfirmation from "@/components/shared/DeleteConfirmation";
 import DotList from "@/components/shared/DotList";
-import EmojiPicker from "@/components/shared/EmojiPicker";
-import EmojiText from "@/components/shared/EmojiText";
-import { useUser } from "@supabase/auth-helpers-react";
+import Loading from "@/components/shared/Loading";
+import TextIcon from "@/components/shared/TextIcon";
+import CommentReplyContextProvider, {
+  useCommentReply,
+} from "@/contexts/CommentReplyContext";
 import useComment from "@/hooks/useComment";
-import { useCreateComment } from "@/hooks/useCreateComment";
+import useCreateReaction from "@/hooks/useCreateReaction";
 import useDeleteComment from "@/hooks/useDeleteComment";
-import useEditComment from "@/hooks/useEditComment";
-import useReactComment from "@/hooks/useReactComment";
-import dayjs from "@/lib/dayjs";
-import { Comment as CommentType } from "@/types";
-import { getMostOccuringEmojis } from "@/utils/emoji";
-import { IEmojiData } from "emoji-picker-react";
-import { useTranslation } from "next-i18next";
+import useRemoveReaction from "@/hooks/useRemoveReaction";
+import useUpdateComment from "@/hooks/useUpdateComment";
+import { Comment } from "@/types";
+import { getMentionedUserIds } from "@/utils/editor";
+import classNames from "classnames";
+import dayjs from "dayjs";
 import { useRouter } from "next/router";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useState } from "react";
+import { AiFillDelete, AiFillEdit } from "react-icons/ai";
+import { BsArrowReturnRight, BsReplyFill } from "react-icons/bs";
+import CommentReactions from "./CommentReactions";
+import Comments from "./Comments";
+import Editor from "./Editor";
+import ReactionSelector from "./ReactionSelector";
 
-interface CommentProps {
-  comment: CommentType;
-  level?: number;
+interface CommentContainerProps {
+  commentId: string;
 }
 
-const Comment: React.FC<CommentProps> = ({
-  comment: initialComment,
-  level = 1,
-}) => {
-  const { user } = useUser();
-  const { t } = useTranslation("comment");
+interface CommentProps {
+  comment: Comment;
+}
 
-  const { data: comment } = useComment(initialComment.id, {
-    enabled: false,
-    initialData: initialComment,
-  });
+const CommentContainer: React.FC<CommentContainerProps> = ({ commentId }) => {
+  const { data: comment, isLoading } = useComment(commentId);
 
-  const reactMutation = useReactComment(comment.id);
-  const deleteMutation = useDeleteComment(comment);
-  const editMutation = useEditComment(comment);
-  const createMutation = useCreateComment({ type: "reply", comment });
-  const { locale } = useRouter();
-
-  const [showReplyInput, setShowReplyInput] = useState(false);
-  const [hasReacted, setHasReacted] = useState(() => {
-    return comment.reactions?.some((reaction) => reaction.user_id === user?.id);
-  });
-  const [isEditing, setIsEditing] = useState(false);
-
-  const handleReplyClick = useCallback(() => {
-    setShowReplyInput((prev) => !prev);
-  }, []);
-
-  const handleReactEmojiSelect = useCallback(
-    (_: any, emoji: IEmojiData) => {
-      setHasReacted(true);
-
-      reactMutation.mutate({ emoji: emoji.emoji, type: "REACT" });
-    },
-    [reactMutation]
+  return (
+    <div className="relative">
+      {isLoading ? (
+        <Loading />
+      ) : !comment.parent_id ? (
+        <CommentReplyContextProvider>
+          <CommentComponent comment={comment} />
+        </CommentReplyContextProvider>
+      ) : (
+        <CommentComponent comment={comment} />
+      )}
+    </div>
   );
-
-  const handleUnReact = useCallback(() => {
-    setHasReacted(false);
-
-    reactMutation.mutate({ emoji: "", type: "UNREACT" });
-  }, [reactMutation]);
-
-  const handleActionSelect = useCallback(
-    (type: CommentActionType) => {
-      if (type === "DELETE") {
-        deleteMutation.mutate();
-      } else if (type === "EDIT") {
-        setIsEditing(true);
-      }
-    },
-    [deleteMutation, setIsEditing]
-  );
-
-  const handleEditSave = useCallback(
-    (text: string) => {
-      setIsEditing(false);
-
-      editMutation.mutate(text);
-    },
-    [editMutation]
-  );
-
-  const handleReply = useCallback(
-    (text: string) => {
-      createMutation.mutate(text);
-    },
-    [createMutation]
-  );
-
-  const mostUsedEmojis = useMemo(
-    () =>
-      getMostOccuringEmojis(
-        comment?.reactions?.length
-          ? comment?.reactions.map((reaction) => reaction.emoji)
-          : []
-      ),
-    [comment?.reactions]
-  );
-
-  return comment.user ? (
-    !isEditing ? (
-      <div className="flex space-x-2 group">
-        <Avatar
-          className="shrink-0"
-          src={comment.user.user_metadata.avatar_url}
-        />
-
-        <div className="w-full">
-          <div className="flex items-center space-x-2">
-            <div className="relative inline-block p-3 mb-2 space-y-2 rounded-md bg-background-900">
-              <DotList>
-                <span className="text-lg">
-                  {comment.user.user_metadata.name}
-                </span>
-                <span className="text-sm text-gray-300">
-                  {dayjs(comment.created_at, { locale }).fromNow()}
-                </span>
-              </DotList>
-
-              <EmojiText text={comment.body} className="break-words" />
-
-              {!!comment.reactions?.length && (
-                <div className="flex gap-2 absolute -bottom-3 px-2 rounded-full reactions bg-background-800 -right-3">
-                  <ul className="flex items-center">
-                    {mostUsedEmojis.map((emoji) => (
-                      <li className="-space-x-1.5" key={emoji}>
-                        {emoji}
-                      </li>
-                    ))}
-                  </ul>
-
-                  <p>{comment.reactions.length}</p>
-                </div>
-              )}
-            </div>
-
-            {comment.user_id === user?.id && (
-              <CommentAction onActionSelect={handleActionSelect} />
-            )}
-          </div>
-
-          <div className="flex items-center px-3 space-x-4">
-            {!hasReacted ? (
-              <EmojiPicker
-                reference={
-                  <p className="text-sm text-gray-300 hover:underline">
-                    {t("like")}
-                  </p>
-                }
-                placement="top"
-                onEmojiClick={handleReactEmojiSelect}
-                disableAutoFocus
-                disableSearchBar
-              />
-            ) : (
-              <button
-                onClick={handleUnReact}
-                className="text-sm text-primary-500 hover:underline"
-              >
-                {t("liked")}
-              </button>
-            )}
-
-            {level === 1 && (
-              <button
-                onClick={handleReplyClick}
-                className="text-sm text-gray-300 hover:underline"
-              >
-                {t("reply")}
-              </button>
-            )}
-
-            {comment.is_edited && (
-              <p className="text-gray-400 text-sm">{t("is_edited")}</p>
-            )}
-          </div>
-
-          {!!comment.reply_comments?.length && (
-            <div className="mt-3 space-y-4">
-              {comment.reply_comments.map(({ comment }) => (
-                <Comment key={comment.id} comment={comment} level={level + 1} />
-              ))}
-            </div>
-          )}
-
-          {showReplyInput && (
-            <div className="mt-4">
-              <CommentInput
-                placeholder={t("reply_placeholder")}
-                onEnter={handleReply}
-              />
-            </div>
-          )}
-        </div>
-      </div>
-    ) : (
-      <EditingComment
-        comment={comment}
-        onLeave={() => setIsEditing(false)}
-        onSave={handleEditSave}
-      />
-    )
-  ) : null;
 };
 
-export default React.memo(Comment);
+const CommentComponent: React.FC<CommentProps> = ({ comment }) => {
+  const { locale } = useRouter();
+  const [showReplies, setShowReplies] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [showActionMenu, setShowActionMenu] = useState(false);
+
+  const commentReply = useCommentReply();
+
+  const { mutate: createReaction } = useCreateReaction();
+  const { mutate: removeReaction } = useRemoveReaction();
+  const { mutate: updateComment } = useUpdateComment();
+  const { mutate: deleteComment } = useDeleteComment({
+    topic: comment.topic,
+    parentId: comment.parent_id,
+  });
+
+  const activeReactions = comment.reactions_metadata.reduce(
+    (set, reactionMetadata) => {
+      if (reactionMetadata.active_for_user) {
+        set.add(reactionMetadata.reaction_type);
+      }
+      return set;
+    },
+    new Set<string>()
+  );
+
+  const handleUpdate = (content: string) => {
+    updateComment({
+      comment: content,
+      id: comment.id,
+      mentionedUserIds: getMentionedUserIds(content),
+    });
+
+    setIsEditing(false);
+  };
+
+  const handleDelete = () => {
+    deleteComment(comment.id);
+  };
+
+  const handleToggleActionMenu: (
+    isShow: boolean
+  ) => React.MouseEventHandler<HTMLDivElement> = (isShow) => () => {
+    setShowActionMenu(isShow);
+  };
+
+  const handleReply = () => {
+    commentReply?.setReplyingTo(comment);
+
+    setShowReplies(!showReplies);
+  };
+
+  const handleShowReplies = () => {
+    setShowReplies(!showReplies);
+  };
+
+  const handleEdit = () => {
+    setIsEditing(!isEditing);
+  };
+
+  const toggleReaction = (reactionType: string) => {
+    if (!activeReactions.has(reactionType)) {
+      createReaction({
+        commentId: comment.id,
+        reactionType,
+      });
+    } else {
+      removeReaction({
+        commentId: comment.id,
+        reactionType,
+      });
+    }
+  };
+
+  return (
+    <div
+      className="relative flex gap-2 md:gap-4"
+      onMouseEnter={handleToggleActionMenu(true)}
+      onMouseLeave={handleToggleActionMenu(false)}
+    >
+      <Avatar src={comment.user.avatar} />
+
+      <div className="grow">
+        <DotList className="mb-1">
+          <span className="font-semibold">{comment.user.name}</span>
+
+          <span className="text-gray-400 text-sm">
+            {dayjs(comment.created_at, { locale }).fromNow()}
+          </span>
+        </DotList>
+
+        <div className="mb-4">
+          <Editor
+            readOnly={!isEditing}
+            defaultContent={comment.comment}
+            onSubmit={handleUpdate}
+          />
+        </div>
+
+        {comment.reactions_metadata?.length ? (
+          <CommentReactions
+            reactionsMetadata={comment.reactions_metadata}
+            toggleReaction={toggleReaction}
+          />
+        ) : null}
+
+        {!showReplies && !comment.parent_id && comment.replies_count > 0 && (
+          <TextIcon
+            className="mt-4 hover:underline cursor-pointer"
+            onClick={handleShowReplies}
+            LeftIcon={BsArrowReturnRight}
+          >
+            {comment.replies_count} replies
+          </TextIcon>
+        )}
+
+        {showReplies && !comment.parent_id && (
+          <div className="mt-6">
+            <Comments topic={comment.topic} parentId={comment.id} />
+          </div>
+        )}
+      </div>
+
+      <div
+        className={classNames(
+          "bg-background-800 items-center gap absolute -top-2 right-0",
+          showActionMenu ? "flex" : "hidden"
+        )}
+      >
+        <ReactionSelector toggleReaction={toggleReaction} />
+
+        <Button
+          iconClassName="w-5 h-5"
+          secondary
+          LeftIcon={AiFillEdit}
+          onClick={handleEdit}
+        />
+
+        <Button
+          iconClassName="w-5 h-5"
+          secondary
+          LeftIcon={BsReplyFill}
+          onClick={handleReply}
+        />
+
+        <DeleteConfirmation
+          reference={
+            <Button
+              iconClassName="w-5 h-5"
+              className="hover:bg-red-500"
+              secondary
+              LeftIcon={AiFillDelete}
+            />
+          }
+          onConfirm={handleDelete}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default CommentContainer;

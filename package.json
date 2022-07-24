@@ -21,6 +21,11 @@
     "@supabase/supabase-js": "^1.29.1",
     "@tailwindcss/aspect-ratio": "^0.4.0",
     "@tailwindcss/line-clamp": "^0.3.1",
+    "@tiptap/extension-mention": "^2.0.0-beta.102",
+    "@tiptap/extension-placeholder": "^2.0.0-beta.53",
+    "@tiptap/extension-underline": "^2.0.0-beta.25",
+    "@tiptap/react": "^2.0.0-beta.114",
+    "@tiptap/starter-kit": "^2.0.0-beta.191",
     "axios": "^0.23.0",
     "classnames": "^2.3.1",
     "dayjs": "^1.10.7",
@@ -56,6 +61,7 @@
     "react-youtube": "^7.14.0",
     "socket.io-client": "^4.5.1",
     "swiper": "6",
+    "traverse": "^0.6.6",
     "url-toolkit": "^2.2.5"
   },
   "devDependencies": {

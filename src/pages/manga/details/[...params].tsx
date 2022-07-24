@@ -1,4 +1,4 @@
-import CommentsSection from "@/components/features/comment/CommentsSection";
+import Comments from "@/components/features/comment/Comments";
 import LocaleChapterSelector from "@/components/features/manga/LocaleChapterSelector";
 import Button from "@/components/shared/Button";
 import Card from "@/components/shared/Card";
@@ -231,7 +231,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
             )}
 
             <DetailsSection title={t("comments_section")}>
-              <CommentsSection manga_id={manga.id} />
+              <Comments topic={`manga-${manga.id}`} />
             </DetailsSection>
           </div>
         </Section>

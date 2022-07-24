@@ -17,6 +17,7 @@ const moduleExports = withPWA({
       "platform-lookaside.fbsbx.com",
       "i.ibb.co",
       "thumb.tapecontent.net",
+      "emojis.slackmojis.com",
     ],
     minimumCacheTTL: 604800, // a week,
   },
