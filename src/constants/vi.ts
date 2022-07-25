@@ -1,3 +1,4 @@
+import { Notification, NotificationEntity } from "@/types";
 import {
   CharacterRole,
   MediaFormat,
@@ -307,6 +308,28 @@ export const PLAYER_TRANSLATIONS: I18n = {
   },
 };
 
+export const NOTIFICATION_ENTITIES: Record<
+  string,
+  (notification: Notification) => NotificationEntity
+> = {
+  comment_mention: (notification) => {
+    const [mediaType, mediaId] = notification.parentEntityId.split("-");
+
+    return {
+      message: `${notification?.sender?.user_metadata?.name} đã nhắc tới bạn trong một bình luận`,
+      redirectUrl: `/${mediaType}/details/${mediaId}?commentId=${notification.entityId}`,
+    };
+  },
+  comment_reaction: (notification) => {
+    const [mediaType, mediaId] = notification.parentEntityId.split("-");
+
+    return {
+      message: `${notification?.sender?.user_metadata?.name} đã bảy tỏ cảm xúc về bình luận của bạn`,
+      redirectUrl: `/${mediaType}/details/${mediaId}?commentId=${notification.entityId}`,
+    };
+  },
+};
+
 const DAYSOFWEEK = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
 
 const translations = {
@@ -327,6 +350,7 @@ const translations = {
   EMOJI_GROUP,
   PLAYER_TRANSLATIONS,
   DAYSOFWEEK,
+  NOTIFICATION_ENTITIES,
 };
 
 export default translations;
