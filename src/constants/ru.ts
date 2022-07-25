@@ -1,3 +1,4 @@
+import { Notification, NotificationEntity } from "@/types";
 import {
   CharacterRole,
   MediaFormat,
@@ -307,6 +308,29 @@ export const PLAYER_TRANSLATIONS: I18n = {
   },
 };
 
+// TODO: translate to russian
+export const NOTIFICATION_ENTITIES: Record<
+  string,
+  (notification: Notification) => NotificationEntity
+> = {
+  comment_mention: (notification) => {
+    const [mediaType, mediaId] = notification.parentEntityId.split("-");
+
+    return {
+      message: `${notification?.sender?.user_metadata?.name} mentioned you in a comment`,
+      redirectUrl: `/${mediaType}/details/${mediaId}?commentId=${notification.entityId}`,
+    };
+  },
+  comment_reaction: (notification) => {
+    const [mediaType, mediaId] = notification.parentEntityId.split("-");
+
+    return {
+      message: `${notification?.sender?.user_metadata?.name} reacted to your comment`,
+      redirectUrl: `/${mediaType}/details/${mediaId}?commentId=${notification.entityId}`,
+    };
+  },
+};
+
 const DAYSOFWEEK = ["Вос", "Пон", "Вт", "Ср", "Чт", "Пт", "Сб"];
 
 const translations = {
@@ -327,6 +351,7 @@ const translations = {
   EMOJI_GROUP,
   PLAYER_TRANSLATIONS,
   DAYSOFWEEK,
+  NOTIFICATION_ENTITIES,
 };
 
 export default translations;
