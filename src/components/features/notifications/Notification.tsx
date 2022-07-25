@@ -5,6 +5,7 @@ import useConstantTranslation from "@/hooks/useConstantTranslation";
 import Link from "next/link";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
+import { useUser } from "@supabase/auth-helpers-react";
 
 interface NotificationProps {
   notification: NotificationType;
@@ -13,10 +14,19 @@ interface NotificationProps {
 const Notification: React.FC<NotificationProps> = ({ notification }) => {
   const { NOTIFICATION_ENTITIES } = useConstantTranslation();
   const { locale } = useRouter();
+  const { user } = useUser();
 
   const notificationEntity = useMemo(
     () => NOTIFICATION_ENTITIES[notification.entityType]?.(notification),
     [NOTIFICATION_ENTITIES, notification]
+  );
+
+  const notifcationUser = useMemo(
+    () =>
+      notification.notificationUsers.find(
+        (notificationUser) => notificationUser.userId === user?.id
+      ),
+    [notification.notificationUsers, user?.id]
   );
 
   return (
@@ -37,7 +47,7 @@ const Notification: React.FC<NotificationProps> = ({ notification }) => {
             </div>
           </div>
 
-          {!notification.isRead && (
+          {!notifcationUser?.isRead && (
             <div className="bg-primary-500 w-4 h-4 rounded-full"></div>
           )}
         </div>

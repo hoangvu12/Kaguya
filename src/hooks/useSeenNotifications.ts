@@ -4,10 +4,16 @@ import { useUser } from "@supabase/auth-helpers-react";
 import { PostgrestError } from "@supabase/supabase-js";
 import { useMutation, useQueryClient } from "react-query";
 
-const convertToReadNotifcations = (notifications: Notification[]) => {
-  return notifications.map(({ sender, ...notification }) => ({
+const convertToReadNotifcations = (notifications: Partial<Notification>[]) => {
+  return notifications.map((notification) => ({
     ...notification,
-    isRead: true,
+    notificationUsers: notification.notificationUsers.map(
+      (notificationUser) => {
+        notificationUser.isRead = true;
+
+        return notificationUser;
+      }
+    ),
   }));
 };
 
@@ -19,11 +25,13 @@ const useSeenNotifications = () => {
     async (notifications) => {
       if (!user) throw new Error("User not logged in");
 
-      const readNotifications = convertToReadNotifcations(notifications);
+      const notifcationUsers = notifications
+        .flatMap((notification) => notification.notificationUsers)
+        .filter((notificationUser) => notificationUser.userId === user.id);
 
       const { data, error } = await supabaseClient
-        .from("kaguya_notifications")
-        .upsert(readNotifications);
+        .from("kaguya_notification_users")
+        .upsert(notifcationUsers);
 
       if (error) throw error;
 
@@ -31,9 +39,7 @@ const useSeenNotifications = () => {
     },
     {
       onMutate: (notifications) => {
-        const readNotifications: Notification[] = notifications.map(
-          (notification) => ({ ...notification, isRead: true })
-        );
+        const readNotifications = convertToReadNotifcations(notifications);
 
         queryClient.setQueryData(["notifications"], readNotifications);
       },

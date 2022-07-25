@@ -304,6 +304,15 @@ export interface Proxy {
   deleteResHeaders?: string[];
 }
 
+export type NotificationUser = {
+  id: number;
+  userId: string;
+  notificationId: string;
+  created_at: string;
+  updated_at: string;
+  isRead: boolean;
+};
+
 export type Notification = {
   id: number;
   senderId: string;
@@ -314,7 +323,7 @@ export type Notification = {
   entityType: string;
   updated_at: string;
   created_at: string;
-  isRead: boolean;
+  notificationUsers: NotificationUser[];
 };
 
 export type NotificationEntity = {
