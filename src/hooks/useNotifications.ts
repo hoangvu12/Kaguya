@@ -13,7 +13,8 @@ const useNotifications = () => {
         .from<Notification>("kaguya_notifications")
         .select("*, sender:senderId(user_metadata)")
         .eq("senderId", user.id)
-        .order("created_at", { ascending: false });
+        .order("created_at", { ascending: false })
+        .limit(10);
     },
     {
       enabled: !!user,
