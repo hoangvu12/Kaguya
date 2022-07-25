@@ -12,7 +12,7 @@ const useNotifications = () => {
       return supabaseClient
         .from<Notification>("kaguya_notifications")
         .select("*, sender:senderId(user_metadata)")
-        .eq("senderId", user.id)
+        .eq("receiverId", user.id)
         .order("created_at", { ascending: false })
         .limit(10);
     },
