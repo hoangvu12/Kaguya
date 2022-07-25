@@ -18,6 +18,9 @@ export interface PopupProps {
   referenceClassName?: string;
   disabled?: boolean;
   popperComponent?: string | React.ComponentType<any>;
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  onMouseEnter?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  onMouseLeave?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 const variants = {
@@ -50,6 +53,9 @@ const Popup: React.FC<PopupProps> = (props) => {
     portalSelector,
     disabled,
     popperComponent: PopperComponent = motion.div,
+    onClick = emptyFn,
+    onMouseEnter = emptyFn,
+    onMouseLeave = emptyFn,
   } = props;
 
   const [referenceElement, setReferenceElement] = useState(null);
@@ -104,21 +110,36 @@ const Popup: React.FC<PopupProps> = (props) => {
     popperOptions
   );
 
-  const handleMouseEnter = useCallback(() => {
-    if (disabled || isMobile) return;
+  const handleMouseEnter = useCallback(
+    (e) => {
+      onMouseEnter?.(e);
 
-    setActive(true);
-  }, [disabled, isMobile]);
+      if (disabled || isMobile) return;
 
-  const handleMouseLeave = useCallback(() => {
-    setActive(false);
-  }, []);
+      setActive(true);
+    },
+    [disabled, isMobile, onMouseEnter]
+  );
 
-  const handleToggle = useCallback(() => {
-    if (disabled) return;
+  const handleMouseLeave = useCallback(
+    (e) => {
+      onMouseLeave?.(e);
 
-    setActive((prev) => !prev);
-  }, [disabled]);
+      setActive(false);
+    },
+    [onMouseLeave]
+  );
+
+  const handleToggle = useCallback(
+    (e) => {
+      onClick?.(e);
+
+      if (disabled) return;
+
+      setActive((prev) => !prev);
+    },
+    [onClick, disabled]
+  );
 
   const handleDisable = useCallback(() => {
     setActive(false);

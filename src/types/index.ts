@@ -303,3 +303,21 @@ export interface Proxy {
   deleteReqHeaders?: string[];
   deleteResHeaders?: string[];
 }
+
+export type Notification = {
+  id: number;
+  senderId: string;
+  sender: User;
+  receiverId: string;
+  entityId: string;
+  parentEntityId: string;
+  entityType: string;
+  updated_at: string;
+  created_at: string;
+  isRead: boolean;
+};
+
+export type NotificationEntity = {
+  message: string;
+  redirectUrl: string;
+};
