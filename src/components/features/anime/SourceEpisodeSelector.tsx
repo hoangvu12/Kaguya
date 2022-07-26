@@ -1,6 +1,6 @@
 import Select from "@/components/shared/Select";
 import { groupBy } from "@/utils";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import EpisodeSelector, { EpisodeSelectorProps } from "./EpisodeSelector";
 
 export interface SourceEpisodeSelectorProps extends EpisodeSelectorProps {}
@@ -13,6 +13,8 @@ const SourceEpisodeSelector: React.FC<SourceEpisodeSelectorProps> = ({
   activeEpisode,
   ...episodeSelectorProps
 }) => {
+  const [videoContainer, setVideoContainer] = useState<HTMLDivElement>();
+
   const verifiedSources = useMemo(() => {
     const verifiedEpisodes = episodes.filter(
       (episode) => episode.source.isCustomSource
@@ -53,6 +55,16 @@ const SourceEpisodeSelector: React.FC<SourceEpisodeSelectorProps> = ({
     [sources, activeSource]
   );
 
+  useLayoutEffect(() => {
+    const videoElement: HTMLDivElement = document.querySelector(
+      ".netplayer-container"
+    );
+
+    if (!videoElement) return;
+
+    setVideoContainer(videoElement);
+  }, []);
+
   return (
     <React.Fragment>
       <div className="flex justify-end w-full mx-auto mb-8">
@@ -73,6 +85,7 @@ const SourceEpisodeSelector: React.FC<SourceEpisodeSelectorProps> = ({
           defaultValue={{ value: activeSource, label: activeSource }}
           isClearable={false}
           isSearchable={false}
+          menuPortalTarget={videoContainer}
         />
       </div>
 
