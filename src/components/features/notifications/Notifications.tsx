@@ -3,6 +3,7 @@ import Popup from "@/components/shared/Popup";
 import useNotifications from "@/hooks/useNotifications";
 import useSeenNotifications from "@/hooks/useSeenNotifications";
 import { useUser } from "@supabase/auth-helpers-react";
+import { useTranslation } from "next-i18next";
 import React, { useMemo } from "react";
 import { MdNotifications } from "react-icons/md";
 import Notification from "./Notification";
@@ -11,6 +12,7 @@ const Notifications = () => {
   const { data: notifications, isLoading } = useNotifications();
   const { mutate: seenNotifcations } = useSeenNotifications();
   const { user } = useUser();
+  const { t } = useTranslation("notification");
 
   const unreadCount = useMemo(
     () =>
@@ -38,7 +40,8 @@ const Notifications = () => {
     <Popup
       onClick={handlePopupClick}
       type="click"
-      placement="bottom"
+      placement="bottom-start"
+      showArrow
       reference={
         <div className="relative">
           <MdNotifications className="w-6 h-6" />
@@ -50,14 +53,18 @@ const Notifications = () => {
           )}
         </div>
       }
-      className="space-y-2 relative h-96 w-[30rem] overflow-y-scroll no-scrollbar bg-background-800"
+      className="space-y-2 relative h-96 w-80 md:w-[30rem] overflow-y-scroll no-scrollbar bg-background-800"
     >
+      <h1 className="text-xl font-semibold">{t("notification_heading")}</h1>
+
       {isLoading ? (
         <Loading className="w-6 h-6" />
-      ) : (
+      ) : notifications?.length ? (
         notifications?.map((notification) => (
           <Notification notification={notification} key={notification.id} />
         ))
+      ) : (
+        <p className="text-center text-gray-400">{t("no_notifications_msg")}</p>
       )}
     </Popup>
   );

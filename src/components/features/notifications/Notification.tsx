@@ -33,7 +33,7 @@ const Notification: React.FC<NotificationProps> = ({ notification }) => {
     <Link href={notificationEntity.redirectUrl}>
       <a>
         <div className="flex items-center justify-between p-2 hover:bg-white/10 transition duration-300">
-          <div className="rounded-md flex items-center gap-2">
+          <div className="rounded-md flex gap-2">
             <Avatar
               src={notification.sender?.user_metadata?.avatar_url}
               className="w-10 h-10 shrink-0"
@@ -41,7 +41,7 @@ const Notification: React.FC<NotificationProps> = ({ notification }) => {
 
             <div className="space-y-1">
               <p>{notificationEntity.message}</p>
-              <p className="capitalize text-sm text-gray-400">
+              <p className="text-sm text-gray-400">
                 {dayjs(notification.created_at, { locale }).fromNow()}
               </p>
             </div>
