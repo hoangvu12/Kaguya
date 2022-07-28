@@ -406,7 +406,7 @@ const AudioChat = () => {
       </div>
 
       {!isUsingVoiceChat && (
-        <Button onClick={handleConnectClick} className="mb-2 bg-background-700">
+        <Button onClick={handleConnectClick} className="bg-primary-700 mb-4">
           {t("audioChat.connect")}
         </Button>
       )}
