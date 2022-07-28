@@ -34,7 +34,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
           </p>
         )}
 
-        <p>{message.body}</p>
+        <p className="p-2 rounded-md bg-background-700">{message.body}</p>
       </div>
     </div>
   );
