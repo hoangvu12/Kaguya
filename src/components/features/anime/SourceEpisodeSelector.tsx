@@ -13,7 +13,7 @@ const SourceEpisodeSelector: React.FC<SourceEpisodeSelectorProps> = ({
   activeEpisode,
   ...episodeSelectorProps
 }) => {
-  const [videoContainer, setVideoContainer] = useState<HTMLDivElement>();
+  const [videoContainer, setVideoContainer] = useState<HTMLElement>();
 
   const verifiedSources = useMemo(() => {
     const verifiedEpisodes = episodes.filter(
@@ -60,7 +60,11 @@ const SourceEpisodeSelector: React.FC<SourceEpisodeSelectorProps> = ({
       ".netplayer-container"
     );
 
-    if (!videoElement) return;
+    if (!videoElement) {
+      setVideoContainer(document.body);
+
+      return;
+    }
 
     setVideoContainer(videoElement);
   }, []);
