@@ -59,6 +59,8 @@ const BrowsePage = ({ query: baseQuery }) => {
   const { t } = useTranslation();
   const { TYPES } = useConstantTranslation();
 
+  console.log(baseQuery);
+
   const {
     format = undefined,
     keyword = "",
@@ -113,7 +115,7 @@ const BrowsePage = ({ query: baseQuery }) => {
         </p>
 
         <Select
-          defaultValue={chosenType}
+          value={{ value: type, label: chosenType.label }}
           options={TYPES}
           isClearable={false}
           isSearchable={false}
