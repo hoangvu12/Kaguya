@@ -50,6 +50,8 @@ const ChatBar = () => {
       if (isHotKey("Enter", e)) {
         handleSendMessage(message);
         setMessage("");
+
+        messageBottomRef.current?.scrollIntoView();
       }
     };
 
@@ -72,8 +74,9 @@ const ChatBar = () => {
 
       <div className="sticky bottom-0 w-full bg-background-900">
         <Input
+          value={message}
           placeholder="Aa"
-          className="bg-background-800"
+          className="px-3 py-2 bg-background-800"
           onChange={(e) => {
             const target = e.target as HTMLInputElement;
 
