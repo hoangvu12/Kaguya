@@ -157,6 +157,10 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime, episodes }) => {
 
   // Show watched overlay
   useEffect(() => {
+    if (!currentEpisode.sourceEpisodeId) return;
+
+    console.log(watchedEpisode, currentEpisode.sourceEpisodeId);
+
     if (
       !watchedEpisode ||
       isSavedDataLoading ||
@@ -325,7 +329,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime, episodes }) => {
         )}
 
         {showWatchedOverlay && !declinedRewatch && (
-          <Portal selector=".video-wrapper">
+          <Portal selector=".netplayer-container">
             <div
               className="fixed inset-0 z-40 bg-black/70"
               onClick={() => {
