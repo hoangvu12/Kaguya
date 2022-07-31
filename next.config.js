@@ -18,6 +18,7 @@ const moduleExports = withPWA({
       "i.ibb.co",
       "thumb.tapecontent.net",
       "emojis.slackmojis.com",
+      "pic-bstarstatic.akamaized.net",
     ],
     minimumCacheTTL: 604800, // a week,
   },

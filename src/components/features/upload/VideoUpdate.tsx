@@ -53,13 +53,14 @@ const VideoUpdate: React.FC<VideoUpdateProps> = ({
         alt="uploaded video"
         containerClassName="shrink-0"
         objectFit="cover"
+        unoptimized
       />
 
-      <div className="pb-2 flex flex-col justify-between">
+      <div className="flex flex-col justify-between pb-2">
         <div>
           <Link href={`/anime/watch/${mediaId}/${sourceId}/${episodeId}`}>
             <a>
-              <p className="text-lg break-all line-clamp-1 hover:text-primary-300 md:line-clamp-none">
+              <p className="break-all text-lg line-clamp-1 hover:text-primary-300 md:line-clamp-none">
                 {initialVideo.name}
               </p>
             </a>
@@ -72,7 +73,7 @@ const VideoUpdate: React.FC<VideoUpdateProps> = ({
 
         <button
           onClick={handleStartUpdating}
-          className="text-left w-max hover:text-primary-300 hover:underline"
+          className="w-max text-left hover:text-primary-300 hover:underline"
         >
           Upload video khác
         </button>
@@ -82,7 +83,7 @@ const VideoUpdate: React.FC<VideoUpdateProps> = ({
     <div className="space-y-4">
       <VideoUpload onChange={handleVideoChange} />
 
-      <div className="flex items-center gap-2 justify-end">
+      <div className="flex items-center justify-end gap-2">
         <Button isLoading={isLoading} onClick={handleCancelUpdating} secondary>
           Hủy bỏ
         </Button>
