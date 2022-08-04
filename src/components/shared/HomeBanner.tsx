@@ -5,7 +5,7 @@ import Image from "@/components/shared/Image";
 import Swiper, { SwiperProps, SwiperSlide } from "@/components/shared/Swiper";
 import TextIcon from "@/components/shared/TextIcon";
 import { Media, MediaType } from "@/types/anilist";
-import { isValidUrl, numberWithCommas } from "@/utils";
+import { createMediaDetailsUrl, isValidUrl, numberWithCommas } from "@/utils";
 import { convert, getDescription, getTitle } from "@/utils/data";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
@@ -29,7 +29,6 @@ import Skeleton, { SkeletonItem } from "./Skeleton";
 
 interface HomeBannerProps {
   data: Media[];
-  type: MediaType;
   isLoading?: boolean;
 }
 
@@ -41,39 +40,30 @@ const bannerVariants = {
 
 const transition = [0.33, 1, 0.68, 1];
 
-const HomeBanner: React.FC<HomeBannerProps> = ({ data, type, isLoading }) => {
+const HomeBanner: React.FC<HomeBannerProps> = ({ data, isLoading }) => {
   return (
     <React.Fragment>
       <BrowserView>
         {isLoading ? (
           <DesktopHomeBannerSkeleton />
         ) : (
-          <DesktopHomeBanner data={data} type={type} />
+          <DesktopHomeBanner data={data} />
         )}
       </BrowserView>
 
-      <MobileView className="px-4 md:px-12 pt-20 pb-8 overflow-hidden">
+      <MobileView className="overflow-hidden px-4 pt-20 pb-8 md:px-12">
         {isLoading ? (
           <MobileHomeBannerSkeleton />
         ) : (
-          <MobileHomeBanner data={data} type={type} />
+          <MobileHomeBanner data={data} />
         )}
       </MobileView>
     </React.Fragment>
   );
 };
 
-const MobileHomeBanner: React.FC<HomeBannerProps> = ({ data, type }) => {
+const MobileHomeBanner: React.FC<HomeBannerProps> = ({ data }) => {
   const { locale } = useRouter();
-
-  const getRedirectUrl = useCallback(
-    (id: number) => {
-      return type === MediaType.Anime
-        ? `/anime/details/${id}`
-        : `/manga/details/${id}`;
-    },
-    [type]
-  );
 
   return (
     <Swiper
@@ -88,9 +78,9 @@ const MobileHomeBanner: React.FC<HomeBannerProps> = ({ data, type }) => {
 
         return (
           <SwiperSlide key={index}>
-            <Link href={getRedirectUrl(slide.id)}>
+            <Link href={createMediaDetailsUrl(slide)}>
               <a>
-                <div className="relative aspect-w-16 aspect-h-9 rounded-md">
+                <div className="aspect-w-16 aspect-h-9 relative rounded-md">
                   {slide.bannerImage && (
                     <Image
                       src={slide.bannerImage}
@@ -101,13 +91,13 @@ const MobileHomeBanner: React.FC<HomeBannerProps> = ({ data, type }) => {
                     />
                   )}
 
-                  <div className="absolute fixed-0 bg-gradient-to-b from-transparent via-black/60 to-black/80 flex items-end">
+                  <div className="fixed-0 absolute flex items-end bg-gradient-to-b from-transparent via-black/60 to-black/80">
                     <div className="p-4">
                       <h1 className="text-xl font-bold uppercase line-clamp-1">
                         {title}
                       </h1>
 
-                      <div className="flex flex-wrap items-center mt-4 text-lg gap-x-8">
+                      <div className="mt-4 flex flex-wrap items-center gap-x-8 text-lg">
                         {slide.averageScore && (
                           <TextIcon
                             LeftIcon={MdTagFaces}
@@ -148,7 +138,7 @@ const MobileHomeBannerSkeleton = () => (
   </Skeleton>
 );
 
-const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data, type }) => {
+const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data }) => {
   const [index, setIndex] = useState<number>(0);
   const [showTrailer, setShowTrailer] = useState(false);
   const [player, setPlayer] =
@@ -164,15 +154,6 @@ const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data, type }) => {
       setIndex(swiper.realIndex);
     },
     []
-  );
-
-  const getRedirectUrl = useCallback(
-    (id: number) => {
-      return type === MediaType.Anime
-        ? `/anime/details/${id}`
-        : `/manga/details/${id}`;
-    },
-    [type]
   );
 
   const mute = useCallback(() => {
@@ -206,7 +187,7 @@ const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data, type }) => {
 
   return (
     <React.Fragment>
-      <div className="group relative w-full md:h-[450px] xl:h-[500px] 2xl:h-[550px] overflow-hidden">
+      <div className="group relative w-full overflow-hidden md:h-[450px] xl:h-[500px] 2xl:h-[550px]">
         <AnimatePresence>
           {isValidUrl(activeSlide.bannerImage) && !showTrailer && (
             <motion.div
@@ -214,7 +195,7 @@ const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data, type }) => {
               animate="animate"
               exit="exit"
               initial="initial"
-              className="w-full h-0"
+              className="h-0 w-full"
               key={title}
             >
               <Image
@@ -227,7 +208,7 @@ const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data, type }) => {
             </motion.div>
           )}
 
-          {type === MediaType.Anime &&
+          {activeSlide?.type === MediaType.Anime &&
             activeSlide?.trailer &&
             activeSlide.trailer?.site === "youtube" && (
               <YouTube
@@ -258,7 +239,7 @@ const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data, type }) => {
                   "relative w-full overflow-hidden aspect-w-16 aspect-h-9 h-[300%] -top-[100%]",
                   !showTrailer && "hidden"
                 )}
-                className="absolute inset-0 w-full h-full"
+                className="absolute inset-0 h-full w-full"
                 opts={{
                   playerVars: {
                     autoplay: 1,
@@ -272,21 +253,21 @@ const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data, type }) => {
             )}
         </AnimatePresence>
 
-        <div className="absolute inset-0 flex flex-col justify-center px-4 banner__overlay md:px-12"></div>
+        <div className="banner__overlay absolute inset-0 flex flex-col justify-center px-4 md:px-12"></div>
 
         <motion.div
           variants={bannerVariants}
           animate="animate"
           initial="initial"
           key={title}
-          className="absolute left-4 md:left-12 lg:left-20 xl:left-28 2xl:left-36 top-1/2 -translate-y-1/2 w-full md:w-[45%]"
+          className="absolute left-4 top-1/2 w-full -translate-y-1/2 md:left-12 md:w-[45%] lg:left-20 xl:left-28 2xl:left-36"
           transition={{ ease: transition, duration: 1 }}
         >
-          <h1 className="text-2xl font-bold uppercase md:text-4xl line-clamp-2 sm:line-clamp-3 md:line-clamp-4">
+          <h1 className="text-2xl font-bold uppercase line-clamp-2 sm:line-clamp-3 md:text-4xl md:line-clamp-4">
             {title}
           </h1>
 
-          <div className="flex flex-wrap items-center mt-4 text-lg gap-x-8">
+          <div className="mt-4 flex flex-wrap items-center gap-x-8 text-lg">
             {activeSlide.averageScore && (
               <TextIcon LeftIcon={MdTagFaces} iconClassName="text-green-300">
                 <p>{activeSlide.averageScore}%</p>
@@ -306,16 +287,16 @@ const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data, type }) => {
 
           <Description
             description={description}
-            className="hidden mt-2 text-base md:block text-gray-200 md:line-clamp-5"
+            className="mt-2 hidden text-base text-gray-200 md:block md:line-clamp-5"
           />
         </motion.div>
 
-        <Link href={getRedirectUrl(activeSlide.id)}>
+        <Link href={createMediaDetailsUrl(activeSlide)}>
           <a>
             <CircleButton
               LeftIcon={AiFillPlayCircle}
               outline
-              className="absolute hidden -translate-x-1/2 -translate-y-1/2 opacity-0 md:block left-2/3 top-1/2 group-hover:opacity-100"
+              className="absolute left-2/3 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 md:block"
               iconClassName="w-16 h-16"
             />
           </a>
@@ -331,7 +312,7 @@ const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data, type }) => {
           />
         )}
 
-        <div className="absolute bottom-0 w-full h-16 banner__overlay--down"></div>
+        <div className="banner__overlay--down absolute bottom-0 h-16 w-full"></div>
       </div>
       <div className="w-full px-4 pb-12 md:px-12">
         <BannerSwiper onSlideChange={handleSlideChange} data={data} />
@@ -343,11 +324,11 @@ const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data, type }) => {
 const DesktopHomeBannerSkeleton = () => (
   <Skeleton className="w-full">
     <SkeletonItem
-      className="relative md:h-[450px] xl:h-[500px] 2xl:h-[550px] w-full"
+      className="relative w-full md:h-[450px] xl:h-[500px] 2xl:h-[550px]"
       container
     >
       <SkeletonItem
-        className="absolute left-4 md:left-12 lg:left-20 xl:left-28 2xl:left-36 top-1/2 -translate-y-1/2 w-full md:w-[45%]"
+        className="absolute left-4 top-1/2 w-full -translate-y-1/2 md:left-12 md:w-[45%] lg:left-20 xl:left-28 2xl:left-36"
         container
       >
         <SkeletonItem className="h-12 w-5/6" />

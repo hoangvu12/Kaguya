@@ -4,7 +4,7 @@ import DotList from "@/components/shared/DotList";
 import TextIcon from "@/components/shared/TextIcon";
 import { useRoomInfo } from "@/contexts/RoomContext";
 import { Episode } from "@/types";
-import { numberWithCommas } from "@/utils";
+import { createMediaDetailsUrl, numberWithCommas } from "@/utils";
 import { convert, getDescription, getTitle } from "@/utils/data";
 import classNames from "classnames";
 import dayjs from "dayjs";
@@ -47,24 +47,24 @@ const MediaBar = () => {
 
   return (
     <div className="p-2">
-      <div className="relative w-full flex flex-col gap-4">
+      <div className="relative flex w-full flex-col gap-4">
         <h1 className="text-2xl font-semibold text-primary-300">
           {t("mediaBar.roomDetails")}
         </h1>
 
         <div className="flex flex-col gap-2">
           <Avatar
-            className="!w-16 !h-16"
+            className="!h-16 !w-16"
             src={room.hostUser.user_metadata.avatar_url}
           />
 
           <div className="space-y-1">
-            <h1 className="font-semibold text-xl line-clamp-1 md:line-clamp-none">
+            <h1 className="text-xl font-semibold line-clamp-1 md:line-clamp-none">
               {room.title || mediaTitle}
             </h1>
 
             <DotList>
-              <span className="font-medium text-lg text-gray-200">
+              <span className="text-lg font-medium text-gray-200">
                 {room.hostUser.user_metadata.name}
               </span>
 
@@ -85,7 +85,7 @@ const MediaBar = () => {
 
       {isHost && (
         <MobileView className="my-8">
-          <h1 className="text-2xl font-semibold text-primary-300 mb-4">
+          <h1 className="mb-4 text-2xl font-semibold text-primary-300">
             {t("mediaBar.episodeSection")}
           </h1>
 
@@ -97,13 +97,13 @@ const MediaBar = () => {
               <button
                 key={episode.sourceEpisodeId}
                 className={classNames(
-                  "rounded-md bg-background-800 col-span-1 aspect-w-2 aspect-h-1 group",
+                  "group aspect-w-2 aspect-h-1 col-span-1 rounded-md bg-background-800",
                   episode.sourceEpisodeId === room.episode?.sourceEpisodeId &&
                     "text-primary-300"
                 )}
                 onClick={() => handleNavigateEpisode(episode)}
               >
-                <div className="flex items-center justify-center w-full h-full group-hover:bg-white/10 rounded-md transition duration-300">
+                <div className="flex h-full w-full items-center justify-center rounded-md transition duration-300 group-hover:bg-white/10">
                   <p>{episode.name}</p>
                 </div>
               </button>
@@ -112,14 +112,14 @@ const MediaBar = () => {
         </MobileView>
       )}
 
-      <div className="w-full text-left flex flex-col mt-8">
+      <div className="mt-8 flex w-full flex-col text-left">
         <h1 className="mb-4 text-2xl font-semibold text-primary-300">
           {t("mediaBar.animeDetails")}
         </h1>
 
-        <Link href={`/anime/details/${room.media.id}`}>
+        <Link href={createMediaDetailsUrl(room.media)}>
           <a>
-            <h1 className="text-lg font-semibold hover:text-primary-300 transition duration-300">
+            <h1 className="text-lg font-semibold transition duration-300 hover:text-primary-300">
               [{room.episode.name}] - {mediaTitle}
             </h1>
           </a>
@@ -133,7 +133,7 @@ const MediaBar = () => {
 
         <Description
           description={mediaDescription}
-          className="text-sm mt-4 line-clamp-4 text-gray-300"
+          className="mt-4 text-sm text-gray-300 line-clamp-4"
         />
       </div>
     </div>

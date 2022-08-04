@@ -98,17 +98,13 @@ const Home = () => {
 
       <ClientOnly>
         <div className="pb-8">
-          <HomeBanner
-            type={MediaType.Anime}
-            data={trendingAnime}
-            isLoading={trendingLoading}
-          />
+          <HomeBanner data={trendingAnime} isLoading={trendingLoading} />
 
           <div className="space-y-8">
             <WatchedSection />
             <RecommendedAnimeSection />
 
-            <Section className="flex flex-col md:flex-row items-center md:space-between space-y-4 space-x-0 md:space-y-0 md:space-x-4">
+            <Section className="md:space-between flex flex-col items-center space-y-4 space-x-0 md:flex-row md:space-y-0 md:space-x-4">
               <ColumnSection
                 title={t("most_popular_season", { ns: "common" })}
                 type={MediaType.Anime}
@@ -159,11 +155,9 @@ const Home = () => {
                 title={t("should_watch_today", { ns: "anime_home" })}
                 className="w-full md:w-[80%] md:!pr-0"
               >
-                <ShouldWatch
-                  type={MediaType.Anime}
-                  data={randomAnime}
-                  isLoading={!randomAnime}
-                />
+                {randomAnime && (
+                  <ShouldWatch data={randomAnime} isLoading={!randomAnime} />
+                )}
               </Section>
 
               <Section

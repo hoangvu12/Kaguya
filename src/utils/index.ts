@@ -1,5 +1,5 @@
 import dayjs from "@/lib/dayjs";
-import { MediaSeason } from "@/types/anilist";
+import { Media, MediaSeason, MediaType } from "@/types/anilist";
 import axios from "axios";
 import { toast } from "react-toastify";
 import mime from "mime";
@@ -439,4 +439,16 @@ export const createProxyUrl = (url: string, proxy: Proxy) => {
 
 export const createAttachmentUrl = (url: string) => {
   return `${config.nodeServerUrl}/file/${url}`;
+};
+
+export const createMediaDetailsUrl = (media: Media) => {
+  if (media.type === MediaType.Anime) {
+    return `/anime/details/${media.id}/${vietnameseSlug(
+      media.title.userPreferred
+    )}`;
+  }
+
+  return `/manga/details/${media.id}/${vietnameseSlug(
+    media.title.userPreferred
+  )}`;
 };

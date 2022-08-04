@@ -23,7 +23,7 @@ const ColumnSection: React.FC<ColumnSectionProps> = ({
   return !isLoading ? (
     <div className="w-full grow-0 bg-background-800 pt-4">
       {title && (
-        <h2 className="px-4 text-xl font-semibold mb-4 line-clamp-1">
+        <h2 className="mb-4 px-4 text-xl font-semibold line-clamp-1">
           {title}
         </h2>
       )}
@@ -32,7 +32,6 @@ const ColumnSection: React.FC<ColumnSectionProps> = ({
         {data.map((data) => (
           <HorizontalCard
             className="px-4 odd:bg-background-700"
-            type={type}
             data={data}
             key={data.id}
           />
@@ -41,9 +40,9 @@ const ColumnSection: React.FC<ColumnSectionProps> = ({
 
       {viewMoreHref && (
         <Link href={viewMoreHref}>
-          <a className="w-full flex items-center justify-center p-5 space-x-2 hover:bg-white/10 transition duration-300">
+          <a className="flex w-full items-center justify-center space-x-2 p-5 transition duration-300 hover:bg-white/10">
             <p>Xem thêm</p>
-            <MdArrowForwardIos className="w-4 h-4" />
+            <MdArrowForwardIos className="h-4 w-4" />
           </a>
         </Link>
       )}

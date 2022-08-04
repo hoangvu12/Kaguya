@@ -3,7 +3,7 @@ import DotList from "@/components/shared/DotList";
 import Image from "@/components/shared/Image";
 import TextIcon from "@/components/shared/TextIcon";
 import { Media, MediaType } from "@/types/anilist";
-import { numberWithCommas } from "@/utils";
+import { createMediaDetailsUrl, numberWithCommas } from "@/utils";
 import { convert, getDescription, getTitle } from "@/utils/data";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -15,11 +15,10 @@ import Skeleton, { SkeletonItem } from "./Skeleton";
 
 interface ShouldWatchProps {
   data: Media;
-  type: MediaType;
   isLoading?: boolean;
 }
 
-const ShouldWatch: React.FC<ShouldWatchProps> = ({ data, type, isLoading }) => {
+const ShouldWatch: React.FC<ShouldWatchProps> = ({ data, isLoading }) => {
   const { locale } = useRouter();
 
   const title = useMemo(() => getTitle(data, locale), [data, locale]);
@@ -28,18 +27,12 @@ const ShouldWatch: React.FC<ShouldWatchProps> = ({ data, type, isLoading }) => {
     [data, locale]
   );
 
-  const redirectUrl = useMemo(
-    () =>
-      type === MediaType.Anime
-        ? `/anime/details/${data?.id}`
-        : `/manga/details/${data?.id}`,
-    [data?.id, type]
-  );
+  const redirectUrl = useMemo(() => createMediaDetailsUrl(data), [data]);
 
   return !isLoading ? (
     <Link href={redirectUrl}>
       <a>
-        <div className="cursor-pointer group relative z-0 w-full h-[200px] md:h-[400px] rounded-md">
+        <div className="group relative z-0 h-[200px] w-full cursor-pointer rounded-md md:h-[400px]">
           {data.bannerImage && (
             <Image
               src={data.bannerImage}
@@ -51,25 +44,25 @@ const ShouldWatch: React.FC<ShouldWatchProps> = ({ data, type, isLoading }) => {
             />
           )}
 
-          <div className="absolute z-10 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
+          <div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2">
             <CircleButton
               LeftIcon={AiFillPlayCircle}
               outline
-              className="absolute hidden -translate-x-1/2 -translate-y-1/2 opacity-0 md:block left-2/3 top-1/2 group-hover:opacity-100"
+              className="absolute left-2/3 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 md:block"
               iconClassName="w-16 h-16"
             />
           </div>
 
-          <div className="absolute inset-0 z-0 transition duration-300 opacity-0 group-hover:opacity-100 bg-black/60"></div>
+          <div className="absolute inset-0 z-0 bg-black/60 opacity-0 transition duration-300 group-hover:opacity-100"></div>
         </div>
 
-        <div className="!mt-8 flex flex-col md:flex-row space-between gap-4">
+        <div className="space-between !mt-8 flex flex-col gap-4 md:flex-row">
           <div className="shrink-0 md:w-2/6">
-            <h1 className="text-2xl font-semibold line-clamp-2 uppercase">
+            <h1 className="text-2xl font-semibold uppercase line-clamp-2">
               {title}
             </h1>
 
-            <div className="flex flex-wrap items-center mt-4 text-lg gap-x-8">
+            <div className="mt-4 flex flex-wrap items-center gap-x-8 text-lg">
               {data.averageScore && (
                 <TextIcon LeftIcon={MdTagFaces} iconClassName="text-green-300">
                   <p>{data.averageScore}%</p>
@@ -103,7 +96,7 @@ const ShouldWatch: React.FC<ShouldWatchProps> = ({ data, type, isLoading }) => {
 
 const ShouldWatchSkeleton = () => (
   <Skeleton>
-    <SkeletonItem className="w-full h-full" />
+    <SkeletonItem className="h-full w-full" />
   </Skeleton>
 );
 

@@ -21,8 +21,8 @@ const WatchWithFriendPage = () => {
         description={t("browse_page_description")}
       />
 
-      <div className="flex flex-col md:flex-row items-center md:justify-between mb-8 gap-4">
-        <h1 className="text-4xl font-semibold text-center md:text-left">
+      <div className="mb-8 flex flex-col items-center gap-4 md:flex-row md:justify-between">
+        <h1 className="text-center text-4xl font-semibold md:text-left">
           {t("active_rooms")}
         </h1>
 
@@ -39,7 +39,7 @@ const WatchWithFriendPage = () => {
         <RoomListSkeleton />
       ) : (
         <List
-          className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 !gap-x-4 !gap-y-8"
+          className="grid-cols-1 !gap-x-4 !gap-y-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
           data={data}
           noListMessage={t("no_active_rooms")}
         >

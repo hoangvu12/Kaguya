@@ -1,12 +1,13 @@
 import Button from "@/components/shared/Button";
+import Description from "@/components/shared/Description";
 import DotList from "@/components/shared/DotList";
 import InfoItem from "@/components/shared/InfoItem";
 import PlainCard from "@/components/shared/PlainCard";
 import TextIcon from "@/components/shared/TextIcon";
 import { TraceImageResponse } from "@/hooks/useTraceImage";
-import { numberWithCommas } from "@/utils";
+import { createMediaDetailsUrl, numberWithCommas } from "@/utils";
+import { convert, getDescription, getTitle } from "@/utils/data";
 import { useTranslation } from "next-i18next";
-import { getTitle, convert, getDescription } from "@/utils/data";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useCallback, useMemo, useState } from "react";
@@ -14,7 +15,6 @@ import { AiFillHeart } from "react-icons/ai";
 import { MdTagFaces } from "react-icons/md";
 import { ImageType } from "react-images-uploading";
 import TraceCard from "./TraceCard";
-import Description from "@/components/shared/Description";
 
 interface TracePanelProps {
   data: TraceImageResponse;
@@ -41,8 +41,8 @@ const TracePanel: React.FC<TracePanelProps> = ({ data, image }) => {
   );
 
   return (
-    <div className="w-full flex flex-col md:flex-row gap-8">
-      <div className="w-full md:w-[30%] space-y-4">
+    <div className="flex w-full flex-col gap-8 md:flex-row">
+      <div className="w-full space-y-4 md:w-[30%]">
         <div className="bg-background-900 p-4">
           <p className="text-xl font-semibold">{t("your_image")}</p>
           <p className="text-sm text-gray-300">
@@ -66,8 +66,8 @@ const TracePanel: React.FC<TracePanelProps> = ({ data, image }) => {
           />
         ))}
       </div>
-      <div className="w-full md:w-[70%] bg-background-900 h-max space-y-4">
-        <div className="w-full aspect-h-9 aspect-w-16">
+      <div className="h-max w-full space-y-4 bg-background-900 md:w-[70%]">
+        <div className="aspect-h-9 aspect-w-16 w-full">
           <video
             src={`${card.video}&size=l`}
             loop
@@ -78,9 +78,9 @@ const TracePanel: React.FC<TracePanelProps> = ({ data, image }) => {
           />
         </div>
 
-        <div className="p-8 space-y-8">
-          <div className="text-center md:text-left flex flex-col md:flex-row items-start gap-4">
-            <div className="w-[183px] shrink-0 mx-auto md:mx-0">
+        <div className="space-y-8 p-8">
+          <div className="flex flex-col items-start gap-4 text-center md:flex-row md:text-left">
+            <div className="mx-auto w-[183px] shrink-0 md:mx-0">
               <PlainCard src={card.anime.coverImage.extraLarge} alt={title} />
             </div>
 
@@ -89,7 +89,7 @@ const TracePanel: React.FC<TracePanelProps> = ({ data, image }) => {
 
               <p className="text-gray-300">{card.anime.title.native}</p>
 
-              <div className="flex flex-wrap items-center text-lg gap-x-8">
+              <div className="flex flex-wrap items-center gap-x-8 text-lg">
                 {card.anime.averageScore && (
                   <TextIcon
                     LeftIcon={MdTagFaces}
@@ -110,7 +110,7 @@ const TracePanel: React.FC<TracePanelProps> = ({ data, image }) => {
                 </DotList>
               </div>
 
-              <div className="flex space-x-8 overflow-x-auto snap-x snap-mandatory md:space-x-16">
+              <div className="flex snap-x snap-mandatory space-x-8 overflow-x-auto md:space-x-16">
                 <InfoItem
                   title={t("common:country")}
                   value={card.anime.countryOfOrigin}
@@ -143,7 +143,7 @@ const TracePanel: React.FC<TracePanelProps> = ({ data, image }) => {
                 className="text-gray-300 line-clamp-5"
               />
 
-              <Link href={`/anime/details/${card.anime.id}`}>
+              <Link href={createMediaDetailsUrl(card.anime)}>
                 <a className="block">
                   <Button primary className="mx-auto md:mx-auto">
                     <p>{t("common:watch_now")}</p>
