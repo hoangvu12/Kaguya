@@ -3,7 +3,11 @@ import Image from "@/components/shared/Image";
 import TextIcon from "@/components/shared/TextIcon";
 import useDevice from "@/hooks/useDevice";
 import { Media, MediaType } from "@/types/anilist";
-import { isColorVisible, numberWithCommas } from "@/utils";
+import {
+  createMediaDetailsUrl,
+  isColorVisible,
+  numberWithCommas,
+} from "@/utils";
 import { convert, getTitle } from "@/utils/data";
 import classNames from "classnames";
 import { motion, Variants } from "framer-motion";
@@ -56,9 +60,7 @@ const Card: React.FC<AnimeCardProps> = (props) => {
     className,
     containerEndSlot,
     imageEndSlot,
-    redirectUrl = data.type === MediaType.Anime
-      ? `/anime/details/${data.id}`
-      : `/manga/details/${data.id}`,
+    redirectUrl = createMediaDetailsUrl(data),
   } = props;
 
   const { isDesktop } = useDevice();
@@ -88,11 +90,11 @@ const Card: React.FC<AnimeCardProps> = (props) => {
         >
           <div
             className={classNames(
-              "relative cursor-pointer aspect-w-9 aspect-h-16 bg-background-900",
+              "aspect-w-9 aspect-h-16 relative cursor-pointer bg-background-900",
               className
             )}
           >
-            <motion.div className="w-full h-full" variants={imageVariants}>
+            <motion.div className="h-full w-full" variants={imageVariants}>
               <Image
                 src={data.coverImage?.extraLarge}
                 layout="fill"

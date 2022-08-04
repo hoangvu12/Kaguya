@@ -1288,6 +1288,11 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@corex/deepmerge@^4.0.29":
+  version "4.0.29"
+  resolved "https://registry.yarnpkg.com/@corex/deepmerge/-/deepmerge-4.0.29.tgz#af9debf07d7f6b0d2a9d04a266abf2c1418ed2f6"
+  integrity sha512-q/yVUnqckA8Do+EvAfpy7RLdumnBy9ZsducMUtZTvpdbJC7azEf1hGtnYYxm0QfphYxjwggv6XtH64prvS1W+A==
+
 "@discoveryjs/json-ext@^0.5.3":
   version "0.5.7"
   resolved "https://registry.yarnpkg.com/@discoveryjs/json-ext/-/json-ext-0.5.7.tgz#1d572bfbbe14b7704e0ba0f39b74815b84870d70"
@@ -8876,6 +8881,14 @@ next-pwa@^5.4.4:
     terser-webpack-plugin "^5.2.5"
     workbox-webpack-plugin "^6.4.2"
     workbox-window "^6.4.2"
+
+next-sitemap@^3.1.16:
+  version "3.1.16"
+  resolved "https://registry.yarnpkg.com/next-sitemap/-/next-sitemap-3.1.16.tgz#3227ab842a14ebf2b9e2435d98850538e49f53a6"
+  integrity sha512-kczTKLB1ifqi44mMImv/sLRsqxy/O4DXJ4mx/1l23vyx6QFWqeuHxS0duEL/EsChcVJUMWV4FNg2pIiX31xxmg==
+  dependencies:
+    "@corex/deepmerge" "^4.0.29"
+    minimist "^1.2.6"
 
 next-tick@~1.0.0:
   version "1.0.0"

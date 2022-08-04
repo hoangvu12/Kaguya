@@ -1,4 +1,5 @@
 import { Media, MediaType } from "@/types/anilist";
+import { createMediaDetailsUrl } from "@/utils";
 import { convert, getTitle } from "@/utils/data";
 import classNames from "classnames";
 import Link from "next/link";
@@ -9,17 +10,13 @@ import PlainCard from "./PlainCard";
 
 interface HorizontalCardProps extends React.HTMLAttributes<HTMLDivElement> {
   data: Media;
-  type?: MediaType;
   redirectUrl?: string;
 }
 
 const HorizontalCard = ({
   data,
-  type,
   className,
-  redirectUrl = type === MediaType.Anime
-    ? `/anime/details/${data.id}`
-    : `/manga/details/${data.id}`,
+  redirectUrl = createMediaDetailsUrl(data),
   ...props
 }: HorizontalCardProps) => {
   const { locale } = useRouter();
@@ -28,10 +25,10 @@ const HorizontalCard = ({
 
   return (
     <div
-      className={classNames("flex items-center space-x-2 h-24 py-2", className)}
+      className={classNames("flex h-24 items-center space-x-2 py-2", className)}
       {...props}
     >
-      <div className="shrink-0 w-12">
+      <div className="w-12 shrink-0">
         <Link href={redirectUrl}>
           <a>
             <PlainCard src={data.coverImage.extraLarge} alt={title} />
@@ -42,7 +39,7 @@ const HorizontalCard = ({
       <div className="space-y-1 self-start">
         <Link href={redirectUrl}>
           <a>
-            <p className="text-white font-semibold line-clamp-1 hover:text-primary-300 transition duration-300">
+            <p className="font-semibold text-white transition duration-300 line-clamp-1 hover:text-primary-300">
               {title}
             </p>
           </a>

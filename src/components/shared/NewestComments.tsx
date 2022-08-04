@@ -4,6 +4,7 @@ import Swiper, { SwiperSlide } from "@/components/shared/Swiper";
 import useNewestComments from "@/hooks/useNewestComments";
 import dayjs from "@/lib/dayjs";
 import { MediaType } from "@/types/anilist";
+import { createMediaDetailsUrl } from "@/utils";
 import { getTitle } from "@/utils/data";
 import { useTranslation } from "next-i18next";
 import Link from "next/link";
@@ -58,17 +59,15 @@ const NewestComments: React.FC<NewestCommentsProps> = (props) => {
       >
         {data.map(({ comment, media }) => {
           const user = comment?.user;
-          const redirectUrl = isAnime
-            ? `/anime/details/${media.id}`
-            : `/manga/details/${media.id}`;
+          const redirectUrl = createMediaDetailsUrl(media);
           const title = getTitle(media, locale);
 
           return (
             <SwiperSlide key={comment.id}>
-              <div className="w-full aspect-w-1 aspect-h-1 rounded-lg bg-background-800 overflow-y-hidden">
-                <div className="flex flex-col justify-between space-y-2 md:space-y-4 w-full h-full p-4">
+              <div className="aspect-w-1 aspect-h-1 w-full overflow-y-hidden rounded-lg bg-background-800">
+                <div className="flex h-full w-full flex-col justify-between space-y-2 p-4 md:space-y-4">
                   <div className="space-y-4">
-                    <div className="shrink-0 flex items-center space-x-2">
+                    <div className="flex shrink-0 items-center space-x-2">
                       <Avatar src={user?.avatar} />
 
                       <div className="space-y-1 text-sm">
@@ -85,7 +84,7 @@ const NewestComments: React.FC<NewestCommentsProps> = (props) => {
 
                   <Link href={redirectUrl}>
                     <a
-                      className="shrink-0 font-semibold line-clamp-1 text-sm block text-primary-300 hover:text-primary-400 transition duration-300"
+                      className="block shrink-0 text-sm font-semibold text-primary-300 transition duration-300 line-clamp-1 hover:text-primary-400"
                       title={title}
                     >
                       {title}

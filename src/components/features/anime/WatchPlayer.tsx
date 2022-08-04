@@ -96,11 +96,11 @@ const PlayerMobileControls = React.memo(() => {
               isOpen && (
                 <div
                   className={classNames(
-                    "w-full px-2 fixed inset-0 z-[9999] flex flex-col justify-center bg-background"
+                    "fixed inset-0 z-[9999] flex w-full flex-col justify-center bg-background px-2"
                   )}
                 >
                   <BsArrowLeft
-                    className="absolute w-8 h-8 transition duration-300 cursor-pointer left-3 top-3 hover:text-gray-200"
+                    className="absolute left-3 top-3 h-8 w-8 cursor-pointer transition duration-300 hover:text-gray-200"
                     onClick={() => setIsOpen(false)}
                   />
 
@@ -137,8 +137,8 @@ const PlayerOverlay = React.memo(() => {
     <Overlay>
       <BsArrowLeft
         className={classNames(
-          "absolute w-10 h-10 transition-al duration-300 cursor-pointer top-10 left-10 hover:text-gray-200",
-          isInteracting ? "opacity-100 visible" : "opacity-0 invisible"
+          "transition-al absolute top-10 left-10 h-10 w-10 cursor-pointer duration-300 hover:text-gray-200",
+          isInteracting ? "visible opacity-100" : "invisible opacity-0"
         )}
         onClick={router.back}
       />
@@ -166,8 +166,8 @@ const PlayerMobileOverlay = React.memo(() => {
       <MobileOverlay>
         <BsArrowLeft
           className={classNames(
-            "absolute w-8 h-8 transition-all duration-300 cursor-pointer top-4 left-4 hover:text-gray-200",
-            isInteracting ? "opacity-100 visible" : "opacity-0 invisible"
+            "absolute top-4 left-4 h-8 w-8 cursor-pointer transition-all duration-300 hover:text-gray-200",
+            isInteracting ? "visible opacity-100" : "invisible opacity-0"
           )}
           onClick={router.back}
         />
@@ -175,7 +175,7 @@ const PlayerMobileOverlay = React.memo(() => {
 
       {anime.idMal && (
         <TimestampSkipButton
-          className="z-50 absolute right-4 bottom-24"
+          className="absolute right-4 bottom-24 z-50"
           episode={parseNumberFromString(currentEpisode.name)}
           malId={anime.idMal}
         />

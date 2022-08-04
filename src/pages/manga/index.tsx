@@ -73,17 +73,13 @@ const Home = () => {
 
       <ClientOnly>
         <div className="pb-8">
-          <HomeBanner
-            type={MediaType.Manga}
-            data={trendingManga}
-            isLoading={trendingLoading}
-          />
+          <HomeBanner data={trendingManga} isLoading={trendingLoading} />
 
           <div className="space-y-8">
             <ReadSection />
             <RecommendedMangaSection />
 
-            <Section className="flex flex-col md:flex-row items-center md:space-between space-y-4 space-x-0 md:space-y-0 md:space-x-4">
+            <Section className="md:space-between flex flex-col items-center space-y-4 space-x-0 md:flex-row md:space-y-0 md:space-x-4">
               <ColumnSection
                 title={t("common:most_popular")}
                 type={MediaType.Manga}
@@ -120,11 +116,7 @@ const Home = () => {
                 title={t("manga_home:should_read_today")}
                 className="w-full md:w-[80%] md:!pr-0"
               >
-                <ShouldWatch
-                  type={MediaType.Manga}
-                  data={randomManga}
-                  isLoading={!randomManga}
-                />
+                <ShouldWatch data={randomManga} isLoading={!randomManga} />
               </Section>
               <Section
                 title={t("common:genres")}

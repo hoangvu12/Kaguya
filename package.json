@@ -11,7 +11,8 @@
     "ts": "tsc --noEmit --incremental",
     "ts:watch": "yarn ts --watch",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "postbuild": "next-sitemap"
   },
   "dependencies": {
     "@popperjs/core": "^2.10.2",
@@ -40,6 +41,7 @@
     "next": "^12.0.9",
     "next-i18next": "^11.0.0",
     "next-pwa": "^5.4.4",
+    "next-sitemap": "^3.1.16",
     "nookies": "^2.5.2",
     "nprogress": "^0.2.0",
     "peerjs": "^1.4.6",
