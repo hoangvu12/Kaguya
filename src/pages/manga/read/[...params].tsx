@@ -3,17 +3,18 @@ import Button from "@/components/shared/Button";
 import Head from "@/components/shared/Head";
 import Loading from "@/components/shared/Loading";
 import Portal from "@/components/shared/Portal";
+import { REVALIDATE_TIME } from "@/constants";
 import { ReadContextProvider } from "@/contexts/ReadContext";
 import { ReadSettingsContextProvider } from "@/contexts/ReadSettingsContext";
 import useFetchImages from "@/hooks/useFetchImages";
+import useMediaDetails from "@/hooks/useMediaDetails";
 import useSavedRead from "@/hooks/useSavedRead";
 import useSaveRead from "@/hooks/useSaveRead";
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
-import { getMediaDetails } from "@/services/anilist";
 import { Chapter, MangaSourceConnection } from "@/types";
-import { Media, MediaType } from "@/types/anilist";
+import { MediaType } from "@/types/anilist";
 import { getTitle, sortMediaUnit } from "@/utils/data";
-import { GetServerSideProps, NextPage } from "next";
+import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
+import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
@@ -27,11 +28,11 @@ const ReadPanel = dynamic(
 );
 
 interface ReadPageProps {
-  manga: Media;
   chapters: Chapter[];
+  params: string[];
 }
 
-const ReadPage: NextPage<ReadPageProps> = ({ manga, chapters }) => {
+const ReadPage: NextPage<ReadPageProps> = ({ chapters, params }) => {
   const router = useRouter();
   const [showReadOverlay, setShowReadOverlay] = useState(false);
   const [declinedReread, setDeclinedReread] = useState(false);
@@ -40,11 +41,8 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga, chapters }) => {
   const { t } = useTranslation("manga_read");
   const saveReadMutation = useSaveRead();
 
-  const title = useMemo(() => getTitle(manga, locale), [manga, locale]);
-
   const sortedChapters = useMemo(() => sortMediaUnit(chapters), [chapters]);
 
-  const { params } = router.query;
   const [
     mangaId,
     sourceId = chapters[0].sourceId,
@@ -56,6 +54,13 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga, chapters }) => {
     isLoading: isSavedDataLoading,
     isError: isSavedDataError,
   } = useSavedRead(Number(mangaId));
+
+  const { data: manga, isLoading: mangaLoading } = useMediaDetails({
+    id: Number(mangaId),
+    type: MediaType.Manga,
+  });
+
+  const title = useMemo(() => getTitle(manga, locale), [manga, locale]);
 
   const sourceChapters = useMemo(
     () => sortedChapters.filter((chapter) => chapter.sourceId === sourceId),
@@ -155,6 +160,14 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga, chapters }) => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentChapter, mangaId]);
+
+  if (mangaLoading) {
+    return (
+      <div className="relative w-full h-full">
+        <Loading />
+      </div>
+    );
+  }
 
   return (
     <ReadContextProvider
@@ -257,65 +270,39 @@ const ReadPage: NextPage<ReadPageProps> = ({ manga, chapters }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({
+export const getStaticPaths: GetStaticPaths = () => {
+  return {
+    paths: [],
+    fallback: "blocking",
+  };
+};
+
+export const getStaticProps: GetStaticProps = async ({
   params: { params },
 }) => {
   try {
-    const sourceConnectionPromise = supabase
+    const { data } = await supabase
       .from<MangaSourceConnection>("kaguya_manga_source")
       .select(
         `
-        chapters:kaguya_chapters(*, source:kaguya_sources(*))
-        `
+      chapters:kaguya_chapters(*, source:kaguya_sources(*))
+      `
       )
       .eq("mediaId", Number(params[0]));
 
-    const fields = `
-      id
-      idMal
-      title {
-        userPreferred
-        romaji
-        native
-        english
-      }
-      description
-      bannerImage
-      coverImage {
-        extraLarge
-        large
-        medium
-        color
-      }
-    `;
-
-    const mediaPromise = getMediaDetails(
-      {
-        id: Number(params[0]),
-        type: MediaType.Manga,
-      },
-      fields
-    );
-
-    const [{ data, error }, media] = await Promise.all([
-      sourceConnectionPromise,
-      mediaPromise,
-    ]);
-
-    if (error) {
-      throw error;
-    }
+    const chapters = data.flatMap((connection) => connection.chapters);
 
     return {
       props: {
-        manga: media,
-        chapters: data.flatMap((connection) => connection.chapters),
+        params,
+        chapters,
       },
+      revalidate: REVALIDATE_TIME,
     };
   } catch (err) {
     console.log(err);
 
-    return { notFound: true };
+    return { notFound: true, revalidate: REVALIDATE_TIME };
   }
 };
 
