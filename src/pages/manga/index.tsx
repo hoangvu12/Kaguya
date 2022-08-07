@@ -116,7 +116,9 @@ const Home = () => {
                 title={t("manga_home:should_read_today")}
                 className="w-full md:w-[80%] md:!pr-0"
               >
-                <ShouldWatch data={randomManga} isLoading={!randomManga} />
+                {randomManga && (
+                  <ShouldWatch data={randomManga} isLoading={!randomManga} />
+                )}
               </Section>
               <Section
                 title={t("common:genres")}
