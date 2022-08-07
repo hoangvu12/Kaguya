@@ -4,18 +4,19 @@ import Description from "@/components/shared/Description";
 import Head from "@/components/shared/Head";
 import Loading from "@/components/shared/Loading";
 import Portal from "@/components/shared/Portal";
+import { REVALIDATE_TIME } from "@/constants";
 import { WatchContextProvider } from "@/contexts/WatchContext";
 import useDevice from "@/hooks/useDevice";
+import useEpisodes from "@/hooks/useEpisodes";
 import useEventListener from "@/hooks/useEventListener";
 import { useFetchSource } from "@/hooks/useFetchSource";
+import useMediaDetails from "@/hooks/useMediaDetails";
 import useSavedWatched from "@/hooks/useSavedWatched";
 import useSaveWatched from "@/hooks/useSaveWatched";
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
-import { getMediaDetails } from "@/services/anilist";
 import { AnimeSourceConnection, Episode } from "@/types";
-import { Media } from "@/types/anilist";
 import { getDescription, getTitle, sortMediaUnit } from "@/utils/data";
-import { GetServerSideProps, NextPage } from "next";
+import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
@@ -26,17 +27,13 @@ import React, {
   useRef,
   useState,
 } from "react";
+
 const WatchPlayer = dynamic(
   () => import("@/components/features/anime/WatchPlayer"),
   {
     ssr: false,
   }
 );
-
-interface WatchPageProps {
-  anime: Media;
-  episodes: Episode[];
-}
 
 const blankVideo = [
   {
@@ -52,7 +49,12 @@ const ForwardRefPlayer = React.memo(
 
 ForwardRefPlayer.displayName = "ForwardRefPlayer";
 
-const WatchPage: NextPage<WatchPageProps> = ({ anime, episodes }) => {
+interface WatchPageProps {
+  params: string[];
+  episodes: Episode[];
+}
+
+const WatchPage: NextPage<WatchPageProps> = ({ params, episodes }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const router = useRouter();
   const { isMobile } = useDevice();
@@ -79,15 +81,20 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime, episodes }) => {
     }, 5000);
   });
 
-  const { params } = router.query;
-
-  const sortedEpisodes = useMemo(() => sortMediaUnit(episodes), [episodes]);
+  const sortedEpisodes = useMemo(
+    () => sortMediaUnit(episodes || []),
+    [episodes]
+  );
 
   const [
     animeId,
     sourceId = sortedEpisodes[0].sourceId,
     episodeId = sortedEpisodes[0].sourceEpisodeId,
   ] = params as string[];
+
+  const { data: anime, isLoading: animeLoading } = useMediaDetails({
+    id: Number(animeId),
+  });
 
   const {
     data: watchedEpisodeData,
@@ -258,6 +265,14 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime, episodes }) => {
     [data?.fonts]
   );
 
+  if (animeLoading) {
+    return (
+      <div className="relative w-full h-full">
+        <Loading />
+      </div>
+    );
+  }
+
   return (
     <WatchContextProvider
       value={{
@@ -374,11 +389,18 @@ const WatchPage: NextPage<WatchPageProps> = ({ anime, episodes }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({
+export const getStaticPaths: GetStaticPaths = () => {
+  return {
+    paths: [],
+    fallback: "blocking",
+  };
+};
+
+export const getStaticProps: GetStaticProps = async ({
   params: { params },
 }) => {
   try {
-    const sourceConnectionPromise = supabase
+    const { data } = await supabaseClient
       .from<AnimeSourceConnection>("kaguya_anime_source")
       .select(
         `
@@ -387,53 +409,21 @@ export const getServerSideProps: GetServerSideProps = async ({
       )
       .eq("mediaId", Number(params[0]));
 
-    const fields = `
-      id
-      idMal
-      title {
-        userPreferred
-        romaji
-        native
-        english
-      }
-      description
-      bannerImage
-      coverImage {
-        extraLarge
-        large
-        medium
-        color
-      }
-    `;
-
-    const mediaPromise = getMediaDetails(
-      {
-        id: Number(params[0]),
-      },
-      fields
-    );
-
-    const [{ data, error }, media] = await Promise.all([
-      sourceConnectionPromise,
-      mediaPromise,
-    ]);
-
-    if (error) {
-      throw error;
-    }
+    const episodes = data
+      .flatMap((connection) => connection.episodes)
+      .filter((episode) => episode.published);
 
     return {
       props: {
-        anime: media,
-        episodes: data
-          .flatMap((connection) => connection.episodes)
-          .filter((episode) => episode.published),
+        params,
+        episodes,
       },
+      revalidate: REVALIDATE_TIME,
     };
   } catch (err) {
     console.log(err);
 
-    return { notFound: true };
+    return { notFound: true, revalidate: REVALIDATE_TIME };
   }
 };
 
