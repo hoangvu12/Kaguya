@@ -50,11 +50,10 @@ const ForwardRefPlayer = React.memo(
 ForwardRefPlayer.displayName = "ForwardRefPlayer";
 
 interface WatchPageProps {
-  params: string[];
   episodes: Episode[];
 }
 
-const WatchPage: NextPage<WatchPageProps> = ({ params, episodes }) => {
+const WatchPage: NextPage<WatchPageProps> = ({ episodes }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const router = useRouter();
   const { isMobile } = useDevice();
@@ -66,6 +65,8 @@ const WatchPage: NextPage<WatchPageProps> = ({ params, episodes }) => {
   const saveWatchedInterval = useRef<NodeJS.Timer>(null);
   const saveWatchedMutation = useSaveWatched();
   const { t } = useTranslation("anime_watch");
+
+  const { params } = router.query;
 
   useEventListener("visibilitychange", () => {
     if (isMobile) return;
