@@ -29,10 +29,9 @@ const ReadPanel = dynamic(
 
 interface ReadPageProps {
   chapters: Chapter[];
-  params: string[];
 }
 
-const ReadPage: NextPage<ReadPageProps> = ({ chapters, params }) => {
+const ReadPage: NextPage<ReadPageProps> = ({ chapters }) => {
   const router = useRouter();
   const [showReadOverlay, setShowReadOverlay] = useState(false);
   const [declinedReread, setDeclinedReread] = useState(false);
@@ -42,6 +41,8 @@ const ReadPage: NextPage<ReadPageProps> = ({ chapters, params }) => {
   const saveReadMutation = useSaveRead();
 
   const sortedChapters = useMemo(() => sortMediaUnit(chapters), [chapters]);
+
+  const { params } = router.query;
 
   const [
     mangaId,
@@ -294,7 +295,6 @@ export const getStaticProps: GetStaticProps = async ({
 
     return {
       props: {
-        params,
         chapters,
       },
       revalidate: REVALIDATE_TIME,
