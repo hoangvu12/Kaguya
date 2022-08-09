@@ -74,7 +74,7 @@ const UploadMangaPage: NextPage<UploadMangaPageProps> = ({
         ) : (
           <UploadMediaProvider value={{ sourceId, mediaId }}>
             <div className="space-y-8">
-              <MediaDetails media={manga} />
+              <MediaDetails media={manga.media} />
 
               <div className="mt-8">
                 <Link href={`/upload/manga/${mediaId}/chapters/create`}>
@@ -114,7 +114,7 @@ const UploadMangaPage: NextPage<UploadMangaPageProps> = ({
           <DeleteConfirmation
             onConfirm={handleConfirm}
             className="space-y-4"
-            confirmString={manga.title.userPreferred}
+            confirmString={manga.media.title.userPreferred}
           >
             <h1 className="text-2xl font-semibold">
               Bạn có chắc chắn xóa không?
