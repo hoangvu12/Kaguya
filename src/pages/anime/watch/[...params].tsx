@@ -7,7 +7,6 @@ import Portal from "@/components/shared/Portal";
 import { REVALIDATE_TIME } from "@/constants";
 import { WatchContextProvider } from "@/contexts/WatchContext";
 import useDevice from "@/hooks/useDevice";
-import useEpisodes from "@/hooks/useEpisodes";
 import useEventListener from "@/hooks/useEventListener";
 import { useFetchSource } from "@/hooks/useFetchSource";
 import useMediaDetails from "@/hooks/useMediaDetails";
@@ -241,11 +240,11 @@ const WatchPage: NextPage<WatchPageProps> = ({ episodes }) => {
   }, [watchedEpisode?.sourceEpisodeId, videoRef.current]);
 
   const title = useMemo(
-    () => getTitle(anime, router.locale),
+    () => getTitle(anime?.media, router.locale, anime?.translations),
     [anime, router.locale]
   );
   const description = useMemo(
-    () => getDescription(anime, router.locale),
+    () => getDescription(anime?.media, router.locale, anime?.translations),
     [anime, router.locale]
   );
 
@@ -275,7 +274,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ episodes }) => {
   return (
     <WatchContextProvider
       value={{
-        anime,
+        anime: anime.media,
         currentEpisode,
         currentEpisodeIndex,
         episodes: sortedEpisodes,
@@ -288,7 +287,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ episodes }) => {
         <Head
           title={`${title} (${currentEpisode.name}) - Kaguya`}
           description={`Xem phim ${title} (${currentEpisode.name}) tại Kaguya. Hoàn toàn miễn phí, không quảng cáo`}
-          image={anime.bannerImage}
+          image={anime.media.bannerImage}
         />
 
         <ForwardRefPlayer

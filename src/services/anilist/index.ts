@@ -7,9 +7,11 @@ import {
   StaffArgs,
   CharacterArgs,
   StudioArgs,
+  MediaType,
 } from "@/types/anilist";
 import { removeArrayOfObjectDup } from "@/utils";
 import axios from "axios";
+import { getTranslations, TMDBTranlations } from "../tmdb";
 import {
   airingSchedulesQuery,
   charactersDefaultFields,
@@ -72,7 +74,19 @@ export const getMediaDetails = async (
     args
   );
 
-  return response?.Media;
+  let translations: TMDBTranlations.Translation[] = [];
+  const media = response?.Media;
+
+  if (args?.type === MediaType.Manga) {
+    translations = null;
+  } else {
+    translations = await getTranslations(media);
+  }
+
+  return {
+    media,
+    translations,
+  };
 };
 
 export const getAiringSchedules = async (

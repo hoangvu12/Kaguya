@@ -315,7 +315,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
     const [
       { data: sourceConnectionData, error: sourceConnectionError },
-      media,
+      { media, translations },
     ] = await Promise.all([sourceConnectionPromise, mediaPromise]);
 
     if (sourceConnectionError) {
@@ -328,7 +328,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
     return {
       props: {
-        room: { ...room, media, episodes },
+        room: { ...room, media, episodes, translations },
         user,
       },
     };

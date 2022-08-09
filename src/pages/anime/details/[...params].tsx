@@ -20,7 +20,7 @@ import withRedirect from "@/hocs/withRedirect";
 import useEpisodes from "@/hooks/useEpisodes";
 import dayjs from "@/lib/dayjs";
 import { getMediaDetails } from "@/services/anilist";
-import { getTranslations, TMDBTranlations } from "@/services/tmdb";
+import { TMDBTranlations } from "@/services/tmdb";
 import { Media, MediaType } from "@/types/anilist";
 import { numberWithCommas, vietnameseSlug } from "@/utils";
 import { convert, getDescription, getTitle } from "@/utils/data";
@@ -319,12 +319,10 @@ export const getStaticProps: GetStaticProps = async ({
   params: { params },
 }) => {
   try {
-    const media = await getMediaDetails({
+    const { media, translations } = await getMediaDetails({
       type: MediaType.Anime,
       id: Number(params[0]),
     });
-
-    const translations = await getTranslations(media);
 
     return {
       props: {
