@@ -61,7 +61,10 @@ const ReadPage: NextPage<ReadPageProps> = ({ chapters }) => {
     type: MediaType.Manga,
   });
 
-  const title = useMemo(() => getTitle(manga, locale), [manga, locale]);
+  const title = useMemo(
+    () => getTitle(manga.media, locale),
+    [manga?.media, locale]
+  );
 
   const sourceChapters = useMemo(
     () => sortedChapters.filter((chapter) => chapter.sourceId === sourceId),
@@ -173,7 +176,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ chapters }) => {
   return (
     <ReadContextProvider
       value={{
-        manga,
+        manga: manga.media,
         currentChapter,
         currentChapterIndex,
         chapters,
@@ -190,7 +193,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ chapters }) => {
               title,
               chapterName: currentChapter.name,
             })}
-            image={manga.bannerImage || manga.coverImage.extraLarge}
+            image={manga.media.bannerImage || manga.media.coverImage.extraLarge}
           />
 
           {isError ? (

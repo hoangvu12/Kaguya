@@ -75,7 +75,7 @@ const UploadAnimePage: NextPage<UploadAnimePageProps> = ({
         ) : (
           <UploadMediaProvider value={{ sourceId, mediaId }}>
             <div className="space-y-8">
-              <MediaDetails media={anime} />
+              <MediaDetails media={anime.media} />
 
               <div className="mt-8">
                 <Link href={`/upload/anime/${mediaId}/episodes/create`}>
@@ -121,7 +121,7 @@ const UploadAnimePage: NextPage<UploadAnimePageProps> = ({
           <DeleteConfirmation
             onConfirm={handleConfirm}
             className="space-y-4"
-            confirmString={anime.title.userPreferred}
+            confirmString={anime.media.title.userPreferred}
             isLoading={deleteLoading}
           >
             <h1 className="text-2xl font-semibold">
