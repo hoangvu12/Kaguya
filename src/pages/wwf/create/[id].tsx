@@ -7,19 +7,20 @@ import Input from "@/components/shared/Input";
 import PlainCard from "@/components/shared/PlainCard";
 import Section from "@/components/shared/Section";
 import Select from "@/components/shared/Select";
-import { REVALIDATE_TIME } from "@/constants";
-import withAuthRedirect from "@/hocs/withAuthRedirect";
 import useConstantTranslation from "@/hooks/useConstantTranslation";
 import useCreateRoom from "@/hooks/useCreateRoom";
 import useDevice from "@/hooks/useDevice";
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
-import { getMedia, getMediaDetails } from "@/services/anilist";
+import { getMediaDetails } from "@/services/anilist";
+import { TMDBTranlations } from "@/services/tmdb";
 import { AnimeSourceConnection, Episode } from "@/types";
-import { Media, MediaSort } from "@/types/anilist";
+import { Media } from "@/types/anilist";
 import { convert, getDescription, getTitle, sortMediaUnit } from "@/utils/data";
-import { withPageAuth } from "@supabase/auth-helpers-nextjs";
+import {
+  supabaseClient as supabase,
+  withPageAuth,
+} from "@supabase/auth-helpers-nextjs";
 import classNames from "classnames";
-import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import { NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import React, { useCallback, useMemo, useState } from "react";
@@ -28,6 +29,7 @@ import { MdOutlineTitle } from "react-icons/md";
 interface CreateRoomPageProps {
   media: Media;
   episodes: Episode[];
+  translations: TMDBTranlations.Translation[];
 }
 
 type Visibility = "public" | "private";
@@ -36,7 +38,11 @@ type VisibilityOption = {
   value: Visibility;
 };
 
-const CreateRoomPage: NextPage<CreateRoomPageProps> = ({ media, episodes }) => {
+const CreateRoomPage: NextPage<CreateRoomPageProps> = ({
+  media,
+  episodes,
+  translations,
+}) => {
   const { isMobile } = useDevice();
   const [roomTitle, setRoomTitle] = useState("");
   const { VISIBILITY_MODES } = useConstantTranslation();
@@ -54,10 +60,13 @@ const CreateRoomPage: NextPage<CreateRoomPageProps> = ({ media, episodes }) => {
     sortedEpisodes[0]
   );
 
-  const mediaTitle = useMemo(() => getTitle(media, locale), [media, locale]);
+  const mediaTitle = useMemo(
+    () => getTitle(media, locale, translations),
+    [media, locale, translations]
+  );
   const mediaDescription = useMemo(
-    () => getDescription(media, locale),
-    [media, locale]
+    () => getDescription(media, locale, translations),
+    [media, locale, translations]
   );
 
   const handleInputChange = useCallback(
@@ -232,7 +241,7 @@ export const getServerSideProps = withPageAuth({
         fields
       );
 
-      const [{ data, error }, media] = await Promise.all([
+      const [{ data, error }, { media, translations }] = await Promise.all([
         sourcePromise,
         mediaPromise,
       ]);
@@ -249,6 +258,7 @@ export const getServerSideProps = withPageAuth({
         props: {
           media,
           episodes,
+          translations,
         },
       };
     } catch (error) {

@@ -244,7 +244,7 @@ export const getStaticProps: GetStaticProps = async ({
   params: { params },
 }) => {
   try {
-    const media = await getMediaDetails({
+    const { media } = await getMediaDetails({
       type: MediaType.Manga,
       id: Number(params[0]),
     });

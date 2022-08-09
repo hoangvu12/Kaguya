@@ -27,13 +27,13 @@ const MediaBar = () => {
   );
 
   const mediaTitle = useMemo(
-    () => getTitle(room?.media, locale),
-    [room?.media, locale]
+    () => getTitle(room?.media, locale, room.translations),
+    [room?.media, room.translations, locale]
   );
 
   const mediaDescription = useMemo(
-    () => getDescription(room?.media, locale),
-    [locale, room?.media]
+    () => getDescription(room?.media, locale, room.translations),
+    [locale, room?.media, room.translations]
   );
 
   const handleNavigateEpisode = useCallback(

@@ -2,6 +2,7 @@ import React from "react";
 import NextHead from "next/head";
 import { WEBSITE_URL } from "@/constants";
 import { useRouter } from "next/router";
+import locales from "@/locales.json";
 
 interface HeadProps {
   title?: string;

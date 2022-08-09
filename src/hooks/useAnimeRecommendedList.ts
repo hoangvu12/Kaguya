@@ -22,7 +22,7 @@ const useAnimeRecommendedList = () => {
 
       if (error) throw error;
 
-      const anilistMedia = await getMediaDetails(
+      const { media } = await getMediaDetails(
         {
           id: data.mediaId,
           perPage: 1,
@@ -48,7 +48,7 @@ const useAnimeRecommendedList = () => {
 
       return {
         ...data,
-        media: anilistMedia,
+        media,
       };
     },
     { enabled: !!user }

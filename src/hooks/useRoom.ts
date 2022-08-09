@@ -48,7 +48,7 @@ const useRoom = (roomId: number, initialData: Room) => {
 
       const [
         { data: sourceConnectionData, error: sourceConnectionError },
-        media,
+        { media, translations },
       ] = await Promise.all([sourceConnectionPromise, mediaPromise]);
 
       if (sourceConnectionError) {
@@ -59,7 +59,7 @@ const useRoom = (roomId: number, initialData: Room) => {
         .flatMap((connection) => connection.episodes)
         .filter((episode) => episode.published);
 
-      return { ...room, media, episodes };
+      return { ...room, media, episodes, translations };
     },
 
     {

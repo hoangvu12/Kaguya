@@ -1,4 +1,5 @@
 import { SkeletonProps } from "@/components/shared/Skeleton";
+import { TMDBTranlations } from "@/services/tmdb";
 import { Attachment, FileInfo } from "@/services/upload";
 import { SupabaseQueryFunction, SupabaseQueryOptions } from "@/utils/supabase";
 import { User } from "@supabase/gotrue-js";
@@ -221,6 +222,7 @@ export type Room = {
   title?: string;
   episodes: Episode[];
   visibility: "public" | "private";
+  translations: TMDBTranlations.Translation[];
 };
 
 export type Chat = {
