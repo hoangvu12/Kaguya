@@ -167,8 +167,6 @@ const WatchPage: NextPage<WatchPageProps> = ({ episodes }) => {
   useEffect(() => {
     if (!currentEpisode.sourceEpisodeId) return;
 
-    console.log(watchedEpisode, currentEpisode.sourceEpisodeId);
-
     if (
       !watchedEpisode ||
       isSavedDataLoading ||
@@ -268,7 +266,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ episodes }) => {
 
   if (animeLoading) {
     return (
-      <div className="relative w-full h-full">
+      <div className="relative w-full min-h-screen">
         <Loading />
       </div>
     );
