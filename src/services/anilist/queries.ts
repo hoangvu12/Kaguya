@@ -218,6 +218,7 @@ query Media(
 
 export const mediaDetailsDefaultFields = `
 id
+idMal
 title {
   romaji
   english
