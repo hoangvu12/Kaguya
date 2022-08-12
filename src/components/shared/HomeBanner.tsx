@@ -26,7 +26,6 @@ import YouTube from "react-youtube";
 import {} from "youtube-player/dist/types";
 import ListSwiperSkeleton from "../skeletons/ListSwiperSkeleton";
 import Description from "./Description";
-import InView from "./InView";
 import Skeleton, { SkeletonItem } from "./Skeleton";
 
 interface HomeBannerProps {
@@ -145,7 +144,6 @@ const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data }) => {
   const [showTrailer, setShowTrailer] = useState(false);
   const [player, setPlayer] =
     useState<ReturnType<YouTube["getInternalPlayer"]>>();
-  const [inView, setInView] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const isRanOnce = useRef(false);
   const { locale } = useRouter();
@@ -185,16 +183,6 @@ const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data }) => {
   );
 
   useEffect(() => {
-    if (!player) return;
-
-    if (inView) {
-      player.playVideo();
-    } else {
-      player.pauseVideo();
-    }
-  }, [inView, player]);
-
-  useEffect(() => {
     setShowTrailer(false);
   }, [activeSlide]);
 
@@ -222,59 +210,50 @@ const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data }) => {
           )}
 
           {activeSlide?.type === MediaType.Anime &&
-            activeSlide?.trailer &&
+            activeSlide?.trailer?.id &&
             activeSlide.trailer?.site === "youtube" && (
-              <InView
-                onInView={() => {
-                  setInView(true);
+              <YouTube
+                videoId={activeSlide.trailer.id}
+                onReady={({ target }) => {
+                  setPlayer(target);
                 }}
-                onOutOfView={() => {
-                  setInView(false);
+                onPlay={({ target }) => {
+                  setShowTrailer(true);
+
+                  if (!isRanOnce.current) {
+                    setIsMuted(true);
+                  } else if (!isMuted) {
+                    setIsMuted(false);
+
+                    target.unMute();
+                  }
+
+                  isRanOnce.current = true;
                 }}
-              >
-                <YouTube
-                  videoId={activeSlide.trailer.id}
-                  onReady={({ target }) => {
-                    setPlayer(target);
-                  }}
-                  onPlay={({ target }) => {
-                    setShowTrailer(true);
-
-                    if (!isRanOnce.current) {
-                      setIsMuted(true);
-                    } else if (!isMuted) {
-                      setIsMuted(false);
-
-                      target.unMute();
-                    }
-
-                    isRanOnce.current = true;
-                  }}
-                  onPause={() => {
-                    setShowTrailer(false);
-                  }}
-                  onEnd={() => {
-                    setShowTrailer(false);
-                  }}
-                  onError={() => {
-                    setShowTrailer(false);
-                  }}
-                  containerClassName={classNames(
-                    "relative w-full overflow-hidden aspect-w-16 aspect-h-9 h-[300%] -top-[100%]",
-                    !showTrailer && "hidden"
-                  )}
-                  className="absolute inset-0 h-full w-full"
-                  opts={{
-                    playerVars: {
-                      autoplay: 1,
-                      modestbranding: 1,
-                      controls: 0,
-                      mute: 1,
-                      origin: "https://kaguya.live",
-                    },
-                  }}
-                />
-              </InView>
+                onPause={() => {
+                  setShowTrailer(false);
+                }}
+                onEnd={() => {
+                  setShowTrailer(false);
+                }}
+                onError={() => {
+                  setShowTrailer(false);
+                }}
+                className="absolute inset-0 h-full w-full"
+                opts={{
+                  playerVars: {
+                    autoplay: 1,
+                    modestbranding: 1,
+                    controls: 0,
+                    mute: 1,
+                    origin: "https://kaguya.live",
+                  },
+                }}
+                containerClassName={classNames(
+                  "relative w-full overflow-hidden aspect-w-16 aspect-h-9 h-[300%] -top-[100%]",
+                  !showTrailer && "hidden"
+                )}
+              />
             )}
         </AnimatePresence>
 
