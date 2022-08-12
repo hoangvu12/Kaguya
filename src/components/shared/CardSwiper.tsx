@@ -5,7 +5,7 @@ import Swiper, {
 } from "@/components/shared/Swiper";
 import { Media } from "@/types/anilist";
 import { debounce } from "@/utils";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
 
 interface CardSwiperProps {
@@ -40,7 +40,7 @@ const CardSwiper: React.FC<CardSwiperProps> = (props) => {
   } = props;
 
   const [swiper, setSwiper] = useState<SwiperInstance>();
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(null);
 
   // I'm sorry for those who are reading this code
   // Even myself don't know why it works.
