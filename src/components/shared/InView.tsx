@@ -2,11 +2,12 @@ import useIntersectionObserver from "@/hooks/useIntersectionObserver";
 import React, { useEffect, useRef } from "react";
 
 interface InViewProps extends React.HTMLProps<HTMLDivElement> {
-  onInView: () => any;
+  onInView?: () => any;
+  onOutOfView?: () => any;
 }
 
 const InView: React.FC<InViewProps> = (props) => {
-  const { onInView, children, ...divProps } = props;
+  const { onInView, onOutOfView, children, ...divProps } = props;
   const ref = useRef<HTMLDivElement | null>(null);
   const entry = useIntersectionObserver(ref, {
     rootMargin: "0px 0px 100px 0px",
@@ -15,9 +16,11 @@ const InView: React.FC<InViewProps> = (props) => {
 
   useEffect(() => {
     if (isVisible) {
-      onInView();
+      onInView?.();
+    } else {
+      onOutOfView?.();
     }
-  }, [isVisible, onInView]);
+  }, [isVisible, onInView, onOutOfView]);
 
   return (
     <div ref={ref} {...divProps}>
