@@ -10,7 +10,7 @@ const useNewestComments = (type: MediaType) => {
       .from<Comment>("sce_comments_with_metadata")
       .select("*,user:sce_display_users!user_id(*)")
       .like("topic", `${type.toLowerCase()}%`)
-      .order("created_at", { ascending: true });
+      .order("created_at", { ascending: false });
 
     if (error) throw error;
 
