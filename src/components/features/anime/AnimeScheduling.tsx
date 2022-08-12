@@ -1,6 +1,7 @@
 import Card from "@/components/shared/Card";
 import CardSwiper from "@/components/shared/CardSwiper";
 import DotList from "@/components/shared/DotList";
+import SwiperCard from "@/components/shared/SwiperCard";
 import useConstantTranslation from "@/hooks/useConstantTranslation";
 import dayjs from "@/lib/dayjs";
 import { AiringSchedule } from "@/types/anilist";
@@ -73,7 +74,7 @@ const AnimeScheduling: React.FC<AnimeSchedulingProps> = ({ schedules }) => {
                   data={schedules.map(
                     (schedule: AiringSchedule) => schedule.media
                   )}
-                  onEachCard={(card) => {
+                  onEachCard={(card, isExpanded) => {
                     const cardWithSchedule = schedules.find(
                       (schedule) => schedule.media.id === card.id
                     );
@@ -83,7 +84,8 @@ const AnimeScheduling: React.FC<AnimeSchedulingProps> = ({ schedules }) => {
                       .isBefore(dayjs());
 
                     return (
-                      <Card
+                      <SwiperCard
+                        isExpanded={isExpanded}
                         data={card}
                         imageEndSlot={
                           <React.Fragment>
