@@ -503,6 +503,7 @@ airingAt
 episode
 mediaId
 media {
+  bannerImage
   type
   id
   title {
