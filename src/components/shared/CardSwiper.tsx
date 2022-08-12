@@ -75,9 +75,14 @@ const CardSwiper: React.FC<CardSwiperProps> = (props) => {
     const { first: firstVisibleCardIndex, last: lastVisibleCardIndex } =
       getVisibleIndex(swiper);
 
+    const nonPlaceholderSlides = swiper.slides.filter(
+      (slide) => !slide.classList.contains("swiper-placeholder")
+    );
+
     const shouldPushSlide =
-      lastVisibleCardIndex - (HOVER_WIDTH - 1) < index ||
-      lastVisibleCardIndex === index;
+      nonPlaceholderSlides.length - (HOVER_WIDTH - 1) >= slidesPerGroup &&
+      (lastVisibleCardIndex - (HOVER_WIDTH - 1) < index ||
+        lastVisibleCardIndex === index);
 
     if (shouldPushSlide) {
       if (!nextSlide) {
@@ -173,12 +178,8 @@ const CardSwiper: React.FC<CardSwiperProps> = (props) => {
         // @ts-ignore
         slidesPerGroup * (swiper.snapIndex + 1) - (HOVER_WIDTH - 1)
     ) {
-      console.log("revert 1");
-
       revertTranslate();
     } else if (index > slidesPerGroup) {
-      console.log("revert 2");
-
       if (
         index === nonPlaceholderSlides.length - 1 ||
         index >= nonPlaceholderSlides.length - (HOVER_WIDTH - 1)
