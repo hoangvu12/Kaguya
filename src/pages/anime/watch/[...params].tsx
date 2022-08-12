@@ -4,7 +4,6 @@ import Description from "@/components/shared/Description";
 import Head from "@/components/shared/Head";
 import Loading from "@/components/shared/Loading";
 import Portal from "@/components/shared/Portal";
-import { REVALIDATE_TIME } from "@/constants";
 import { WatchContextProvider } from "@/contexts/WatchContext";
 import useDevice from "@/hooks/useDevice";
 import useEventListener from "@/hooks/useEventListener";
@@ -15,7 +14,7 @@ import useSaveWatched from "@/hooks/useSaveWatched";
 import { AnimeSourceConnection, Episode } from "@/types";
 import { getDescription, getTitle, sortMediaUnit } from "@/utils/data";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import { GetServerSideProps, GetStaticPaths, NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
@@ -387,25 +386,20 @@ const WatchPage: NextPage<WatchPageProps> = ({ episodes }) => {
   );
 };
 
-export const getStaticPaths: GetStaticPaths = () => {
-  return {
-    paths: [],
-    fallback: "blocking",
-  };
-};
-
-export const getStaticProps: GetStaticProps = async ({
+export const getServerSideProps: GetServerSideProps = async ({
   params: { params },
 }) => {
   try {
-    const { data } = await supabaseClient
+    const { data, error } = await supabaseClient
       .from<AnimeSourceConnection>("kaguya_anime_source")
       .select(
         `
-      episodes:kaguya_episodes(*, source:kaguya_sources(*))
-    `
+          episodes:kaguya_episodes(*, source:kaguya_sources(*))
+        `
       )
       .eq("mediaId", Number(params[0]));
+
+    if (error) throw error;
 
     const episodes = data
       .flatMap((connection) => connection.episodes)
@@ -413,15 +407,13 @@ export const getStaticProps: GetStaticProps = async ({
 
     return {
       props: {
-        params,
         episodes,
       },
-      revalidate: REVALIDATE_TIME,
     };
   } catch (err) {
     console.log(err);
 
-    return { notFound: true, revalidate: REVALIDATE_TIME };
+    return { notFound: true };
   }
 };
 
