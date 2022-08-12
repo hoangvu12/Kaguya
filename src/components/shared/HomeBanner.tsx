@@ -23,6 +23,7 @@ import { AiFillHeart, AiFillPlayCircle } from "react-icons/ai";
 import { BsFillVolumeMuteFill, BsFillVolumeUpFill } from "react-icons/bs";
 import { MdTagFaces } from "react-icons/md";
 import YouTube from "react-youtube";
+import {} from "youtube-player/dist/types";
 import ListSwiperSkeleton from "../skeletons/ListSwiperSkeleton";
 import Description from "./Description";
 import InView from "./InView";
@@ -144,6 +145,7 @@ const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data }) => {
   const [showTrailer, setShowTrailer] = useState(false);
   const [player, setPlayer] =
     useState<ReturnType<YouTube["getInternalPlayer"]>>();
+  const [inView, setInView] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const isRanOnce = useRef(false);
   const { locale } = useRouter();
@@ -183,6 +185,16 @@ const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data }) => {
   );
 
   useEffect(() => {
+    if (!player) return;
+
+    if (inView) {
+      player.playVideo();
+    } else {
+      player.pauseVideo();
+    }
+  }, [inView, player]);
+
+  useEffect(() => {
     setShowTrailer(false);
   }, [activeSlide]);
 
@@ -214,10 +226,10 @@ const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data }) => {
             activeSlide.trailer?.site === "youtube" && (
               <InView
                 onInView={() => {
-                  setShowTrailer(true);
+                  setInView(true);
                 }}
                 onOutOfView={() => {
-                  setShowTrailer(false);
+                  setInView(false);
                 }}
               >
                 <YouTube
@@ -237,6 +249,9 @@ const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data }) => {
                     }
 
                     isRanOnce.current = true;
+                  }}
+                  onPause={() => {
+                    setShowTrailer(false);
                   }}
                   onEnd={() => {
                     setShowTrailer(false);
