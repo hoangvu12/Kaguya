@@ -1,11 +1,10 @@
-import SwiperCard from "@/components/shared/SwiperCard";
 import Swiper, {
   SwiperInstance,
   SwiperSlide,
 } from "@/components/shared/Swiper";
+import SwiperCard from "@/components/shared/SwiperCard";
 import { Media } from "@/types/anilist";
-import { debounce } from "@/utils";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { isMobile } from "react-device-detect";
 
 interface CardSwiperProps {
@@ -206,19 +205,35 @@ const CardSwiper: React.FC<CardSwiperProps> = (props) => {
       speed={500}
       watchSlidesVisibility
     >
-      {data.map((item, index) => (
-        <SwiperSlide
-          onMouseEnter={
-            isMobile ? noop : debounce(handleSlideHover(index), 300)
-          }
-          onMouseLeave={
-            isMobile ? noop : debounce(handleSlideLeave(index), 300)
-          }
-          key={index}
-        >
-          {onEachCard(item, activeIndex === index)}
-        </SwiperSlide>
-      ))}
+      {data.map((item, index) => {
+        let debounceTimeout: NodeJS.Timeout = null;
+
+        const debounce = (fn: (...args: any[]) => void, wait: number) => {
+          return (...args: any[]) => {
+            const later = () => {
+              debounceTimeout = null;
+              fn(...args);
+            };
+
+            clearTimeout(debounceTimeout);
+            debounceTimeout = setTimeout(later, wait);
+          };
+        };
+
+        return (
+          <SwiperSlide
+            onMouseEnter={
+              isMobile ? noop : debounce(handleSlideHover(index), 300)
+            }
+            onMouseLeave={
+              isMobile ? noop : debounce(handleSlideLeave(index), 300)
+            }
+            key={index}
+          >
+            {onEachCard(item, activeIndex === index)}
+          </SwiperSlide>
+        );
+      })}
     </Swiper>
   );
 };
