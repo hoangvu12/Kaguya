@@ -28,7 +28,9 @@ const HeaderProfile = () => {
         <Avatar src={user.user_metadata.avatar_url} className="!w-14 !h-14" />
 
         <div>
-          <p className="font-semibold">{user.user_metadata.name}</p>
+          <p className="font-semibold">
+            {user.user_metadata.full_name || user.user_metadata.name}
+          </p>
           <p className="text-gray-300 text-sm">{t("user")}</p>
         </div>
       </div>

@@ -227,7 +227,9 @@ const RoomPage: NextPage<RoomPageProps> = ({ room, user }) => {
         title={`${title || mediaTitle} - Kaguya`}
         description={t("head_description", {
           mediaTitle,
-          username: data.hostUser.user_metadata.name,
+          username:
+            data.hostUser.user_metadata.full_name ||
+            data.hostUser.user_metadata.name,
         })}
         image={data.media.bannerImage || data.media.coverImage.extraLarge}
       />

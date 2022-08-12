@@ -19,6 +19,7 @@ const moduleExports = withPWA({
       "thumb.tapecontent.net",
       "emojis.slackmojis.com",
       "pic-bstarstatic.akamaized.net",
+      "cdn.discordapp.com",
     ],
     minimumCacheTTL: 604800, // a week,
   },

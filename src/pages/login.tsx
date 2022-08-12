@@ -7,7 +7,7 @@ import { Provider } from "@supabase/gotrue-js";
 import axios from "axios";
 import { GetStaticProps, NextPage } from "next";
 import React, { useMemo } from "react";
-import { FaFacebookF } from "react-icons/fa";
+import { FaDiscord, FaFacebookF } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { REVALIDATE_TIME } from "@/constants";
 import { useTranslation } from "next-i18next";
@@ -70,22 +70,32 @@ const LoginPage: NextPage<LoginPageProps> = ({ quotes }) => {
           <div className="w-full px-4 md:px-0 md:w-1/2">
             <h1 className="text-5xl font-bold mb-8">{t("login_heading")}</h1>
 
-            <Button
-              className="shadow-lg relative bg-white text-black font-bold flex items-center justify-center w-full hover:!bg-opacity-90 mb-2"
-              LeftIcon={FcGoogle}
-              iconClassName="absolute left-6"
-              onClick={handleSignIn("google")}
-            >
-              <p>{t("login_with_google")}</p>
-            </Button>
-            <Button
-              className="shadow-lg relative bg-[#2D88FF] !hover:bg-white/20 text-white font-bold flex items-center justify-center w-full hover:!bg-opacity-90"
-              LeftIcon={FaFacebookF}
-              iconClassName="absolute left-6"
-              onClick={handleSignIn("facebook")}
-            >
-              <p>{t("login_with_facebook")}</p>
-            </Button>
+            <div className="space-y-4">
+              <Button
+                className="shadow-lg relative bg-white text-black font-bold flex items-center justify-center w-full hover:!bg-opacity-90"
+                LeftIcon={FcGoogle}
+                iconClassName="absolute left-6"
+                onClick={handleSignIn("google")}
+              >
+                <p>{t("login_with_google")}</p>
+              </Button>
+              <Button
+                className="shadow-lg relative bg-[#2D88FF] !hover:bg-white/20 text-white font-bold flex items-center justify-center w-full hover:!bg-opacity-90"
+                LeftIcon={FaFacebookF}
+                iconClassName="absolute left-6"
+                onClick={handleSignIn("facebook")}
+              >
+                <p>{t("login_with_facebook")}</p>
+              </Button>
+              <Button
+                className="shadow-lg relative bg-[#5865F2] !hover:bg-white/20 text-white font-bold flex items-center justify-center w-full hover:!bg-opacity-90"
+                LeftIcon={FaDiscord}
+                iconClassName="absolute left-6"
+                onClick={handleSignIn("discord")}
+              >
+                <p>{t("login_with_discord")}</p>
+              </Button>
+            </div>
           </div>
         </div>
       </div>

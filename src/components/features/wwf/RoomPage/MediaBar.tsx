@@ -65,7 +65,8 @@ const MediaBar = () => {
 
             <DotList>
               <span className="text-lg font-medium text-gray-200">
-                {room.hostUser.user_metadata.name}
+                {room.hostUser.user_metadata.full_name ||
+                  room.hostUser.user_metadata.name}
               </span>
 
               <span className="text-sm text-gray-300">
