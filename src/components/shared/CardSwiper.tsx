@@ -137,10 +137,18 @@ const CardSwiper: React.FC<CardSwiperProps> = (props) => {
     const { first: firstVisibleCardIndex } = getVisibleIndex(swiper);
 
     const revertTranslate = () => {
-      const newTranslate =
+      // @ts-ignore
+      const minTranslate = swiper.minTranslate();
+      // @ts-ignore
+      const maxTranslate = swiper.maxTranslate();
+
+      let newTranslate =
         -1 *
         ((firstVisibleCardIndex - (HOVER_WIDTH - 1)) *
           (originalWidth + spaceBetween));
+
+      if (newTranslate > minTranslate) newTranslate = minTranslate;
+      else if (newTranslate < maxTranslate) newTranslate = maxTranslate;
 
       // @ts-ignore
       swiper.setTransition(300);
@@ -151,7 +159,14 @@ const CardSwiper: React.FC<CardSwiperProps> = (props) => {
       (slide) => !slide.classList.contains("swiper-placeholder")
     );
 
-    if (
+    if (nonPlaceholderSlides.length <= slidesPerGroup) {
+      if (
+        index === nonPlaceholderSlides.length - 1 ||
+        index >= nonPlaceholderSlides.length - (HOVER_WIDTH - 1)
+      ) {
+        revertTranslate();
+      }
+    } else if (
       index ===
         // @ts-ignore
         slidesPerGroup * (swiper.snapIndex + 1) - 1 ||
@@ -159,9 +174,12 @@ const CardSwiper: React.FC<CardSwiperProps> = (props) => {
         // @ts-ignore
         slidesPerGroup * (swiper.snapIndex + 1) - (HOVER_WIDTH - 1)
     ) {
+      console.log("revert 1");
+
       revertTranslate();
     } else if (index > slidesPerGroup) {
-      // Remove by two because of placeholder card
+      console.log("revert 2");
+
       if (
         index === nonPlaceholderSlides.length - 1 ||
         index >= nonPlaceholderSlides.length - (HOVER_WIDTH - 1)
