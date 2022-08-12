@@ -9,7 +9,7 @@ import { getTitle } from "@/utils/data";
 import { useTranslation } from "next-i18next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useMemo } from "react";
+import React from "react";
 import Editor from "../features/comment/Editor";
 import CommentsSwiperSkeleton from "../skeletons/CommentsSwiperSkeleton";
 
@@ -21,8 +21,6 @@ const NewestComments: React.FC<NewestCommentsProps> = (props) => {
   const { data, isLoading } = useNewestComments(props.type);
   const { t } = useTranslation("common");
   const { locale } = useRouter();
-
-  const isAnime = useMemo(() => props.type === MediaType.Anime, [props.type]);
 
   if (isLoading) {
     return <CommentsSwiperSkeleton />;
