@@ -63,8 +63,6 @@ const useCreateComment = () => {
               reactions_metadata: [],
             });
 
-            console.log(comments);
-
             return comments;
           }
         );
