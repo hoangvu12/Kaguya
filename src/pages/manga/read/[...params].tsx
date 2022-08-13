@@ -3,7 +3,6 @@ import Button from "@/components/shared/Button";
 import Head from "@/components/shared/Head";
 import Loading from "@/components/shared/Loading";
 import Portal from "@/components/shared/Portal";
-import { REVALIDATE_TIME } from "@/constants";
 import { ReadContextProvider } from "@/contexts/ReadContext";
 import { ReadSettingsContextProvider } from "@/contexts/ReadSettingsContext";
 import useFetchImages from "@/hooks/useFetchImages";
@@ -13,8 +12,8 @@ import useSaveRead from "@/hooks/useSaveRead";
 import { Chapter, MangaSourceConnection } from "@/types";
 import { MediaType } from "@/types/anilist";
 import { getTitle, sortMediaUnit } from "@/utils/data";
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
-import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import { supabaseClient } from "@supabase/auth-helpers-nextjs";
+import { GetServerSideProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
@@ -62,7 +61,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ chapters }) => {
   });
 
   const title = useMemo(
-    () => getTitle(manga.media, locale),
+    () => getTitle(manga?.media, locale),
     [manga?.media, locale]
   );
 
@@ -165,7 +164,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ chapters }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentChapter, mangaId]);
 
-  if (mangaLoading) {
+  if (mangaLoading || !manga?.media) {
     return (
       <div className="relative w-full h-full">
         <Loading />
@@ -176,7 +175,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ chapters }) => {
   return (
     <ReadContextProvider
       value={{
-        manga: manga.media,
+        manga: manga?.media,
         currentChapter,
         currentChapterIndex,
         chapters,
@@ -274,25 +273,20 @@ const ReadPage: NextPage<ReadPageProps> = ({ chapters }) => {
   );
 };
 
-export const getStaticPaths: GetStaticPaths = () => {
-  return {
-    paths: [],
-    fallback: "blocking",
-  };
-};
-
-export const getStaticProps: GetStaticProps = async ({
+export const getServerSideProps: GetServerSideProps = async ({
   params: { params },
 }) => {
   try {
-    const { data } = await supabase
+    const { data, error } = await supabaseClient
       .from<MangaSourceConnection>("kaguya_manga_source")
       .select(
         `
-      chapters:kaguya_chapters(*, source:kaguya_sources(*))
-      `
+         chapters:kaguya_chapters(*, source:kaguya_sources(*))
+        `
       )
       .eq("mediaId", Number(params[0]));
+
+    if (error) throw error;
 
     const chapters = data.flatMap((connection) => connection.chapters);
 
@@ -300,12 +294,11 @@ export const getStaticProps: GetStaticProps = async ({
       props: {
         chapters,
       },
-      revalidate: REVALIDATE_TIME,
     };
   } catch (err) {
     console.log(err);
 
-    return { notFound: true, revalidate: REVALIDATE_TIME };
+    return { notFound: true };
   }
 };
 
