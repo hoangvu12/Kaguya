@@ -37,7 +37,10 @@ const TracePage = () => {
 
   return (
     <React.Fragment>
-      <Head title={`${t("tab_title")} - Kaguya`} />
+      <Head
+        title={`${t("tab_title")} - Kaguya`}
+        description="Tìm kiếm Anime, số tập mà khoảnh khắc trong ảnh đó xuất hiện."
+      />
 
       <Section className="pt-20 space-y-16 flex flex-col items-center justify-center">
         <div className="text-center">

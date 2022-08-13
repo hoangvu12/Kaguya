@@ -59,8 +59,6 @@ const BrowsePage = ({ query: baseQuery }) => {
   const { t } = useTranslation();
   const { TYPES } = useConstantTranslation();
 
-  console.log(baseQuery);
-
   const {
     format = undefined,
     keyword = "",
@@ -107,7 +105,10 @@ const BrowsePage = ({ query: baseQuery }) => {
 
   return (
     <Section className="py-20">
-      <Head title={`Tìm kiếm ${chosenType.label} - Kaguya`} />
+      <Head
+        title={`Tìm kiếm ${chosenType.label} - Kaguya`}
+        description={`Tìm kiếm ${chosenType.label} ở trang Kaguya`}
+      />
 
       <div className="mb-8 flex items-center space-x-2">
         <p className="text-4xl font-semibold text-center md:text-left">

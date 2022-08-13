@@ -72,6 +72,7 @@ const ThemesPage = ({ slug, type }: ThemesPageProps) => {
         title={
           !data ? `Themes - Kaguya` : `${data.name} (${data.type}) - Kaguya`
         }
+        description="Xem OP/ED của các Anime mà bạn yêu thích."
       />
 
       <ThemePlayerContextProvider

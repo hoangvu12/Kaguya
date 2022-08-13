@@ -4,7 +4,7 @@ import React from "react";
 const dmca = () => {
   return (
     <div className="pt-20 px-4 md:px-12 space-y-4">
-      <Head title="DMCA - Kaguya" />
+      <Head title="DMCA - Kaguya" description="DMCA Kaguya" />
 
       <h1 className="text-2xl font-bold">Yêu cầu gỡ xuống theo DMCA</h1>
 
