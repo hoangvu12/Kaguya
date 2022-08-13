@@ -1,5 +1,11 @@
 import dayjs from "@/lib/dayjs";
-import { Character, Media, MediaSeason, MediaType } from "@/types/anilist";
+import {
+  Character,
+  Media,
+  MediaSeason,
+  MediaType,
+  Staff,
+} from "@/types/anilist";
 import axios from "axios";
 import { toast } from "react-toastify";
 import mime from "mime";
@@ -456,5 +462,11 @@ export const createMediaDetailsUrl = (media: Media) => {
 export const createCharacterDetailsUrl = (character: Character) => {
   return `/characters/details/${character.id}/${vietnameseSlug(
     character?.name?.userPreferred
+  )}`;
+};
+
+export const createVoiceActorDetailsUrl = (voiceActor: Staff) => {
+  return `/voice-actors/details/${voiceActor.id}/${vietnameseSlug(
+    voiceActor?.name?.userPreferred
   )}`;
 };
