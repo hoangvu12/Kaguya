@@ -35,6 +35,10 @@ const Footer = () => {
         <Link href="/contact">
           <p className="text-lg">{t("contact")}</p>
         </Link>
+
+        <Link href="/deletion-privacy">
+          <p className="text-lg">Deletion Privacy</p>
+        </Link>
       </div>
 
       <p className="text-sm text-gray-300 text-center">{t("disclaimer")}</p>
