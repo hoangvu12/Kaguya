@@ -4,7 +4,10 @@ import React from "react";
 const tos = () => {
   return (
     <div className="pt-20 px-4 md:px-12 space-y-4">
-      <Head title="Điều khoản dịch vụ - Kaguya" />
+      <Head
+        title="Điều khoản dịch vụ - Kaguya"
+        description="Điều khoản dịch vụ tại Kaguya"
+      />
 
       <h1 className="text-2xl font-bold">Điều khoản dịch vụ</h1>
 
