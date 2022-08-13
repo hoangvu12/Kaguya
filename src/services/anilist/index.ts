@@ -77,8 +77,6 @@ export const getMediaDetails = async (
   let translations: TMDBTranlations.Translation[] = [];
   const media = response?.Media;
 
-  console.log(media);
-
   if (args?.type === MediaType.Manga) {
     translations = null;
   } else {

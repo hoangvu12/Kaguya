@@ -1,14 +1,14 @@
 import Portal from "@/components/shared/Portal";
 import useDevice from "@/hooks/useDevice";
-import { Options, Placement } from "@popperjs/core";
+import { Modifier, Options, Placement } from "@popperjs/core";
 import classNames from "classnames";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, Variants } from "framer-motion";
 import React, { useCallback, useMemo, useState } from "react";
 import { usePopper } from "react-popper";
 
 export interface PopupProps {
   reference?: React.ReactNode;
-  options?: Options;
+  options?: Partial<Options>;
   type?: "hover" | "click";
   placement?: Placement;
   showArrow?: boolean;
@@ -23,7 +23,7 @@ export interface PopupProps {
   onMouseLeave?: (event: React.MouseEvent<HTMLDivElement>) => void;
 }
 
-const variants = {
+const variants: Variants = {
   initial: {
     opacity: 0,
   },
@@ -42,7 +42,7 @@ const emptyFn = () => {};
 const Popup: React.FC<PopupProps> = (props) => {
   const {
     children,
-    options,
+    options: { modifiers = [], ...options } = {},
     reference,
     type = "hover",
     placement = "right-start",
@@ -83,6 +83,7 @@ const Popup: React.FC<PopupProps> = (props) => {
   const popperOptions = useMemo(
     () => ({
       modifiers: [
+        ...modifiers,
         ...arrowModifier,
         {
           name: "offset",
@@ -101,7 +102,7 @@ const Popup: React.FC<PopupProps> = (props) => {
       placement,
       ...options,
     }),
-    [arrowModifier, offset, options, placement]
+    [arrowModifier, modifiers, offset, options, placement]
   );
 
   const { styles, attributes } = usePopper(
@@ -152,6 +153,7 @@ const Popup: React.FC<PopupProps> = (props) => {
       <div
         onClick={!isHover ? handleToggle : emptyFn}
         onMouseEnter={isHover ? handleMouseEnter : emptyFn}
+        onMouseMove={isHover ? handleMouseEnter : emptyFn}
         onMouseLeave={isHover ? handleMouseLeave : emptyFn}
         ref={setReferenceElement}
         className={classNames(
