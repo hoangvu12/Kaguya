@@ -1,5 +1,6 @@
 import Image from "@/components/shared/Image";
 import { Character } from "@/types/anilist";
+import { createCharacterDetailsUrl } from "@/utils";
 import Link from "next/link";
 import React from "react";
 
@@ -9,7 +10,7 @@ interface CharacterCardProps {
 
 const CharacterCard: React.FC<CharacterCardProps> = ({ character }) => {
   return (
-    <Link href={`/characters/details/${character.id}`}>
+    <Link href={createCharacterDetailsUrl(character)}>
       <a>
         <div className="space-y-2">
           <div className="aspect-w-9 aspect-h-16 space-y-2">
