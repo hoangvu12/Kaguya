@@ -94,8 +94,6 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
 
       const requestUrl = createProxyUrl(url, source.proxy);
 
-      console.log("Proxying", url, "to", requestUrl);
-
       return requestUrl;
     }, []);
 
