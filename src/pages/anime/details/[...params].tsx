@@ -22,7 +22,11 @@ import dayjs from "@/lib/dayjs";
 import { getMediaDetails } from "@/services/anilist";
 import { TMDBTranlations } from "@/services/tmdb";
 import { Media, MediaType } from "@/types/anilist";
-import { numberWithCommas, vietnameseSlug } from "@/utils";
+import {
+  createStudioDetailsUrl,
+  numberWithCommas,
+  vietnameseSlug,
+} from "@/utils";
 import { convert, getDescription, getTitle } from "@/utils/data";
 import { useUser } from "@supabase/auth-helpers-react";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
@@ -214,7 +218,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime, translations }) => {
                 title="Studio"
                 value={anime.studios.nodes.map((studio) => (
                   <p key={studio.id}>
-                    <Link href={`/studios/${studio.id}`}>
+                    <Link href={createStudioDetailsUrl(studio)}>
                       <a className="hover:text-primary-300 transition duration-300">
                         {studio.name}
                       </a>

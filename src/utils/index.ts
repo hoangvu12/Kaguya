@@ -5,6 +5,7 @@ import {
   MediaSeason,
   MediaType,
   Staff,
+  Studio,
 } from "@/types/anilist";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -469,4 +470,8 @@ export const createVoiceActorDetailsUrl = (voiceActor: Staff) => {
   return `/voice-actors/details/${voiceActor.id}/${vietnameseSlug(
     voiceActor?.name?.userPreferred
   )}`;
+};
+
+export const createStudioDetailsUrl = (studio: Studio) => {
+  return `/studios/${studio.id}/${vietnameseSlug(studio?.name)}`;
 };
