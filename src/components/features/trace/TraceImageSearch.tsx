@@ -1,7 +1,6 @@
 import Button from "@/components/shared/Button";
 import CircleButton from "@/components/shared/CircleButton";
 import Input from "@/components/shared/Input";
-import useTraceImage, { TraceImageResponse } from "@/hooks/useTraceImage";
 import { isValidUrl } from "@/utils";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
@@ -37,7 +36,7 @@ const TraceImageSearch: React.FC<TraceImageSearchProps> = ({
     >
       {({ dragProps, onImageUpload, isDragging, imageList, onImageRemove }) => (
         <div className="w-full md:w-[600px] rounded-lg p-8 text-center bg-background-900">
-          <h1 className="text-2xl font-semibold">{t("upload_image")}</h1>
+          <h2 className="text-2xl font-semibold">{t("upload_image")}</h2>
           <h2 className="text-lg text-gray-300">
             {t("upload_supported_extensions")}
           </h2>

@@ -54,9 +54,9 @@ const LoginPage: NextPage<LoginPageProps> = ({ quotes }) => {
         >
           <div className="relative flex flex-col justify-center items-center w-full h-full z-20">
             <div className="w-full px-8">
-              <h1 className="text-4xl font-semibold text-white line-clamp-6">
+              <p className="text-4xl font-semibold text-white line-clamp-6">
                 &quot;{randomQuote.quote}&quot;
-              </h1>
+              </p>
               <p className="text-right text-xl italic mt-4 font-semibold">
                 {randomQuote.character}
               </p>
