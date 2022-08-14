@@ -184,6 +184,7 @@ export type VideoSource = {
   file: string;
   label?: string;
   useProxy?: boolean;
+  usePublicProxy?: boolean;
   proxy?: Proxy;
 };
 

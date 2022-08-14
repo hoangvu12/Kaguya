@@ -419,7 +419,13 @@ export const createFileFromUrl = async (url: string, filename: string) => {
   return file;
 };
 
-export const createProxyUrl = (url: string, proxy: Proxy) => {
+export const createProxyUrl = (
+  url: string,
+  proxy: Proxy,
+  isPublicProxy?: boolean
+) => {
+  if (isPublicProxy) return `https://corsproxy.io/?${encodeURIComponent(url)}`;
+
   const composeHeaders = (
     headers: Record<string, string>
   ): [string, string][] => {
