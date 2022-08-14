@@ -56,9 +56,11 @@ const Comments: React.FC<CommentsProps> = ({ parentId = null, topic }) => {
   };
 
   return (
-    <div className="relative space-y-4 mb-4">
+    <div className="space-y-4 mb-4">
       {isLoading ? (
-        <Loading className="py-4 w-8 h-8" />
+        <div className="relative w-full h-20">
+          <Loading className="w-8 h-8" />
+        </div>
       ) : (
         comments &&
         comments.map((comment) => (
