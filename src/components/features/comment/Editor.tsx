@@ -76,7 +76,11 @@ const Editor = React.forwardRef<EditorType, EditorProps>(
     useImperativeHandle(ref, () => editor, [editor]);
 
     return (
-      <div className={classNames(!readOnly && "border border-gray-600")}>
+      <div
+        className={classNames(
+          !readOnly && "border border-gray-600 max-w-[30rem]"
+        )}
+      >
         <EditorContent
           className={classNames(!readOnly && "p-4")}
           editor={editor}
