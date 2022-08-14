@@ -97,7 +97,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime, translations }) => {
             </div>
 
             <div className="flex flex-col items-center justify-between py-4 mt-4 text-center md:text-left md:items-start md:-mt-16 space-y-4">
-              <div className="flex flex-col md:items-start items-center space-y-4">
+              <div className="flex flex-col md:items-start items-center space-y-4 md:no-scrollbar">
                 {episodes?.length ? (
                   <div className="flex items-center flex-wrap gap-2 mb-4">
                     <Link href={`/anime/watch/${anime.id}`}>
@@ -151,7 +151,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime, translations }) => {
                 />
               </div>
 
-              <div className="flex space-x-8 overflow-x-auto snap-x snap-mandatory md:space-x-16">
+              <div className="flex gap-x-8 overflow-x-scroll md:gap-x-16 [&>*]:shrink-0">
                 <InfoItem
                   title={t("common:country")}
                   value={convert(anime.countryOfOrigin, "country", { locale })}
@@ -193,7 +193,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime, translations }) => {
 
         <Section className="w-full min-h-screen gap-8 mt-8 space-y-8 md:space-y-0 md:grid md:grid-cols-10 sm:px-12">
           <div className="md:col-span-2 xl:h-[max-content] space-y-4">
-            <div className="bg-background-900 rounded-md p-4 space-y-4">
+            <div className="flex flex-row md:flex-col overflow-x-scroll bg-background-900 rounded-md p-4 gap-4 [&>*]:shrink-0 md:no-scrollbar">
               <InfoItem
                 title={t("common:format")}
                 value={convert(anime.format, "format", { locale })}
@@ -235,14 +235,16 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime, translations }) => {
               />
               <InfoItem
                 title={t("common:synonyms")}
-                value={anime.synonyms.join("\n")}
+                value={anime.synonyms.map((synomym) => (
+                  <p key={synomym}>{synomym}</p>
+                ))}
               />
             </div>
 
             <div className="space-y-2 text-gray-400">
               <h1 className="font-semibold">Tags</h1>
 
-              <ul className="space-y-2">
+              <ul className="overflow-x-scroll flex flex-row md:flex-col gap-2 [&>*]:shrink-0 md:no-scrollbar">
                 {anime.tags.map((tag) => (
                   <Link
                     href={{
@@ -251,7 +253,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime, translations }) => {
                     }}
                     key={tag.id}
                   >
-                    <a className="block">
+                    <a className="md:block">
                       <li className="p-2 rounded-md bg-background-900 hover:text-primary-300 transition duration-300">
                         {tag.name}
                       </li>
