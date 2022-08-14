@@ -151,7 +151,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime, translations }) => {
                 />
               </div>
 
-              <div className="flex gap-x-8 overflow-x-scroll md:gap-x-16 [&>*]:shrink-0">
+              <div className="flex gap-x-8 overflow-x-auto md:gap-x-16 [&>*]:shrink-0">
                 <InfoItem
                   title={t("common:country")}
                   value={convert(anime.countryOfOrigin, "country", { locale })}
@@ -193,7 +193,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime, translations }) => {
 
         <Section className="w-full min-h-screen gap-8 mt-8 space-y-8 md:space-y-0 md:grid md:grid-cols-10 sm:px-12">
           <div className="md:col-span-2 xl:h-[max-content] space-y-4">
-            <div className="flex flex-row md:flex-col overflow-x-scroll bg-background-900 rounded-md p-4 gap-4 [&>*]:shrink-0 md:no-scrollbar">
+            <div className="flex flex-row md:flex-col overflow-x-auto bg-background-900 rounded-md p-4 gap-4 [&>*]:shrink-0 md:no-scrollbar">
               <InfoItem
                 title={t("common:format")}
                 value={convert(anime.format, "format", { locale })}
@@ -244,7 +244,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime, translations }) => {
             <div className="space-y-2 text-gray-400">
               <h1 className="font-semibold">Tags</h1>
 
-              <ul className="overflow-x-scroll flex flex-row md:flex-col gap-2 [&>*]:shrink-0 md:no-scrollbar">
+              <ul className="overflow-x-auto flex flex-row md:flex-col gap-2 [&>*]:shrink-0 md:no-scrollbar">
                 {anime.tags.map((tag) => (
                   <Link
                     href={{

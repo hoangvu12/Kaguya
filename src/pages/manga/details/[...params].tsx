@@ -115,7 +115,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
                 />
               </div>
 
-              <div className="flex overflow-x-auto md:scroll-bar snap-x space-x-8 md:space-x-16">
+              <div className="flex gap-x-8 overflow-x-auto md:gap-x-16 [&>*]:shrink-0">
                 <InfoItem
                   title={t("common:country")}
                   value={manga.countryOfOrigin}
@@ -139,7 +139,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
 
         <Section className="space-y-8 md:space-y-0 md:grid md:grid-cols-10 w-full min-h-screen mt-8 sm:px-12 gap-8">
           <div className="md:col-span-2 h-[max-content] space-y-4">
-            <div className="bg-background-900 rounded-md p-4 space-y-4">
+            <div className="flex flex-row md:flex-col overflow-x-auto bg-background-900 rounded-md p-4 gap-4 [&>*]:shrink-0 md:no-scrollbar">
               <InfoItem title="English" value={manga.title.english} />
               <InfoItem title="Native" value={manga.title.native} />
               <InfoItem title="Romanji" value={manga.title.romaji} />
@@ -165,7 +165,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
             <div className="space-y-2 text-gray-400">
               <h1 className="font-semibold">Tags</h1>
 
-              <ul className="space-y-2">
+              <ul className="overflow-x-auto flex flex-row md:flex-col gap-2 [&>*]:shrink-0 md:no-scrollbar">
                 {manga.tags.map((tag) => (
                   <Link
                     href={{
