@@ -22,6 +22,8 @@ export interface PlayerProps extends NetPlayerProps {
   fonts?: Font[];
 }
 
+const corsServers = [config.proxyServerUrl, "https://corsproxy.io"];
+
 const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
   ({ hotkeys, components, subtitles, fonts, ...props }, ref) => {
     const { PLAYER_TRANSLATIONS } = useConstantTranslation();
@@ -41,21 +43,35 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
       // @ts-ignore
       hls.on("hlsFragLoading", (_, { frag }) => {
         if (
-          !frag.baseurl.includes(config.proxyServerUrl) ||
+          !corsServers.some((server) => frag.url.includes(server)) ||
           frag.relurl.includes("http")
         )
           return;
 
-        const href = new URL(frag.baseurl);
-        const targetUrl = href.searchParams.get("url");
+        if (frag.url.includes(config.proxyServerUrl)) {
+          const href = new URL(frag.baseurl);
+          const targetUrl = href.searchParams.get("url");
 
-        const url = buildAbsoluteURL(targetUrl, frag.relurl, {
-          alwaysNormalize: true,
-        });
+          const url = buildAbsoluteURL(targetUrl, frag.relurl, {
+            alwaysNormalize: true,
+          });
 
-        href.searchParams.set("url", url);
+          href.searchParams.set("url", url);
 
-        frag.url = href.toString();
+          frag.url = href.toString();
+
+          // Free CORS server
+        } else if (frag.url.includes("corsproxy")) {
+          const targetUrl = decodeURIComponent(
+            frag.baseurl.replace("https://corsproxy.io/?", "")
+          );
+
+          const url = buildAbsoluteURL(targetUrl, frag.relurl, {
+            alwaysNormalize: true,
+          });
+
+          frag.url = `https://corsproxy.io/?${encodeURIComponent(url)}`;
+        }
       });
     }, []);
 
@@ -90,9 +106,17 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
     );
 
     const proxyBuilder = useCallback((url: string, source: VideoSource) => {
-      if (url.includes(config.proxyServerUrl) || !source.useProxy) return url;
+      if (
+        corsServers.some((server) => url.includes(server)) ||
+        (!source.useProxy && !source.usePublicProxy)
+      )
+        return url;
 
-      const requestUrl = createProxyUrl(url, source.proxy);
+      const requestUrl = createProxyUrl(
+        url,
+        source.proxy,
+        source.usePublicProxy
+      );
 
       return requestUrl;
     }, []);
