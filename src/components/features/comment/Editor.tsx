@@ -48,7 +48,7 @@ const Editor = React.forwardRef<EditorType, EditorProps>(
           Placeholder.configure({
             placeholder,
             emptyNodeClass:
-              "first:before:h-0 first:before:text-gray-400 first:before:float-left first:before:content-[attr(data-placeholder)] first:before:pointer-events-none",
+              "first:before:h-0 first:before:text-gray-500 first:before:float-left first:before:content-[attr(data-placeholder)] first:before:pointer-events-none",
           }),
           Mention.configure({
             HTMLAttributes: {
@@ -63,7 +63,7 @@ const Editor = React.forwardRef<EditorType, EditorProps>(
           attributes: {
             class: classNames(
               "!max-w-full prose prose-sm prose-invert focus:outline-none focus:border-none",
-              !readOnly && "min-h-[5rem]"
+              !readOnly && "min-h-[2rem]"
             ),
           },
         },
@@ -83,67 +83,84 @@ const Editor = React.forwardRef<EditorType, EditorProps>(
         />
 
         {!readOnly && (
-          <div className="p-4 flex flex-col md:flex-row justify-between border-t gap-2 border-gray-600">
+          <div className="p-2 flex flex-col md:flex-row justify-between border-t gap-2 border-gray-600">
             <div className="flex items-center md:gap-2 flex-wrap">
               <CircleButton
                 secondary
                 className="text-gray-300"
+                iconClassName="w-4 h-4"
                 LeftIcon={AiOutlineBold}
                 onClick={() => editor.chain().toggleBold().focus().run()}
+                title="Bold"
               />
 
               <CircleButton
                 secondary
                 className="text-gray-300"
+                iconClassName="w-4 h-4"
                 LeftIcon={AiOutlineUnderline}
                 onClick={() => editor.chain().toggleUnderline().focus().run()}
+                title="Underline"
               />
 
               <CircleButton
                 secondary
                 className="text-gray-300"
+                iconClassName="w-4 h-4"
                 LeftIcon={AiOutlineItalic}
                 onClick={() => editor.chain().toggleItalic().focus().run()}
+                title="Italic"
               />
 
               <CircleButton
                 secondary
                 className="text-gray-300"
+                iconClassName="w-4 h-4"
                 LeftIcon={AiOutlineUnorderedList}
                 onClick={() => editor.chain().toggleBulletList().focus().run()}
+                title="Unordered list"
               />
 
               <CircleButton
                 secondary
                 className="text-gray-300"
+                iconClassName="w-4 h-4"
                 LeftIcon={AiOutlineOrderedList}
                 onClick={() => editor.chain().toggleOrderedList().focus().run()}
+                title="Ordered list"
               />
 
               <CircleButton
                 secondary
                 className="text-gray-300"
+                iconClassName="w-4 h-4"
                 LeftIcon={AiOutlineStrikethrough}
                 onClick={() => editor.chain().toggleStrike().focus().run()}
+                title="Strikethrough"
               />
 
               <CircleButton
                 secondary
                 className="text-gray-300"
+                iconClassName="w-4 h-4"
                 LeftIcon={GrBlockQuote}
                 onClick={() => editor.chain().toggleBlockquote().focus().run()}
+                title="Blockquote"
               />
 
               <CircleButton
                 secondary
                 className="text-gray-300"
+                iconClassName="w-4 h-4"
                 LeftIcon={AiOutlineEyeInvisible}
                 onClick={() => editor.chain().setSpoiler().focus().run()}
+                title="Spoiler"
               />
             </div>
 
             <CircleButton
               className="ml-auto max-w-min text-primary-300"
+              iconClassName="w-4 h-4"
               secondary
               shortcutKey="enter"
               onClick={() => {
