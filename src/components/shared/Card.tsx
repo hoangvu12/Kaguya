@@ -35,7 +35,7 @@ const popupOptions: Partial<Options> = {
       enabled: true,
       fn: ({ state }) => {
         state.styles.popper.height = `${state.rects.reference.height}px`;
-        state.styles.popper.width = `${state.rects.reference.width * 3.5}px`;
+        state.styles.popper.width = `${state.rects.reference.width * 3}px`;
       },
       phase: "beforeWrite",
       requires: ["computeStyles"],
@@ -43,7 +43,7 @@ const popupOptions: Partial<Options> = {
         const { width, height } =
           state.elements.reference.getBoundingClientRect();
 
-        state.elements.popper.style.width = `${width * 3.5}px`;
+        state.elements.popper.style.width = `${width * 3}px`;
 
         state.elements.popper.style.height = `${height}px`;
       },
