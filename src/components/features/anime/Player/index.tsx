@@ -6,6 +6,7 @@ import { Font, VideoSource } from "@/types";
 import { createProxyUrl } from "@/utils";
 import SubtitlesOctopus from "libass-wasm";
 import NetPlayer, { NetPlayerProps } from "netplayer";
+import Hls from "netplayer/dist/types/hls.js";
 import React, { useCallback, useMemo, useRef } from "react";
 import { buildAbsoluteURL } from "url-toolkit";
 import Subtitle from "./Subtitle";
@@ -28,6 +29,7 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
   ({ hotkeys, components, subtitles, fonts, ...props }, ref) => {
     const { PLAYER_TRANSLATIONS } = useConstantTranslation();
     const subtitlesOctopusRef = useRef(null);
+    const firstLoaded = useRef(false);
 
     const playerComponents = useMemo(
       () => ({ ...components, Subtitle }),
@@ -39,7 +41,30 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
       [hotkeys]
     );
 
-    const handleHlsInit = useCallback((hls) => {
+    const handleHlsInit = useCallback((hls: Hls, source: VideoSource) => {
+      // @ts-ignore
+      hls.on("hlsManifestParsed", (_, info) => {
+        info.levels.forEach((level) => {
+          if (!level?.url?.length) return;
+
+          level.url = level.url.map((url) => {
+            if (!corsServers.some((server) => url.includes(server))) return url;
+
+            if (url.includes("corsproxy")) {
+              const targetUrl = decodeURIComponent(
+                url.replace("https://corsproxy.io/", "")
+              );
+
+              const finalUrl = buildAbsoluteURL(source.file, targetUrl, {
+                alwaysNormalize: true,
+              });
+
+              return `https://corsproxy.io/?${encodeURIComponent(finalUrl)}`;
+            }
+          });
+        });
+      });
+
       // @ts-ignore
       hls.on("hlsFragLoading", (_, { frag }) => {
         if (
