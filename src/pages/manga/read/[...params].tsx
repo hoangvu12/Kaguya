@@ -166,7 +166,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ chapters }) => {
 
   if (mangaLoading || !manga?.media) {
     return (
-      <div className="relative w-full h-full">
+      <div className="relative w-full min-h-screen">
         <Loading />
       </div>
     );

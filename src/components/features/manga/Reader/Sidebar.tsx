@@ -36,7 +36,7 @@ const sidebarVariants: Variants = {
     width: 0,
     opacity: 0,
   },
-  animate: { width: "30%", opacity: 1 },
+  animate: { width: "25%", opacity: 1 },
 };
 
 const mobileSidebarVarants: Variants = {
@@ -102,7 +102,7 @@ const Sidebar = () => {
     currentChapterEl.scrollIntoView();
   }, [currentChapter]);
 
-  const horizontalScrollRef = useHorizontalScroll<HTMLUListElement>();
+  const horizontalScrollRef = useHorizontalScroll<HTMLDivElement>();
 
   return (
     <motion.div
@@ -110,7 +110,7 @@ const Sidebar = () => {
       animate={isSidebarOpen ? "animate" : "initial"}
       initial="initial"
       className={classNames(
-        "bg-background-800",
+        "bg-background-800 flex-shrink-0 flex-grow-0",
         isMobile && "fixed top-0 w-full min-h-[content] z-50"
       )}
       transition={{ ease: transition, duration: 0.6 }}
@@ -140,11 +140,11 @@ const Sidebar = () => {
         </div>
 
         <MobileView>
-          <div className="flex space-x-2 w-full px-2">
+          <div className="flex gap-x-2 w-full px-2 overflow-x-auto no-scrollbar [&>*]:shrink-0">
             {Object.keys(sources).map((source) => (
               <div
                 className={classNames(
-                  "overflow-x-scroll text-gray-300 cursor-pointer rounded-[18px] px-2 py-1 w-[max-content] duration-300 transition",
+                  "text-gray-300 cursor-pointer rounded-[18px] px-2 py-1 w-[max-content] duration-300 transition",
                   activeSource === source
                     ? "bg-white text-black"
                     : "hover:text-white"
@@ -279,7 +279,10 @@ const Sidebar = () => {
             }
           />
 
-          <div className="flex space-x-2 w-full px-2">
+          <div
+            ref={horizontalScrollRef}
+            className="flex space-x-2 w-full px-2 overflow-x-scroll no-scrollbar [&>*]:shrink-0"
+          >
             {Object.keys(sources).map((source) => (
               <div
                 className={classNames(
@@ -298,10 +301,7 @@ const Sidebar = () => {
         </BrowserView>
 
         <BrowserView renderWithFragment>
-          <ul
-            ref={horizontalScrollRef}
-            className="h-full overflow-auto bg-background-900"
-          >
+          <ul className="h-full overflow-auto bg-background-900">
             {filteredChapters.map((chapter) => {
               const isActive =
                 chapter.sourceChapterId === currentChapter.sourceChapterId;
