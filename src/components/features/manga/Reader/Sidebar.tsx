@@ -29,6 +29,7 @@ import {
 } from "react-icons/cg";
 import { HiOutlineArrowsExpand } from "react-icons/hi";
 import { useTranslation } from "next-i18next";
+import useHorizontalScroll from "@/hooks/useHorizontalScroll";
 
 const sidebarVariants: Variants = {
   initial: {
@@ -101,6 +102,8 @@ const Sidebar = () => {
     currentChapterEl.scrollIntoView();
   }, [currentChapter]);
 
+  const horizontalScrollRef = useHorizontalScroll<HTMLUListElement>();
+
   return (
     <motion.div
       variants={isMobile ? mobileSidebarVarants : sidebarVariants}
@@ -141,7 +144,7 @@ const Sidebar = () => {
             {Object.keys(sources).map((source) => (
               <div
                 className={classNames(
-                  "text-gray-300 cursor-pointer rounded-[18px] px-2 py-1 w-[max-content] duration-300 transition",
+                  "overflow-x-scroll text-gray-300 cursor-pointer rounded-[18px] px-2 py-1 w-[max-content] duration-300 transition",
                   activeSource === source
                     ? "bg-white text-black"
                     : "hover:text-white"
@@ -295,7 +298,10 @@ const Sidebar = () => {
         </BrowserView>
 
         <BrowserView renderWithFragment>
-          <ul className="h-full overflow-auto bg-background-900">
+          <ul
+            ref={horizontalScrollRef}
+            className="h-full overflow-auto bg-background-900"
+          >
             {filteredChapters.map((chapter) => {
               const isActive =
                 chapter.sourceChapterId === currentChapter.sourceChapterId;

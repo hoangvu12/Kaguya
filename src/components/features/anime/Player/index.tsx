@@ -60,6 +60,19 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
               });
 
               return `https://corsproxy.io/?${encodeURIComponent(finalUrl)}`;
+            } else if (url.includes(config.proxyServerUrl)) {
+              const targetUrl = decodeURIComponent(
+                url.replace(config.proxyServerUrl + "/", "")
+              );
+
+              const href = new URL(source.file);
+              const baseUrl = href.searchParams.get("url");
+
+              const finalUrl = buildAbsoluteURL(baseUrl, targetUrl, {
+                alwaysNormalize: true,
+              });
+
+              return createProxyUrl(finalUrl, source.proxy);
             }
           });
         });
