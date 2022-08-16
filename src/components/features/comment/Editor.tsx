@@ -26,6 +26,7 @@ interface EditorProps extends Partial<EditorOptions> {
   placeholder?: string;
   readOnly?: boolean;
   isLoading?: boolean;
+  className?: string;
 }
 
 const Editor = React.forwardRef<EditorType, EditorProps>(
@@ -36,6 +37,7 @@ const Editor = React.forwardRef<EditorType, EditorProps>(
       placeholder,
       readOnly,
       isLoading,
+      className,
       ...editorOptions
     },
     ref
@@ -78,7 +80,8 @@ const Editor = React.forwardRef<EditorType, EditorProps>(
     return (
       <div
         className={classNames(
-          !readOnly && "border border-gray-600 max-w-[30rem]"
+          !readOnly && "border border-gray-600 max-w-[30rem]",
+          className
         )}
       >
         <EditorContent

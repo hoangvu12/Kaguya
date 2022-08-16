@@ -77,7 +77,11 @@ const NewestComments: React.FC<NewestCommentsProps> = (props) => {
                       </div>
                     </div>
 
-                    <Editor readOnly defaultContent={comment.comment} />
+                    <Editor
+                      className="line-clamp-2 md:line-clamp-4"
+                      readOnly
+                      defaultContent={comment.comment}
+                    />
                   </div>
 
                   <Link href={redirectUrl}>
