@@ -40,6 +40,7 @@ const BannerSwiper: React.FC<BannerSwiperProps> = ({ data, ...props }) => {
           slidesPerView: 3,
         },
       }}
+      slideToClickedSlide
       {...props}
     >
       {data.map((anime) => (
@@ -62,6 +63,7 @@ const BannerSwiper: React.FC<BannerSwiperProps> = ({ data, ...props }) => {
                 }}
                 className="w-full"
                 animate={isActive ? "enter" : "exit"}
+                title={title}
               >
                 <PlainCard src={anime.coverImage.extraLarge} alt={title} />
               </motion.div>

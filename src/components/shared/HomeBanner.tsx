@@ -152,6 +152,10 @@ const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data }) => {
 
   const handleSlideChange: SwiperProps["onSlideChange"] = useCallback(
     (swiper) => {
+      console.log(swiper.activeIndex);
+
+      swiper.loopCreate;
+
       setIndex(swiper.realIndex);
     },
     []
