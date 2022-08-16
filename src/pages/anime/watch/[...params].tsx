@@ -303,7 +303,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ episodes }) => {
           </Portal>
         )}
 
-        {isError && (
+        {isError ? (
           <Portal selector=".netplayer-container">
             <div className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 space-y-4">
               <p className="text-4xl font-semibold text-center">｡゜(｀Д´)゜｡</p>
@@ -315,6 +315,23 @@ const WatchPage: NextPage<WatchPageProps> = ({ episodes }) => {
               </p>
             </div>
           </Portal>
+        ) : (
+          !isLoading &&
+          !data?.sources?.length && (
+            <Portal selector=".netplayer-container">
+              <div className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 space-y-4">
+                <p className="text-4xl font-semibold text-center">
+                  ｡゜(｀Д´)゜｡
+                </p>
+                <p className="text-xl text-center">
+                  Đã có lỗi xảy ra (No sources found)
+                </p>
+                <p className="text-lg text-center">
+                  Bạn có thể chọn source khác hoặc thử lại sau.
+                </p>
+              </div>
+            </Portal>
+          )
         )}
 
         {showInfoOverlay && (
