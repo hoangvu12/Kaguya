@@ -71,6 +71,7 @@ const Swiper: React.FC<SwiperProps> = ({
           spaceBetween: 10,
         },
       }}
+      grabCursor
       onInit={(swiper) => {
         // @ts-ignore
         // eslint-disable-next-line no-param-reassign
