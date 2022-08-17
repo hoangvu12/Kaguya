@@ -15,13 +15,15 @@ import useMediaDetails from "@/hooks/useMediaDetails";
 import useUploadedEpisodes from "@/hooks/useUploadedEpisodes";
 import { AdditionalUser, Source } from "@/types";
 import { MediaType } from "@/types/anilist";
-import { sortMediaUnit } from "@/utils/data";
+import { getDescription, getTitle, sortMediaUnit } from "@/utils/data";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { NextPage } from "next";
 import Link from "next/link";
 import { useMemo } from "react";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { useQueryClient } from "react-query";
+import AddTranslationModal from "@/components/shared/AddTranslationModal";
+import { useRouter } from "next/router";
 
 interface UploadAnimePageProps {
   user: AdditionalUser;
@@ -39,6 +41,8 @@ const UploadAnimePage: NextPage<UploadAnimePageProps> = ({
     id: mediaId,
   });
 
+  const { locale } = useRouter();
+
   const queryClient = useQueryClient();
 
   const { mutateAsync: animeSourceDelete, isLoading: deleteLoading } =
@@ -55,6 +59,12 @@ const UploadAnimePage: NextPage<UploadAnimePageProps> = ({
 
     return sortMediaUnit(uploadedEpisodes);
   }, [episodesLoading, uploadedEpisodes]);
+
+  const title = useMemo(() => getTitle(anime, locale), [anime, locale]);
+  const description = useMemo(
+    () => getDescription(anime, locale),
+    [anime, locale]
+  );
 
   const handleConfirm = async () => {
     await animeSourceDelete(null, {
@@ -78,17 +88,22 @@ const UploadAnimePage: NextPage<UploadAnimePageProps> = ({
               <MediaDetails media={anime} />
 
               <div className="mt-8">
-                <Link href={`/upload/anime/${mediaId}/episodes/create`}>
-                  <a>
-                    <Button
-                      LeftIcon={IoIosAddCircleOutline}
-                      primary
-                      className="ml-auto mb-4"
-                    >
-                      Tập mới
-                    </Button>
-                  </a>
-                </Link>
+                <div className="w-full flex justify-end items-center gap-x-2 [&>*]:w-max">
+                  <Link href={`/upload/anime/${mediaId}/episodes/create`}>
+                    <a>
+                      <Button LeftIcon={IoIosAddCircleOutline} primary>
+                        Tập mới
+                      </Button>
+                    </a>
+                  </Link>
+
+                  <AddTranslationModal
+                    mediaId={mediaId}
+                    mediaType={MediaType.Anime}
+                    defaultDescription={description}
+                    defaultTitle={title}
+                  />
+                </div>
 
                 <div className="space-y-2">
                   {sortedEpisodes.map((episode) => (
