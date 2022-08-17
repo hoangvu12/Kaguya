@@ -13,7 +13,7 @@ import useMediaDetails from "@/hooks/useMediaDetails";
 import useUploadedChapters from "@/hooks/useUploadedChapters";
 import { AdditionalUser, Source } from "@/types";
 import { MediaType } from "@/types/anilist";
-import { sortMediaUnit } from "@/utils/data";
+import { getDescription, getTitle, sortMediaUnit } from "@/utils/data";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { NextPage } from "next";
 import Link from "next/link";
@@ -21,6 +21,10 @@ import { useMemo } from "react";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import useMangaSourceDelete from "@/hooks/useMangaSourceDelete";
 import { useQueryClient } from "react-query";
+import AddTranslationModal from "@/components/shared/AddTranslationModal";
+import { locale } from "dayjs";
+import anime from "../../anime";
+import { useRouter } from "next/router";
 
 interface UploadMangaPageProps {
   user: AdditionalUser;
@@ -40,6 +44,8 @@ const UploadMangaPage: NextPage<UploadMangaPageProps> = ({
 
   const queryClient = useQueryClient();
 
+  const { locale } = useRouter();
+
   const { mutate: mangaSourceDelete, isLoading: deleteLoading } =
     useMangaSourceDelete(`${sourceId}-${mediaId}`);
 
@@ -54,6 +60,12 @@ const UploadMangaPage: NextPage<UploadMangaPageProps> = ({
 
     return sortMediaUnit(uploadedChapters);
   }, [chaptersLoading, uploadedChapters]);
+
+  const title = useMemo(() => getTitle(manga, locale), [manga, locale]);
+  const description = useMemo(
+    () => getDescription(manga, locale),
+    [manga, locale]
+  );
 
   const handleConfirm = () => {
     mangaSourceDelete(null, {
@@ -77,17 +89,22 @@ const UploadMangaPage: NextPage<UploadMangaPageProps> = ({
               <MediaDetails media={manga} />
 
               <div className="mt-8">
-                <Link href={`/upload/manga/${mediaId}/chapters/create`}>
-                  <a>
-                    <Button
-                      LeftIcon={IoIosAddCircleOutline}
-                      primary
-                      className="ml-auto mb-4"
-                    >
-                      Chapter mới
-                    </Button>
-                  </a>
-                </Link>
+                <div className="w-full flex justify-end items-center gap-x-2 [&>*]:w-max">
+                  <Link href={`/upload/manga/${mediaId}/chapters/create`}>
+                    <a>
+                      <Button LeftIcon={IoIosAddCircleOutline} primary>
+                        Chapter mới
+                      </Button>
+                    </a>
+                  </Link>
+
+                  <AddTranslationModal
+                    mediaId={mediaId}
+                    mediaType={MediaType.Manga}
+                    defaultDescription={description}
+                    defaultTitle={title}
+                  />
+                </div>
 
                 <div className="space-y-2">
                   {sortedChapters.map((chapter) => (
