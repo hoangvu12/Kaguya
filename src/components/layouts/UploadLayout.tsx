@@ -109,7 +109,7 @@ const UploadLayout: React.FC = ({ children }) => {
                     <li
                       className={classNames(
                         "flex items-center space-x-2 transition duration-300 font-semibold px-3 py-2 cursor-pointer rounded-md",
-                        isActive ? "bg-primary-600" : "hover:bg-white/20"
+                        isActive ? "bg-white/20" : "hover:bg-white/20"
                       )}
                       onClick={() => setIsMenuOpen(false)}
                     >
