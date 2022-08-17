@@ -166,22 +166,24 @@ const Editor = React.forwardRef<EditorType, EditorProps>(
               />
             </div>
 
-            <CircleButton
-              className="ml-auto max-w-min text-primary-300"
-              iconClassName="w-4 h-4"
-              secondary
-              shortcutKey="enter"
-              onClick={() => {
-                if (editor.isEmpty) return;
+            {onSubmit && (
+              <CircleButton
+                className="ml-auto max-w-min text-primary-300"
+                iconClassName="w-4 h-4"
+                secondary
+                shortcutKey="enter"
+                onClick={() => {
+                  if (editor.isEmpty) return;
 
-                const html = editor.getHTML();
+                  const html = editor.getHTML();
 
-                onSubmit?.(html);
-              }}
-              isLoading={isLoading}
-              disabled={editor?.isEmpty}
-              LeftIcon={AiOutlineSend}
-            />
+                  onSubmit(html);
+                }}
+                isLoading={isLoading}
+                disabled={editor?.isEmpty}
+                LeftIcon={AiOutlineSend}
+              />
+            )}
           </div>
         )}
       </div>
