@@ -9,7 +9,13 @@ export interface DescriptionProps extends EditorProps {
 const Description = React.forwardRef<EditorType, DescriptionProps>(
   ({ description, ...props }, ref) => {
     return (
-      <Editor ref={ref} readOnly defaultContent={description} {...props} />
+      <Editor
+        ref={ref}
+        readOnly
+        defaultContent={description}
+        editorClassName="text-base text-gray-300 hover:text-gray-100"
+        {...props}
+      />
     );
   }
 );

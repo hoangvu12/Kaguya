@@ -7,7 +7,7 @@ import {
   isColorVisible,
   numberWithCommas,
 } from "@/utils";
-import { convert, getTitle } from "@/utils/data";
+import { convert, getDescription, getTitle } from "@/utils/data";
 import { Options } from "@popperjs/core";
 import classNames from "classnames";
 import Link from "next/link";
@@ -73,6 +73,11 @@ const Card: React.FC<CardProps> = (props) => {
     [data, router?.locale]
   );
 
+  const description = useMemo(
+    () => getDescription(data, router.locale),
+    [data, router.locale]
+  );
+
   return (
     <Link href={redirectUrl}>
       <a>
@@ -127,7 +132,7 @@ const Card: React.FC<CardProps> = (props) => {
             </p>
 
             <Description
-              description={data.description}
+              description={description}
               className="text-gray-300 hover:text-gray-100 transition duration-300 line-clamp-3 mb-2"
             />
 

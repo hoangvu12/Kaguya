@@ -29,7 +29,6 @@ import { MdOutlineTitle } from "react-icons/md";
 interface CreateRoomPageProps {
   media: Media;
   episodes: Episode[];
-  translations: TMDBTranlations.Translation[];
 }
 
 type Visibility = "public" | "private";
@@ -38,11 +37,7 @@ type VisibilityOption = {
   value: Visibility;
 };
 
-const CreateRoomPage: NextPage<CreateRoomPageProps> = ({
-  media,
-  episodes,
-  translations,
-}) => {
+const CreateRoomPage: NextPage<CreateRoomPageProps> = ({ media, episodes }) => {
   const { isMobile } = useDevice();
   const [roomTitle, setRoomTitle] = useState("");
   const { VISIBILITY_MODES } = useConstantTranslation();
@@ -60,13 +55,10 @@ const CreateRoomPage: NextPage<CreateRoomPageProps> = ({
     sortedEpisodes[0]
   );
 
-  const mediaTitle = useMemo(
-    () => getTitle(media, locale, translations),
-    [media, locale, translations]
-  );
+  const mediaTitle = useMemo(() => getTitle(media, locale), [media, locale]);
   const mediaDescription = useMemo(
-    () => getDescription(media, locale, translations),
-    [media, locale, translations]
+    () => getDescription(media, locale),
+    [media, locale]
   );
 
   const handleInputChange = useCallback(
@@ -241,7 +233,7 @@ export const getServerSideProps = withPageAuth({
         fields
       );
 
-      const [{ data, error }, { media, translations }] = await Promise.all([
+      const [{ data, error }, media] = await Promise.all([
         sourcePromise,
         mediaPromise,
       ]);
@@ -258,7 +250,6 @@ export const getServerSideProps = withPageAuth({
         props: {
           media,
           episodes,
-          translations,
         },
       };
     } catch (error) {

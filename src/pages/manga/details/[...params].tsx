@@ -37,22 +37,18 @@ import { BsFillPlayFill } from "react-icons/bs";
 
 interface DetailsPageProps {
   manga: Media;
-  translations: Translation[];
 }
 
-const DetailsPage: NextPage<DetailsPageProps> = ({ manga, translations }) => {
+const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
   const { user } = useUser();
   const { locale } = useRouter();
   const { t } = useTranslation("manga_details");
   const { data: chapters, isLoading } = useChapters(manga.id);
 
-  const title = useMemo(
-    () => getTitle(manga, locale, translations),
-    [manga, locale, translations]
-  );
+  const title = useMemo(() => getTitle(manga, locale), [manga, locale]);
   const description = useMemo(
-    () => getDescription(manga, locale, translations),
-    [manga, locale, translations]
+    () => getDescription(manga, locale),
+    [manga, locale]
   );
 
   return (
@@ -272,7 +268,7 @@ export const getStaticProps: GetStaticProps = async ({
   params: { params },
 }) => {
   try {
-    const { media, translations } = await getMediaDetails({
+    const media = await getMediaDetails({
       type: MediaType.Manga,
       id: Number(params[0]),
     });
@@ -280,7 +276,6 @@ export const getStaticProps: GetStaticProps = async ({
     return {
       props: {
         manga: media as Media,
-        translations,
       },
       revalidate: REVALIDATE_TIME,
     };
