@@ -88,7 +88,7 @@ const UploadAnimePage: NextPage<UploadAnimePageProps> = ({
               <MediaDetails media={anime} />
 
               <div className="mt-8">
-                <div className="w-full flex justify-end items-center gap-x-2 [&>*]:w-max">
+                <div className="w-full flex justify-end items-center gap-x-2 [&>*]:w-max mb-8">
                   <Link href={`/upload/anime/${mediaId}/episodes/create`}>
                     <a>
                       <Button LeftIcon={IoIosAddCircleOutline} primary>
