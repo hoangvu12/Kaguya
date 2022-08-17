@@ -100,8 +100,6 @@ export const convert = (
 };
 
 export const getTitle = (data: Media, locale?: string) => {
-  if (locale === "en") return data?.title.userPreferred;
-
   const translations = data?.translations || [];
 
   const translation = translations.find((trans) => trans.locale === locale);
@@ -114,8 +112,6 @@ export const getTitle = (data: Media, locale?: string) => {
 };
 
 export const getDescription = (data: Media, locale?: string) => {
-  if (locale === "en") return data?.description;
-
   const translations = data?.translations || [];
 
   const translation = translations.find((trans) => trans.locale === locale);

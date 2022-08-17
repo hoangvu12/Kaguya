@@ -89,7 +89,7 @@ const UploadMangaPage: NextPage<UploadMangaPageProps> = ({
               <MediaDetails media={manga} />
 
               <div className="mt-8">
-                <div className="w-full flex justify-end items-center gap-x-2 [&>*]:w-max">
+                <div className="w-full flex justify-end items-center gap-x-2 [&>*]:w-max mb-8">
                   <Link href={`/upload/manga/${mediaId}/chapters/create`}>
                     <a>
                       <Button LeftIcon={IoIosAddCircleOutline} primary>
