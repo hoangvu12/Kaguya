@@ -1,16 +1,16 @@
 import Button from "@/components/shared/Button";
 import Head from "@/components/shared/Head";
+import { REVALIDATE_TIME } from "@/constants";
 import useSignIn from "@/hooks/useSignIn";
 import quotes from "@/quotes.json";
 import { randomElement } from "@/utils";
 import { Provider } from "@supabase/gotrue-js";
 import axios from "axios";
 import { GetStaticProps, NextPage } from "next";
+import { useTranslation } from "next-i18next";
 import React, { useMemo } from "react";
 import { FaDiscord, FaFacebookF } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { REVALIDATE_TIME } from "@/constants";
-import { useTranslation } from "next-i18next";
 
 interface Quote {
   anime: string;
@@ -29,7 +29,7 @@ const LoginPage: NextPage<LoginPageProps> = ({ quotes }) => {
   const { t } = useTranslation("login");
 
   const signInMutation = useSignIn({
-    redirectTo: isDev ? "http://localhost:3000" : "/",
+    redirectTo: isDev ? `http://localhost:3000` : "/",
   });
 
   const handleSignIn = (provider: Provider) => () => {

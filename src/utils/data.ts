@@ -1,8 +1,7 @@
 import enTranslations from "@/constants/en";
 import viTranslations from "@/constants/vi";
 import ruTranslations from "@/constants/ru";
-import { TMDBTranlations } from "@/services/tmdb";
-import { Chapter, Episode } from "@/types";
+import { Chapter, Episode, Translation as TranslationType } from "@/types";
 import { Media } from "@/types/anilist";
 import { Translation } from "next-i18next";
 import { parseNumbersFromString } from ".";
@@ -103,37 +102,33 @@ export const convert = (
 export const getTitle = (
   data: Media,
   locale?: string,
-  translations: TMDBTranlations.Translation[] = []
+  translations: TranslationType[] = []
 ) => {
   if (locale === "en") return data?.title.userPreferred;
 
-  const translation = translations.find((trans) => trans.iso_639_1 === locale);
+  const translation = translations.find((trans) => trans.locale === locale);
 
   if (!translation) {
     return data?.title?.userPreferred;
   }
 
-  return (
-    translation.data.title ||
-    translation.data.name ||
-    data?.title?.userPreferred
-  );
+  return translation.title || data?.title?.userPreferred;
 };
 
 export const getDescription = (
   data: Media,
   locale?: string,
-  translations: TMDBTranlations.Translation[] = []
+  translations: TranslationType[] = []
 ) => {
   if (locale === "en") return data?.description;
 
-  const translation = translations.find((trans) => trans.iso_639_1 === locale);
+  const translation = translations.find((trans) => trans.locale === locale);
 
   if (!translation) {
     return data?.description;
   }
 
-  return translation.data.overview || data?.description;
+  return translation.description || data?.description;
 };
 
 export const sortMediaUnit = <T extends Chapter | Episode>(data: T[]) => {

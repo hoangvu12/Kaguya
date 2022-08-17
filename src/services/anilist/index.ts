@@ -1,17 +1,19 @@
+import { Translation } from "@/types";
 import {
   AiringSchedule,
-  MediaArgs,
-  PageArgs,
   AiringScheduleArgs,
+  CharacterArgs,
+  MediaArgs,
+  MediaType,
+  PageArgs,
   RecommendationArgs,
   StaffArgs,
-  CharacterArgs,
   StudioArgs,
-  MediaType,
 } from "@/types/anilist";
 import { removeArrayOfObjectDup } from "@/utils";
+import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import axios from "axios";
-import { getTranslations, TMDBTranlations } from "../tmdb";
+import { getTranslations } from "../tmdb";
 import {
   airingSchedulesQuery,
   charactersDefaultFields,
@@ -74,10 +76,18 @@ export const getMediaDetails = async (
     args
   );
 
-  let translations: TMDBTranlations.Translation[] = [];
+  let translations: Translation[] = [];
   const media = response?.Media;
 
-  if (args?.type === MediaType.Manga) {
+  const { data } = await supabaseClient
+    .from<Translation>("kaguya_translations")
+    .select("*")
+    .eq("mediaId", media.id)
+    .eq("mediaType", args?.type || MediaType.Anime);
+
+  if (data?.length) {
+    translations = data;
+  } else if (args?.type === MediaType.Manga) {
     translations = null;
   } else {
     translations = await getTranslations(media);

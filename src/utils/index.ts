@@ -1,4 +1,6 @@
+import config from "@/config";
 import dayjs from "@/lib/dayjs";
+import { Proxy } from "@/types";
 import {
   Character,
   Media,
@@ -8,11 +10,9 @@ import {
   Studio,
 } from "@/types/anilist";
 import axios from "axios";
-import { toast } from "react-toastify";
 import mime from "mime";
-import config from "@/config";
-import { Episode, Proxy } from "@/types";
 import { stringify } from "querystring";
+import { toast } from "react-toastify";
 
 export const randomElement = <T>(array: T[]): T => {
   const index = Math.floor(Math.random() * array.length);

@@ -20,13 +20,15 @@ import {
 import { GrBlockQuote } from "react-icons/gr";
 import { Editor as EditorType } from "@tiptap/react";
 
-interface EditorProps extends Partial<EditorOptions> {
+export interface EditorProps extends Partial<EditorOptions> {
   defaultContent?: string;
   onSubmit?: (content: string) => void;
   placeholder?: string;
   readOnly?: boolean;
   isLoading?: boolean;
   className?: string;
+  containerProps?: React.HTMLAttributes<HTMLDivElement>;
+  editorClassName?: string;
 }
 
 const Editor = React.forwardRef<EditorType, EditorProps>(
@@ -38,6 +40,7 @@ const Editor = React.forwardRef<EditorType, EditorProps>(
       readOnly,
       isLoading,
       className,
+      editorClassName,
       ...editorOptions
     },
     ref
@@ -65,24 +68,22 @@ const Editor = React.forwardRef<EditorType, EditorProps>(
           attributes: {
             class: classNames(
               "!max-w-full prose prose-sm prose-invert focus:outline-none focus:border-none",
-              !readOnly && "min-h-[2rem]"
+              !readOnly && "min-h-[2rem]",
+              editorClassName
             ),
           },
         },
         editable: !readOnly,
         ...editorOptions,
       },
-      [placeholder, readOnly, defaultContent]
+      [placeholder, readOnly, defaultContent, editorClassName]
     );
 
     useImperativeHandle(ref, () => editor, [editor]);
 
     return (
       <div
-        className={classNames(
-          !readOnly && "border border-gray-600 max-w-[30rem]",
-          className
-        )}
+        className={classNames(!readOnly && "border border-gray-600", className)}
       >
         <EditorContent
           className={classNames(!readOnly && "p-4")}
