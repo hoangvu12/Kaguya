@@ -7,6 +7,7 @@ import { getMentionedUserIds } from "@/utils/editor";
 import { useUser } from "@supabase/auth-helpers-react";
 import { Editor as EditorType } from "@tiptap/react";
 import { Trans, useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import CommentComponent from "./Comment";
 import Editor from "./Editor";
@@ -27,6 +28,8 @@ const Comments: React.FC<CommentsProps> = ({ parentId = null, topic }) => {
   const commentReply = useCommentReply();
   const { user } = useUser();
   const editorRef = useRef<EditorType>(null);
+
+  const { asPath } = useRouter();
 
   const { mutate: createComment, isLoading: createCommentLoading } =
     useCreateComment();
@@ -82,7 +85,7 @@ const Comments: React.FC<CommentsProps> = ({ parentId = null, topic }) => {
           <Trans i18nKey="comment:need_login_msg">
             Bạn phải{" "}
             <TransLink
-              href="/login"
+              href={`/login?redirectedFrom=${asPath}`}
               className="text-primary-300 hover:underline"
             >
               đăng nhập
