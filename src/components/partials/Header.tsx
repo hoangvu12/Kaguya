@@ -149,7 +149,7 @@ const Header = () => {
           <HeaderProfile />
         ) : (
           <div className="flex items-center space-x-2">
-            <Link href="/login">
+            <Link href={`/login?redirectedFrom=${router.asPath}`}>
               <a>
                 <Button primary>
                   <p>{t("login")}</p>

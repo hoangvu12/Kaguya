@@ -1,7 +1,6 @@
 import { AdditionalUser } from "@/types";
-import { getUser, supabaseClient, User } from "@supabase/auth-helpers-nextjs";
+import { getUser, supabaseClient } from "@supabase/auth-helpers-nextjs";
 import {
-  GetServerSideProps,
   GetServerSidePropsContext,
   GetServerSidePropsResult,
   PreviewData,
@@ -77,7 +76,7 @@ const withAdditionalUser =
       return {
         redirect: {
           statusCode: 302,
-          destination: "/login",
+          destination: `/login`,
         },
       };
     }

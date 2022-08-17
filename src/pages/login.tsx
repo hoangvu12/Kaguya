@@ -8,6 +8,7 @@ import { Provider } from "@supabase/gotrue-js";
 import axios from "axios";
 import { GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { FaDiscord, FaFacebookF } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
@@ -28,8 +29,14 @@ const LoginPage: NextPage<LoginPageProps> = ({ quotes }) => {
   const randomQuote = useMemo(() => randomElement(quotes), [quotes]);
   const { t } = useTranslation("login");
 
+  const { query } = useRouter();
+
+  const { redirectedFrom = "/" } = query as { redirectedFrom: string };
+
   const signInMutation = useSignIn({
-    redirectTo: isDev ? `http://localhost:3000` : "/",
+    redirectTo: isDev
+      ? `http://localhost:3000${redirectedFrom}`
+      : redirectedFrom,
   });
 
   const handleSignIn = (provider: Provider) => () => {
