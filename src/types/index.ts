@@ -1,5 +1,4 @@
 import { SkeletonProps } from "@/components/shared/Skeleton";
-import { TMDBTranlations } from "@/services/tmdb";
 import { Attachment, FileInfo } from "@/services/upload";
 import { SupabaseQueryFunction, SupabaseQueryOptions } from "@/utils/supabase";
 import { User } from "@supabase/gotrue-js";
@@ -210,6 +209,14 @@ export type RoomUser = {
   useVoiceChat: boolean;
 } & BasicRoomUser;
 
+export type Translation = {
+  locale: string;
+  title: string;
+  description: string;
+  mediaId?: number;
+  mediaType?: string;
+};
+
 export type Room = {
   id: number;
   hostUser: User;
@@ -223,7 +230,7 @@ export type Room = {
   title?: string;
   episodes: Episode[];
   visibility: "public" | "private";
-  translations: TMDBTranlations.Translation[];
+  translations: Translation[];
 };
 
 export type Chat = {

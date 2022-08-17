@@ -1,5 +1,6 @@
 import LocaleEpisodeSelector from "@/components/features/anime/Player/LocaleEpisodeSelector";
 import Comments from "@/components/features/comment/Comments";
+import AddTranslationModal from "@/components/shared/AddTranslationModal";
 import Button from "@/components/shared/Button";
 import Card from "@/components/shared/Card";
 import CharacterConnectionCard from "@/components/shared/CharacterConnectionCard";
@@ -12,6 +13,7 @@ import List from "@/components/shared/List";
 import MediaDescription from "@/components/shared/MediaDescription";
 import NotificationButton from "@/components/shared/NotificationButton";
 import PlainCard from "@/components/shared/PlainCard";
+import Popup from "@/components/shared/Popup";
 import Section from "@/components/shared/Section";
 import SourceStatus from "@/components/shared/SourceStatus";
 import Spinner from "@/components/shared/Spinner";
@@ -20,7 +22,7 @@ import withRedirect from "@/hocs/withRedirect";
 import useEpisodes from "@/hooks/useEpisodes";
 import dayjs from "@/lib/dayjs";
 import { getMediaDetails } from "@/services/anilist";
-import { TMDBTranlations } from "@/services/tmdb";
+import { Translation } from "@/types";
 import { Media, MediaType } from "@/types/anilist";
 import {
   createStudioDetailsUrl,
@@ -35,11 +37,12 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { AiOutlineUpload } from "react-icons/ai";
+import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { BsFillPlayFill } from "react-icons/bs";
 
 interface DetailsPageProps {
   anime: Media;
-  translations: TMDBTranlations.Translation[];
+  translations: Translation[];
 }
 
 const DetailsPage: NextPage<DetailsPageProps> = ({ anime, translations }) => {
@@ -108,27 +111,48 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime, translations }) => {
                       </a>
                     </Link>
 
-                    <Link href={`/wwf/create/${anime.id}`}>
-                      <a>
+                    <Popup
+                      reference={
                         <Button
-                          className="text-black"
-                          LeftIcon={BsFillPlayFill}
-                        >
-                          <p>{t("watch_with_friends")}</p>
-                        </Button>
-                      </a>
-                    </Link>
+                          className="!bg-[#393a3b]"
+                          LeftIcon={BiDotsHorizontalRounded}
+                        ></Button>
+                      }
+                      placement="bottom"
+                      type="click"
+                      className="space-y-2"
+                    >
+                      <Link href={`/wwf/create/${anime.id}`}>
+                        <a>
+                          <Button
+                            secondary
+                            className="w-full"
+                            LeftIcon={BsFillPlayFill}
+                          >
+                            <p>{t("watch_with_friends")}</p>
+                          </Button>
+                        </a>
+                      </Link>
 
-                    <Link href={`/upload/anime/${anime.id}`}>
-                      <a>
-                        <Button
-                          className="text-black"
-                          LeftIcon={AiOutlineUpload}
-                        >
-                          <p>Upload</p>
-                        </Button>
-                      </a>
-                    </Link>
+                      <AddTranslationModal
+                        mediaId={anime.id}
+                        mediaType={MediaType.Anime}
+                        defaultDescription={description}
+                        defaultTitle={title}
+                      />
+
+                      <Link href={`/upload/anime/${anime.id}`}>
+                        <a>
+                          <Button
+                            secondary
+                            className="w-full"
+                            LeftIcon={AiOutlineUpload}
+                          >
+                            <p>Upload</p>
+                          </Button>
+                        </a>
+                      </Link>
+                    </Popup>
                   </div>
                 ) : (
                   <div className="h-8 mb-4"></div>

@@ -1,3 +1,4 @@
+import { Translation } from "@/types";
 import { Media, MediaFormat } from "@/types/anilist";
 import axios from "axios";
 
@@ -99,7 +100,7 @@ export const search = async (keyword: string, type: "movie" | "tv") => {
   return data.results[0];
 };
 
-export const getTranslations = async (media: Media) => {
+export const getTranslations = async (media: Media): Promise<Translation[]> => {
   const type = media.format === MediaFormat.Movie ? "movie" : "tv";
 
   const searchResult = await search(
@@ -113,5 +114,9 @@ export const getTranslations = async (media: Media) => {
     `/${type}/${searchResult.id}/translations`
   );
 
-  return data.translations;
+  return data.translations.map((trans) => ({
+    locale: trans.iso_639_1,
+    description: trans.data.overview,
+    title: trans.data.title || trans.data.name,
+  }));
 };

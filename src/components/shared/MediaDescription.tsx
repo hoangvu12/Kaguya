@@ -1,4 +1,5 @@
 import useDevice from "@/hooks/useDevice";
+import { Editor } from "@tiptap/react";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
 import React, { useCallback, useEffect, useRef } from "react";
@@ -19,15 +20,21 @@ const MediaDescription: React.FC<MediaDescriptionProps> = ({
   const [isDescriptionExpanded, setIsDescriptionExpanded] =
     React.useState(false);
   const { t } = useTranslation("common");
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<Editor>(null);
   const { isMobile } = useDevice();
 
   useEffect(() => {
     if (!ref.current) return;
 
-    const element = ref.current;
+    console.log(ref.current);
+
+    const element = ref.current?.options?.element;
+
+    if (!element) return;
 
     const isClamped = element.scrollHeight > element.clientHeight;
+
+    console.log(isClamped, element.scrollHeight, element.clientHeight);
 
     if (!isClamped) {
       setIsDescriptionExpanded(true);
@@ -47,7 +54,10 @@ const MediaDescription: React.FC<MediaDescriptionProps> = ({
           isDescriptionExpanded ? "line-clamp-none" : "line-clamp-6",
           className
         )}
-        onClick={isMobile ? handleClick : noop}
+        containerProps={{
+          onClick: isMobile ? handleClick : noop,
+        }}
+        editorClassName="text-base text-gray-300 hover:text-gray-100"
         {...props}
       />
 

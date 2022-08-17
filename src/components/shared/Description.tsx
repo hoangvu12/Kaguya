@@ -1,19 +1,15 @@
-import classNames from "classnames";
 import React from "react";
+import Editor, { EditorProps } from "../features/comment/Editor";
+import { Editor as EditorType } from "@tiptap/react";
 
-export interface DescriptionProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface DescriptionProps extends EditorProps {
   description: string;
 }
 
-const Description = React.forwardRef<HTMLDivElement, DescriptionProps>(
-  ({ description, className, ...props }, ref) => {
+const Description = React.forwardRef<EditorType, DescriptionProps>(
+  ({ description, ...props }, ref) => {
     return (
-      <div
-        ref={ref}
-        className={classNames("prose !max-w-full", className)}
-        dangerouslySetInnerHTML={{ __html: description }}
-        {...props}
-      />
+      <Editor ref={ref} readOnly defaultContent={description} {...props} />
     );
   }
 );

@@ -147,6 +147,7 @@ const CommentComponent: React.FC<CommentProps> = ({ comment }) => {
             readOnly={!isEditing}
             defaultContent={comment.comment}
             onSubmit={handleUpdate}
+            className="max-w-[30rem]"
           />
         </div>
 

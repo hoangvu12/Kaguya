@@ -1,5 +1,6 @@
 import Comments from "@/components/features/comment/Comments";
 import LocaleChapterSelector from "@/components/features/manga/LocaleChapterSelector";
+import AddTranslationModal from "@/components/shared/AddTranslationModal";
 import Button from "@/components/shared/Button";
 import Card from "@/components/shared/Card";
 import CharacterConnectionCard from "@/components/shared/CharacterConnectionCard";
@@ -12,6 +13,7 @@ import List from "@/components/shared/List";
 import MediaDescription from "@/components/shared/MediaDescription";
 import NotificationButton from "@/components/shared/NotificationButton";
 import PlainCard from "@/components/shared/PlainCard";
+import Popup from "@/components/shared/Popup";
 import Section from "@/components/shared/Section";
 import SourceStatus from "@/components/shared/SourceStatus";
 import Spinner from "@/components/shared/Spinner";
@@ -19,6 +21,7 @@ import { REVALIDATE_TIME } from "@/constants";
 import withRedirect from "@/hocs/withRedirect";
 import useChapters from "@/hooks/useChapters";
 import { getMediaDetails } from "@/services/anilist";
+import { Translation } from "@/types";
 import { Media, MediaType } from "@/types/anilist";
 import { numberWithCommas, vietnameseSlug } from "@/utils";
 import { convert, getDescription, getTitle } from "@/utils/data";
@@ -29,22 +32,27 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { AiOutlineUpload } from "react-icons/ai";
+import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { BsFillPlayFill } from "react-icons/bs";
 
 interface DetailsPageProps {
   manga: Media;
+  translations: Translation[];
 }
 
-const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
+const DetailsPage: NextPage<DetailsPageProps> = ({ manga, translations }) => {
   const { user } = useUser();
   const { locale } = useRouter();
   const { t } = useTranslation("manga_details");
   const { data: chapters, isLoading } = useChapters(manga.id);
 
-  const title = useMemo(() => getTitle(manga, locale), [manga, locale]);
+  const title = useMemo(
+    () => getTitle(manga, locale, translations),
+    [manga, locale, translations]
+  );
   const description = useMemo(
-    () => getDescription(manga, locale),
-    [manga, locale]
+    () => getDescription(manga, locale, translations),
+    [manga, locale, translations]
   );
 
   return (
@@ -83,16 +91,36 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
                       </a>
                     </Link>
 
-                    <Link href={`/upload/manga/${manga.id}`}>
-                      <a>
+                    <Popup
+                      reference={
                         <Button
-                          className="text-black"
-                          LeftIcon={AiOutlineUpload}
-                        >
-                          <p>Upload</p>
-                        </Button>
-                      </a>
-                    </Link>
+                          className="!bg-[#393a3b]"
+                          LeftIcon={BiDotsHorizontalRounded}
+                        ></Button>
+                      }
+                      placement="bottom"
+                      type="click"
+                      className="space-y-2"
+                    >
+                      <Link href={`/upload/manga/${manga.id}`}>
+                        <a>
+                          <Button
+                            secondary
+                            className="w-full"
+                            LeftIcon={AiOutlineUpload}
+                          >
+                            <p>Upload</p>
+                          </Button>
+                        </a>
+                      </Link>
+
+                      <AddTranslationModal
+                        mediaId={manga.id}
+                        mediaType={MediaType.Manga}
+                        defaultDescription={description}
+                        defaultTitle={title}
+                      />
+                    </Popup>
                   </div>
                 ) : (
                   <div className="h-8 mb-4"></div>
@@ -244,7 +272,7 @@ export const getStaticProps: GetStaticProps = async ({
   params: { params },
 }) => {
   try {
-    const { media } = await getMediaDetails({
+    const { media, translations } = await getMediaDetails({
       type: MediaType.Manga,
       id: Number(params[0]),
     });
@@ -252,6 +280,7 @@ export const getStaticProps: GetStaticProps = async ({
     return {
       props: {
         manga: media as Media,
+        translations,
       },
       revalidate: REVALIDATE_TIME,
     };
