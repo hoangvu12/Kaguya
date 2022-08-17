@@ -99,12 +99,10 @@ export const convert = (
   return constant[index].label;
 };
 
-export const getTitle = (
-  data: Media,
-  locale?: string,
-  translations: TranslationType[] = []
-) => {
+export const getTitle = (data: Media, locale?: string) => {
   if (locale === "en") return data?.title.userPreferred;
+
+  const translations = data?.translations || [];
 
   const translation = translations.find((trans) => trans.locale === locale);
 
@@ -115,12 +113,10 @@ export const getTitle = (
   return translation.title || data?.title?.userPreferred;
 };
 
-export const getDescription = (
-  data: Media,
-  locale?: string,
-  translations: TranslationType[] = []
-) => {
+export const getDescription = (data: Media, locale?: string) => {
   if (locale === "en") return data?.description;
+
+  const translations = data?.translations || [];
 
   const translation = translations.find((trans) => trans.locale === locale);
 

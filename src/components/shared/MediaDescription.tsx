@@ -57,7 +57,6 @@ const MediaDescription: React.FC<MediaDescriptionProps> = ({
         containerProps={{
           onClick: isMobile ? handleClick : noop,
         }}
-        editorClassName="text-base text-gray-300 hover:text-gray-100"
         {...props}
       />
 

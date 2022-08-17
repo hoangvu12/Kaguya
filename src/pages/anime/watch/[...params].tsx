@@ -239,11 +239,11 @@ const WatchPage: NextPage<WatchPageProps> = ({ episodes }) => {
   }, [watchedEpisode?.sourceEpisodeId, videoRef.current]);
 
   const title = useMemo(
-    () => getTitle(anime?.media, router.locale, anime?.translations),
+    () => getTitle(anime, router.locale),
     [anime, router.locale]
   );
   const description = useMemo(
-    () => getDescription(anime?.media, router.locale, anime?.translations),
+    () => getDescription(anime, router.locale),
     [anime, router.locale]
   );
 
@@ -273,7 +273,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ episodes }) => {
   return (
     <WatchContextProvider
       value={{
-        anime: anime.media,
+        anime,
         currentEpisode,
         currentEpisodeIndex,
         episodes: sortedEpisodes,
@@ -286,7 +286,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ episodes }) => {
         <Head
           title={`${title} (${currentEpisode.name}) - Kaguya`}
           description={`Xem phim ${title} (${currentEpisode.name}) tại Kaguya. Hoàn toàn miễn phí, không quảng cáo`}
-          image={anime.media.bannerImage}
+          image={anime.bannerImage}
         />
 
         <ForwardRefPlayer

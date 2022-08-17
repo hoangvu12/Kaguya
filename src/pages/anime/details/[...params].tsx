@@ -66,13 +66,10 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime, translations }) => {
     return dayjs.unix(nextAiringSchedule.airingAt).locale(locale).fromNow();
   }, [nextAiringSchedule?.airingAt, locale]);
 
-  const title = useMemo(
-    () => getTitle(anime, locale, translations),
-    [anime, locale, translations]
-  );
+  const title = useMemo(() => getTitle(anime, locale), [anime, locale]);
   const description = useMemo(
-    () => getDescription(anime, locale, translations),
-    [anime, locale, translations]
+    () => getDescription(anime, locale),
+    [anime, locale]
   );
 
   return (
@@ -349,7 +346,7 @@ export const getStaticProps: GetStaticProps = async ({
   params: { params },
 }) => {
   try {
-    const { media, translations } = await getMediaDetails({
+    const media = await getMediaDetails({
       type: MediaType.Anime,
       id: Number(params[0]),
     });
@@ -357,7 +354,6 @@ export const getStaticProps: GetStaticProps = async ({
     return {
       props: {
         anime: media as Media,
-        translations,
       },
       revalidate: REVALIDATE_TIME,
     };

@@ -22,7 +22,7 @@ const useAnimeRecommendedList = () => {
 
       if (error) throw error;
 
-      const { media } = await getMediaDetails(
+      const media = await getMediaDetails(
         {
           id: data.mediaId,
           perPage: 1,

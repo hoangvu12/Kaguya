@@ -60,10 +60,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ chapters }) => {
     type: MediaType.Manga,
   });
 
-  const title = useMemo(
-    () => getTitle(manga?.media, locale),
-    [manga?.media, locale]
-  );
+  const title = useMemo(() => getTitle(manga, locale), [manga, locale]);
 
   const sourceChapters = useMemo(
     () => sortedChapters.filter((chapter) => chapter.sourceId === sourceId),
@@ -164,7 +161,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ chapters }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentChapter, mangaId]);
 
-  if (mangaLoading || !manga?.media) {
+  if (mangaLoading || !manga) {
     return (
       <div className="relative w-full min-h-screen">
         <Loading />
@@ -175,7 +172,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ chapters }) => {
   return (
     <ReadContextProvider
       value={{
-        manga: manga?.media,
+        manga: manga,
         currentChapter,
         currentChapterIndex,
         chapters,
@@ -192,7 +189,7 @@ const ReadPage: NextPage<ReadPageProps> = ({ chapters }) => {
               title,
               chapterName: currentChapter.name,
             })}
-            image={manga.media.bannerImage || manga.media.coverImage.extraLarge}
+            image={manga.bannerImage || manga.coverImage.extraLarge}
           />
 
           {isError ? (

@@ -64,7 +64,27 @@ export const getMedia = async (args: MediaArgs & PageArgs, fields?: string) => {
     args
   );
 
-  return response?.Page.media;
+  const mediaList = response?.Page?.media || [];
+
+  const mediaIdList = mediaList.map((media) => media.id);
+
+  const { data: mediaTranslations, error } = await supabaseClient
+    .from<Translation>("kaguya_translations")
+    .select("*")
+    .in("mediaId", mediaIdList);
+
+  if (error || !mediaTranslations?.length) return mediaList;
+
+  return mediaList.map((media) => {
+    const translations = mediaTranslations.filter(
+      (trans) => trans.mediaId === media.id
+    );
+
+    return {
+      ...media,
+      translations,
+    };
+  });
 };
 
 export const getMediaDetails = async (
@@ -94,7 +114,7 @@ export const getMediaDetails = async (
   }
 
   return {
-    media,
+    ...media,
     translations,
   };
 };
