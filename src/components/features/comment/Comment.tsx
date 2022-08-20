@@ -14,6 +14,8 @@ import useRemoveReaction from "@/hooks/useRemoveReaction";
 import useUpdateComment from "@/hooks/useUpdateComment";
 import { Comment } from "@/types";
 import { getMentionedUserIds } from "@/utils/editor";
+import { userEvent } from "@storybook/testing-library";
+import { useUser } from "@supabase/auth-helpers-react";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
@@ -58,6 +60,8 @@ const CommentComponent: React.FC<CommentProps> = ({ comment }) => {
   const [showActionMenu, setShowActionMenu] = useState(false);
 
   const commentReply = useCommentReply();
+
+  const { user } = useUser();
 
   const { mutate: createReaction } = useCreateReaction();
   const { mutate: removeReaction } = useRemoveReaction();
@@ -197,17 +201,19 @@ const CommentComponent: React.FC<CommentProps> = ({ comment }) => {
           onClick={handleReply}
         />
 
-        <DeleteConfirmation
-          reference={
-            <Button
-              iconClassName="w-5 h-5"
-              className="hover:bg-red-500"
-              secondary
-              LeftIcon={AiFillDelete}
-            />
-          }
-          onConfirm={handleDelete}
-        />
+        {comment.user.id === user?.id && (
+          <DeleteConfirmation
+            reference={
+              <Button
+                iconClassName="w-5 h-5"
+                className="hover:bg-red-500"
+                secondary
+                LeftIcon={AiFillDelete}
+              />
+            }
+            onConfirm={handleDelete}
+          />
+        )}
       </div>
     </div>
   );
