@@ -14,7 +14,6 @@ import ListSwiperSkeleton from "@/components/skeletons/ListSwiperSkeleton";
 import useDevice from "@/hooks/useDevice";
 import useMedia from "@/hooks/useMedia";
 import useRecommendations from "@/hooks/useRecommendations";
-import useWeekAiringSchedules from "@/hooks/useWeekAIringSchedules";
 import { MediaSort, MediaType } from "@/types/anilist";
 import { getSeason, randomElement } from "@/utils";
 import classNames from "classnames";
@@ -88,9 +87,6 @@ const Home = () => {
     () => randomElement(recommendationsAnime || [])?.media,
     [recommendationsAnime]
   );
-
-  const { data: weekSchedule, isLoading: weekScheduleLoading } =
-    useWeekAiringSchedules();
 
   return (
     <React.Fragment>
@@ -171,13 +167,9 @@ const Home = () => {
               </Section>
             </div>
 
-            {weekScheduleLoading ? (
-              <ListSwiperSkeleton />
-            ) : (
-              <Section title={t("airing_schedule", { ns: "anime_home" })}>
-                <AnimeScheduling schedules={weekSchedule} />
-              </Section>
-            )}
+            <Section title={t("airing_schedule", { ns: "anime_home" })}>
+              <AnimeScheduling />
+            </Section>
           </div>
         </div>
       </ClientOnly>

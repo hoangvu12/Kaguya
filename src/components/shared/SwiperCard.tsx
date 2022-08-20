@@ -187,6 +187,7 @@ const Card: React.FC<AnimeCardProps> = (props) => {
                     </motion.div>
 
                     <motion.div
+                      className="mt-4"
                       transition={{ duration: 0.1 }}
                       variants={slotVariants}
                     >
