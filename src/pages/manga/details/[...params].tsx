@@ -77,53 +77,48 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
 
             <div className="justify-between text-center md:text-left flex flex-col items-center md:items-start py-4 mt-4 md:-mt-16 space-y-4">
               <div className="flex flex-col md:items-start items-center space-y-4">
-                {chapters?.length ? (
-                  <div className="flex items-center flex-wrap gap-2 mb-4">
-                    <Link href={`/manga/read/${manga.id}`}>
+                <div className="flex items-center flex-wrap gap-2 mb-4">
+                  <Link href={`/manga/read/${manga.id}`}>
+                    <a>
+                      <Button primary LeftIcon={BsFillPlayFill}>
+                        <p>{t("read_now")}</p>
+                      </Button>
+                    </a>
+                  </Link>
+
+                  <Popup
+                    reference={
+                      <Button
+                        className="!bg-[#393a3b]"
+                        LeftIcon={BiDotsHorizontalRounded}
+                      ></Button>
+                    }
+                    placement="bottom"
+                    type="click"
+                    className="space-y-2"
+                  >
+                    <Link href={`/upload/manga/${manga.id}`}>
                       <a>
-                        <Button primary LeftIcon={BsFillPlayFill}>
-                          <p>{t("read_now")}</p>
+                        <Button
+                          secondary
+                          className="w-full"
+                          LeftIcon={AiOutlineUpload}
+                        >
+                          <p>Upload</p>
                         </Button>
                       </a>
                     </Link>
 
-                    <Popup
-                      reference={
-                        <Button
-                          className="!bg-[#393a3b]"
-                          LeftIcon={BiDotsHorizontalRounded}
-                        ></Button>
-                      }
-                      placement="bottom"
-                      type="click"
-                      className="space-y-2"
-                    >
-                      <Link href={`/upload/manga/${manga.id}`}>
-                        <a>
-                          <Button
-                            secondary
-                            className="w-full"
-                            LeftIcon={AiOutlineUpload}
-                          >
-                            <p>Upload</p>
-                          </Button>
-                        </a>
-                      </Link>
-
-                      <AddTranslationModal
-                        mediaId={manga.id}
-                        mediaType={MediaType.Manga}
-                        defaultDescription={description}
-                        defaultTitle={title}
-                      />
-                    </Popup>
-                  </div>
-                ) : (
-                  <div className="h-8 mb-4"></div>
-                )}
+                    <AddTranslationModal
+                      mediaId={manga.id}
+                      mediaType={MediaType.Manga}
+                      defaultDescription={description}
+                      defaultTitle={title}
+                    />
+                  </Popup>
+                </div>
 
                 <p className="text-3xl font-semibold mb-2">{title}</p>
-
                 <DotList>
                   {manga.genres.map((genre) => (
                     <span key={genre}>
@@ -131,7 +126,6 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
                     </span>
                   ))}
                 </DotList>
-
                 <MediaDescription
                   description={description}
                   containerClassName="mt-4 mb-8"

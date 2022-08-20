@@ -98,62 +98,58 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime, translations }) => {
 
             <div className="flex flex-col items-center justify-between py-4 mt-4 text-center md:text-left md:items-start md:-mt-16 space-y-4">
               <div className="flex flex-col md:items-start items-center space-y-4 md:no-scrollbar">
-                {episodes?.length ? (
-                  <div className="flex items-center flex-wrap gap-2 mb-4">
-                    <Link href={`/anime/watch/${anime.id}`}>
+                <div className="flex items-center flex-wrap gap-2 mb-4">
+                  <Link href={`/anime/watch/${anime.id}`}>
+                    <a>
+                      <Button primary LeftIcon={BsFillPlayFill}>
+                        <p>{t("common:watch_now")}</p>
+                      </Button>
+                    </a>
+                  </Link>
+
+                  <Popup
+                    reference={
+                      <Button
+                        className="!bg-[#393a3b]"
+                        LeftIcon={BiDotsHorizontalRounded}
+                      ></Button>
+                    }
+                    placement="bottom"
+                    type="click"
+                    className="space-y-2"
+                  >
+                    <Link href={`/wwf/create/${anime.id}`}>
                       <a>
-                        <Button primary LeftIcon={BsFillPlayFill}>
-                          <p>{t("common:watch_now")}</p>
+                        <Button
+                          secondary
+                          className="w-full"
+                          LeftIcon={BsFillPlayFill}
+                        >
+                          <p>{t("watch_with_friends")}</p>
                         </Button>
                       </a>
                     </Link>
 
-                    <Popup
-                      reference={
+                    <AddTranslationModal
+                      mediaId={anime.id}
+                      mediaType={MediaType.Anime}
+                      defaultDescription={description}
+                      defaultTitle={title}
+                    />
+
+                    <Link href={`/upload/anime/${anime.id}`}>
+                      <a>
                         <Button
-                          className="!bg-[#393a3b]"
-                          LeftIcon={BiDotsHorizontalRounded}
-                        ></Button>
-                      }
-                      placement="bottom"
-                      type="click"
-                      className="space-y-2"
-                    >
-                      <Link href={`/wwf/create/${anime.id}`}>
-                        <a>
-                          <Button
-                            secondary
-                            className="w-full"
-                            LeftIcon={BsFillPlayFill}
-                          >
-                            <p>{t("watch_with_friends")}</p>
-                          </Button>
-                        </a>
-                      </Link>
-
-                      <AddTranslationModal
-                        mediaId={anime.id}
-                        mediaType={MediaType.Anime}
-                        defaultDescription={description}
-                        defaultTitle={title}
-                      />
-
-                      <Link href={`/upload/anime/${anime.id}`}>
-                        <a>
-                          <Button
-                            secondary
-                            className="w-full"
-                            LeftIcon={AiOutlineUpload}
-                          >
-                            <p>Upload</p>
-                          </Button>
-                        </a>
-                      </Link>
-                    </Popup>
-                  </div>
-                ) : (
-                  <div className="h-8 mb-4"></div>
-                )}
+                          secondary
+                          className="w-full"
+                          LeftIcon={AiOutlineUpload}
+                        >
+                          <p>Upload</p>
+                        </Button>
+                      </a>
+                    </Link>
+                  </Popup>
+                </div>
 
                 <p className="mb-2 text-3xl font-semibold">{title}</p>
 
