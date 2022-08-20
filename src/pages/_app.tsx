@@ -88,7 +88,7 @@ function App({ Component, pageProps, router, err }: WorkaroundAppProps) {
       />
 
       <QueryClientProvider client={queryClient}>
-        <UserProvider autoRefreshToken={false} supabaseClient={supabaseClient}>
+        <UserProvider supabaseClient={supabaseClient}>
           <SubscriptionContextProvider>
             <ErrorBoundary
               onError={(error, info) => {

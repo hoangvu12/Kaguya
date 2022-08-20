@@ -9,6 +9,7 @@ import {
   SetStateAction,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from "react";
 
@@ -26,9 +27,14 @@ export const SubscriptionContextProvider: React.FC = ({ children }) => {
   const { user } = useUser();
   const { data: isSavedSub, isLoading } = useIsSavedSub();
   const createSubscription = useCreateSubscription();
+  const isSubscriptionSent = useRef(false);
 
   useEffect(() => {
     if (!user || isDev || isLoading) return;
+
+    if (isSubscriptionSent.current) return;
+
+    isSubscriptionSent.current = true;
 
     navigator.serviceWorker.getRegistration().then(async (registration) => {
       let subscription = await registration.pushManager.getSubscription();
@@ -46,6 +52,10 @@ export const SubscriptionContextProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     if (!user || !sub || isDev) return;
+
+    if (isSubscriptionSent.current) return;
+
+    isSubscriptionSent.current = true;
 
     createSubscription.mutate(sub);
     // eslint-disable-next-line react-hooks/exhaustive-deps
