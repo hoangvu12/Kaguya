@@ -1,47 +1,48 @@
-import Card from "@/components/shared/Card";
 import CardSwiper from "@/components/shared/CardSwiper";
 import DotList from "@/components/shared/DotList";
+import Loading from "@/components/shared/Loading";
 import SwiperCard from "@/components/shared/SwiperCard";
+import useAiringSchedules from "@/hooks/useAiringSchedules";
 import useConstantTranslation from "@/hooks/useConstantTranslation";
 import dayjs from "@/lib/dayjs";
-import { AiringSchedule } from "@/types/anilist";
+import { AiringSchedule, AiringSort } from "@/types/anilist";
+import { removeArrayOfObjectDup } from "@/utils";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
-import React, { useMemo } from "react";
+import React, { useState } from "react";
+import { isMobile } from "react-device-detect";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 
-interface AnimeSchedulingProps {
-  schedules: AiringSchedule[];
-}
+interface AnimeSchedulingProps {}
 
-const AnimeScheduling: React.FC<AnimeSchedulingProps> = ({ schedules }) => {
+const AnimeScheduling: React.FC<AnimeSchedulingProps> = () => {
   const { t } = useTranslation("anime_home");
   const { DAYSOFWEEK } = useConstantTranslation();
 
   const today = dayjs();
   const todayIndex = today.day();
 
-  const chunks = useMemo(
-    () =>
-      schedules.reduce((acc, cur) => {
-        const day = dayjs.unix(cur.airingAt);
+  const [selectedTab, setSelectedTab] = useState(todayIndex);
 
-        const dayIndex = day.day();
-        const dayName = DAYSOFWEEK[dayIndex];
+  const selectedDayOfWeek = dayjs().day(selectedTab);
 
-        if (!(dayName in acc)) {
-          acc[dayName] = [];
-        }
+  const { data: schedules, isLoading: schedulesLoading } = useAiringSchedules({
+    airingAt_greater: selectedDayOfWeek.startOf("day").unix(),
+    airingAt_lesser: selectedDayOfWeek.endOf("day").unix(),
+    perPage: isMobile ? 10 : 20,
+    sort: [AiringSort.Time_desc],
+  });
 
-        acc[dayName].push(cur);
-
-        return acc;
-      }, {}),
-    [DAYSOFWEEK, schedules]
-  );
+  const handleTabSelect = (index: number) => {
+    setSelectedTab(index);
+  };
 
   return (
-    <Tabs defaultIndex={todayIndex} selectedTabClassName="bg-white !text-black">
+    <Tabs
+      onSelect={handleTabSelect}
+      defaultIndex={todayIndex}
+      selectedTabClassName="bg-white !text-black"
+    >
       <TabList className="w-5/6 mx-auto flex items-center justify-center flex-wrap gap-x-4 lg:gap-x-8">
         {DAYSOFWEEK.map((day, index) => {
           const isToday = todayIndex === index;
@@ -62,17 +63,19 @@ const AnimeScheduling: React.FC<AnimeSchedulingProps> = ({ schedules }) => {
 
       <div className="mt-20">
         {DAYSOFWEEK.map((day) => {
-          const hasSchedules = day in chunks;
-          const schedules: AiringSchedule[] = chunks[day];
-
           return (
             <TabPanel key={day}>
-              {!hasSchedules ? (
+              {schedulesLoading ? (
+                <div className="relative h-6 w-full">
+                  <Loading />
+                </div>
+              ) : !schedules?.length ? (
                 <p className="text-2xl text-center">Không có...</p>
               ) : (
                 <CardSwiper
-                  data={schedules.map(
-                    (schedule: AiringSchedule) => schedule.media
+                  data={removeArrayOfObjectDup(
+                    schedules.map((schedule: AiringSchedule) => schedule.media),
+                    "id"
                   )}
                   onEachCard={(card, isExpanded) => {
                     const cardWithSchedule = schedules.find(
@@ -87,22 +90,19 @@ const AnimeScheduling: React.FC<AnimeSchedulingProps> = ({ schedules }) => {
                       <SwiperCard
                         isExpanded={isExpanded}
                         data={card}
-                        imageEndSlot={
-                          <React.Fragment>
-                            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60"></div>
-                            <DotList className="p-2 absolute bottom-0 w-full">
-                              <span>
-                                {t("common:episode")} {cardWithSchedule.episode}
-                              </span>
-                              <span>
-                                {!isReleased
-                                  ? dayjs
-                                      .unix(cardWithSchedule.airingAt)
-                                      .format("HH:mm")
-                                  : t("airing_schedule_passed")}
-                              </span>
-                            </DotList>
-                          </React.Fragment>
+                        containerEndSlot={
+                          <DotList>
+                            <span>
+                              {t("common:episode")} {cardWithSchedule.episode}
+                            </span>
+                            <span>
+                              {!isReleased
+                                ? dayjs
+                                    .unix(cardWithSchedule.airingAt)
+                                    .format("HH:mm")
+                                : t("airing_schedule_passed")}
+                            </span>
+                          </DotList>
                         }
                       />
                     );
