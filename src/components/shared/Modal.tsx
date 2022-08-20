@@ -37,7 +37,7 @@ const Modal = React.forwardRef<ModalRef, PropsWithChildren<ModalProps>>(
     const [isOpen, setIsOpen] = useState(defaultValue);
 
     let defaultClassName =
-      "fixed left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 z-[9999] p-8 rounded-md bg-background-900 h-[80vh] overflow-y-auto no-scrollbar";
+      "fixed left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 z-[9999] p-8 rounded-md bg-background-900 max-h-[80vh] overflow-y-auto no-scrollbar";
 
     if (className.includes("w-")) {
       defaultClassName = classNames(defaultClassName, className);
