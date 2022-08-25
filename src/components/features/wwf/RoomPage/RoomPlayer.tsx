@@ -5,19 +5,16 @@ import {
 } from "@/contexts/RoomPlayerContext";
 import { useFetchSource } from "@/hooks/useFetchSource";
 import useVideoSync from "@/hooks/useVideoSync";
-import { Episode, Room } from "@/types";
+import { Episode } from "@/types";
 import { parseNumberFromString } from "@/utils";
 import { sortMediaUnit } from "@/utils/data";
-import { useUser } from "@supabase/auth-helpers-react";
 import classNames from "classnames";
 import { useInteract } from "netplayer";
 import { useRouter } from "next/router";
 import React, { useCallback, useMemo } from "react";
 import { BsArrowLeft } from "react-icons/bs";
-import { useQueryClient } from "react-query";
 import Player from "../../anime/Player";
 import MobileOverlay from "../../anime/Player/MobileOverlay";
-import NextEpisodeButton from "../../anime/Player/NextEpisodeButton";
 import Overlay from "../../anime/Player/Overlay";
 import TimestampSkipButton from "../../anime/Player/TimestampSkipButton";
 import RoomPlayerControls from "./RoomPlayerControls";
@@ -198,6 +195,7 @@ const RoomPlayer = () => {
             className="object-contain w-full h-full"
             components={components}
             hotkeys={hotkeys}
+            thumbnail={data?.thumbnail}
             autoPlay
           />
         </div>

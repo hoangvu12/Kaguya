@@ -10,6 +10,7 @@ interface ReturnSuccessType {
   sources: VideoSource[];
   subtitles?: Subtitle[];
   fonts?: Font[];
+  thumbnail?: string;
 }
 
 interface ReturnFailType {
