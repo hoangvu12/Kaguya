@@ -1,6 +1,6 @@
 import Select from "@/components/shared/Select";
-import { groupBy } from "@/utils";
-import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { groupBy, sortObjectByValue } from "@/utils";
+import React, { useLayoutEffect, useMemo, useState } from "react";
 import EpisodeSelector, { EpisodeSelectorProps } from "./EpisodeSelector";
 
 export interface SourceEpisodeSelectorProps extends EpisodeSelectorProps {}
@@ -20,7 +20,14 @@ const SourceEpisodeSelector: React.FC<SourceEpisodeSelectorProps> = ({
       (episode) => episode.source.isCustomSource
     );
 
-    return groupBy(verifiedEpisodes, (episode) => episode.source.name);
+    const sources = groupBy(verifiedEpisodes, (episode) => episode.source.name);
+
+    const sortedSources = sortObjectByValue(
+      sources,
+      (a, b) => b.length - a.length
+    );
+
+    return sortedSources;
   }, [episodes]);
 
   const nonVerifiedSources = useMemo(() => {
@@ -28,7 +35,17 @@ const SourceEpisodeSelector: React.FC<SourceEpisodeSelectorProps> = ({
       (episode) => !episode.source.isCustomSource
     );
 
-    return groupBy(nonVerifiedEpisodes, (episode) => episode.source.name);
+    const sources = groupBy(
+      nonVerifiedEpisodes,
+      (episode) => episode.source.name
+    );
+
+    const sortedSources = sortObjectByValue(
+      sources,
+      (a, b) => b.length - a.length
+    );
+
+    return sortedSources;
   }, [episodes]);
 
   const sources = useMemo(() => {

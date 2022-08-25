@@ -481,3 +481,17 @@ export const createVoiceActorDetailsUrl = (voiceActor: Staff) => {
 export const createStudioDetailsUrl = (studio: Studio) => {
   return `/studios/${studio.id}/${vietnameseSlug(studio?.name)}`;
 };
+
+export const sortObjectByValue = <T extends object>(
+  obj: T,
+  sortFn: (a: T[keyof T], b: T[keyof T]) => number
+) => {
+  const sortedObj = Object.keys(obj)
+    .sort((a, b) => sortFn(obj[a], obj[b]))
+    .reduce((result, key) => {
+      result[key] = obj[key];
+      return result;
+    }, {} as T);
+
+  return sortedObj;
+};
