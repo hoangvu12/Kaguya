@@ -29,7 +29,6 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
   ({ hotkeys, components, subtitles, fonts, ...props }, ref) => {
     const { PLAYER_TRANSLATIONS } = useConstantTranslation();
     const subtitlesOctopusRef = useRef(null);
-    const firstLoaded = useRef(false);
 
     const playerComponents = useMemo(
       () => ({ ...components, Subtitle }),

@@ -294,6 +294,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ episodes }) => {
           sources={sources}
           subtitles={subtitles}
           fonts={fonts}
+          thumbnail={data?.thumbnail}
           className="object-contain w-full h-full"
         />
 
