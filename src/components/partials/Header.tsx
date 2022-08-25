@@ -152,7 +152,7 @@ const Header = () => {
             <Link href={`/login?redirectedFrom=${router.asPath}`}>
               <a>
                 <Button primary>
-                  <p>{t("login")}</p>
+                  <p className="line-clamp-1">{t("login")}</p>
                 </Button>
               </a>
             </Link>
