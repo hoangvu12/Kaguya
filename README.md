@@ -56,6 +56,10 @@ The official website is [kaguya.live](https://kaguya.live)
 - Reader is heavily inspired by [danke.moe](https://danke.moe)
 - Info from [Anilist](anilist.co)
 
+## Installation
+
+See [INSTALLATION.md](INSTALLATION.md)
+
 ## Enviroment Variables
 
 ```
@@ -70,7 +74,7 @@ NEXT_PUBLIC_GA_ID=
 NEXT_PUBLIC_NODE_SERVER_URL=
 NEXT_PUBLIC_SOCKET_SERVER_URL=
 
-# See: https://github.com/hoangvu12/kaguya-proxy
+# See: https://github.com/hoangvu12/requests-proxy
 NEXT_PUBLIC_PROXY_SERVER_URL=
 
 # Public web push key (https://github.com/hoangvu12/kaguya-scraper)
