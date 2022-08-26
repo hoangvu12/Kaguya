@@ -291,6 +291,7 @@ export const PLAYER_TRANSLATIONS: I18n = {
     episodes: "Danh sách tập",
     skipOPED: "Skip OP/ED",
     timestamps: "Mốc thời gian",
+    screenshot: "Chụp màn hình",
   },
   settings: {
     audio: "Âm thanh",

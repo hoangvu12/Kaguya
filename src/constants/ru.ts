@@ -291,6 +291,7 @@ export const PLAYER_TRANSLATIONS: I18n = {
     episodes: "Эрпизоды",
     skipOPED: "Пропустить опенинг/эндинг",
     timestamps: "Timestamps", // cant translate
+    screenshot: "Скриншот",
   },
   settings: {
     audio: "Аудио",
