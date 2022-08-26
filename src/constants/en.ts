@@ -291,6 +291,7 @@ export const PLAYER_TRANSLATIONS: I18n = {
     episodes: "Episodes",
     skipOPED: "Skip OP/ED",
     timestamps: "Timestamps",
+    screenshot: "Screenshot",
   },
   settings: {
     audio: "Audio",

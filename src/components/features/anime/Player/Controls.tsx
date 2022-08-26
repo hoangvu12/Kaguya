@@ -4,6 +4,7 @@ import {
   ForwardButton,
   FullscreenButton,
   PlayPauseButton,
+  ScreenshotButton,
   SettingsButton,
   SubtitleButton,
   TimeIndicator,
@@ -55,6 +56,7 @@ const Controls: React.FC<ControlsProps> = ({
           <TimestampsButton />
           <SkipButton />
           <SubtitleButton />
+          <ScreenshotButton />
           <SettingsButton />
           <FullscreenButton />
         </div>

@@ -55,24 +55,7 @@ const PlayerOverlay = () => {
 const PlayerMobileOverlay = () => {
   const router = useRouter();
   const { isInteracting } = useInteract();
-  const {
-    currentEpisode,
-    anime,
-    currentEpisodeIndex,
-    episodes,
-    sourceId,
-    setEpisode,
-  } = useRoomPlayer();
-
-  const sourceEpisodes = useMemo(
-    () => episodes.filter((episode) => episode.sourceId === sourceId),
-    [episodes, sourceId]
-  );
-
-  const nextEpisode = useMemo(
-    () => sourceEpisodes[currentEpisodeIndex + 1],
-    [currentEpisodeIndex, sourceEpisodes]
-  );
+  const { currentEpisode, anime } = useRoomPlayer();
 
   return (
     <React.Fragment>
