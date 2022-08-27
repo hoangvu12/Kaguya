@@ -71,6 +71,8 @@ const ThemePlayer: React.FC<ThemePlayerProps> = (props) => {
         }}
         hotkeys={hotkeys}
         ref={videoRef}
+        // @ts-ignore
+        crossOrigin={null}
         {...props}
       >
         {props.children}
