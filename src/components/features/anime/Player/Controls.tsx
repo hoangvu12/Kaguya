@@ -4,7 +4,6 @@ import {
   ForwardButton,
   FullscreenButton,
   PlayPauseButton,
-  ScreenshotButton,
   SettingsButton,
   SubtitleButton,
   TimeIndicator,
@@ -14,6 +13,7 @@ import {
 } from "netplayer";
 import * as React from "react";
 import ProgressSlider from "./ProgressSlider";
+import ScreenshotButton from "./ScreenshotButton";
 import SkipButton from "./SkipButton";
 import TimestampsButton from "./TimestampsButton";
 
