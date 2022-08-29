@@ -495,3 +495,22 @@ export const sortObjectByValue = <T extends object>(
 
   return sortedObj;
 };
+
+// https://stackoverflow.com/questions/5306680/move-an-array-element-from-one-array-position-to-another
+export const array_move = <T>(
+  arr: T[],
+  old_index: number,
+  new_index: number
+) => {
+  const clonedArr = [...arr];
+
+  if (new_index >= arr.length) {
+    let k = new_index - clonedArr.length + 1;
+    while (k--) {
+      clonedArr.push(undefined);
+    }
+  }
+
+  clonedArr.splice(new_index, 0, clonedArr.splice(old_index, 1)[0]);
+  return clonedArr;
+};

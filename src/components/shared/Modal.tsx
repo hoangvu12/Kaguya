@@ -15,6 +15,7 @@ export interface ModalProps {
   closeOnClickOutside?: boolean;
   defaultValue?: boolean;
   onClose?: () => void;
+  portalSelector?: string;
 }
 
 export interface ModalRef {
@@ -31,6 +32,7 @@ const Modal = React.forwardRef<ModalRef, PropsWithChildren<ModalProps>>(
       closeOnClickOutside = true,
       defaultValue = false,
       onClose,
+      portalSelector,
     },
     ref
   ) => {
@@ -69,7 +71,7 @@ const Modal = React.forwardRef<ModalRef, PropsWithChildren<ModalProps>>(
       <React.Fragment>
         <div onClick={handleOpenState(true)}>{reference}</div>
 
-        <Portal>
+        <Portal selector={portalSelector}>
           {isOpen && (
             <React.Fragment>
               {closeOnClickOutside && (
