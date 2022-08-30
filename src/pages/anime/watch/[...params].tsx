@@ -227,10 +227,12 @@ const WatchPage: NextPage<WatchPageProps> = ({ episodes }) => {
 
     const handleVideoPlay = () => {
       videoEl.currentTime = watchedEpisodeData.watchedTime;
+
+      videoEl.removeEventListener("canplay", handleVideoPlay);
     };
 
     // Only set the video time if the video is ready
-    videoEl.addEventListener("canplay", handleVideoPlay, { once: true });
+    videoEl.addEventListener("canplay", handleVideoPlay);
 
     return () => {
       videoEl.removeEventListener("canplay", handleVideoPlay);
