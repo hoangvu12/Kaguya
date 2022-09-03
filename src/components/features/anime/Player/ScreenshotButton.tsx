@@ -52,6 +52,19 @@ const LAYOUTS: ImageLayout[] = [
   // =============
   // ||    1    ||
   // =============
+  {
+    positions: [
+      {
+        grid: [CANVAS_COLUMNS, CANVAS_ROWS],
+        startColumn: 0,
+        startRow: 0,
+      },
+    ],
+  },
+
+  // =============
+  // ||    1    ||
+  // =============
   // ||    2    ||
   // =============
   {
@@ -68,6 +81,25 @@ const LAYOUTS: ImageLayout[] = [
       },
     ],
     canvasHeight: (defaultHeight: number) => defaultHeight * 2,
+  },
+
+  // ===========================
+  // ||    1     ||     2     ||
+  // ===========================
+  {
+    positions: [
+      {
+        grid: [CANVAS_COLUMNS / 2, CANVAS_ROWS],
+        startColumn: 0,
+        startRow: 0,
+      },
+      {
+        grid: [CANVAS_COLUMNS / 2, CANVAS_ROWS],
+        startColumn: CANVAS_COLUMNS / 2,
+        startRow: 0,
+      },
+    ],
+    canvasWidth: (defaultWidth: number) => defaultWidth * 2,
   },
 
   // =============
@@ -310,7 +342,7 @@ const ScreenshotButton = () => {
           </div>
 
           <div className="my-8 flex h-full flex-col justify-between">
-            <div className="flex items-center space-x-4 mb-8">
+            <div className="flex flex-wrap items-center space-x-4 mb-8">
               {LAYOUTS.map((layout, index) => (
                 <div
                   className="cursor-pointer w-32 h-24"
