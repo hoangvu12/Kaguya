@@ -9,6 +9,7 @@ import {
   parseTime,
   randomString,
 } from "@/utils";
+import classNames from "classnames";
 import {
   BackwardButton,
   ControlButton,
@@ -18,6 +19,7 @@ import {
   useVideoProps,
 } from "netplayer";
 import React, { useEffect, useRef, useState } from "react";
+import { isMobile } from "react-device-detect";
 import { AiOutlineCamera, AiOutlineSave } from "react-icons/ai";
 import { BiDownArrowAlt, BiUpArrowAlt } from "react-icons/bi";
 import { CgClose } from "react-icons/cg";
@@ -372,7 +374,10 @@ const ScreenshotButton = () => {
             <AiOutlineCamera className="w-6 h-6" />
           </ControlButton>
         }
-        className="md:w-2/3 w-11/12"
+        className={classNames(
+          "max-h-screen",
+          isMobile ? "w-11/12" : "max-w-xl"
+        )}
         portalSelector=".netplayer-container"
       >
         <div className="relative">
@@ -520,7 +525,7 @@ const CanvasLayout: React.FC<{ layout: ImageLayout }> = ({ layout }) => {
       canvas.height =
         layout?.canvasHeight?.(canvas.offsetHeight) || canvas.offsetHeight;
 
-      layout.positions.forEach((position, index) => {
+      layout.positions.forEach((position) => {
         const { grid, startColumn, startRow } = position;
 
         const [column, row] = grid;
