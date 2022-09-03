@@ -374,10 +374,7 @@ const ScreenshotButton = () => {
             <AiOutlineCamera className="w-6 h-6" />
           </ControlButton>
         }
-        className={classNames(
-          "max-h-screen",
-          isMobile ? "w-11/12" : "max-w-xl"
-        )}
+        className={classNames("max-h-screen", isMobile ? "w-11/12" : "w-2/3")}
         portalSelector=".netplayer-container"
       >
         <div className="relative">
