@@ -308,15 +308,16 @@ const ScreenshotButton = () => {
           ctx.fillRect(x, y, imageCanvasWidth, imageCanvasHeight);
 
           ctx.fillStyle = "white";
-          ctx.font = `${imageCanvasWidth / 10}px Arial`;
+          ctx.font = `${imageCanvasWidth / 10}px "Nunito Sans"`;
 
           const textString = (index + 1).toString();
           const textWidth = ctx.measureText(textString).width;
+          const textHeight = textWidth * 1.25;
 
           ctx.fillText(
             textString,
             x + imageCanvasWidth / 2 - textWidth / 2,
-            y + imageCanvasHeight / 2
+            y + imageCanvasHeight / 2 + textHeight / 2
           );
 
           ctx.lineWidth = 8;
@@ -339,7 +340,9 @@ const ScreenshotButton = () => {
 
             const textString = screenshotImage.subtitle;
 
-            canvasTxt.strokeWidth = 2.5;
+            canvasTxt.font = "Roboto";
+            canvasTxt.stroke = true;
+            canvasTxt.strokeWidth = 12;
             canvasTxt.vAlign = "bottom";
             canvasTxt.align = "center";
             canvasTxt.fontSize = fontSize;

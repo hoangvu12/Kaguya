@@ -137,14 +137,20 @@ const canvasTxt = {
     //print all lines of text
     textarray.forEach((txtline) => {
       txtline = txtline.trim();
-      ctx.fillText(txtline, textanchor, txtY);
 
       if (this.stroke) {
-        const temp = ctx.fillStyle;
         ctx.strokeStyle = this.strokeColor;
         ctx.lineWidth = this.strokeWidth;
+        ctx.lineJoin = "round";
+        ctx.miterLimit = 2;
         ctx.strokeText(txtline, textanchor, txtY);
-        ctx.fillStyle = temp;
+        ctx.globalCompositeOperation = "destination-out"; // will delete what's under
+        ctx.fillText(txtline, textanchor, txtY);
+        ctx.globalCompositeOperation = "source-over"; // normal comp. mode
+
+        ctx.fillText(txtline, textanchor, txtY);
+      } else {
+        ctx.fillText(txtline, textanchor, txtY);
       }
 
       txtY += charHeight;
