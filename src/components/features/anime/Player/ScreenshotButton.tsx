@@ -1,5 +1,7 @@
 import CircleButton from "@/components/shared/CircleButton";
+import Input from "@/components/shared/Input";
 import Modal from "@/components/shared/Modal";
+import canvasTxt from "@/lib/canvasTxt";
 import {
   array_move,
   download,
@@ -38,6 +40,7 @@ type ImageLayout = {
 type ScreenshotImage = {
   imageUrl: string;
   screenshotTime: number;
+  subtitle?: string;
 };
 
 const IMAGE_WIDTH = 1920;
@@ -221,6 +224,10 @@ const ScreenshotButton = () => {
 
     if (!videoEl) return;
 
+    const subtitleEl: HTMLDivElement = document.querySelector(
+      ".netplayer-subtitle"
+    );
+
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
@@ -236,7 +243,11 @@ const ScreenshotButton = () => {
 
       setImages([
         ...images,
-        { imageUrl: url, screenshotTime: videoEl.currentTime },
+        {
+          imageUrl: url,
+          screenshotTime: videoEl.currentTime,
+          subtitle: subtitleEl?.textContent,
+        },
       ]);
     });
   };
@@ -273,7 +284,8 @@ const ScreenshotButton = () => {
       );
 
       currentLayout.positions.forEach((position, index) => {
-        const image = loadedImages[index];
+        const imageEl = loadedImages[index];
+        const screenshotImage = images[index];
 
         const { grid, startColumn, startRow } = position;
 
@@ -288,7 +300,7 @@ const ScreenshotButton = () => {
         const imageCanvasWidth = canvasWidthPerColumn * column;
         const imageCanvasHeight = canvasHeightPerRow * row;
 
-        if (!image) {
+        if (!imageEl) {
           ctx.fillStyle = "#18191a";
 
           ctx.fillRect(x, y, imageCanvasWidth, imageCanvasHeight);
@@ -309,7 +321,39 @@ const ScreenshotButton = () => {
           ctx.strokeStyle = "white";
           ctx.strokeRect(x, y, imageCanvasWidth, imageCanvasHeight);
         } else {
-          drawImageProp(ctx, image, x, y, imageCanvasWidth, imageCanvasHeight);
+          drawImageProp(
+            ctx,
+            imageEl,
+            x,
+            y,
+            imageCanvasWidth,
+            imageCanvasHeight
+          );
+
+          if (screenshotImage?.subtitle) {
+            const fontSize = imageCanvasWidth / 25;
+
+            ctx.fillStyle = "white";
+
+            const textString = screenshotImage.subtitle;
+
+            canvasTxt.strokeWidth = 2.5;
+            canvasTxt.vAlign = "bottom";
+            canvasTxt.align = "center";
+            canvasTxt.fontSize = fontSize;
+            canvasTxt.fontWeight = "bold";
+
+            const PADDING = 0.05;
+
+            canvasTxt.drawText(
+              ctx,
+              textString,
+              x,
+              y,
+              imageCanvasWidth,
+              imageCanvasHeight - imageCanvasHeight * PADDING
+            );
+          }
         }
       });
 
@@ -342,7 +386,7 @@ const ScreenshotButton = () => {
           </div>
 
           <div className="my-8 flex h-full flex-col justify-between">
-            <div className="flex flex-wrap items-center space-x-4 mb-8">
+            <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
               {LAYOUTS.map((layout, index) => (
                 <div
                   className="cursor-pointer w-32 h-24"
@@ -369,7 +413,7 @@ const ScreenshotButton = () => {
                   <div className="flex items-center gap-4">
                     <p className="text-2xl">{index + 1}</p>
 
-                    <div className="grow shrink-0 w-32 aspect-w-[25] aspect-h-9">
+                    <div className="shrink-0 w-32 aspect-h-9">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={image.imageUrl}
@@ -379,6 +423,24 @@ const ScreenshotButton = () => {
                     </div>
 
                     <p>{parseTime(image.screenshotTime)}</p>
+
+                    <Input
+                      placeholder="Subtitle"
+                      defaultValue={image.subtitle}
+                      containerClassName="max-w-[content] bg-background-500"
+                      className="bg-background-500 px-3 py-2"
+                      onBlur={(event) => {
+                        const text = event.target.value;
+
+                        setImages((prevImages) => {
+                          const newImages = [...prevImages];
+
+                          newImages[index].subtitle = text;
+
+                          return newImages;
+                        });
+                      }}
+                    />
                   </div>
 
                   <div className="flex itemes-center">
