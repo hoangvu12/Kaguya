@@ -109,7 +109,7 @@ const Subtitle = () => {
   return (
     <div
       className={classNames(
-        "absolute left-1/2 -translate-x-1/2 w-[80%] flex items-center justify-evenly transition-all duration-300",
+        "netplayer-subtitle absolute left-1/2 -translate-x-1/2 w-[80%] flex items-center justify-evenly transition-all duration-300",
         isInteracting && isDesktop ? "bottom-24" : "bottom-4"
       )}
     >
