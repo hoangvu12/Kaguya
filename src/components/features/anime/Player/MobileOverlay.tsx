@@ -10,10 +10,10 @@ import {
   ForwardButton,
   SettingsButton,
   MobileVolumeSlider,
-  ScreenshotButton,
 } from "netplayer";
 import * as React from "react";
 import MobileTimestampsButton from "./MobileTimestampsButton";
+import ScreenshotButton from "./ScreenshotButton";
 
 interface MobileOverlayProps {}
 
