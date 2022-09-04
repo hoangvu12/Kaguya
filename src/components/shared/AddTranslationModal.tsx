@@ -96,6 +96,8 @@ const AddTranslationModal: React.FC<AddTranslationModalProps> = ({
           </div>
         </div>
 
+        <p className="italic text-gray-300">{t("modal_translation-notice")}</p>
+
         <div className="flex items-center justify-end gap-2">
           <Button secondary onClick={handleModalState("close")}>
             <p>{t("modal_cancel")}</p>
