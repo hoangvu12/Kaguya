@@ -1,10 +1,12 @@
 import { getPageMedia } from "@/services/anilist";
+import { Translation } from "@/types";
 import {
   MediaFormat,
   MediaSort,
   MediaStatus,
   MediaType,
 } from "@/types/anilist";
+import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useInfiniteQuery } from "react-query";
 
 export interface UseBrowseOptions {
@@ -33,6 +35,25 @@ const useBrowse = (options: UseBrowseOptions) => {
   return useInfiniteQuery(
     ["browse-manga", options],
     async ({ pageParam = 1 }) => {
+      let translationMediaIds = [];
+
+      // Search media from translations
+      if (keyword) {
+        const { data: mediaTranslations } = await supabaseClient
+          .from<Translation>("kaguya_translations")
+          .select("mediaId")
+          .eq("mediaType", MediaType.Manga)
+          .textSearch("title", keyword, {
+            type: "plain",
+          });
+
+        if (mediaTranslations?.length) {
+          translationMediaIds = mediaTranslations.map(
+            (translation) => translation.mediaId
+          );
+        }
+      }
+
       const data = await getPageMedia({
         type: MediaType.Manga,
         format,
@@ -41,9 +62,12 @@ const useBrowse = (options: UseBrowseOptions) => {
         sort: [sort],
         status,
         page: pageParam,
+        // If media ids are found, search the media using id_in.
+        ...(translationMediaIds?.length && { id_in: translationMediaIds }),
         ...(tags?.length && { tag_in: tags }),
         ...(genres?.length && { genre_in: genres }),
-        ...(keyword && { search: keyword }),
+        ...(keyword && !translationMediaIds?.length && { search: keyword }),
+        ...(!keyword && { isAdult: false }),
       });
 
       return data;
