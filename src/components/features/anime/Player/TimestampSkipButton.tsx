@@ -5,7 +5,7 @@ import { SkipTimeStamp, SkipType } from "@/types";
 import axios from "axios";
 import classNames from "classnames";
 import { useVideo } from "netplayer";
-import React, { useEffect, useState, useMemo, useCallback } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 
 interface TimestampSkipButtonProps extends BaseButtonProps {
@@ -92,6 +92,8 @@ const TimestampSkipButton: React.FC<TimestampSkipButtonProps> = ({
 
       return;
     }
+
+    if (!videoEl) return;
 
     const handleProgress = () => {
       const currentTime = videoEl?.currentTime;

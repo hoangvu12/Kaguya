@@ -2,14 +2,13 @@ import SliderIcon from "@/components/icons/SliderIcon";
 import TextIcon from "@/components/shared/TextIcon";
 import classNames from "classnames";
 import {
-  useInteract,
-  useVideoProps,
-  useVideo,
   BackwardButton,
-  PlayPauseButton,
   ForwardButton,
+  PlayPauseButton,
   SettingsButton,
-  MobileVolumeSlider,
+  useInteract,
+  useVideo,
+  useVideoProps,
 } from "netplayer";
 import * as React from "react";
 import MobileTimestampsButton from "./MobileTimestampsButton";
@@ -45,10 +44,6 @@ const MobileOverlay: React.FC<MobileOverlayProps> = ({ children }) => {
       >
         {i18n.controls.sliderDragMessage}
       </TextIcon>
-
-      <div className="w-[max-content] h-[90%]">
-        <MobileVolumeSlider />
-      </div>
 
       <div
         className={classNames(
@@ -107,7 +102,6 @@ const MobileOverlay: React.FC<MobileOverlayProps> = ({ children }) => {
           </div>
         </div>
       </div>
-
       {children}
     </div>
   );

@@ -18,6 +18,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { AppErrorFallback } from "@/components/shared/AppErrorFallback";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { UserProvider } from "@supabase/auth-helpers-react";
+import GlobalPlayerContextProvider from "@/contexts/GlobalPlayerContext";
 
 Router.events.on("routeChangeStart", NProgress.start);
 Router.events.on("routeChangeComplete", NProgress.done);
@@ -90,21 +91,26 @@ function App({ Component, pageProps, router, err }: WorkaroundAppProps) {
       <QueryClientProvider client={queryClient}>
         <UserProvider supabaseClient={supabaseClient}>
           <SubscriptionContextProvider>
-            <ErrorBoundary
-              onError={(error, info) => {
-                if (process.env.NODE_ENV === "production") {
-                  Sentry.captureException(error);
-                }
-                setErrorInfo(info);
-              }}
-              fallbackRender={(fallbackProps) => {
-                return (
-                  <AppErrorFallback {...fallbackProps} errorInfo={errorInfo} />
-                );
-              }}
-            >
-              {getLayout(<Component {...pageProps} err={err} />)}
-            </ErrorBoundary>
+            <GlobalPlayerContextProvider>
+              <ErrorBoundary
+                onError={(error, info) => {
+                  if (process.env.NODE_ENV === "production") {
+                    Sentry.captureException(error);
+                  }
+                  setErrorInfo(info);
+                }}
+                fallbackRender={(fallbackProps) => {
+                  return (
+                    <AppErrorFallback
+                      {...fallbackProps}
+                      errorInfo={errorInfo}
+                    />
+                  );
+                }}
+              >
+                {getLayout(<Component {...pageProps} err={err} />)}
+              </ErrorBoundary>
+            </GlobalPlayerContextProvider>
           </SubscriptionContextProvider>
         </UserProvider>
         {process.env.NODE_ENV === "development" && <ReactQueryDevtools />}

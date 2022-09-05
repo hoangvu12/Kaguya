@@ -4,7 +4,7 @@ import Description from "@/components/shared/Description";
 import Head from "@/components/shared/Head";
 import Loading from "@/components/shared/Loading";
 import Portal from "@/components/shared/Portal";
-import { WatchContextProvider } from "@/contexts/WatchContext";
+import { useGlobalPlayer } from "@/contexts/GlobalPlayerContext";
 import useDevice from "@/hooks/useDevice";
 import useEventListener from "@/hooks/useEventListener";
 import { useFetchSource } from "@/hooks/useFetchSource";
@@ -14,7 +14,7 @@ import useSaveWatched from "@/hooks/useSaveWatched";
 import { AnimeSourceConnection, Episode } from "@/types";
 import { getDescription, getTitle, sortMediaUnit } from "@/utils/data";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import { GetServerSideProps, GetStaticPaths, NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
@@ -264,6 +264,26 @@ const WatchPage: NextPage<WatchPageProps> = ({ episodes }) => {
     [data?.fonts]
   );
 
+  useGlobalPlayer({
+    playerState: {
+      ref: videoRef,
+      sources: sources,
+      subtitles: subtitles,
+      fonts: fonts,
+      thumbnail: data?.thumbnail,
+      className: "object-contain w-full h-full",
+    },
+    playerProps: {
+      anime,
+      currentEpisode,
+      currentEpisodeIndex,
+      episodes: sortedEpisodes,
+      setEpisode: handleNavigateEpisode,
+      sourceId,
+      sources,
+    },
+  });
+
   if (animeLoading) {
     return (
       <div className="relative w-full min-h-screen">
@@ -273,136 +293,111 @@ const WatchPage: NextPage<WatchPageProps> = ({ episodes }) => {
   }
 
   return (
-    <WatchContextProvider
-      value={{
-        anime,
-        currentEpisode,
-        currentEpisodeIndex,
-        episodes: sortedEpisodes,
-        setEpisode: handleNavigateEpisode,
-        sourceId,
-        sources,
-      }}
-    >
-      <div className="relative w-full h-screen">
-        <Head
-          title={`${title} (${currentEpisode.name}) - Kaguya`}
-          description={`Xem phim ${title} (${currentEpisode.name}) tại Kaguya. Hoàn toàn miễn phí, không quảng cáo`}
-          image={anime.bannerImage}
-        />
+    <React.Fragment>
+      <Head
+        title={`${title} (${currentEpisode.name}) - Kaguya`}
+        description={`Xem phim ${title} (${currentEpisode.name}) tại Kaguya. Hoàn toàn miễn phí, không quảng cáo`}
+        image={anime.bannerImage}
+      />
 
-        <ForwardRefPlayer
-          ref={videoRef}
-          sources={sources}
-          subtitles={subtitles}
-          fonts={fonts}
-          thumbnail={data?.thumbnail}
-          className="object-contain w-full h-full"
-        />
+      {isLoading && (
+        <Portal selector=".netplayer-container">
+          <Loading />
+        </Portal>
+      )}
 
-        {isLoading && (
-          <Portal selector=".netplayer-container">
-            <Loading />
-          </Portal>
-        )}
-
-        {isError ? (
+      {isError ? (
+        <Portal selector=".netplayer-container">
+          <div className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 space-y-4">
+            <p className="text-4xl font-semibold text-center">｡゜(｀Д´)゜｡</p>
+            <p className="text-xl text-center">
+              Đã có lỗi xảy ra ({error?.response?.data?.error})
+            </p>
+            <p className="text-lg text-center">
+              Bạn có thể chọn source khác hoặc thử lại sau.
+            </p>
+          </div>
+        </Portal>
+      ) : (
+        !isLoading &&
+        !data?.sources?.length && (
           <Portal selector=".netplayer-container">
             <div className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 space-y-4">
               <p className="text-4xl font-semibold text-center">｡゜(｀Д´)゜｡</p>
               <p className="text-xl text-center">
-                Đã có lỗi xảy ra ({error?.response?.data?.error})
+                Đã có lỗi xảy ra (No sources found)
               </p>
               <p className="text-lg text-center">
                 Bạn có thể chọn source khác hoặc thử lại sau.
               </p>
             </div>
           </Portal>
-        ) : (
-          !isLoading &&
-          !data?.sources?.length && (
-            <Portal selector=".netplayer-container">
-              <div className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 space-y-4">
-                <p className="text-4xl font-semibold text-center">
-                  ｡゜(｀Д´)゜｡
-                </p>
-                <p className="text-xl text-center">
-                  Đã có lỗi xảy ra (No sources found)
-                </p>
-                <p className="text-lg text-center">
-                  Bạn có thể chọn source khác hoặc thử lại sau.
-                </p>
-              </div>
-            </Portal>
-          )
-        )}
+        )
+      )}
 
-        {showInfoOverlay && (
-          <Portal>
-            <div
-              className="fixed inset-0 z-[9999] flex items-center bg-black/70"
-              onMouseMove={() => setShowInfoOverlay(false)}
-            >
-              <div className="w-11/12 px-40">
-                <p className="mb-2 text-xl text-gray-200">
-                  {t("blur_heading")}
-                </p>
-                <p className="mb-8 text-5xl font-semibold">
-                  {title} - {currentEpisode.name}
-                </p>
-
-                <Description
-                  description={description || t("common:updating") + "..."}
-                  className="text-lg text-gray-300 line-clamp-6"
-                />
-              </div>
-            </div>
-          </Portal>
-        )}
-
-        {showWatchedOverlay && !declinedRewatch && (
-          <Portal selector=".netplayer-container">
-            <div
-              className="fixed inset-0 z-40 bg-black/70"
-              onClick={() => {
-                setShowWatchedOverlay(false);
-                setDeclinedRewatch(true);
-              }}
-            />
-
-            <div className="fixed left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 z-50 w-2/3 p-8 rounded-md bg-background-900">
-              <h1 className="text-4xl font-bold mb-4">
-                {t("rewatch_heading", { episodeName: watchedEpisode.name })}
-              </h1>
-              <p className="">
-                {t("rewatch_description", { episodeName: watchedEpisode.name })}
+      {showInfoOverlay && (
+        <Portal>
+          <div
+            className="fixed inset-0 z-[9999] flex items-center bg-black/70"
+            onMouseMove={() => setShowInfoOverlay(false)}
+          >
+            <div className="w-11/12 px-40">
+              <p className="mb-2 text-xl text-gray-200">{t("blur_heading")}</p>
+              <p className="mb-8 text-5xl font-semibold">
+                {title} - {currentEpisode.name}
               </p>
-              <p className="mb-4">
-                {t("rewatch_question", { episodeName: watchedEpisode.name })}
-              </p>
-              <div className="flex items-center justify-end space-x-4">
-                <Button
-                  onClick={() => {
-                    setShowWatchedOverlay(false), setDeclinedRewatch(true);
-                  }}
-                  className="!bg-transparent hover:!bg-white/20 transition duration-300"
-                >
-                  <p>{t("rewatch_no")}</p>
-                </Button>
-                <Button
-                  onClick={() =>
-                    handleNavigateEpisode(watchedEpisodeData?.episode)
-                  }
-                  primary
-                >
-                  <p>{t("rewatch_yes")}</p>
-                </Button>
-              </div>
+
+              <Description
+                description={description || t("common:updating") + "..."}
+                className="text-lg text-gray-300 line-clamp-6"
+              />
             </div>
-          </Portal>
-        )}
-      </div>
-    </WatchContextProvider>
+          </div>
+        </Portal>
+      )}
+
+      {showWatchedOverlay && !declinedRewatch && (
+        <Portal selector=".netplayer-container">
+          <div
+            className="fixed inset-0 z-40 bg-black/70"
+            onClick={() => {
+              setShowWatchedOverlay(false);
+              setDeclinedRewatch(true);
+            }}
+          />
+
+          <div className="fixed left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 z-50 w-2/3 p-8 rounded-md bg-background-900">
+            <h1 className="text-4xl font-bold mb-4">
+              {t("rewatch_heading", { episodeName: watchedEpisode.name })}
+            </h1>
+            <p className="">
+              {t("rewatch_description", { episodeName: watchedEpisode.name })}
+            </p>
+            <p className="mb-4">
+              {t("rewatch_question", { episodeName: watchedEpisode.name })}
+            </p>
+            <div className="flex items-center justify-end space-x-4">
+              <Button
+                onClick={() => {
+                  setShowWatchedOverlay(false), setDeclinedRewatch(true);
+                }}
+                className="!bg-transparent hover:!bg-white/20 transition duration-300"
+              >
+                <p>{t("rewatch_no")}</p>
+              </Button>
+              <Button
+                onClick={() =>
+                  handleNavigateEpisode(watchedEpisodeData?.episode)
+                }
+                primary
+              >
+                <p>{t("rewatch_yes")}</p>
+              </Button>
+            </div>
+          </div>
+        </Portal>
+      )}
+    </React.Fragment>
   );
 };
 
