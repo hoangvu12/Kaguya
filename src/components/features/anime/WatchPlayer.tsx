@@ -1,9 +1,10 @@
-import { useWatchPlayer } from "@/contexts/WatchContext";
+import { useGlobalPlayer } from "@/contexts/GlobalPlayerContext";
 import { parseNumberFromString } from "@/utils";
 import classNames from "classnames";
-import { useInteract } from "netplayer";
+import { ControlButton, useInteract } from "netplayer";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
+import { AiOutlineClose, AiOutlineExpandAlt } from "react-icons/ai";
 import { BsArrowLeft } from "react-icons/bs";
 import Player, { PlayerProps } from "./Player";
 import Controls from "./Player/Controls";
@@ -15,6 +16,7 @@ import MobileNextEpisode from "./Player/MobileNextEpisode";
 import MobileOverlay from "./Player/MobileOverlay";
 import NextEpisodeButton from "./Player/NextEpisodeButton";
 import Overlay from "./Player/Overlay";
+import ProgressSlider from "./Player/ProgressSlider";
 import TimestampSkipButton from "./Player/TimestampSkipButton";
 
 export interface WatchPlayerProps extends PlayerProps {
@@ -23,13 +25,16 @@ export interface WatchPlayerProps extends PlayerProps {
 
 const PlayerControls = React.memo(() => {
   const {
-    setEpisode,
-    episodes,
-    currentEpisodeIndex,
-    sourceId,
-    anime,
-    currentEpisode,
-  } = useWatchPlayer();
+    playerProps: {
+      setEpisode,
+      episodes,
+      currentEpisodeIndex,
+      sourceId,
+      anime,
+      currentEpisode,
+    },
+    isBackground,
+  } = useGlobalPlayer();
 
   const sourceEpisodes = useMemo(
     () => episodes.filter((episode) => episode.sourceId === sourceId),
@@ -41,7 +46,7 @@ const PlayerControls = React.memo(() => {
     [currentEpisodeIndex, sourceEpisodes]
   );
 
-  return (
+  return !isBackground ? (
     <Controls
       rightControlsSlot={
         <React.Fragment>
@@ -49,19 +54,23 @@ const PlayerControls = React.memo(() => {
             <NextEpisodeButton onClick={() => setEpisode(nextEpisode)} />
           )}
 
-          <EpisodesButton>
-            <div className="w-[70vw] overflow-hidden bg-background-900 p-4">
-              <LocaleEpisodeSelector
-                mediaId={anime.id}
-                episodes={episodes}
-                activeEpisode={currentEpisode}
-                episodeLinkProps={{ shallow: true, replace: true }}
-              />
-            </div>
-          </EpisodesButton>
+          {anime?.id && (
+            <EpisodesButton>
+              <div className="w-[70vw] overflow-hidden bg-background-900 p-4">
+                <LocaleEpisodeSelector
+                  mediaId={anime.id}
+                  episodes={episodes}
+                  activeEpisode={currentEpisode}
+                  episodeLinkProps={{ shallow: true, replace: true }}
+                />
+              </div>
+            </EpisodesButton>
+          )}
         </React.Fragment>
       }
     />
+  ) : (
+    <ProgressSlider />
   );
 });
 
@@ -69,13 +78,15 @@ PlayerControls.displayName = "PlayerControls";
 
 const PlayerMobileControls = React.memo(() => {
   const {
-    setEpisode,
-    episodes,
-    currentEpisodeIndex,
-    sourceId,
-    anime,
-    currentEpisode,
-  } = useWatchPlayer();
+    playerProps: {
+      setEpisode,
+      episodes,
+      currentEpisodeIndex,
+      sourceId,
+      anime,
+      currentEpisode,
+    },
+  } = useGlobalPlayer();
 
   const sourceEpisodes = useMemo(
     () => episodes.filter((episode) => episode.sourceId === sourceId),
@@ -104,14 +115,16 @@ const PlayerMobileControls = React.memo(() => {
                     onClick={() => setIsOpen(false)}
                   />
 
-                  <div>
-                    <LocaleEpisodeSelector
-                      mediaId={anime.id}
-                      episodes={episodes}
-                      activeEpisode={currentEpisode}
-                      episodeLinkProps={{ shallow: true, replace: true }}
-                    />
-                  </div>
+                  {anime.id && (
+                    <div>
+                      <LocaleEpisodeSelector
+                        mediaId={anime.id}
+                        episodes={episodes}
+                        activeEpisode={currentEpisode}
+                        episodeLinkProps={{ shallow: true, replace: true }}
+                      />
+                    </div>
+                  )}
                 </div>
               )
             }
@@ -131,24 +144,63 @@ PlayerMobileControls.displayName = "PlayerMobileControls";
 const PlayerOverlay = React.memo(() => {
   const router = useRouter();
   const { isInteracting } = useInteract();
-  const { currentEpisode, anime } = useWatchPlayer();
+  const {
+    playerProps: { currentEpisode, anime },
+    setPlayerState,
+  } = useGlobalPlayer();
+  const { isBackground } = useGlobalPlayer();
 
   return (
     <Overlay>
-      <BsArrowLeft
-        className={classNames(
-          "transition-al absolute top-10 left-10 h-10 w-10 cursor-pointer duration-300 hover:text-gray-200",
-          isInteracting ? "visible opacity-100" : "invisible opacity-0"
-        )}
-        onClick={router.back}
-      />
+      {isBackground ? (
+        <MobileOverlay>
+          <div className="flex items-center gap-2 absolute top-4 left-4">
+            <div className="w-8 h-8">
+              <ControlButton
+                className={classNames(
+                  isInteracting ? "visible opacity-100" : "invisible opacity-0"
+                )}
+                onClick={() =>
+                  router.push(
+                    `/anime/watch/${anime?.id}/${currentEpisode?.sourceId}/${currentEpisode.sourceEpisodeId}`
+                  )
+                }
+                tooltip="Expand"
+              >
+                <AiOutlineExpandAlt />
+              </ControlButton>
+            </div>
+            <div className="w-8 h-8">
+              <ControlButton
+                className={classNames(
+                  isInteracting ? "visible opacity-100" : "invisible opacity-0"
+                )}
+                onClick={() => setPlayerState(null)}
+                tooltip="Exit"
+              >
+                <AiOutlineClose />
+              </ControlButton>
+            </div>
+          </div>
+        </MobileOverlay>
+      ) : (
+        <React.Fragment>
+          <BsArrowLeft
+            className={classNames(
+              "transition-al absolute top-10 left-10 h-10 w-10 cursor-pointer duration-300 hover:text-gray-200",
+              isInteracting ? "visible opacity-100" : "invisible opacity-0"
+            )}
+            onClick={router.back}
+          />
 
-      {anime.idMal && (
-        <TimestampSkipButton
-          className="absolute right-4 bottom-20"
-          episode={parseNumberFromString(currentEpisode.name)}
-          malId={anime.idMal}
-        />
+          {anime?.idMal && (
+            <TimestampSkipButton
+              className="absolute right-4 bottom-20"
+              episode={parseNumberFromString(currentEpisode.name)}
+              malId={anime.idMal}
+            />
+          )}
+        </React.Fragment>
       )}
     </Overlay>
   );
@@ -159,7 +211,9 @@ PlayerOverlay.displayName = "PlayerOverlay";
 const PlayerMobileOverlay = React.memo(() => {
   const router = useRouter();
   const { isInteracting } = useInteract();
-  const { currentEpisode, anime } = useWatchPlayer();
+  const {
+    playerProps: { currentEpisode, anime },
+  } = useGlobalPlayer();
 
   return (
     <React.Fragment>
@@ -187,9 +241,9 @@ const PlayerMobileOverlay = React.memo(() => {
 PlayerMobileOverlay.displayName = "PlayerMobileOverlay";
 
 const WatchPlayer: React.FC<WatchPlayerProps> = ({ videoRef, ...props }) => {
-  const { setEpisode, episodes, currentEpisodeIndex, sourceId } =
-    useWatchPlayer();
-
+  const {
+    playerProps: { episodes, currentEpisodeIndex, setEpisode, sourceId },
+  } = useGlobalPlayer();
   const sourceEpisodes = useMemo(
     () => episodes.filter((episode) => episode.sourceId === sourceId),
     [episodes, sourceId]

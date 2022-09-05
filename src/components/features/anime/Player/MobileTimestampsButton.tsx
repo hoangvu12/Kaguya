@@ -8,7 +8,7 @@ const MobileTimestampsButton = () => {
     <Dialog
       portalSelector=".netplayer-container"
       reference={
-        <ControlButton>
+        <ControlButton tooltip="Timestamps">
           <MarkIcon />
         </ControlButton>
       }

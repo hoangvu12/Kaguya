@@ -4849,11 +4849,6 @@ caniuse-lite@^1.0.30001283, caniuse-lite@^1.0.30001286:
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001303.tgz#9b168e4f43ccfc372b86f4bc5a551d9b909c95c9"
   integrity sha512-/Mqc1oESndUNszJP0kx0UaQU9kEv9nNtJ7Kn8AdA0mNnH8eR1cj0kG+NbNuC1Wq/b21eA8prhKRA3bbkjONegQ==
 
-canvas-txt@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/canvas-txt/-/canvas-txt-3.0.0.tgz#47d84e8870201d21604cc2d2964be22c46360ec4"
-  integrity sha512-SrNIp4aaGsgddjQX7S0D8jDaYNaOkPjC/k6VjaaT3h1GZ5RonSvmoCv2FyQfNk9mPZto84C8sNURgEC8dsC/vA==
-
 capture-exit@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/capture-exit/-/capture-exit-2.0.0.tgz#fb953bfaebeb781f62898239dabb426d08a509a4"
@@ -9298,10 +9293,10 @@ nested-error-stacks@^2.0.0, nested-error-stacks@^2.1.0:
   resolved "https://registry.yarnpkg.com/nested-error-stacks/-/nested-error-stacks-2.1.0.tgz#0fbdcf3e13fe4994781280524f8b96b0cdff9c61"
   integrity sha512-AO81vsIO1k1sM4Zrd6Hu7regmJN1NSiAja10gc4bX3F0wd+9rQmcuHQaHVQCYIEC8iFXnE+mavh23GOt7wBgug==
 
-netplayer@^1.4.3:
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/netplayer/-/netplayer-1.4.3.tgz#3a7193748aece154dc595731ed49be2cec5e0018"
-  integrity sha512-Tko4thszeIzowtFqLnT4GPVSqzgywX5xygD1j2fnHNf54BgQUPeQhESpqeFKhQ3/3wmtkp4CFm0EQUMIP0O6qQ==
+netplayer@^1.4.5:
+  version "1.4.5"
+  resolved "https://registry.yarnpkg.com/netplayer/-/netplayer-1.4.5.tgz#9090d57d5b78b79e76573a7fe662cc7651446b77"
+  integrity sha512-k247qCXOF3iSafnuQutHlffVr4WpbqBd3Uwk+oRTW1qoastWXbAa+37fxjN0lwTVqbZcDE5RDp3ZudsW6bfG1g==
   dependencies:
     "@plussub/srt-vtt-parser" "^1.1.0"
     load-script "^2.0.0"

@@ -26,7 +26,10 @@ export interface PlayerProps extends NetPlayerProps {
 const corsServers = [config.proxyServerUrl, "https://corsproxy.io"];
 
 const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
-  ({ hotkeys, components, subtitles, fonts, ...props }, ref) => {
+  (
+    { hotkeys = [], components = [], subtitles = [], fonts = [], ...props },
+    ref
+  ) => {
     const { PLAYER_TRANSLATIONS } = useConstantTranslation();
     const subtitlesOctopusRef = useRef(null);
 

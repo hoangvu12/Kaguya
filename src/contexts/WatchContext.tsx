@@ -2,7 +2,7 @@ import { Episode, VideoSource } from "@/types";
 import { Media } from "@/types/anilist";
 import React from "react";
 
-interface ContextProps {
+export interface WatchPlayerContextProps {
   anime: Media;
   episodes: Episode[];
   currentEpisode: Episode;
@@ -13,10 +13,10 @@ interface ContextProps {
 }
 
 interface WatchContextProviderProps {
-  value: ContextProps;
+  value: WatchPlayerContextProps;
 }
 
-const WatchContext = React.createContext<ContextProps>(null);
+const WatchContext = React.createContext<WatchPlayerContextProps>(null);
 
 export const WatchContextProvider: React.FC<WatchContextProviderProps> = ({
   children,

@@ -37,7 +37,7 @@
     "is-hotkey": "^0.2.0",
     "libass-wasm": "^4.0.0",
     "mime": "^3.0.0",
-    "netplayer": "^1.4.3",
+    "netplayer": "^1.4.5",
     "next": "^12.0.9",
     "next-i18next": "^11.0.0",
     "next-pwa": "^5.4.4",
