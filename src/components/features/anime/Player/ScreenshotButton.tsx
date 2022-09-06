@@ -2,14 +2,9 @@ import CircleButton from "@/components/shared/CircleButton";
 import Input from "@/components/shared/Input";
 import Modal from "@/components/shared/Modal";
 import canvasTxt from "@/lib/canvasTxt";
-import {
-  array_move,
-  download,
-  drawImageProp,
-  parseTime,
-  randomString,
-} from "@/utils";
+import { download, drawImageProp, parseTime, randomString } from "@/utils";
 import classNames from "classnames";
+import { Reorder } from "framer-motion";
 import {
   BackwardButton,
   ControlButton,
@@ -21,7 +16,6 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { AiOutlineCamera, AiOutlineSave } from "react-icons/ai";
-import { BiDownArrowAlt, BiUpArrowAlt } from "react-icons/bi";
 import { CgClose } from "react-icons/cg";
 import { MdOutlinePreview } from "react-icons/md";
 import { toast } from "react-toastify";
@@ -204,12 +198,6 @@ const ScreenshotButton = () => {
 
   const deleteImage = (imageIndex: number) => () => {
     setImages(images.filter((_, index) => index !== imageIndex));
-  };
-
-  const rePositionImage = (oldIndex: number, newIndex: number) => () => {
-    const newPositionImages = array_move(images, oldIndex, newIndex);
-
-    setImages(newPositionImages);
   };
 
   const snapshot = () => {
@@ -403,15 +391,25 @@ const ScreenshotButton = () => {
               ))}
             </div>
 
-            <div className="space-y-4 w-full">
-              {!images?.length && (
+            <Reorder.Group
+              axis="y"
+              values={images}
+              onReorder={setImages}
+              className="space-y-4 w-full"
+            >
+              {!images?.length ? (
                 <p className="text-center text-2xl">
                   Click screenshot button to take a snapshot of the video
+                </p>
+              ) : (
+                <p className="text-center text-lg">
+                  Drag and drop to reorder the images
                 </p>
               )}
 
               {images.map((image, index) => (
-                <div
+                <Reorder.Item
+                  value={image}
                   key={image.imageUrl}
                   className="w-full flex items-center justify-between"
                 >
@@ -449,24 +447,6 @@ const ScreenshotButton = () => {
                   </div>
 
                   <div className="flex itemes-center">
-                    {index !== 0 && (
-                      <CircleButton
-                        secondary
-                        LeftIcon={BiUpArrowAlt}
-                        iconClassName="w-4 h-4"
-                        onClick={rePositionImage(index, index - 1)}
-                      />
-                    )}
-
-                    {index !== images.length - 1 && (
-                      <CircleButton
-                        secondary
-                        LeftIcon={BiDownArrowAlt}
-                        iconClassName="w-4 h-4"
-                        onClick={rePositionImage(index, index + 1)}
-                      />
-                    )}
-
                     <CircleButton
                       secondary
                       LeftIcon={CgClose}
@@ -474,9 +454,9 @@ const ScreenshotButton = () => {
                       onClick={deleteImage(index)}
                     />
                   </div>
-                </div>
+                </Reorder.Item>
               ))}
-            </div>
+            </Reorder.Group>
 
             <div className="mt-8 px-8 py-6 bg-background-700 sticky bottom-0">
               <ProgressSlider />
