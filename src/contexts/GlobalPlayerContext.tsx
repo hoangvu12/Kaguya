@@ -95,7 +95,11 @@ export const useGlobalPlayer = (
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state?.playerState?.sources, state?.playerProps?.anime]);
+  }, [
+    state?.playerState?.sources,
+    state?.playerProps?.anime,
+    state?.playerProps?.currentEpisode,
+  ]);
 
   return {
     setPlayerState,
