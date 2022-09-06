@@ -1,7 +1,7 @@
 import { useGlobalPlayer } from "@/contexts/GlobalPlayerContext";
 import { parseNumberFromString } from "@/utils";
 import classNames from "classnames";
-import { ControlButton, useInteract } from "netplayer";
+import { ControlButton, TimeIndicator, useInteract } from "netplayer";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { AiOutlineClose, AiOutlineExpandAlt } from "react-icons/ai";
@@ -35,6 +35,7 @@ const PlayerControls = React.memo(() => {
     },
     isBackground,
   } = useGlobalPlayer();
+  const { isInteracting } = useInteract();
 
   const sourceEpisodes = useMemo(
     () => episodes.filter((episode) => episode.sourceId === sourceId),
@@ -70,7 +71,15 @@ const PlayerControls = React.memo(() => {
       }
     />
   ) : (
-    <ProgressSlider />
+    <div className="space-y-2">
+      {isInteracting && (
+        <div className="px-4">
+          <TimeIndicator />
+        </div>
+      )}
+
+      <ProgressSlider />
+    </div>
   );
 });
 
