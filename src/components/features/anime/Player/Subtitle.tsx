@@ -1,17 +1,17 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { parse } from "@plussub/srt-vtt-parser";
-import { buildAbsoluteURL } from "url-toolkit";
+import { useGlobalPlayer } from "@/contexts/GlobalPlayerContext";
 import { isValidUrl } from "@/utils";
+import { parse } from "@plussub/srt-vtt-parser";
 import classNames from "classnames";
 import {
-  useVideoState,
+  useInteract,
   useSubtitleSettings,
   useTextScaling,
   useVideo,
-  useInteract,
+  useVideoState,
 } from "netplayer";
+import { useEffect, useMemo, useState } from "react";
 import { isDesktop } from "react-device-detect";
-import { useGlobalPlayer } from "@/contexts/GlobalPlayerContext";
+import { buildAbsoluteURL } from "url-toolkit";
 
 const textStyles = {
   none: "",
@@ -83,7 +83,10 @@ const Subtitle = () => {
   }, [subtitle]);
 
   useEffect(() => {
-    update();
+    // Video animation takes 300 milliseconds to complete
+    setTimeout(() => {
+      update();
+    }, 300);
   }, [isBackground, update]);
 
   useEffect(() => {

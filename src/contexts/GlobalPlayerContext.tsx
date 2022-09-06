@@ -1,5 +1,6 @@
 import { WatchPlayerProps } from "@/components/features/anime/WatchPlayer";
 import classNames from "classnames";
+import { AnimatePresence, motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React, { createContext, useEffect, useMemo, useState } from "react";
@@ -62,14 +63,18 @@ const GlobalPlayerContextProvider: React.FC = ({ children }) => {
             shouldPlayInBackground && "bottom-4 right-4 z-[9999]"
           )}
         >
-          <div
-            style={{
-              width: shouldPlayInBackground ? 400 : "100vw",
-              height: shouldPlayInBackground ? 225 : "100vh",
-            }}
-          >
-            <ForwardRefPlayer {...playerState} />
-          </div>
+          <AnimatePresence initial={false}>
+            <motion.div
+              layout
+              transition={{ duration: 0.3, ease: "linear" }}
+              animate={{
+                width: shouldPlayInBackground ? 400 : "100vw",
+                height: shouldPlayInBackground ? 225 : "100vh",
+              }}
+            >
+              <ForwardRefPlayer {...playerState} />
+            </motion.div>
+          </AnimatePresence>
         </div>
       ) : null}
     </PlayerContext.Provider>
