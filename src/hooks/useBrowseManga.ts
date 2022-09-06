@@ -67,7 +67,8 @@ const useBrowse = (options: UseBrowseOptions) => {
         ...(tags?.length && { tag_in: tags }),
         ...(genres?.length && { genre_in: genres }),
         ...(keyword && !translationMediaIds?.length && { search: keyword }),
-        ...(!keyword && { isAdult: false }),
+        isAdult:
+          !!keyword || genres.includes("Hentai") || genres.includes("Ecchi"),
       });
 
       return data;

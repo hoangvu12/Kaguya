@@ -80,6 +80,7 @@ const BrowsePage = ({ query: baseQuery }) => {
     season: season as string,
     seasonYear: seasonYear as string,
     sort: sort as MediaSort,
+    type,
   };
 
   const handleTypeChange = (type: typeof TYPES[number]) => {
