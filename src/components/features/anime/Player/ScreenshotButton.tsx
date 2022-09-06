@@ -157,9 +157,9 @@ const LAYOUTS: ImageLayout[] = [
   },
 
   // ==========================
-  // ||    1    ||     3     ||
+  // ||    1    ||     2     ||
   // ========================||
-  // ||    2    ||     4     ||
+  // ||    3    ||     4     ||
   // ==========================
   {
     positions: [
@@ -170,13 +170,13 @@ const LAYOUTS: ImageLayout[] = [
       },
       {
         grid: [CANVAS_COLUMNS / 2, CANVAS_ROWS / 2],
-        startColumn: 0,
-        startRow: CANVAS_COLUMNS / 2,
+        startColumn: CANVAS_COLUMNS / 2,
+        startRow: 0,
       },
       {
         grid: [CANVAS_COLUMNS / 2, CANVAS_ROWS / 2],
-        startColumn: CANVAS_COLUMNS / 2,
-        startRow: 0,
+        startColumn: 0,
+        startRow: CANVAS_COLUMNS / 2,
       },
       {
         grid: [CANVAS_COLUMNS / 2, CANVAS_ROWS / 2],
