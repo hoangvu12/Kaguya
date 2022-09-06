@@ -3,7 +3,13 @@ import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import React, { createContext, useEffect, useMemo, useState } from "react";
+import React, {
+  createContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { isMobile } from "react-device-detect";
 import { WatchPlayerContextProps } from "./WatchContext";
 
@@ -38,6 +44,7 @@ const PlayerContext = createContext<ContextProps>(null);
 const GlobalPlayerContextProvider: React.FC = ({ children }) => {
   const [playerState, setPlayerState] = useState<PlayerProps>(null);
   const [playerProps, setPlayerProps] = useState<WatchPlayerContextProps>(null);
+  const dragConstraintsRef = useRef<HTMLDivElement>(null);
 
   const router = useRouter();
 
@@ -64,10 +71,18 @@ const GlobalPlayerContextProvider: React.FC = ({ children }) => {
           )}
         >
           <AnimatePresence initial={false}>
+            <div
+              ref={dragConstraintsRef}
+              className="fixed inset-0 pointer-events-none"
+            />
+
             <motion.div
               layout
-              transition={{ duration: 0.3, ease: "linear" }}
-              animate={{
+              drag={shouldPlayInBackground}
+              dragElastic={0}
+              dragMomentum={false}
+              dragConstraints={dragConstraintsRef}
+              style={{
                 width: shouldPlayInBackground ? 400 : "100vw",
                 height: shouldPlayInBackground ? 225 : "100vh",
               }}
