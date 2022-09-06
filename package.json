@@ -30,7 +30,7 @@
     "axios": "^0.23.0",
     "classnames": "^2.3.1",
     "dayjs": "^1.10.7",
-    "framer-motion": "^4.1.17",
+    "framer-motion": "6",
     "i18next-chained-backend": "^3.0.2",
     "i18next-http-backend": "^1.4.0",
     "i18next-localstorage-backend": "^3.1.3",
