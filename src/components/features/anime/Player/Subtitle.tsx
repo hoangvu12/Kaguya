@@ -51,7 +51,7 @@ const requestSubtitle = async (url: string): Promise<string | null> => {
 const Subtitle = () => {
   const { state } = useVideoState();
   const { state: subtitleSettings } = useSubtitleSettings();
-  const { moderateScale } = useTextScaling();
+  const { moderateScale, update } = useTextScaling();
   const { isBackground } = useGlobalPlayer();
   const { videoEl } = useVideo();
   const { isInteracting } = useInteract();
@@ -81,6 +81,10 @@ const Subtitle = () => {
 
     getSubtitle();
   }, [subtitle]);
+
+  useEffect(() => {
+    update();
+  }, [isBackground, update]);
 
   useEffect(() => {
     if (!subtitleText) return;
