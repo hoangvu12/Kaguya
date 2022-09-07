@@ -16,7 +16,7 @@ There are 3 things that needed to run the website.
 
 2. ### Scraper
 
-   Next, clone ([kaguya-scraper](https://github.com/hoangvu12/kaguya-scraper)) to your local machine.
+   Next, clone ([kaguya-scraper](https://github.com/hoangvu12/kaguya-database)) to your local machine.
 
    Run these to install all the independencies:
 
