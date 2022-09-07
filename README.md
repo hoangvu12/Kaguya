@@ -59,28 +59,3 @@ The official website is [kaguya.live](https://kaguya.live)
 ## Installation
 
 See [INSTALLATION.md](INSTALLATION.md)
-
-## Enviroment Variables
-
-```
-# Supabase (See: https://github.com/hoangvu12/kaguya-database)
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-
-# Google Analytics
-NEXT_PUBLIC_GA_ID=
-
-# See: https://github.com/hoangvu12/kaguya-scraper
-NEXT_PUBLIC_NODE_SERVER_URL=
-NEXT_PUBLIC_SOCKET_SERVER_URL=
-
-# See: https://github.com/hoangvu12/requests-proxy
-NEXT_PUBLIC_PROXY_SERVER_URL=
-
-# Public web push key (https://github.com/hoangvu12/kaguya-scraper)
-NEXT_PUBLIC_WEB_PUSH=
-
-# Sentry
-SENTRY_AUTH_TOKEN=
-SENTRY_DSN=
-```
