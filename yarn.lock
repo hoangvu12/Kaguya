@@ -9347,10 +9347,10 @@ nested-error-stacks@^2.0.0, nested-error-stacks@^2.1.0:
   resolved "https://registry.yarnpkg.com/nested-error-stacks/-/nested-error-stacks-2.1.0.tgz#0fbdcf3e13fe4994781280524f8b96b0cdff9c61"
   integrity sha512-AO81vsIO1k1sM4Zrd6Hu7regmJN1NSiAja10gc4bX3F0wd+9rQmcuHQaHVQCYIEC8iFXnE+mavh23GOt7wBgug==
 
-netplayer@^1.4.6:
-  version "1.4.6"
-  resolved "https://registry.yarnpkg.com/netplayer/-/netplayer-1.4.6.tgz#7eae5443680ad2518bf5a029d290641b32bd3ff7"
-  integrity sha512-z7Tppfpo072LvL4eee00/+h1fmM68A8wFq8tR3G6tnpENe5PMvhme5JLwnAqnFZ+k/088gq5vUG3OtbKQPrfww==
+netplayer@^1.4.9:
+  version "1.4.9"
+  resolved "https://registry.yarnpkg.com/netplayer/-/netplayer-1.4.9.tgz#ae5c8ddb3500284200f1af3473f3fc97922f40b7"
+  integrity sha512-/ae6vVlcNZa6THsJ+N3R1aRkzopb6MNWsvhBbwg0H8gh81Fuh353hJwLAd0IOMtKXUkOFdqKPc9XfHMikXtSCw==
   dependencies:
     "@plussub/srt-vtt-parser" "^1.1.0"
     load-script "^2.0.0"

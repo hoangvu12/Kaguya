@@ -267,9 +267,9 @@ const WatchPage: NextPage<WatchPageProps> = ({ episodes }) => {
   useGlobalPlayer({
     playerState: {
       ref: videoRef,
-      sources: sources,
-      subtitles: subtitles,
-      fonts: fonts,
+      sources,
+      subtitles,
+      fonts,
       thumbnail: data?.thumbnail,
       className: "object-contain w-full h-full",
     },
