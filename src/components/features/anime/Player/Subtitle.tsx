@@ -86,7 +86,7 @@ const Subtitle = () => {
     // Video animation takes 300 milliseconds to complete
     setTimeout(() => {
       update();
-    }, 300);
+    }, 500);
   }, [isBackground, update]);
 
   useEffect(() => {
