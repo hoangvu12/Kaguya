@@ -83,7 +83,7 @@ const GlobalPlayerContextProvider: React.FC = ({ children }) => {
                 width: shouldPlayInBackground ? 400 : "100vw",
                 height: shouldPlayInBackground ? 225 : "100vh",
               }}
-              transition={{ duration: 0.3, ease: "linear" }}
+              transition={{ duration: 0.5, type: "tween" }}
             >
               <ForwardRefPlayer {...playerState} />
             </motion.div>
