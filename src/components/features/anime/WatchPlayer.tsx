@@ -124,7 +124,7 @@ const PlayerMobileControls = React.memo(() => {
                     onClick={() => setIsOpen(false)}
                   />
 
-                  {anime.id && (
+                  {anime?.id && (
                     <div>
                       <LocaleEpisodeSelector
                         mediaId={anime.id}
@@ -236,7 +236,7 @@ const PlayerMobileOverlay = React.memo(() => {
         />
       </MobileOverlay>
 
-      {anime.idMal && (
+      {anime?.idMal && (
         <TimestampSkipButton
           className="absolute right-4 bottom-24 z-50"
           episode={parseNumberFromString(currentEpisode.name)}
