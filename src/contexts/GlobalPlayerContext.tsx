@@ -1,6 +1,6 @@
 import { WatchPlayerProps } from "@/components/features/anime/WatchPlayer";
 import classNames from "classnames";
-import { AnimatePresence, motion, useMotionValue } from "framer-motion";
+import { AnimatePresence, motion, Variants } from "framer-motion";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React, { createContext, useEffect, useMemo, useState } from "react";
@@ -33,26 +33,28 @@ interface ContextProps {
   isBackground: boolean;
 }
 
+const playerVariants: Variants = {
+  watch: {
+    width: "100vw",
+    height: "100vh",
+  },
+  background: {
+    width: 400,
+    height: 225,
+  },
+};
+
 const PlayerContext = createContext<ContextProps>(null);
 
 const GlobalPlayerContextProvider: React.FC = ({ children }) => {
   const [playerState, setPlayerState] = useState<PlayerProps>(null);
   const [playerProps, setPlayerProps] = useState<WatchPlayerContextProps>(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
 
   const router = useRouter();
 
   const shouldPlayInBackground = useMemo(() => {
     return !router?.pathname.includes("watch") && !isMobile;
   }, [router?.pathname]);
-
-  useEffect(() => {
-    if (!shouldPlayInBackground) {
-      x.set(0);
-      y.set(0);
-    }
-  }, [shouldPlayInBackground, x, y]);
 
   return (
     <PlayerContext.Provider
@@ -74,15 +76,10 @@ const GlobalPlayerContextProvider: React.FC = ({ children }) => {
             )}
           >
             <motion.div
-              drag={shouldPlayInBackground}
-              dragMomentum={false}
-              dragElastic={0}
               layout
-              style={{ x, y }}
-              animate={{
-                width: shouldPlayInBackground ? 400 : "100vw",
-                height: shouldPlayInBackground ? 225 : "100vh",
-              }}
+              dragElastic={0}
+              variants={playerVariants}
+              animate={shouldPlayInBackground ? "background" : "watch"}
               transition={{ duration: 0.5, type: "tween" }}
             >
               <ForwardRefPlayer {...playerState} />
