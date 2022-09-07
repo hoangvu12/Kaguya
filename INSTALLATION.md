@@ -1,46 +1,142 @@
 # Self hosting
 
+Here is the instructions to deploy Kaguya on your local machine.
+
 There are 3 things that needed to run the website.
 
 1. The website ([Kaguya](https://github.com/hoangvu12/Kaguya))
 2. The server for scraping, pushing notifications and handling requests from the website. ([kaguya-scraper](https://github.com/hoangvu12/kaguya-scraper))
-3. The server for handling sockets. ([kaguya-socket](https://github.com/hoangvu12/kaguya-socket))
-4. Database ([kaguya-database](https://github.com/hoangvu12/kaguya-scraper))
+3. Database ([kaguya-database](https://github.com/hoangvu12/kaguya-scraper))
 
-## The website
+## Steps
 
-1. ### Clone the website
+1. ### Database
+
+   First you have to get supabase's keys and url. [See detailed instructions](https://github.com/hoangvu12/kaguya-scraper)
+
+2. ### Scraper
+
+   Next, clone ([kaguya-scraper](https://github.com/hoangvu12/kaguya-scraper)) to your local machine.
+
+   Run these to install all the independencies:
 
    ```bash
-   git clone https://github.com/hoangvu12/Kaguya
+   cd kaguya-scraper
+   yarn
    ```
 
-2. ### Rename `.env-example` to `.env` and fill in the values
+   After that, rename `.env-example` to `.env` and fill all the variables
 
-   1. #### Database
+   ```
+   # See https://github.com/hoangvu12/kaguya-database (Required)
 
-      - `NEXT_PUBLIC_SUPABASE_URL`: This is supabase's URL, you can get it from ([kaguya-database](https://github.com/hoangvu12/kaguya-scraper))
-      - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Same as URL.
+   SUPABASE_KEY=
+   SUPABASE_URL=
 
-   2. #### Servers
+   # Push notification (npm run webPush:generate) (Optional)
 
-      - `NEXT_PUBLIC_NODE_SERVER_URL`: URL of the scraping server ([kaguya-scraper](https://github.com/hoangvu12/kaguya-scraper))
+   WEB_PUSH_PUBLIC_KEY=
+   WEB_PUSH_PRIVATE_KEY=
+   WEB_PUSH_EMAIL=
 
-      - `NEXT_PUBLIC_SOCKET_SERVER_URL`: URL of the handling sockets server ([kaguya-socket](https://github.com/hoangvu12/kaguya-socket))
+   # This will be your base route (https://example.com/BASE_ROUTE) (Optional but recommended)
 
-      - `NEXT_PUBLIC_PROXY_SERVER_URL`: URL of the proxy server (to modify requests, mainly to bypass cors or adding headers) ([requests-proxy](https://github.com/hoangvu12/requests-proxy)) [Optional]
+   BASE_ROUTE=
 
-   3. #### Google Analytics
+   # Discord
 
-      - `NEXT_PUBLIC_GA_ID`: Google analytics's ID [Optional]
+   # Discord new anime/manga update channel id (Required)
 
-   4. #### Public web push key
+   DISCORD_UPDATE_CHANNEL_ID=
+   DISCORD_GUILD_ID=
+   DISCORD_CLIENT_ID=
+   DISCORD_TOKEN=
 
-      - `NEXT_PUBLIC_WEB_PUSH`: Web push public key for notifications pushing, you can get it by running `npm run webPush:generate` on scraping server ([kaguya-scraper](https://github.com/hoangvu12/kaguya-scraper)) [Optional]
+   # Discord storage (Optional, for file hostings purpose)
 
-   5. #### Sentry
-      - `SENTRY_AUTH_TOKEN`: Sentry auth token for error tracking [Optional]
+   DISCORD_WEBHOOK_URL=
 
-3. ### Run `npm run dev` to start the server
+   # Streamtape (Optional, for video hostings)
 
-4. ### For hosting, you could use some hosting services like [Vercel](https://vercel.app) or [Netlify](https://www.netlify.com) to host the website, or since the website using NextJS framework, you could just self-host it by your own. [Read more](https://nextjs.org/docs/deployment)
+   STREAMTAPE_LOGIN=
+   STREAMTAPE_API_KEY=
+   ```
+
+   Then, run these to start the server
+
+   ```bash
+   yarn build
+   yarn start
+   ```
+
+   If it show to the console `Listening on port 3001`, then you just successfully deployed the server, now is running on `http://localhost:3001`.
+
+3. ### The website
+
+   Next, clone ([Kaguya](https://github.com/hoangvu12/Kaguya)) to your local machine.
+
+   Run these to install all the independencies:
+
+   ```bash
+   cd kaguya-scraper
+   yarn
+   ```
+
+   After that, rename `.env-example` to `.env` and fill all the variables
+
+   ```
+   # Supabase (See: https://github.com/hoangvu12/kaguya-database) (Required)
+   NEXT_PUBLIC_SUPABASE_URL=
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=
+
+   # Google Analytics (Optional but recommended)
+   NEXT_PUBLIC_GA_ID=
+
+   # See: https://github.com/hoangvu12/kaguya-scraper (Required)
+   NEXT_PUBLIC_NODE_SERVER_URL=
+
+   # See: https://github.com/hoangvu12/kaguya-socket (Optional)
+   NEXT_PUBLIC_SOCKET_SERVER_URL=
+
+   # See: https://github.com/hoangvu12/requests-proxy (Optional)
+   NEXT_PUBLIC_PROXY_SERVER_URL=
+
+   # Public web push key (https://github.com/hoangvu12/kaguya-scraper) (Optional)
+   NEXT_PUBLIC_WEB_PUSH=
+
+   # Sentry (Optional)
+   SENTRY_AUTH_TOKEN=
+   SENTRY_DSN=
+   ```
+
+   `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` : Get these on step 1.
+
+   `NEXT_PUBLIC_NODE_SERVER_URL`: The URL of the scraping server, if you running on local machine then it should be `http://localhost:3001`
+
+   `NEXT_PUBLIC_SOCKET_SERVER_URL`: The URL of the socket server, if you running on local machine then it should be `http://localhost:3002` (Optional)
+
+   `NEXT_PUBLIC_PROXY_SERVER_URL`: The URL of the proxy server, if you running on local machine then it should be `http://localhost:3002` (Optional, you should change the port to avoid port already use)
+
+   `NEXT_PUBLIC_WEB_PUSH`: The public web push key, you can get this one on scraping server by running `yarn webPush:generate` (Optional)
+
+   `SENTRY_AUTH_TOKEN` and `SENTRY_DSN`: Get these from Sentry (Optional)
+
+   Then start the website by running:
+
+   ```bash
+   yarn dev
+   ```
+
+   The website should start on `http://localhost:3000`.
+
+   If you've done everything correctly, the website should working fine without any errors, but there won't be any media units (episodes and chapters).
+
+## Notes
+
+To add media units, you should create your own scraper on scraping server. (I've made some scrapers and public it. [See them here](https://github.com/hoangvu12/kaguya-scraper/tree/main/src/scrapers))
+
+Then, run `yarn cli scraper:init` on your scraping server to start scraping. (Only needed to run once, it will takes a lot of time to scrape)
+
+Still stuck? Feel free to ask me here:
+
+[![Kaguya Discord server](https://discordapp.com/api/guilds/906042713688928257/widget.png?style=banner2)](https://discord.gg/382BEFfER6)
