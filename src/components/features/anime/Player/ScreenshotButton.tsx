@@ -335,15 +335,16 @@ const ScreenshotButton = () => {
             canvasTxt.align = "center";
             canvasTxt.fontSize = fontSize;
             canvasTxt.fontWeight = "bold";
+            canvasTxt.debug = process.env.NODE_ENV === "development";
 
             const PADDING = 0.05;
 
             canvasTxt.drawText(
               ctx,
               textString,
-              x,
+              x + (imageCanvasWidth * PADDING) / 2,
               y,
-              imageCanvasWidth,
+              imageCanvasWidth - imageCanvasWidth * PADDING,
               imageCanvasHeight - imageCanvasHeight * PADDING
             );
           }
