@@ -14,10 +14,7 @@ const AdvancedSettings: React.FC<PopupProps> = ({
         <GoSettings className="text-white p-2 rounded-sm bg-background-800 w-10 h-10 hover:bg-white/20 transition duration-300 border border-white/80" />
       }
       type="click"
-      className={classNames(
-        "flex items-center space-x-4 rounded-md p-8 !bg-background-900",
-        className
-      )}
+      className={classNames("rounded-md p-8 !bg-background-900", className)}
       placement="bottom"
       {...props}
     >
