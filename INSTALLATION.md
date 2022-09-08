@@ -71,14 +71,69 @@ There are 3 things that needed to run the website.
 
    If it show to the console `Listening on port 3001`, then you just successfully deployed the server, now is running on `http://localhost:3001`.
 
-3. ### The website
+3. ### Socket server (Optional)
+
+   Next, clone ([kaguya-socket](https://github.com/hoangvu12/kaguya-socket)) to your local machine.
+
+   Run these to install all the independencies:
+
+   ```bash
+   cd kaguya-socket
+   yarn
+   ```
+
+   After that, rename `.env-example` to `.env` and fill all the variables
+
+   ```
+   # See https://github.com/hoangvu12/kaguya-database (Supabase private key)
+
+   SUPABASE_KEY=
+   SUPABASE_URL=
+
+   # Redis (You can get one for free on https://upstash.com)
+
+   REDIS_URL=
+
+   # This will be your base route (https://example.com/BASE_ROUTE)
+
+   BASE_ROUTE=
+   ```
+
+   Then, run these to start the server
+
+   ```bash
+   yarn start
+   ```
+
+   If it show to the console `Listening on port 3002`, then you just successfully deployed the server, now is running on `http://localhost:3002`.
+
+4. ### Proxy server (Optional)
+
+   Next, clone ([requests-proxy](https://github.com/hoangvu12/requests-proxy)) to your local machine.
+
+   Run these to install all the independencies:
+
+   ```bash
+   cd requests-proxy
+   yarn
+   ```
+
+   Then, run these to start the server
+
+   ```bash
+   yarn start
+   ```
+
+   If it show to the console `Listening on port 3002`, then you just successfully deployed the server, now is running on `http://localhost:3002`.
+
+5. ### The website
 
    Next, clone ([Kaguya](https://github.com/hoangvu12/Kaguya)) to your local machine.
 
    Run these to install all the independencies:
 
    ```bash
-   cd kaguya-scraper
+   cd Kaguya
    yarn
    ```
 
