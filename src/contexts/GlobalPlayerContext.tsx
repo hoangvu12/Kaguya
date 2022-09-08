@@ -101,8 +101,6 @@ export const useGlobalPlayer = (
     React.useContext(PlayerContext);
 
   useEffect(() => {
-    console.log(state);
-
     if (state?.playerState) {
       setPlayerState(state.playerState);
     }
