@@ -18,6 +18,7 @@ export interface UseBrowseOptions {
   sort?: MediaSort;
   country?: string;
   status?: MediaStatus;
+  isAdult?: boolean;
 }
 
 const useBrowse = (options: UseBrowseOptions) => {
@@ -30,6 +31,7 @@ const useBrowse = (options: UseBrowseOptions) => {
     tags,
     country,
     status,
+    isAdult,
   } = options;
 
   return useInfiniteQuery(
@@ -68,7 +70,7 @@ const useBrowse = (options: UseBrowseOptions) => {
         ...(genres?.length && { genre_in: genres }),
         ...(keyword && !translationMediaIds?.length && { search: keyword }),
         isAdult:
-          !!keyword || genres.includes("Hentai") || genres.includes("Ecchi"),
+          isAdult || genres.includes("Hentai") || genres.includes("Ecchi"),
       });
 
       return data;

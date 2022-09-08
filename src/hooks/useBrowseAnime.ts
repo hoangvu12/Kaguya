@@ -22,20 +22,22 @@ export interface UseBrowseOptions {
   sort?: MediaSort;
   country?: string;
   status?: MediaStatus;
+  isAdult?: boolean;
 }
 
 const useBrowse = (options: UseBrowseOptions) => {
   const {
-    format,
-    genres,
-    keyword,
-    season,
-    seasonYear,
-    sort,
+    format = undefined,
+    genres = [],
+    keyword = "",
+    season = undefined,
+    seasonYear = undefined,
+    sort = MediaSort.Trending_desc,
     limit = 30,
-    tags,
-    country,
-    status,
+    tags = [],
+    country = undefined,
+    status = undefined,
+    isAdult = false,
   } = options;
 
   return useInfiniteQuery(
@@ -77,7 +79,7 @@ const useBrowse = (options: UseBrowseOptions) => {
         // If keyword is given, but there is no media ids found, search the media using keyword.
         ...(keyword && !translationMediaIds?.length && { search: keyword }),
         isAdult:
-          !!keyword || genres.includes("Hentai") || genres.includes("Ecchi"),
+          isAdult || genres.includes("Hentai") || genres.includes("Ecchi"),
       });
 
       return data;
