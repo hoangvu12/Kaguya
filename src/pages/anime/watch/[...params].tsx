@@ -12,6 +12,7 @@ import useMediaDetails from "@/hooks/useMediaDetails";
 import useSavedWatched from "@/hooks/useSavedWatched";
 import useSaveWatched from "@/hooks/useSaveWatched";
 import { AnimeSourceConnection, Episode } from "@/types";
+import { parseNumberFromString } from "@/utils";
 import { getDescription, getTitle, sortMediaUnit } from "@/utils/data";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { GetServerSideProps, NextPage } from "next";
@@ -283,6 +284,22 @@ const WatchPage: NextPage<WatchPageProps> = ({ episodes }) => {
       sources,
     },
   });
+
+  useEffect(() => {
+    if (!anime) return;
+
+    const syncDataScript = document.querySelector("#syncData");
+
+    syncDataScript.textContent = JSON.stringify({
+      title: anime.title.userPreferred,
+      aniId: Number(animeId),
+      episode: parseNumberFromString(currentEpisode.name),
+      id: animeId,
+      nextEpUrl: nextEpisode
+        ? `/anime/watch/${animeId}/${nextEpisode.sourceId}/${nextEpisode.sourceEpisodeId}`
+        : null,
+    });
+  }, [anime, animeId, currentEpisode.name, nextEpisode]);
 
   if (animeLoading) {
     return (

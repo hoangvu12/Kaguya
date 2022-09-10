@@ -35,17 +35,16 @@ import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { AiOutlineUpload } from "react-icons/ai";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { BsFillPlayFill } from "react-icons/bs";
 
 interface DetailsPageProps {
   anime: Media;
-  translations: Translation[];
 }
 
-const DetailsPage: NextPage<DetailsPageProps> = ({ anime, translations }) => {
+const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
   const { user } = useUser();
   const { locale } = useRouter();
   const { t } = useTranslation("anime_details");
@@ -71,6 +70,20 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime, translations }) => {
     () => getDescription(anime, locale),
     [anime, locale]
   );
+
+  useEffect(() => {
+    if (!anime) return;
+
+    const syncDataScript = document.querySelector("#syncData");
+
+    syncDataScript.textContent = JSON.stringify({
+      title: anime.title.userPreferred,
+      aniId: Number(anime.id),
+      episode: null,
+      id: anime.id,
+      nextEpUrl: null,
+    });
+  }, [anime]);
 
   return (
     <>
@@ -166,6 +179,9 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime, translations }) => {
                   containerClassName="mt-4 mb-8"
                   className="text-gray-300 hover:text-gray-100 transition duration-300"
                 />
+
+                {/* MAL-Sync UI */}
+                <div id="mal-sync"></div>
               </div>
 
               <div className="flex gap-x-8 overflow-x-auto md:gap-x-16 [&>*]:shrink-0">
