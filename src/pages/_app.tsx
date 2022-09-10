@@ -60,6 +60,9 @@ function App({ Component, pageProps, router, err }: WorkaroundAppProps) {
 
   return (
     <React.Fragment>
+      {/* A placeholder to integrate MAL-Sync (https://github.com/MALSync/MALSync)*/}
+      <script id="syncData" type="application/json"></script>
+
       <Script
         strategy="afterInteractive"
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
