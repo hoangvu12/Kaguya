@@ -13,6 +13,7 @@ import ShouldWatch from "@/components/shared/ShouldWatch";
 import ListSwiperSkeleton from "@/components/skeletons/ListSwiperSkeleton";
 import useDevice from "@/hooks/useDevice";
 import useMedia from "@/hooks/useMedia";
+import useRecentlyUpdated from "@/hooks/useRecentlyUpdated";
 import useRecommendations from "@/hooks/useRecommendations";
 import { MediaSort, MediaType } from "@/types/anilist";
 import { getSeason, randomElement } from "@/utils";
@@ -63,14 +64,8 @@ const Home = () => {
       perPage: 5,
     });
 
-  const { data: recentlyUpdated, isLoading: recentlyUpdatedLoading } = useMedia(
-    {
-      type: MediaType.Anime,
-      sort: [MediaSort.Updated_at_desc],
-      isAdult: false,
-      perPage: isMobile ? 5 : 10,
-    }
-  );
+  const { data: recentlyUpdated, isLoading: recentlyUpdatedLoading } =
+    useRecentlyUpdated();
 
   const randomTrendingAnime = useMemo(() => {
     return randomElement(trendingAnime || []);
