@@ -25,6 +25,7 @@ import { Translation } from "@/types";
 import { Media, MediaType } from "@/types/anilist";
 import { numberWithCommas, vietnameseSlug } from "@/utils";
 import { convert, getDescription, getTitle } from "@/utils/data";
+import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useUser } from "@supabase/auth-helpers-react";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
@@ -262,6 +263,21 @@ export const getStaticProps: GetStaticProps = async ({
   params: { params },
 }) => {
   try {
+    const { data: isDMCA } = await supabaseClient
+      .from("kaguya_dmca")
+      .select("id")
+      .eq("mediaId", params[0])
+      .eq("mediaType", MediaType.Anime);
+
+    if (isDMCA) {
+      return {
+        props: null,
+        redirect: {
+          destination: "/got-dmca",
+        },
+      };
+    }
+
     const media = await getMediaDetails({
       type: MediaType.Manga,
       id: Number(params[0]),
