@@ -362,7 +362,8 @@ export const getStaticProps: GetStaticProps = async ({
       .from("kaguya_dmca")
       .select("id")
       .eq("mediaId", params[0])
-      .eq("mediaType", MediaType.Anime);
+      .eq("mediaType", MediaType.Anime)
+      .single();
 
     if (isDMCA) {
       return {
