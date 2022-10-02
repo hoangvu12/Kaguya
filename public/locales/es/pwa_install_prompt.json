@@ -1,0 +1,7 @@
+{
+    "app_installed": "La aplicación ha sido instalada.",
+    "prompt_description": "Instala la aplicación de Kaguya para una mejor experiencia",
+    "prompt_heading": "Instalar app de Kaguya",
+    "prompt_no": "Cancelar",
+    "prompt_yes": "Instalar"
+}

@@ -1,0 +1,7 @@
+{
+  "subscribed_msg": "Las notificaciones de {{mediaTitle}} han sido activadas",
+  "subscription_needed_msg": "Debes permitir recibir notificaciones antes de suscribirte",
+  "unsubscribed_msg": "Las notificaciones de {{mediaTitle}} han sido activadas",
+  "notification_heading": "Notificaciones",
+  "no_notifications_msg": "No hay notificaciones"
+}

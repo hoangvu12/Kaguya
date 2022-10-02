@@ -1,0 +1,18 @@
+{
+    "browse_files": "Selecciona una imagen de tu computadora",
+    "description": "Te dice cual anime, cual episodio, y el momento exacto de la escena",
+    "drag_and_drop": "Arrastra y suelta",
+    "heading": "Busqueda de escena por imagen",
+    "invalid_url": "URL invalida",
+    "made_by": "Usando el buscador de",
+    "note": "Nota: Los resultados de busqueda no son 100% acertados. Solo funciona con escenas de anime.",
+    "num_of_found_images": "{{num}} escenas buscadas",
+    "percent_similarity": "Similaridad del ~{{percent}}%",
+    "tab_title": "Busqueda de escena por imagen",
+    "try_again": "Intenta con otra imagen",
+    "upload": "Subir",
+    "upload_another_image": "Otra imagen",
+    "upload_image": "Sube tu imagen",
+    "upload_supported_extensions": "PNG y JPG soportados.",
+    "your_image": "Tu imagen de busqueda"
+}
