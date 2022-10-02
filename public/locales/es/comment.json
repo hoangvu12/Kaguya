@@ -1,0 +1,13 @@
+{
+    "comment_delete": "Eliminar",
+    "comment_edit": "Editar",
+    "comment_placeholder": "Di lo que piensas",
+    "editing_escape": "Presiona ESC para <2>salir</2>.",
+    "is_edited": "Editado",
+    "like": "Me gusta",
+    "liked": "Me gusta",
+    "need_login_msg": "Debes <2>iniciar sesión</2> para comentar",
+    "no_comments_msg": "Se el primero en comentar en esta serie!",
+    "reply": "Responder",
+    "reply_placeholder": "Responder"
+}
