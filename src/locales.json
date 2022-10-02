@@ -4,5 +4,6 @@
     "name": "Tiếng Việt"
   },
   { "locale": "en", "name": "English" },
-  { "locale": "ru", "name": "Русский" }
+  { "locale": "ru", "name": "Русский" },
+  { "locale": "es", "name": "Español" }
 ]
