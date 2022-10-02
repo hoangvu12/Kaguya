@@ -11,7 +11,7 @@ module.exports = {
       typeof window !== "undefined" ? [LocalStorageBackend, HttpBackend] : [],
   },
   i18n: {
-    locales: ["vi", "en", "ru"],
+    locales: ["vi", "en", "ru", "es"],
     defaultLocale: "en",
     reloadOnPrerender: isDev,
   },
