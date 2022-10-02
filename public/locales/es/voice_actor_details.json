@@ -1,0 +1,11 @@
+{
+    "age": "Edad",
+    "birthday": "Fecha de nacimiento",
+    "blood_type": "Tipo de sangre",
+    "characters_section": "Personajes",
+    "deathday": "Fecha de fallecimiento",
+    "gender": "Genero",
+    "hometown": "Ciudad natal",
+    "is_today_birthday": "Cumpleaños",
+    "years_active": "Años activo"
+}

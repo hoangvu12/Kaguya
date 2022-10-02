@@ -1,0 +1,8 @@
+{
+    "blur_heading": "Estas viendo",
+    "rewatch_description": "El sistema reconoce que has visto {{episodeName}}",
+    "rewatch_heading": "Ver de nuevo {{episodeName}}",
+    "rewatch_no": "No",
+    "rewatch_question": "¿Quieres volver a ver {{episodeName}}?",
+    "rewatch_yes": "Si"
+}
