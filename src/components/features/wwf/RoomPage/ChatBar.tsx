@@ -14,6 +14,8 @@ const ChatBar = () => {
 
   useEffect(() => {
     const handleMessage = (message: ChatMessage) => {
+      if (!message) return;
+
       setChats((prev) => [...prev, { ...message, type: "message" }]);
 
       if (audioRef.current) {
@@ -46,6 +48,8 @@ const ChatBar = () => {
 
   const handleSendMessage = useCallback(
     (text: string) => {
+      if (!text) return;
+
       socket.emit("sendMessage", text);
 
       setChats((prev) => [
