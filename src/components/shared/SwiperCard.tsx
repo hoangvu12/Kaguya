@@ -48,7 +48,6 @@ const Card: React.FC<AnimeCardProps> = (props) => {
     data,
     className,
     containerEndSlot,
-    imageEndSlot,
     redirectUrl = createMediaDetailsUrl(data),
     isExpanded,
   } = props;
@@ -77,7 +76,7 @@ const Card: React.FC<AnimeCardProps> = (props) => {
 
     const { width } = containerRef.current.getBoundingClientRect();
 
-    setCardSize({ width, height: width * (16 / 9) });
+    setCardSize({ width, height: width * (3 / 2) });
   }, []);
 
   return (
