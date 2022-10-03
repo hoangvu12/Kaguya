@@ -22,8 +22,6 @@ const useRecentlyUpdated = () => {
     );
   }, [data, isLoading]);
 
-  console.log(mediaList);
-
   return {
     data: mediaList,
     isLoading,

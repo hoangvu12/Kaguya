@@ -71,8 +71,6 @@ const withAdditionalUser =
 
       return initialResult;
     } catch (error) {
-      console.log(error);
-
       return {
         redirect: {
           statusCode: 302,
