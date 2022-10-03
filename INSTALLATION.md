@@ -6,7 +6,7 @@ There are 3 things that needed to run the website.
 
 1. The website ([Kaguya](https://github.com/hoangvu12/Kaguya))
 2. The server for scraping, pushing notifications and handling requests from the website. ([kaguya-scraper](https://github.com/hoangvu12/kaguya-scraper))
-3. Database ([kaguya-database](https://github.com/hoangvu12/kaguya-scraper))
+3. Database ([kaguya-database](https://github.com/hoangvu12/kaguya-database))
 
 ## Steps
 
