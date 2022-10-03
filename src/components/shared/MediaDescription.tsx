@@ -26,15 +26,11 @@ const MediaDescription: React.FC<MediaDescriptionProps> = ({
   useEffect(() => {
     if (!ref.current) return;
 
-    console.log(ref.current);
-
     const element = ref.current?.options?.element;
 
     if (!element) return;
 
     const isClamped = element.scrollHeight > element.clientHeight;
-
-    console.log(isClamped, element.scrollHeight, element.clientHeight);
 
     if (!isClamped) {
       setIsDescriptionExpanded(true);

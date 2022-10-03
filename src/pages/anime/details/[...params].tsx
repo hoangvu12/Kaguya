@@ -386,8 +386,6 @@ export const getStaticProps: GetStaticProps = async ({
       revalidate: REVALIDATE_TIME,
     };
   } catch (err) {
-    console.log(err);
-
     return { notFound: true, revalidate: REVALIDATE_TIME };
   }
 };
