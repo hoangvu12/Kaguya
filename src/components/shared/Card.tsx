@@ -86,7 +86,7 @@ const Card: React.FC<CardProps> = (props) => {
             <React.Fragment>
               <div
                 className={classNames(
-                  "relative aspect-w-9 aspect-h-16",
+                  "relative aspect-w-2 aspect-h-3",
                   className
                 )}
               >
