@@ -4,6 +4,7 @@ import AddTranslationModal from "@/components/shared/AddTranslationModal";
 import Button from "@/components/shared/Button";
 import Card from "@/components/shared/Card";
 import CharacterConnectionCard from "@/components/shared/CharacterConnectionCard";
+import CircleButton from "@/components/shared/CircleButton";
 import DetailsBanner from "@/components/shared/DetailsBanner";
 import DetailsSection from "@/components/shared/DetailsSection";
 import DotList from "@/components/shared/DotList";
@@ -31,11 +32,13 @@ import {
 import { convert, getDescription, getTitle } from "@/utils/data";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useUser } from "@supabase/auth-helpers-react";
+import classNames from "classnames";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useMemo } from "react";
+import { isMobile } from "react-device-detect";
 import { AiOutlineUpload } from "react-icons/ai";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { BsFillPlayFill } from "react-icons/bs";
@@ -101,7 +104,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
             <div className="shrink-0 relative md:static md:left-0 md:-translate-x-0 w-[120px] md:w-[186px] -mt-20 space-y-6">
               <PlainCard src={anime.coverImage.extraLarge} alt={title} />
 
-              {user && (
+              {user && !isMobile && (
                 <div className="hidden md:flex items-center space-x-1">
                   <SourceStatus type="anime" source={anime} />
                   <NotificationButton type="anime" source={anime} />
@@ -164,7 +167,9 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                   </Popup>
                 </div>
 
-                <p className="mb-2 text-2xl md:text-3xl font-semibold">{title}</p>
+                <p className="mb-2 text-2xl md:text-3xl font-semibold">
+                  {title}
+                </p>
 
                 <DotList>
                   {anime.genres.map((genre) => (
@@ -181,7 +186,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                 />
 
                 {/* MAL-Sync UI */}
-                <div className="hidden" id="mal-sync"></div>
+                <div id="hidden mal-sync"></div>
               </div>
 
               <div className="hidden md:flex gap-x-8 overflow-x-auto md:gap-x-16 [&>*]:shrink-0">
@@ -228,113 +233,68 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
             containerClassName="my-4 block md:hidden"
             className="text-gray-300 hover:text-gray-100 transition duration-300"
           />
-          
-          {user ? (
-            <div className="flex md:hidden items-center space-x-2 mb-4">
-              <SourceStatus type="anime" source={anime} />
-              <Link href={`/anime/watch/${anime.id}`}>
-                <a>
-                  <Button className="transition duration-300 px-2 py-2 rounded-full bg-transparent hover:bg-white/20 aspect-square bg-white">
-                    <BsFillPlayFill className="h-6 w-6" />
-                  </Button>
-                </a>
-              </Link>
-              <NotificationButton type="anime" source={anime} />
-              <Popup
-                reference={
-                  <Button className="transition duration-300 px-2 py-2 rounded-full bg-transparent hover:bg-white/20 aspect-square bg-white">
-                    <BiDotsHorizontalRounded className="h-6 w-6" />
-                  </Button>
-                }
-                placement="bottom"
-                type="click"
-                className="space-y-2"
-              >
-                <Link href={`/wwf/create/${anime.id}`}>
-                  <a>
-                    <Button
-                      secondary
-                      className="w-full"
-                      LeftIcon={BsFillPlayFill}
-                    >
-                      <p>{t("watch_with_friends")}</p>
-                    </Button>
-                  </a>
-                </Link>
 
-                <AddTranslationModal
-                  mediaId={anime.id}
-                  mediaType={MediaType.Anime}
-                  defaultDescription={description}
-                  defaultTitle={title}
-                />
+          <div className="flex md:hidden items-center space-x-2 mb-4">
+            {user && isMobile && <SourceStatus type="anime" source={anime} />}
 
-                <Link href={`/upload/anime/${anime.id}`}>
-                  <a>
-                    <Button
-                      secondary
-                      className="w-full"
-                      LeftIcon={AiOutlineUpload}
-                    >
-                      <p>Upload</p>
-                    </Button>
-                  </a>
-                </Link>
-              </Popup>
-            </div>
-          ) : (
-            <div className="flex md:hidden items-center space-x-2 mb-4">
-              <Link href={`/anime/watch/${anime.id}`}>
-                <a className="flex-1">
+            <Link href={`/anime/watch/${anime.id}`}>
+              <a className={classNames(!user && "flex-1")}>
+                {user ? (
+                  <CircleButton secondary LeftIcon={BsFillPlayFill} />
+                ) : (
                   <Button primary LeftIcon={BsFillPlayFill} className="w-full">
-                    <p className="flex-1 text-center">{t("common:watch_now")}</p>
+                    <p className="flex-1 text-center">
+                      {t("common:watch_now")}
+                    </p>
+                  </Button>
+                )}
+              </a>
+            </Link>
+
+            {user && isMobile && (
+              <NotificationButton type="anime" source={anime} />
+            )}
+
+            <Popup
+              reference={
+                <CircleButton secondary LeftIcon={BiDotsHorizontalRounded} />
+              }
+              placement="bottom"
+              type="click"
+              className="space-y-2"
+            >
+              <Link href={`/wwf/create/${anime.id}`}>
+                <a>
+                  <Button
+                    secondary
+                    className="w-full"
+                    LeftIcon={BsFillPlayFill}
+                  >
+                    <p>{t("watch_with_friends")}</p>
                   </Button>
                 </a>
               </Link>
 
-              <Popup
-                reference={
-                  <Button className="transition duration-300 px-2 py-2 rounded-full bg-transparent hover:bg-white/20 aspect-square bg-white">
-                    <BiDotsHorizontalRounded className="h-6 w-6" />
+              <AddTranslationModal
+                mediaId={anime.id}
+                mediaType={MediaType.Anime}
+                defaultDescription={description}
+                defaultTitle={title}
+              />
+
+              <Link href={`/upload/anime/${anime.id}`}>
+                <a>
+                  <Button
+                    secondary
+                    className="w-full"
+                    LeftIcon={AiOutlineUpload}
+                  >
+                    <p>Upload</p>
                   </Button>
-                }
-                placement="bottom"
-                type="click"
-                className="space-y-2"
-              >
-                <Link href={`/wwf/create/${anime.id}`}>
-                  <a>
-                    <Button
-                      secondary
-                      className="w-full"
-                      LeftIcon={BsFillPlayFill}
-                    >
-                      <p>{t("watch_with_friends")}</p>
-                    </Button>
-                  </a>
-                </Link>
-
-                <AddTranslationModal
-                  mediaId={anime.id}
-                  mediaType={MediaType.Anime}
-                  defaultDescription={description}
-                  defaultTitle={title}
-                />
-
-                <Link href={`/upload/anime/${anime.id}`}>
-                  <a>
-                    <Button
-                      secondary
-                      className="w-full"
-                      LeftIcon={AiOutlineUpload}
-                    >
-                      <p>Upload</p>
-                    </Button>
-                  </a>
-                </Link>
-              </Popup>
-            </div>
-          )}
+                </a>
+              </Link>
+            </Popup>
+          </div>
 
           <div className="md:hidden flex gap-x-8 overflow-x-auto md:gap-x-16 [&>*]:shrink-0">
             <InfoItem
@@ -374,9 +334,9 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
           </div>
         </Section>
 
-        <Section className="w-full min-h-screen gap-8 mt-8 space-y-8 md:space-y-0 md:grid md:grid-cols-10 sm:px-12">
+        <Section className="w-full min-h-screen gap-8 mt-2 md:mt-8 space-y-8 md:space-y-0 md:grid md:grid-cols-10 sm:px-12">
           <div className="md:col-span-2 xl:h-[max-content] space-y-4">
-            <div className="flex flex-row md:flex-col overflow-x-auto bg-background-900 rounded-md p-4 gap-4 [&>*]:shrink-0 md:no-scrollbar">
+            <div className="flex flex-row md:flex-col overflow-x-auto bg-background-900 rounded-md md:p-4 gap-4 [&>*]:shrink-0 md:no-scrollbar">
               <InfoItem
                 title={t("common:format")}
                 value={convert(anime.format, "format", { locale })}

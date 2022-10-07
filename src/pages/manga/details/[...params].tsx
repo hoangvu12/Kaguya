@@ -4,6 +4,7 @@ import AddTranslationModal from "@/components/shared/AddTranslationModal";
 import Button from "@/components/shared/Button";
 import Card from "@/components/shared/Card";
 import CharacterConnectionCard from "@/components/shared/CharacterConnectionCard";
+import CircleButton from "@/components/shared/CircleButton";
 import DetailsBanner from "@/components/shared/DetailsBanner";
 import DetailsSection from "@/components/shared/DetailsSection";
 import DotList from "@/components/shared/DotList";
@@ -27,11 +28,13 @@ import { numberWithCommas, vietnameseSlug } from "@/utils";
 import { convert, getDescription, getTitle } from "@/utils/data";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useUser } from "@supabase/auth-helpers-react";
+import classNames from "classnames";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
+import { isMobile } from "react-device-detect";
 import { AiOutlineUpload } from "react-icons/ai";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { BsFillPlayFill } from "react-icons/bs";
@@ -64,11 +67,11 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
         <DetailsBanner image={manga.bannerImage} />
 
         <Section className="relative z-10 bg-background-900 pb-4">
-          <div className="flex flex-col md:flex-row md:space-x-8">
-            <div className="shrink-0 relative left-1/2 -translate-x-1/2 md:static md:left-0 md:-translate-x-0 w-[186px] -mt-20 space-y-6">
+          <div className="flex md:space-x-8">
+            <div className="shrink-0 relative md:static md:left-0 md:-translate-x-0 w-[120px] md:w-[186px] -mt-20 space-y-6">
               <PlainCard src={manga.coverImage.extraLarge} alt={title} />
 
-              {user && (
+              {user && !isMobile && (
                 <div className="flex items-center space-x-1">
                   <SourceStatus type="manga" source={manga} />
                   <NotificationButton type="manga" source={manga} />
@@ -76,9 +79,9 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
               )}
             </div>
 
-            <div className="justify-between text-center md:text-left flex flex-col items-center md:items-start py-4 mt-4 md:-mt-16 space-y-4">
-              <div className="flex flex-col md:items-start items-center space-y-4">
-                <div className="flex items-center flex-wrap gap-2 mb-4">
+            <div className="flex flex-col justify-between md:py-4 ml-4 text-left items-start md:-mt-16 space-y-4">
+              <div className="flex flex-col items-start space-y-4 md:no-scrollbar">
+                <div className="hidden md:flex items-center flex-wrap gap-2 mb-4">
                   <Link href={`/manga/read/${manga.id}`}>
                     <a>
                       <Button primary LeftIcon={BsFillPlayFill}>
@@ -119,7 +122,10 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
                   </Popup>
                 </div>
 
-                <p className="text-3xl font-semibold mb-2">{title}</p>
+                <p className="text-2xl md:text-3xl font-semibold mb-2">
+                  {title}
+                </p>
+
                 <DotList>
                   {manga.genres.map((genre) => (
                     <span key={genre}>
@@ -127,14 +133,18 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
                     </span>
                   ))}
                 </DotList>
+
                 <MediaDescription
                   description={description}
-                  containerClassName="mt-4 mb-8"
+                  containerClassName="mt-4 mb-8 hidden md:block"
                   className="text-gray-300 hover:text-gray-100 transition duration-300"
                 />
+
+                {/* MAL-Sync UI */}
+                <div id="hidden mal-sync"></div>
               </div>
 
-              <div className="flex gap-x-8 overflow-x-auto md:gap-x-16 [&>*]:shrink-0">
+              <div className="hidden md:flex gap-x-8 overflow-x-auto md:gap-x-16 [&>*]:shrink-0">
                 <InfoItem
                   title={t("common:country")}
                   value={manga.countryOfOrigin}
@@ -154,11 +164,86 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
               </div>
             </div>
           </div>
+
+          <MediaDescription
+            description={description}
+            containerClassName="my-4 block md:hidden"
+            className="text-gray-300 hover:text-gray-100 transition duration-300"
+          />
+
+          <div className="flex md:hidden items-center space-x-2 mb-4">
+            {user && isMobile && <SourceStatus type="manga" source={manga} />}
+
+            <Link href={`/manga/watch/${manga.id}`}>
+              <a className={classNames(!user && "flex-1")}>
+                {user ? (
+                  <CircleButton secondary LeftIcon={BsFillPlayFill} />
+                ) : (
+                  <Button primary LeftIcon={BsFillPlayFill} className="w-full">
+                    <p className="flex-1 text-center">
+                      {t("common:watch_now")}
+                    </p>
+                  </Button>
+                )}
+              </a>
+            </Link>
+
+            {user && isMobile && (
+              <NotificationButton type="manga" source={manga} />
+            )}
+
+            <Popup
+              reference={
+                <CircleButton secondary LeftIcon={BiDotsHorizontalRounded} />
+              }
+              placement="bottom"
+              type="click"
+              className="space-y-2"
+            >
+              <AddTranslationModal
+                mediaId={manga.id}
+                mediaType={MediaType.Manga}
+                defaultDescription={description}
+                defaultTitle={title}
+              />
+
+              <Link href={`/upload/manga/${manga.id}`}>
+                <a>
+                  <Button
+                    secondary
+                    className="w-full"
+                    LeftIcon={AiOutlineUpload}
+                  >
+                    <p>Upload</p>
+                  </Button>
+                </a>
+              </Link>
+            </Popup>
+          </div>
+
+          <div className="md:hidden flex gap-x-8 overflow-x-auto md:gap-x-16 [&>*]:shrink-0">
+            <InfoItem
+              title={t("common:country")}
+              value={manga.countryOfOrigin}
+            />
+
+            <InfoItem
+              title={t("common:status")}
+              value={convert(manga.status, "status", { locale })}
+            />
+
+            <InfoItem title={t("total_chapters")} value={manga.chapters} />
+
+            <InfoItem
+              title={t("common:age_rated")}
+              value={manga.isAdult ? "18+" : ""}
+            />
+          </div>
         </Section>
 
-        <Section className="space-y-8 md:space-y-0 md:grid md:grid-cols-10 w-full min-h-screen mt-8 sm:px-12 gap-8">
+        <Section className="w-full min-h-screen gap-8 mt-2 md:mt-8 space-y-8 md:space-y-0 md:grid md:grid-cols-10 sm:px-12">
           <div className="md:col-span-2 h-[max-content] space-y-4">
-            <div className="flex flex-row md:flex-col overflow-x-auto bg-background-900 rounded-md p-4 gap-4 [&>*]:shrink-0 md:no-scrollbar">
+            <div className="flex flex-row md:flex-col overflow-x-auto bg-background-900 rounded-md gap-4 [&>*]:shrink-0 md:no-scrollbar">
               <InfoItem title="English" value={manga.title.english} />
               <InfoItem title="Native" value={manga.title.native} />
               <InfoItem title="Romanji" value={manga.title.romaji} />
