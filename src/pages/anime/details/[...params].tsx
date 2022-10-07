@@ -97,21 +97,21 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
         <DetailsBanner image={anime.bannerImage} />
 
         <Section className="relative pb-4 bg-background-900">
-          <div className="flex flex-col md:flex-row md:space-x-8">
-            <div className="shrink-0 relative left-1/2 -translate-x-1/2 md:static md:left-0 md:-translate-x-0 w-[186px] -mt-20 space-y-6">
+          <div className="flex flex-row md:space-x-8">
+            <div className="shrink-0 relative md:static md:left-0 md:-translate-x-0 w-[120px] md:w-[186px] -mt-20 space-y-6">
               <PlainCard src={anime.coverImage.extraLarge} alt={title} />
 
               {user && (
-                <div className="flex items-center space-x-1">
+                <div className="hidden md:flex items-center space-x-1">
                   <SourceStatus type="anime" source={anime} />
                   <NotificationButton type="anime" source={anime} />
                 </div>
               )}
             </div>
 
-            <div className="flex flex-col items-center justify-between py-4 mt-4 text-center md:text-left md:items-start md:-mt-16 space-y-4">
-              <div className="flex flex-col md:items-start items-center space-y-4 md:no-scrollbar">
-                <div className="flex items-center flex-wrap gap-2 mb-4">
+            <div className="flex flex-col justify-between md:py-4 ml-4 text-left items-start md:-mt-16 space-y-4">
+              <div className="flex flex-col items-start space-y-4 md:no-scrollbar">
+                <div className="hidden md:flex items-center flex-wrap gap-2 mb-4">
                   <Link href={`/anime/watch/${anime.id}`}>
                     <a>
                       <Button primary LeftIcon={BsFillPlayFill}>
@@ -164,7 +164,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                   </Popup>
                 </div>
 
-                <p className="mb-2 text-3xl font-semibold">{title}</p>
+                <p className="mb-2 text-2xl md:text-3xl font-semibold">{title}</p>
 
                 <DotList>
                   {anime.genres.map((genre) => (
@@ -176,15 +176,15 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
 
                 <MediaDescription
                   description={description}
-                  containerClassName="mt-4 mb-8"
+                  containerClassName="mt-4 mb-8 hidden md:block"
                   className="text-gray-300 hover:text-gray-100 transition duration-300"
                 />
 
                 {/* MAL-Sync UI */}
-                <div id="mal-sync"></div>
+                <div className="hidden" id="mal-sync"></div>
               </div>
 
-              <div className="flex gap-x-8 overflow-x-auto md:gap-x-16 [&>*]:shrink-0">
+              <div className="hidden md:flex gap-x-8 overflow-x-auto md:gap-x-16 [&>*]:shrink-0">
                 <InfoItem
                   title={t("common:country")}
                   value={convert(anime.countryOfOrigin, "country", { locale })}
@@ -221,6 +221,156 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                 )}
               </div>
             </div>
+          </div>
+
+          <MediaDescription
+            description={description}
+            containerClassName="my-4 block md:hidden"
+            className="text-gray-300 hover:text-gray-100 transition duration-300"
+          />
+          
+          {user ? (
+            <div className="flex md:hidden items-center space-x-2 mb-4">
+              <SourceStatus type="anime" source={anime} />
+              <Link href={`/anime/watch/${anime.id}`}>
+                <a>
+                  <Button className="transition duration-300 px-2 py-2 rounded-full bg-transparent hover:bg-white/20 aspect-square bg-white">
+                    <BsFillPlayFill className="h-6 w-6" />
+                  </Button>
+                </a>
+              </Link>
+              <NotificationButton type="anime" source={anime} />
+              <Popup
+                reference={
+                  <Button className="transition duration-300 px-2 py-2 rounded-full bg-transparent hover:bg-white/20 aspect-square bg-white">
+                    <BiDotsHorizontalRounded className="h-6 w-6" />
+                  </Button>
+                }
+                placement="bottom"
+                type="click"
+                className="space-y-2"
+              >
+                <Link href={`/wwf/create/${anime.id}`}>
+                  <a>
+                    <Button
+                      secondary
+                      className="w-full"
+                      LeftIcon={BsFillPlayFill}
+                    >
+                      <p>{t("watch_with_friends")}</p>
+                    </Button>
+                  </a>
+                </Link>
+
+                <AddTranslationModal
+                  mediaId={anime.id}
+                  mediaType={MediaType.Anime}
+                  defaultDescription={description}
+                  defaultTitle={title}
+                />
+
+                <Link href={`/upload/anime/${anime.id}`}>
+                  <a>
+                    <Button
+                      secondary
+                      className="w-full"
+                      LeftIcon={AiOutlineUpload}
+                    >
+                      <p>Upload</p>
+                    </Button>
+                  </a>
+                </Link>
+              </Popup>
+            </div>
+          ) : (
+            <div className="flex md:hidden items-center space-x-2 mb-4">
+              <Link href={`/anime/watch/${anime.id}`}>
+                <a className="flex-1">
+                  <Button primary LeftIcon={BsFillPlayFill} className="w-full">
+                    <p className="flex-1 text-center">{t("common:watch_now")}</p>
+                  </Button>
+                </a>
+              </Link>
+
+              <Popup
+                reference={
+                  <Button className="transition duration-300 px-2 py-2 rounded-full bg-transparent hover:bg-white/20 aspect-square bg-white">
+                    <BiDotsHorizontalRounded className="h-6 w-6" />
+                  </Button>
+                }
+                placement="bottom"
+                type="click"
+                className="space-y-2"
+              >
+                <Link href={`/wwf/create/${anime.id}`}>
+                  <a>
+                    <Button
+                      secondary
+                      className="w-full"
+                      LeftIcon={BsFillPlayFill}
+                    >
+                      <p>{t("watch_with_friends")}</p>
+                    </Button>
+                  </a>
+                </Link>
+
+                <AddTranslationModal
+                  mediaId={anime.id}
+                  mediaType={MediaType.Anime}
+                  defaultDescription={description}
+                  defaultTitle={title}
+                />
+
+                <Link href={`/upload/anime/${anime.id}`}>
+                  <a>
+                    <Button
+                      secondary
+                      className="w-full"
+                      LeftIcon={AiOutlineUpload}
+                    >
+                      <p>Upload</p>
+                    </Button>
+                  </a>
+                </Link>
+              </Popup>
+            </div>
+          )}
+
+          <div className="md:hidden flex gap-x-8 overflow-x-auto md:gap-x-16 [&>*]:shrink-0">
+            <InfoItem
+              title={t("common:country")}
+              value={convert(anime.countryOfOrigin, "country", { locale })}
+            />
+            <InfoItem
+              title={t("common:total_episodes")}
+              value={anime.episodes}
+            />
+
+            {anime.duration && (
+              <InfoItem
+                title={t("common:duration")}
+                value={`${anime.duration} ${t("common:minutes")}`}
+              />
+            )}
+
+            <InfoItem
+              title={t("common:status")}
+              value={convert(anime.status, "status", { locale })}
+            />
+            <InfoItem
+              title={t("common:age_rated")}
+              value={anime.isAdult ? "18+" : ""}
+            />
+
+            {nextAiringSchedule && (
+              <InfoItem
+                className="!text-primary-300"
+                title={t("next_airing_schedule")}
+                value={`${t("common:episode")} ${
+                  nextAiringSchedule.episode
+                }: ${nextAiringScheduleTime}`}
+              />
+            )}
           </div>
         </Section>
 
