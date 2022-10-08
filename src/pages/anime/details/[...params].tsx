@@ -242,8 +242,12 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                 {user ? (
                   <CircleButton secondary LeftIcon={BsFillPlayFill} />
                 ) : (
-                  <Button primary LeftIcon={BsFillPlayFill} className="w-full">
-                    <p className="flex-1 text-center">
+                  <Button
+                    primary
+                    LeftIcon={BsFillPlayFill}
+                    className="relative w-full"
+                  >
+                    <p className="!mx-0 absolute left-1/2 -translate-x-1/2">
                       {t("common:watch_now")}
                     </p>
                   </Button>

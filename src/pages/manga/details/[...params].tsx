@@ -174,14 +174,18 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
           <div className="flex md:hidden items-center space-x-2 mb-4">
             {user && isMobile && <SourceStatus type="manga" source={manga} />}
 
-            <Link href={`/manga/watch/${manga.id}`}>
+            <Link href={`/manga/read/${manga.id}`}>
               <a className={classNames(!user && "flex-1")}>
                 {user ? (
                   <CircleButton secondary LeftIcon={BsFillPlayFill} />
                 ) : (
-                  <Button primary LeftIcon={BsFillPlayFill} className="w-full">
-                    <p className="flex-1 text-center">
-                      {t("common:watch_now")}
+                  <Button
+                    primary
+                    LeftIcon={BsFillPlayFill}
+                    className="relative w-full"
+                  >
+                    <p className="!mx-0 absolute left-1/2 -translate-x-1/2">
+                      {t("read_now")}
                     </p>
                   </Button>
                 )}
