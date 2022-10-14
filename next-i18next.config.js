@@ -6,7 +6,7 @@ const isDev = process.env.NODE_ENV === "development";
 
 module.exports = {
   backend: {
-    backendOptions: [{ expirationTime: isDev ? 60 : 60 * 60 * 1000 }], // 1 hour
+    backendOptions: [{ expirationTime: isDev ? 60 : 7 * 24 * 60 * 60 * 1000 }], //  7 days
     backends:
       typeof window !== "undefined" ? [LocalStorageBackend, HttpBackend] : [],
   },
@@ -14,6 +14,7 @@ module.exports = {
     locales: ["vi", "en", "ru", "es"],
     defaultLocale: "en",
     reloadOnPrerender: isDev,
+    load: "currentOnly",
   },
   serializeConfig: false,
   use: typeof window !== "undefined" ? [ChainedBackend] : [],
