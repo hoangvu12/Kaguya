@@ -581,3 +581,8 @@ export function drawImageProp(
   // fill image in dest. rectangle
   ctx.drawImage(img, cx, cy, cw, ch, x, y, w, h);
 }
+
+export const removeDup = <T>(a: T[]) =>
+  a.filter(function (item, pos) {
+    return a.indexOf(item) == pos;
+  });
