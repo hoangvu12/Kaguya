@@ -186,7 +186,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
                 />
 
                 {/* MAL-Sync UI */}
-                <div id="hidden mal-sync"></div>
+                <div id="mal-sync" className="hidden md:block"></div>
               </div>
 
               <div className="hidden md:flex gap-x-8 overflow-x-auto md:gap-x-16 [&>*]:shrink-0">
