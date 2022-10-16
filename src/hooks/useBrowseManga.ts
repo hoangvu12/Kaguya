@@ -6,6 +6,7 @@ import {
   MediaStatus,
   MediaType,
 } from "@/types/anilist";
+import { removeDup } from "@/utils";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { useInfiniteQuery } from "react-query";
 
@@ -37,7 +38,7 @@ const useBrowse = (options: UseBrowseOptions) => {
   return useInfiniteQuery(
     ["browse-manga", options],
     async ({ pageParam = 1 }) => {
-      let translationMediaIds = [];
+      let translationMediaIds: number[] = [];
 
       // Search media from translations
       if (keyword) {
@@ -50,13 +51,13 @@ const useBrowse = (options: UseBrowseOptions) => {
           });
 
         if (mediaTranslations?.length) {
-          translationMediaIds = mediaTranslations.map(
-            (translation) => translation.mediaId
+          translationMediaIds = removeDup(
+            mediaTranslations.map((translation) => translation.mediaId)
           );
         }
       }
 
-      const data = await getPageMedia({
+      const searchData = await getPageMedia({
         type: MediaType.Manga,
         format,
         perPage: limit,
@@ -64,16 +65,30 @@ const useBrowse = (options: UseBrowseOptions) => {
         sort: [sort],
         status,
         page: pageParam,
-        // If media ids are found, search the media using id_in.
-        ...(translationMediaIds?.length && { id_in: translationMediaIds }),
         ...(tags?.length && { tag_in: tags }),
         ...(genres?.length && { genre_in: genres }),
-        ...(keyword && !translationMediaIds?.length && { search: keyword }),
+        ...(keyword && { search: keyword }),
         isAdult:
           isAdult || genres.includes("Hentai") || genres.includes("Ecchi"),
       });
 
-      return data;
+      // If translations are found, search the anime using id_in. Then append to anilist search results.
+      if (translationMediaIds?.length) {
+        const searchDataWithTranslations = await getPageMedia({
+          id_in: translationMediaIds,
+          type: MediaType.Manga,
+        });
+
+        const existingMediaIds = searchData?.media?.map((media) => media.id);
+
+        searchDataWithTranslations?.media.forEach((media) => {
+          if (!existingMediaIds?.includes(media.id)) {
+            searchData?.media?.push(media);
+          }
+        });
+      }
+
+      return searchData;
     },
     {
       getNextPageParam: (lastPage) =>
