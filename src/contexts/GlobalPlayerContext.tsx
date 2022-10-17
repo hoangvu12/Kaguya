@@ -68,7 +68,7 @@ const GlobalPlayerContextProvider: React.FC = ({ children }) => {
   const router = useRouter();
 
   const shouldPlayInBackground = useMemo(() => {
-    return !router?.pathname.includes("watch") && !isMobile;
+    return !router?.pathname.includes("watch");
   }, [router?.pathname]);
 
   useEffect(() => {
@@ -78,6 +78,27 @@ const GlobalPlayerContextProvider: React.FC = ({ children }) => {
     x.set(0);
     y.set(0);
   }, [shouldPlayInBackground, x, y]);
+
+  const playerSize = useMemo(() => {
+    if (!shouldPlayInBackground) {
+      return {
+        width: "100vw",
+        height: "100vh",
+      };
+    }
+
+    if (isMobile) {
+      return {
+        width: 320,
+        height: 180,
+      };
+    }
+
+    return {
+      width: 400,
+      height: 225,
+    };
+  }, [shouldPlayInBackground]);
 
   return (
     <PlayerContext.Provider
@@ -109,8 +130,8 @@ const GlobalPlayerContextProvider: React.FC = ({ children }) => {
               dragMomentum={false}
               dragConstraints={constraintsRef}
               style={{
-                width: shouldPlayInBackground ? 400 : "100vw",
-                height: shouldPlayInBackground ? 225 : "100vh",
+                width: playerSize.width,
+                height: playerSize.height,
                 x,
                 y,
               }}

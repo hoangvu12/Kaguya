@@ -95,6 +95,7 @@ const PlayerMobileControls = React.memo(() => {
       anime,
       currentEpisode,
     },
+    isBackground,
   } = useGlobalPlayer();
 
   const sourceEpisodes = useMemo(
@@ -107,7 +108,7 @@ const PlayerMobileControls = React.memo(() => {
     [currentEpisodeIndex, sourceEpisodes]
   );
 
-  return (
+  return !isBackground ? (
     <MobileControls
       controlsSlot={
         <React.Fragment>
@@ -145,7 +146,7 @@ const PlayerMobileControls = React.memo(() => {
         </React.Fragment>
       }
     />
-  );
+  ) : null;
 });
 
 PlayerMobileControls.displayName = "PlayerMobileControls";
@@ -222,18 +223,53 @@ const PlayerMobileOverlay = React.memo(() => {
   const { isInteracting } = useInteract();
   const {
     playerProps: { currentEpisode, anime },
+    isBackground,
+    setPlayerState,
   } = useGlobalPlayer();
 
   return (
     <React.Fragment>
       <MobileOverlay>
-        <BsArrowLeft
-          className={classNames(
-            "absolute top-4 left-4 h-8 w-8 cursor-pointer transition-all duration-300 hover:text-gray-200",
-            isInteracting ? "visible opacity-100" : "invisible opacity-0"
-          )}
-          onClick={router.back}
-        />
+        {!isBackground && (
+          <BsArrowLeft
+            className={classNames(
+              "absolute top-4 left-4 h-8 w-8 cursor-pointer transition-all duration-300 hover:text-gray-200",
+              isInteracting ? "visible opacity-100" : "invisible opacity-0"
+            )}
+            onClick={router.back}
+          />
+        )}
+
+        {isBackground && (
+          <div className="flex items-center gap-2 absolute top-4 left-4">
+            <div className="w-8 h-8">
+              <ControlButton
+                className={classNames(
+                  isInteracting ? "visible opacity-100" : "invisible opacity-0"
+                )}
+                onClick={() =>
+                  router.push(
+                    `/anime/watch/${anime?.id}/${currentEpisode?.sourceId}/${currentEpisode.sourceEpisodeId}`
+                  )
+                }
+                tooltip="Expand"
+              >
+                <AiOutlineExpandAlt />
+              </ControlButton>
+            </div>
+            <div className="w-8 h-8">
+              <ControlButton
+                className={classNames(
+                  isInteracting ? "visible opacity-100" : "invisible opacity-0"
+                )}
+                onClick={() => setPlayerState(null)}
+                tooltip="Exit"
+              >
+                <AiOutlineClose />
+              </ControlButton>
+            </div>
+          </div>
+        )}
       </MobileOverlay>
 
       {anime?.idMal && (
