@@ -29,7 +29,6 @@ const NewestComments: React.FC<NewestCommentsProps> = (props) => {
   return data?.length ? (
     <Section title={t("recent_comments")}>
       <Swiper
-        hideNavigation
         slidesPerGroup={1}
         breakpoints={{
           1536: {
