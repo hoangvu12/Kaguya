@@ -26,6 +26,7 @@ import YouTube from "react-youtube";
 import {} from "youtube-player/dist/types";
 import ListSwiperSkeleton from "../skeletons/ListSwiperSkeleton";
 import Description from "./Description";
+import Section from "./Section";
 import Skeleton, { SkeletonItem } from "./Skeleton";
 
 interface HomeBannerProps {
@@ -320,9 +321,9 @@ const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data }) => {
 
         <div className="banner__overlay--down absolute bottom-0 h-16 w-full"></div>
       </div>
-      <div className="w-full px-4 pb-12 md:px-12">
+      <Section className="w-full pb-12">
         <BannerSwiper onSlideChange={handleSlideChange} data={data} />
-      </div>
+      </Section>
     </React.Fragment>
   );
 };
