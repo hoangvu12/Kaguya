@@ -89,25 +89,32 @@ const SourceEpisodeSelector: React.FC<SourceEpisodeSelectorProps> = ({
   return (
     <React.Fragment>
       <div className="flex justify-end w-full mx-auto mb-8">
-        <Select
-          options={[
-            {
-              label: "Verified",
-              options: sourcesToOptions(Object.keys(verifiedSources)),
-            },
-            {
-              label: "Not verified",
-              options: sourcesToOptions(Object.keys(nonVerifiedSources)),
-            },
-          ]}
-          onChange={({ value }) => {
-            setActiveSource(value);
-          }}
-          defaultValue={{ value: activeSource, label: activeSource }}
-          isClearable={false}
-          isSearchable={false}
-          menuPortalTarget={videoContainer}
-        />
+        <div className="flex items-center gap-2">
+          <label htmlFor="source-selector" className="font-medium">
+            Sources:{" "}
+          </label>
+
+          <Select
+            id="source-selector"
+            options={[
+              {
+                label: "Verified",
+                options: sourcesToOptions(Object.keys(verifiedSources)),
+              },
+              {
+                label: "Not verified",
+                options: sourcesToOptions(Object.keys(nonVerifiedSources)),
+              },
+            ]}
+            onChange={({ value }) => {
+              setActiveSource(value);
+            }}
+            defaultValue={{ value: activeSource, label: activeSource }}
+            isClearable={false}
+            isSearchable={false}
+            menuPortalTarget={videoContainer}
+          />
+        </div>
       </div>
 
       <EpisodeSelector
