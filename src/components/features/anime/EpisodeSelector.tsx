@@ -4,7 +4,7 @@ import ArrowSwiper, {
 } from "@/components/shared/ArrowSwiper";
 import useDevice from "@/hooks/useDevice";
 import { Episode } from "@/types";
-import { chunk, groupBy } from "@/utils";
+import { chunk, groupBy, parseNumberFromString } from "@/utils";
 import classNames from "classnames";
 import Link, { LinkProps } from "next/link";
 import React, { useMemo } from "react";
@@ -84,10 +84,13 @@ const EpisodeSelector: React.FC<EpisodeSelectorProps> = (props) => {
         {...chunkSwiperProps}
       >
         {chunks.map((chunk, i) => {
-          const firstEpisodeName = chunk[0].name.replace("Tập", "");
-          const lastEpisodeName = chunk[chunk.length - 1].name.replace(
-            "Tập",
-            ""
+          const firstEpisodeName = parseNumberFromString(
+            chunk[0].name,
+            chunk[0].name
+          );
+          const lastEpisodeName = parseNumberFromString(
+            chunk[chunk.length - 1].name,
+            chunk[chunk.length - 1].name
           );
 
           const title =
