@@ -79,6 +79,24 @@ function App({ Component, pageProps, router, err }: WorkaroundAppProps) {
         `}
       </Script>
 
+      <Script
+        strategy="afterInteractive"
+        data-cfasync="false"
+        type="text/javascript"
+        src="https://ssqyuvavse.com/lv/esnk/1944246/code.js"
+        async
+        id="__clb-1944246"
+      />
+
+      <Script
+        strategy="afterInteractive"
+        data-cfasync="false"
+        type="text/javascript"
+        src="https://ssqyuvavse.com/lv/esnk/1944247/code.js"
+        async
+        id="__clb-1944247"
+      />
+
       <ToastContainer
         position="bottom-left"
         autoClose={5000}
