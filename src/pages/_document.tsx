@@ -6,6 +6,7 @@ class MyDocument extends Document {
       <Html>
         <Head>
           <meta httpEquiv="Cache-Control" content="max-age=200" />
+          <meta name="clckd" content="731c2112cb8b4e8fc49219c6a6fd193e" />
           <link rel="shortcut icon" href="/favicon.ico" />
           <link rel="icon" href="/favicon.ico" type="image/ico" />
         </Head>
