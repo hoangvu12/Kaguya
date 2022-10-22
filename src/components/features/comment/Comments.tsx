@@ -4,7 +4,7 @@ import { useCommentReply } from "@/contexts/CommentReplyContext";
 import useComments from "@/hooks/useComments";
 import useCreateComment from "@/hooks/useCreateComment";
 import { getMentionedUserIds } from "@/utils/editor";
-import { useUser } from "@supabase/auth-helpers-react";
+import { useUser } from "@/contexts/AuthContext";
 import { Editor as EditorType } from "@tiptap/react";
 import { Trans, useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
@@ -26,7 +26,7 @@ const Comments: React.FC<CommentsProps> = ({ parentId = null, topic }) => {
   const { data: comments, isLoading } = useComments({ parentId, topic });
   const [commentState, setCommentState] = useState<CommentState>({});
   const commentReply = useCommentReply();
-  const { user } = useUser();
+  const user = useUser();
   const editorRef = useRef<EditorType>(null);
 
   const { asPath } = useRouter();

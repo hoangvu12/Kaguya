@@ -1,4 +1,4 @@
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
+import supabaseClient from "@/lib/supabase";
 import { MangaSourceConnection } from "@/types";
 import { sortMediaUnit } from "@/utils/data";
 import { useSupabaseQuery } from "@/utils/supabase";
@@ -18,7 +18,7 @@ const useChapters = (mediaId: number) => {
   const { data, isLoading, ...rest } = useSupabaseQuery(
     ["chapters", mediaId],
     () =>
-      supabase
+      supabaseClient
         .from<MangaSourceConnection>("kaguya_manga_source")
         .select(query)
         .eq("mediaId", mediaId)

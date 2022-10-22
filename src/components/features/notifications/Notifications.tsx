@@ -2,7 +2,7 @@ import Loading from "@/components/shared/Loading";
 import Popup from "@/components/shared/Popup";
 import useNotifications from "@/hooks/useNotifications";
 import useSeenNotifications from "@/hooks/useSeenNotifications";
-import { useUser } from "@supabase/auth-helpers-react";
+import { useUser } from "@/contexts/AuthContext";
 import { useTranslation } from "next-i18next";
 import React, { useMemo } from "react";
 import { MdNotifications } from "react-icons/md";
@@ -11,7 +11,7 @@ import Notification from "./Notification";
 const Notifications = () => {
   const { data: notifications, isLoading } = useNotifications();
   const { mutate: seenNotifcations } = useSeenNotifications();
-  const { user } = useUser();
+  const user = useUser();
   const { t } = useTranslation("notification");
 
   const unreadCount = useMemo(

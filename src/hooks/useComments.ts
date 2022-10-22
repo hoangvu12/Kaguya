@@ -2,7 +2,7 @@ import { Comment } from "@/types";
 import { MediaType } from "@/types/anilist";
 import { useSupabaseQuery } from "@/utils/supabase";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import { useUser } from "@supabase/auth-helpers-react";
+import { useUser } from "@/contexts/AuthContext";
 import { useQueryClient } from "react-query";
 
 interface UseCommentsQuery {
@@ -15,7 +15,6 @@ const useComments = (query: UseCommentsQuery) => {
   const { topic, parentId = null, type } = query;
 
   const queryClient = useQueryClient();
-  const { isLoading } = useUser();
 
   return useSupabaseQuery(
     ["comments", { topic, parentId }],
@@ -47,11 +46,6 @@ const useComments = (query: UseCommentsQuery) => {
           queryClient.setQueryData(["comment", comment.id], comment);
         });
       },
-
-      // Because the reaction's active_user is checked by the database (postgresql), so if there is an user
-      // but the user info haven't fetched yet, then the database will mark the reaction is not user's. although it is.
-      // So we'll wait for user info.
-      enabled: !isLoading,
     }
   );
 };

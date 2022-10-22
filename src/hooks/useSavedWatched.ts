@@ -1,11 +1,12 @@
-import { useUser } from "@supabase/auth-helpers-react";
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
+import { useUser } from "@/contexts/AuthContext";
+import supabaseClient from "@/lib/supabase";
+
 import { Watched } from "@/types";
 import Storage from "@/utils/storage";
 import { useSupabaseSingleQuery } from "@/utils/supabase";
 
 const useSavedWatched = (animeId: number) => {
-  const { user } = useUser();
+  const user = useUser();
   const storage = new Storage("watched");
 
   const localStorageData =
@@ -15,7 +16,7 @@ const useSavedWatched = (animeId: number) => {
   return useSupabaseSingleQuery(
     ["watched", animeId],
     () =>
-      supabase
+      supabaseClient
         .from<Watched>("kaguya_watched")
         .select("episode:episodeId(*), watchedTime")
         .eq("mediaId", animeId)

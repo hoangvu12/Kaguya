@@ -1,6 +1,6 @@
 import { Notification } from "@/types";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import { useUser } from "@supabase/auth-helpers-react";
+import { useUser } from "@/contexts/AuthContext";
 import { PostgrestError } from "@supabase/supabase-js";
 import { useMutation, useQueryClient } from "react-query";
 
@@ -18,7 +18,7 @@ const convertToReadNotifcations = (notifications: Partial<Notification>[]) => {
 };
 
 const useSeenNotifications = () => {
-  const { user } = useUser();
+  const user = useUser();
   const queryClient = useQueryClient();
 
   return useMutation<Notification[], PostgrestError, Notification[], any>(

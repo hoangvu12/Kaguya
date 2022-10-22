@@ -1,4 +1,4 @@
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
+import supabaseClient from "@/lib/supabase";
 import { Provider } from "@supabase/gotrue-js";
 import { useMutation } from "react-query";
 
@@ -9,7 +9,7 @@ interface UseSignInOptions {
 
 const useSignIn = (supabaseOptions?: UseSignInOptions) => {
   return useMutation((provider: Provider) => {
-    return supabase.auth.signIn(
+    return supabaseClient.auth.signIn(
       {
         provider,
       },

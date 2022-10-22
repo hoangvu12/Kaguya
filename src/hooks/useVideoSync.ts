@@ -1,6 +1,6 @@
 // https://github.com/hoangvu12/video-sync/blob/main/public/index.js
 
-import { useUser } from "@supabase/auth-helpers-react";
+import { useUser } from "@/contexts/AuthContext";
 import { useRoomInfo } from "@/contexts/RoomContext";
 import { sleep } from "@/utils";
 import { useEffect, useMemo, useRef } from "react";
@@ -43,7 +43,7 @@ const median = (values: number[]) => {
 const useVideoSync = () => {
   const { room, socket } = useRoomInfo();
   const playerRef = useRef<HTMLVideoElement>();
-  const { user } = useUser();
+  const user = useUser();
   const overEstimates = useRef<number[]>([]);
   const underEstimates = useRef<number[]>([]);
   const overEstimate = useRef<number>(0);

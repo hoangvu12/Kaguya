@@ -1,15 +1,16 @@
-import { useUser } from "@supabase/auth-helpers-react";
+import { useUser } from "@/contexts/AuthContext";
 import { useSupabaseSingleQuery } from "@/utils/supabase";
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
+import supabaseClient from "@/lib/supabase";
+
 import { Read } from "@/types";
 
 const useSavedRead = (mangaId: number) => {
-  const { user } = useUser();
+  const user = useUser();
 
   return useSupabaseSingleQuery(
     ["read", mangaId],
     () =>
-      supabase
+      supabaseClient
         .from<Read>("kaguya_read")
         .select("chapter:chapterId(*)")
         .eq("mediaId", mangaId)

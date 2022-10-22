@@ -1,7 +1,7 @@
 import { Comment, CommentReaction } from "@/types";
 import { randomString } from "@/utils";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import { useUser } from "@supabase/auth-helpers-react";
+import { useUser } from "@/contexts/AuthContext";
 import { PostgrestError } from "@supabase/supabase-js";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
@@ -50,7 +50,7 @@ const addOrIncrement = (reactionType: string, comment: Comment): Comment => {
 
 const useCreateReaction = () => {
   const queryClient = useQueryClient();
-  const { user } = useUser();
+  const user = useUser();
 
   return useMutation<
     CommentReaction,

@@ -9,7 +9,7 @@ import {
 import { Episode, UploadSubtitle } from "@/types";
 import { randomString, sleep } from "@/utils";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import { useUser } from "@supabase/auth-helpers-react";
+import { useUser } from "@/contexts/AuthContext";
 import { useRouter } from "next/router";
 import { useMutation } from "react-query";
 import { toast } from "react-toastify";
@@ -37,7 +37,7 @@ interface CreateEpisodeResponse {
 const useCreateEpisode = (args: UseCreateEpisodeArgs) => {
   const { sourceId, mediaId } = args;
 
-  const { user } = useUser();
+  const user = useUser();
   const router = useRouter();
 
   const id = "create-episode-id";

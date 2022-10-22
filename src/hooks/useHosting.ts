@@ -1,10 +1,13 @@
 import { Hosting } from "@/types";
 import { useSupabaseSingleQuery } from "@/utils/supabase";
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
+import supabaseClient from "@/lib/supabase";
 
 const useHosting = (hostingId: string) => {
   return useSupabaseSingleQuery(["hosting", hostingId], () =>
-    supabase.from<Hosting>("kaguya_hostings").select("*").eq("id", hostingId)
+    supabaseClient
+      .from<Hosting>("kaguya_hostings")
+      .select("*")
+      .eq("id", hostingId)
   );
 };
 

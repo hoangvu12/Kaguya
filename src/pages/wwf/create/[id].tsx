@@ -10,15 +10,12 @@ import Select from "@/components/shared/Select";
 import useConstantTranslation from "@/hooks/useConstantTranslation";
 import useCreateRoom from "@/hooks/useCreateRoom";
 import useDevice from "@/hooks/useDevice";
+import supabaseClient from "@/lib/supabase";
 import { getMediaDetails } from "@/services/anilist";
-import { TMDBTranlations } from "@/services/tmdb";
 import { AnimeSourceConnection, Episode } from "@/types";
 import { Media } from "@/types/anilist";
 import { convert, getDescription, getTitle, sortMediaUnit } from "@/utils/data";
-import {
-  supabaseClient as supabase,
-  withPageAuth,
-} from "@supabase/auth-helpers-nextjs";
+import { withPageAuth } from "@supabase/auth-helpers-nextjs";
 import classNames from "classnames";
 import { NextPage } from "next";
 import { useTranslation } from "next-i18next";
@@ -196,7 +193,7 @@ export const getServerSideProps = withPageAuth({
   redirectTo: "/login",
   async getServerSideProps({ params }) {
     try {
-      const sourcePromise = supabase
+      const sourcePromise = supabaseClient
         .from<AnimeSourceConnection>("kaguya_anime_source")
         .select(
           `

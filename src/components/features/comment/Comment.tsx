@@ -15,7 +15,7 @@ import useUpdateComment from "@/hooks/useUpdateComment";
 import { Comment } from "@/types";
 import { getMentionedUserIds } from "@/utils/editor";
 import { userEvent } from "@storybook/testing-library";
-import { useUser } from "@supabase/auth-helpers-react";
+import { useUser } from "@/contexts/AuthContext";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
@@ -61,7 +61,7 @@ const CommentComponent: React.FC<CommentProps> = ({ comment }) => {
 
   const commentReply = useCommentReply();
 
-  const { user } = useUser();
+  const user = useUser();
 
   const { mutate: createReaction } = useCreateReaction();
   const { mutate: removeReaction } = useRemoveReaction();

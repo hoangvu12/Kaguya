@@ -1,10 +1,10 @@
 import { Notification } from "@/types";
 import { useSupabaseQuery } from "@/utils/supabase";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import { useUser } from "@supabase/auth-helpers-react";
+import { useUser } from "@/contexts/AuthContext";
 
 const useNotifications = () => {
-  const { user } = useUser();
+  const user = useUser();
 
   return useSupabaseQuery(
     ["notifications"],
