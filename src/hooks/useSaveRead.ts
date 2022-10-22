@@ -1,7 +1,6 @@
-import { useUser } from "@supabase/auth-helpers-react";
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
+import { useUser } from "@/contexts/AuthContext";
+import supabaseClient from "@/lib/supabase";
 import { Read } from "@/types";
-import axios from "axios";
 import { useMutation } from "react-query";
 
 interface MutationInput {
@@ -10,14 +9,14 @@ interface MutationInput {
 }
 
 const useSaveRead = () => {
-  const { user } = useUser();
+  const user = useUser();
 
   return useMutation(async (data: MutationInput) => {
     if (!user) return;
 
     const { chapter_id, media_id } = data;
 
-    const { error: upsertError } = await supabase
+    const { error: upsertError } = await supabaseClient
       .from<Read>("kaguya_read")
       .upsert(
         {

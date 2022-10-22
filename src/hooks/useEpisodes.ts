@@ -1,6 +1,6 @@
 import { AnimeSourceConnection } from "@/types";
 import { sortMediaUnit } from "@/utils/data";
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
+import supabaseClient from "@/lib/supabase";
 import { useQuery } from "react-query";
 
 const query = `
@@ -15,7 +15,7 @@ const query = `
 
 const useEpisodes = (mediaId: number) => {
   return useQuery(["episodes", mediaId], async () => {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
       .from<AnimeSourceConnection>("kaguya_anime_source")
       .select(query)
       .eq("mediaId", mediaId);

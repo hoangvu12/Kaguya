@@ -2,7 +2,7 @@ import config from "@/config";
 import useCreateSubscription from "@/hooks/useCreateSubscription";
 import useIsSavedSub from "@/hooks/useIsSavedSub";
 import { base64ToUint8Array } from "@/utils";
-import { useUser } from "@supabase/auth-helpers-react";
+import { useUser } from "@/contexts/AuthContext";
 import {
   createContext,
   Dispatch,
@@ -24,7 +24,7 @@ const isDev = process.env.NODE_ENV === "development";
 
 export const SubscriptionContextProvider: React.FC = ({ children }) => {
   const [sub, setSub] = useState<PushSubscription>(null);
-  const { user } = useUser();
+  const user = useUser();
   const { data: isSavedSub, isLoading } = useIsSavedSub();
   const createSubscription = useCreateSubscription();
   const isSubscriptionSent = useRef(false);

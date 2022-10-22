@@ -19,6 +19,7 @@ import { AppErrorFallback } from "@/components/shared/AppErrorFallback";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { UserProvider } from "@supabase/auth-helpers-react";
 import GlobalPlayerContextProvider from "@/contexts/GlobalPlayerContext";
+import AuthContext, { AuthContextProvider } from "@/contexts/AuthContext";
 
 Router.events.on("routeChangeStart", NProgress.start);
 Router.events.on("routeChangeComplete", NProgress.done);
@@ -110,7 +111,7 @@ function App({ Component, pageProps, router, err }: WorkaroundAppProps) {
       />
 
       <QueryClientProvider client={queryClient}>
-        <UserProvider autoRefreshToken={false} supabaseClient={supabaseClient}>
+        <AuthContextProvider>
           <SubscriptionContextProvider>
             <GlobalPlayerContextProvider>
               <ErrorBoundary
@@ -133,7 +134,8 @@ function App({ Component, pageProps, router, err }: WorkaroundAppProps) {
               </ErrorBoundary>
             </GlobalPlayerContextProvider>
           </SubscriptionContextProvider>
-        </UserProvider>
+        </AuthContextProvider>
+
         {process.env.NODE_ENV === "development" && <ReactQueryDevtools />}
       </QueryClientProvider>
     </React.Fragment>

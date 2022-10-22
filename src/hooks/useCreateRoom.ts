@@ -1,5 +1,5 @@
-import { useUser } from "@supabase/auth-helpers-react";
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
+import { useUser } from "@/contexts/AuthContext";
+import supabaseClient from "@/lib/supabase";
 import { Room } from "@/types";
 import { PostgrestError } from "@supabase/supabase-js";
 import { useRouter } from "next/router";
@@ -14,12 +14,12 @@ interface CreateRoomBody {
 }
 
 const useCreateRoom = () => {
-  const { user } = useUser();
+  const user = useUser();
   const router = useRouter();
 
   return useMutation<Room, PostgrestError, CreateRoomBody, any>(
     async (body) => {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseClient
         .from<Room>("kaguya_rooms")
         .insert({
           hostUserId: user.id,

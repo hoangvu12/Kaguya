@@ -1,6 +1,6 @@
 import { Comment, CommentReaction } from "@/types";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import { useUser } from "@supabase/auth-helpers-react";
+import { useUser } from "@/contexts/AuthContext";
 import { PostgrestError } from "@supabase/supabase-js";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
@@ -43,7 +43,7 @@ const removeOrDecrement = (reactionType: string, comment: Comment): Comment => {
 
 const useRemoveReaction = () => {
   const queryClient = useQueryClient();
-  const { user } = useUser();
+  const user = useUser();
 
   return useMutation<
     CommentReaction,

@@ -1,13 +1,13 @@
 import { Translation } from "@/types";
 import { MediaType } from "@/types/anilist";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import { useUser } from "@supabase/auth-helpers-react";
+import { useUser } from "@/contexts/AuthContext";
 import { PostgrestError } from "@supabase/supabase-js";
 import { useMutation } from "react-query";
 import { toast } from "react-toastify";
 
 const useSaveTranslation = (mediaId: number, mediaType: MediaType) => {
-  const { user } = useUser();
+  const user = useUser();
 
   return useMutation<Translation, PostgrestError, Translation, any>(
     async (translation) => {

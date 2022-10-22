@@ -1,4 +1,5 @@
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
+import supabaseClient from "@/lib/supabase";
+
 import { getMedia } from "@/services/anilist";
 import { Room } from "@/types";
 import { useQuery } from "react-query";
@@ -8,7 +9,7 @@ const useRooms = () => {
   return useQuery(
     "rooms",
     async () => {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseClient
         .from<Room>("kaguya_rooms")
         .select(
           `

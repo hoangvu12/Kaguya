@@ -1,19 +1,20 @@
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
+import supabaseClient from "@/lib/supabase";
+
 import { Read } from "@/types";
 import { useSupabaseQuery } from "@/utils/supabase";
-import { useUser } from "@supabase/auth-helpers-react";
+import { useUser } from "@/contexts/AuthContext";
 import { useQuery } from "react-query";
 import { getMedia } from "@/services/anilist";
 import { MediaType } from "@/types/anilist";
 import { isMobile } from "react-device-detect";
 
 const useRead = () => {
-  const { user } = useUser();
+  const user = useUser();
 
   return useQuery<Read[]>(
     "read",
     async () => {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseClient
         .from<Read>("kaguya_read")
         .select(
           "mediaId, chapter:kaguya_chapters!chapterId(sourceChapterId, name, sourceId)"

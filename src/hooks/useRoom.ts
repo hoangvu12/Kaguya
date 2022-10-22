@@ -2,7 +2,8 @@ import { getMediaDetails } from "@/services/anilist";
 import { mediaDefaultFields } from "@/services/anilist/queries";
 import { AnimeSourceConnection, Room } from "@/types";
 import { MediaType } from "@/types/anilist";
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
+import supabaseClient from "@/lib/supabase";
+
 import { useMemo } from "react";
 import { useQuery } from "react-query";
 import { toast } from "react-toastify";
@@ -13,7 +14,7 @@ const useRoom = (roomId: number, initialData: Room) => {
   return useQuery(
     queryKey,
     async () => {
-      const { data: room, error } = await supabase
+      const { data: room, error } = await supabaseClient
         .from<Room>("kaguya_rooms")
         .select(
           `
@@ -29,7 +30,7 @@ const useRoom = (roomId: number, initialData: Room) => {
 
       if (error) throw error;
 
-      const sourceConnectionPromise = supabase
+      const sourceConnectionPromise = supabaseClient
         .from<AnimeSourceConnection>("kaguya_anime_source")
         .select(
           `

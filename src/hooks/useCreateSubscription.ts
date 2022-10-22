@@ -1,16 +1,16 @@
-import { useUser } from "@supabase/auth-helpers-react";
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
+import { useUser } from "@/contexts/AuthContext";
+import supabaseClient from "@/lib/supabase";
 import { PostgrestError } from "@supabase/supabase-js";
 import { useMutation } from "react-query";
 
 const useCreateSubscription = () => {
-  const { user } = useUser();
+  const user = useUser();
 
   return useMutation<any, PostgrestError, PushSubscription, any>(
     async (subscription) => {
       const userAgent = navigator.userAgent;
 
-      const { data, error } = await supabase
+      const { data, error } = await supabaseClient
         .from("kaguya_subscriptions")
         .upsert({
           subscription,

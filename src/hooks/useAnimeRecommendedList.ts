@@ -1,18 +1,18 @@
 import { getMediaDetails } from "@/services/anilist";
 import { mediaDefaultFields } from "@/services/anilist/queries";
 import { Watched } from "@/types";
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
-import { useUser } from "@supabase/auth-helpers-react";
+import supabaseClient from "@/lib/supabase";
+import { useUser } from "@/contexts/AuthContext";
 import { isMobile } from "react-device-detect";
 import { useQuery } from "react-query";
 
 const useAnimeRecommendedList = () => {
-  const { user } = useUser();
+  const user = useUser();
 
   return useQuery<Watched>(
     ["anime", "recommended"],
     async () => {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseClient
         .from<Watched>("kaguya_watched")
         .select("mediaId")
         .eq("userId", user.id)

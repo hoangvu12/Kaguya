@@ -1,5 +1,6 @@
-import { useUser } from "@supabase/auth-helpers-react";
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
+import { useUser } from "@/contexts/AuthContext";
+import supabaseClient from "@/lib/supabase";
+
 import { Media } from "@/types/anilist";
 import { getTitle } from "@/utils/data";
 import { PostgrestError } from "@supabase/supabase-js";
@@ -13,7 +14,7 @@ const useUnsubscribe = <T extends "anime" | "manga">(
   type: T,
   source: Media
 ) => {
-  const { user } = useUser();
+  const user = useUser();
   const queryClient = useQueryClient();
   const { locale } = useRouter();
   const { t } = useTranslation("notification");
@@ -25,7 +26,7 @@ const useUnsubscribe = <T extends "anime" | "manga">(
 
   return useMutation<any, PostgrestError, any, any>(
     async () => {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseClient
         .from(tableName)
         .delete({ returning: "minimal" })
         .match({ userId: user.id, mediaId: source.id });

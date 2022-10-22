@@ -2,7 +2,7 @@ import { Attachment, uploadFile, upsertChapter } from "@/services/upload";
 import { Chapter } from "@/types";
 import { randomString } from "@/utils";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import { useUser } from "@supabase/auth-helpers-react";
+import { useUser } from "@/contexts/AuthContext";
 import { useRouter } from "next/router";
 import { useMutation } from "react-query";
 import { toast } from "react-toastify";
@@ -25,7 +25,7 @@ interface CreateChapterResponse {
 const useCreateChapter = (args: UseCreateChapterArgs) => {
   const { sourceId, mediaId } = args;
 
-  const { user } = useUser();
+  const user = useUser();
   const router = useRouter();
 
   const id = "create-chapter-id";

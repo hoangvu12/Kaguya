@@ -1,9 +1,9 @@
-import { useUser } from "@supabase/auth-helpers-react";
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
+import { useUser } from "@/contexts/AuthContext";
+import supabaseClient from "@/lib/supabase";
 import { useQuery } from "react-query";
 
 const useIsSavedSub = () => {
-  const { user } = useUser();
+  const user = useUser();
 
   return useQuery(
     ["saved_subscription", user?.id],
@@ -12,7 +12,7 @@ const useIsSavedSub = () => {
 
       if (!userAgent) throw new Error("No user agent");
 
-      const { data, error } = await supabase
+      const { data, error } = await supabaseClient
         .from("kaguya_subscriptions")
         .select("userId")
         .eq("userId", user.id)

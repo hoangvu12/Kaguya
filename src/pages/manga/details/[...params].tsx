@@ -27,7 +27,7 @@ import { Media, MediaType } from "@/types/anilist";
 import { numberWithCommas, vietnameseSlug } from "@/utils";
 import { convert, getDescription, getTitle } from "@/utils/data";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import { useUser } from "@supabase/auth-helpers-react";
+import { useUser } from "@/contexts/AuthContext";
 import classNames from "classnames";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
@@ -44,7 +44,7 @@ interface DetailsPageProps {
 }
 
 const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
-  const { user } = useUser();
+  const user = useUser();
   const { locale } = useRouter();
   const { t } = useTranslation("manga_details");
   const { data: chapters, isLoading } = useChapters(manga.id);

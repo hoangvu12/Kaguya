@@ -1,5 +1,6 @@
-import { useUser } from "@supabase/auth-helpers-react";
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
+import { useUser } from "@/contexts/AuthContext";
+import supabaseClient from "@/lib/supabase";
+
 import { Media } from "@/types/anilist";
 import { useQuery } from "react-query";
 
@@ -7,7 +8,7 @@ const useIsSubscribed = <T extends "anime" | "manga">(
   type: T,
   source: Media
 ) => {
-  const { user } = useUser();
+  const user = useUser();
   const tableName =
     type === "anime" ? "kaguya_anime_subscribers" : "kaguya_manga_subscribers";
   const queryKey = ["is_subscribed", user.id, source.id];
@@ -15,7 +16,7 @@ const useIsSubscribed = <T extends "anime" | "manga">(
   return useQuery(
     queryKey,
     async () => {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseClient
         .from(tableName)
         .select("userId")
         .eq("userId", user.id)

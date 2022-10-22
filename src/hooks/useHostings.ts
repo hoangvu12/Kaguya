@@ -1,10 +1,10 @@
 import { Hosting } from "@/types";
 import { useSupabaseQuery } from "@/utils/supabase";
-import { supabaseClient as supabase } from "@supabase/auth-helpers-nextjs";
+import supabaseClient from "@/lib/supabase";
 
 const useHostings = () => {
   return useSupabaseQuery(["hostings"], () =>
-    supabase.from<Hosting>("kaguya_hostings").select("*")
+    supabaseClient.from<Hosting>("kaguya_hostings").select("*")
   );
 };
 
