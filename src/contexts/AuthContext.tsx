@@ -5,6 +5,9 @@ import nookies from "nookies";
 
 const AuthContext = React.createContext(supabase.auth.user());
 
+const accessTokenCookieName = "sb-access-token";
+const refreshTokenCookieName = "sb-refresh-token";
+
 export const AuthContextProvider: React.FC<{}> = ({ children }) => {
   const [user, setUser] = useState<User>(supabase.auth.user());
 
@@ -16,7 +19,8 @@ export const AuthContextProvider: React.FC<{}> = ({ children }) => {
     if (!session || currentDate.getMilliseconds() >= session.expires_at) {
       setUser(null);
 
-      nookies.destroy(null, "sb:token");
+      nookies.destroy(null, accessTokenCookieName);
+      nookies.destroy(null, refreshTokenCookieName);
     }
   }, []);
 
@@ -30,9 +34,6 @@ export const AuthContextProvider: React.FC<{}> = ({ children }) => {
       } else if (event === "SIGNED_IN") {
         setUser(user);
       }
-
-      const accessTokenCookieName = "sb-access-token";
-      const refreshTokenCookieName = "sb-refresh-token";
 
       if (!session) {
         setUser(null);
