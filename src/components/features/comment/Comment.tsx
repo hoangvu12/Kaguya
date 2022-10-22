@@ -187,12 +187,14 @@ const CommentComponent: React.FC<CommentProps> = ({ comment }) => {
       >
         <ReactionSelector toggleReaction={toggleReaction} />
 
-        <Button
-          iconClassName="w-5 h-5"
-          secondary
-          LeftIcon={AiFillEdit}
-          onClick={handleEdit}
-        />
+        {comment.user.id === user?.id && (
+          <Button
+            iconClassName="w-5 h-5"
+            secondary
+            LeftIcon={AiFillEdit}
+            onClick={handleEdit}
+          />
+        )}
 
         <Button
           iconClassName="w-5 h-5"
