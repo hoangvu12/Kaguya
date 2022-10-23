@@ -20,6 +20,7 @@ import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { UserProvider } from "@supabase/auth-helpers-react";
 import GlobalPlayerContextProvider from "@/contexts/GlobalPlayerContext";
 import AuthContext, { AuthContextProvider } from "@/contexts/AuthContext";
+import { initBanners } from "@/lib/ads";
 
 Router.events.on("routeChangeStart", NProgress.start);
 Router.events.on("routeChangeComplete", NProgress.done);
@@ -46,7 +47,11 @@ function App({ Component, pageProps, router, err }: WorkaroundAppProps) {
   useEffect(() => {
     const handleRouteChange = (url: string) => {
       pageview(url);
+
+      initBanners();
     };
+
+    initBanners();
 
     router.events.on("routeChangeComplete", handleRouteChange);
 
@@ -147,7 +152,7 @@ function App({ Component, pageProps, router, err }: WorkaroundAppProps) {
         `}
       </Script>
 
-      <Script
+      {/* <Script
         strategy="afterInteractive"
         data-cfasync="false"
         type="text/javascript"
@@ -163,7 +168,7 @@ function App({ Component, pageProps, router, err }: WorkaroundAppProps) {
         src="https://ssqyuvavse.com/lv/esnk/1944247/code.js"
         async
         id="__clb-1944247"
-      />
+      /> */}
 
       <ToastContainer
         position="bottom-left"
