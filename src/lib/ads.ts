@@ -1,6 +1,7 @@
 import nookies from "nookies";
 
-const BANNER_CODES = ["1944246", "1944247", "1944543", "1944544", "1944545"];
+// const BANNER_CODES = ["1944246", "1944247", "1944543", "1944544", "1944545"];
+const BANNER_CODES = ["1944246"];
 const POPUNDER_COOKIE = "kaguya_popunder";
 
 export const initBanners = () => {
@@ -21,7 +22,9 @@ export const initBanners = () => {
     script.setAttribute("data-cfasync", "false");
     script.async = true;
 
-    document.body.appendChild(script);
+    const container = document.querySelector(".banner-ads");
+
+    container.appendChild(script);
   };
 
   BANNER_CODES.forEach((code) => initBanner(code));

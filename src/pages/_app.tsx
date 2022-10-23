@@ -1,3 +1,4 @@
+import Banner from "@/components/features/ads/Banner";
 import BaseLayout from "@/components/layouts/BaseLayout";
 import { AppErrorFallback } from "@/components/shared/AppErrorFallback";
 import { AuthContextProvider } from "@/contexts/AuthContext";
@@ -124,6 +125,8 @@ function App({ Component, pageProps, router, err }: WorkaroundAppProps) {
 
         {process.env.NODE_ENV === "development" && <ReactQueryDevtools />}
       </QueryClientProvider>
+
+      <Banner />
     </React.Fragment>
   );
 }
