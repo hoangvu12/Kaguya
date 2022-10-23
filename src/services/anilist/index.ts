@@ -118,11 +118,13 @@ export const getMediaDetails = async (
   let translations: Translation[] = [];
   const media = response?.Media;
 
-  const { data } = await supabaseClient
+  const { data, error } = await supabaseClient
     .from<Translation>("kaguya_translations")
     .select("*")
     .eq("mediaId", media.id)
     .eq("mediaType", args?.type || MediaType.Anime);
+
+  if (error) return media;
 
   if (data?.length) {
     translations = data;
@@ -131,6 +133,7 @@ export const getMediaDetails = async (
   } else {
     translations = await getTranslations(media);
   }
+
 
   return {
     ...media,
