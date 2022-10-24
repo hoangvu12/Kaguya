@@ -12,7 +12,7 @@ import {
 } from "netplayer";
 import * as React from "react";
 import MobileTimestampsButton from "./MobileTimestampsButton";
-import ScreenshotButton from "./ScreenshotButton";
+// import ScreenshotButton from "./ScreenshotButton";
 
 interface MobileOverlayProps {}
 
@@ -93,9 +93,9 @@ const MobileOverlay: React.FC<MobileOverlayProps> = ({ children }) => {
             <MobileTimestampsButton />
           </div>
 
-          <div className="w-8 h-8">
+          {/* <div className="w-8 h-8">
             <ScreenshotButton />
-          </div>
+          </div> */}
 
           <div className="w-8 h-8">
             <SettingsButton />

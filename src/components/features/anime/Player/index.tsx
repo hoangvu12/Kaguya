@@ -172,6 +172,8 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
           subtitles={notAssSubtitles}
           onInit={handleVideoInit}
           changeSourceUrl={proxyBuilder}
+          // @ts-ignore
+          crossOrigin={null}
           {...props}
         >
           {props.children}

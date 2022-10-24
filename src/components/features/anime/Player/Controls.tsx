@@ -13,7 +13,7 @@ import {
 } from "netplayer";
 import * as React from "react";
 import ProgressSlider from "./ProgressSlider";
-import ScreenshotButton from "./ScreenshotButton";
+// import ScreenshotButton from "./ScreenshotButton";
 import SkipButton from "./SkipButton";
 import TimestampsButton from "./TimestampsButton";
 
@@ -56,7 +56,7 @@ const Controls: React.FC<ControlsProps> = ({
           <TimestampsButton />
           <SkipButton />
           <SubtitleButton />
-          <ScreenshotButton />
+          {/* <ScreenshotButton /> */}
           <SettingsButton />
           <FullscreenButton />
         </div>
