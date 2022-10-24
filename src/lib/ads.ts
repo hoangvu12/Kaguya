@@ -48,8 +48,8 @@ export const initPopunder = () => {
     window.focus();
 
     nookies.set(null, POPUNDER_COOKIE, "1", {
-      // 6 hours
-      maxAge: 6 * 60 * 60,
+      // 12 hours
+      maxAge: 12 * 60 * 60,
       path: "/",
     });
   });
