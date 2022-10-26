@@ -17,6 +17,8 @@ const Banner = () => {
         !isShow && "hidden"
       )}
     >
+      <div className="hidden hidden-banner"></div>
+
       <CircleButton
         onClick={handleClose}
         className="!bg-background-600 absolute -top-5 -right-5"

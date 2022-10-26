@@ -1,11 +1,10 @@
 import nookies from "nookies";
 
-// const BANNER_CODES = ["1944246", "1944247", "1944543", "1944544", "1944545"];
-const BANNER_CODES = ["1944246"];
+const BANNER_CODES = ["1944246", "1944247", "1944543", "1944544", "1944545"];
 const POPUNDER_COOKIE = "kaguya_popunder";
 
 export const initBanners = () => {
-  const initBanner = (code: string) => {
+  const initBanner = (code: string, isShown: boolean) => {
     const scriptId = `__clb-${code}`;
 
     const existingScript = document.getElementById(scriptId);
@@ -23,11 +22,16 @@ export const initBanners = () => {
     script.async = true;
 
     const container = document.querySelector(".banner-ads");
+    const hiddenContainer = document.querySelector(".hidden-banner");
 
-    container.appendChild(script);
+    if (isShown) {
+      container.appendChild(script);
+    } else {
+      hiddenContainer.appendChild(script);
+    }
   };
 
-  BANNER_CODES.forEach((code) => initBanner(code));
+  BANNER_CODES.forEach((code, index) => initBanner(code, index === 0));
 };
 
 export const initPopunder = () => {
