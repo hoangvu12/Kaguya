@@ -1,3 +1,4 @@
+import TopBanner from "@/components/features/ads/TopBanner";
 import Button from "@/components/shared/Button";
 import Head from "@/components/shared/Head";
 import List from "@/components/shared/List";
@@ -20,6 +21,8 @@ const WatchWithFriendPage = () => {
         title={t("browse_page_title")}
         description={t("browse_page_description")}
       />
+
+      <TopBanner />
 
       <div className="mb-8 flex flex-col items-center gap-4 md:flex-row md:justify-between">
         <h1 className="text-center text-4xl font-semibold md:text-left">

@@ -38,6 +38,7 @@ import { isMobile } from "react-device-detect";
 import { AiOutlineUpload } from "react-icons/ai";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { BsFillPlayFill } from "react-icons/bs";
+import TopBanner from "@/components/features/ads/TopBanner";
 
 interface DetailsPageProps {
   manga: Media;
@@ -294,6 +295,8 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
           </div>
 
           <div className="md:col-span-8 space-y-12">
+            <TopBanner />
+
             <DetailsSection title={t("chapters_section")} className="relative">
               {isLoading ? (
                 <div className="h-full w-full flex items-center justify-center">

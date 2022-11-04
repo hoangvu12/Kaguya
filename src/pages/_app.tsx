@@ -1,4 +1,5 @@
 import Banner from "@/components/features/ads/Banner";
+import Preload from "@/components/features/ads/Preload";
 import BaseLayout from "@/components/layouts/BaseLayout";
 import { AppErrorFallback } from "@/components/shared/AppErrorFallback";
 import { AuthContextProvider } from "@/contexts/AuthContext";
@@ -96,6 +97,8 @@ function App({ Component, pageProps, router, err }: WorkaroundAppProps) {
         pauseOnHover
         theme="dark"
       />
+
+      <Preload />
 
       <QueryClientProvider client={queryClient}>
         <AuthContextProvider>

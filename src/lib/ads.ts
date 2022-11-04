@@ -34,7 +34,7 @@ export const initBanners = () => {
     }
   };
 
-  BANNER_CODES.forEach((code, index) => initBanner(code, index === 0));
+  BANNER_CODES.forEach((code, index) => initBanner(code, false));
 
   nookies.set(null, BANNER_COOKIE, "1", {
     // 2 days

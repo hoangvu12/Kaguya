@@ -11,6 +11,7 @@ import { MdOutlineRestartAlt } from "react-icons/md";
 import { ImageType } from "react-images-uploading";
 import { useTranslation } from "react-i18next";
 import Section from "@/components/shared/Section";
+import TopBanner from "@/components/features/ads/TopBanner";
 
 const TracePage = () => {
   const [traceResult, setTraceResult] = useState<TraceImageResponse>(null);
@@ -43,6 +44,8 @@ const TracePage = () => {
       />
 
       <Section className="pt-20 space-y-16 flex flex-col items-center justify-center">
+        <TopBanner />
+
         <div className="text-center">
           <h1 className="text-3xl font-bold mb-1">{t("heading")}</h1>
 

@@ -1,3 +1,4 @@
+import TopBanner from "@/components/features/ads/TopBanner";
 import ReadSection from "@/components/features/manga/ReadSection";
 import RecommendedMangaSection from "@/components/features/manga/RecommendedMangaSection";
 import CardSwiper from "@/components/shared/CardSwiper";
@@ -77,6 +78,8 @@ const Home = () => {
       <ClientOnly>
         <div className="pb-8">
           <HomeBanner data={trendingManga} isLoading={trendingLoading} />
+
+          <TopBanner />
 
           <div className="space-y-8">
             <ReadSection />

@@ -1,3 +1,4 @@
+import TopBanner from "@/components/features/ads/TopBanner";
 import CharacterCard from "@/components/shared/CharacterCard";
 import Head from "@/components/shared/Head";
 import List from "@/components/shared/List";
@@ -147,6 +148,8 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ voiceActor }) => {
             </div>
           </div>
         </Section>
+
+        <TopBanner />
 
         <Section title={t("characters_section")}>
           <List data={voiceActor.characters.nodes}>

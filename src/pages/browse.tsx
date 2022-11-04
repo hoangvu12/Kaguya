@@ -10,6 +10,7 @@ import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import Section from "@/components/shared/Section";
+import TopBanner from "@/components/features/ads/TopBanner";
 
 const components = {
   anime: AnimeBrowseList,
@@ -110,6 +111,8 @@ const BrowsePage = ({ query: baseQuery }) => {
         title={`Tìm kiếm ${chosenType.label} - Kaguya`}
         description={`Tìm kiếm ${chosenType.label} ở trang Kaguya`}
       />
+
+      <TopBanner />
 
       <div className="mb-8 flex items-center space-x-2">
         <h1 className="text-4xl font-semibold text-center md:text-left">

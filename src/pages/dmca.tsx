@@ -1,3 +1,4 @@
+import TopBanner from "@/components/features/ads/TopBanner";
 import Head from "@/components/shared/Head";
 import React from "react";
 
@@ -5,6 +6,8 @@ const dmca = () => {
   return (
     <div className="pt-20 px-4 md:px-12 space-y-4">
       <Head title="DMCA - Kaguya" description="DMCA Kaguya" />
+
+      <TopBanner />
 
       <h1 className="text-2xl font-bold">Yêu cầu gỡ xuống theo DMCA</h1>
 

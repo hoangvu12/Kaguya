@@ -1,3 +1,4 @@
+import TopBanner from "@/components/features/ads/TopBanner";
 import Card from "@/components/shared/Card";
 import DetailsSection from "@/components/shared/DetailsSection";
 import Head from "@/components/shared/Head";
@@ -60,6 +61,8 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ studio: initialStudio }) => {
             </TextIcon>
           </div>
         </Section>
+
+        <TopBanner />
 
         <Section className="px-4 sm:px-12">
           {/* Using flex column reverse because the object is not sortable */}

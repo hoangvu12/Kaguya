@@ -42,6 +42,7 @@ import { isMobile } from "react-device-detect";
 import { AiOutlineUpload } from "react-icons/ai";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { BsFillPlayFill } from "react-icons/bs";
+import TopBanner from "@/components/features/ads/TopBanner";
 
 interface DetailsPageProps {
   anime: Media;
@@ -410,7 +411,10 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
               </ul>
             </div>
           </div>
+
           <div className="space-y-12 md:col-span-8">
+            <TopBanner />
+
             <DetailsSection
               title={t("episodes_section")}
               className="overflow-hidden"

@@ -1,3 +1,4 @@
+import TopBanner from "@/components/features/ads/TopBanner";
 import AnimeScheduling from "@/components/features/anime/AnimeScheduling";
 import RecommendedAnimeSection from "@/components/features/anime/RecommendedAnimeSection";
 import WatchedSection from "@/components/features/anime/WatchedSection";
@@ -93,6 +94,8 @@ const Home = () => {
       <ClientOnly>
         <div className="pb-8">
           <HomeBanner data={trendingAnime} isLoading={trendingLoading} />
+
+          <TopBanner />
 
           <div className="space-y-8">
             <WatchedSection />
