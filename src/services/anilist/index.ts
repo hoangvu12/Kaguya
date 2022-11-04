@@ -12,7 +12,6 @@ import {
 } from "@/types/anilist";
 import { removeArrayOfObjectDup } from "@/utils";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import axios from "axios";
 import { getTranslations } from "../tmdb";
 import {
   airingSchedulesQuery,
@@ -31,14 +30,19 @@ import {
   studiosQuery,
 } from "./queries";
 
+import axios from "axios";
+import rateLimit from "axios-rate-limit";
+
 const GRAPHQL_URL = "https://graphql.anilist.co";
+
+const client = rateLimit(axios.create(), { maxRPS: 1 });
 
 export const anilistFetcher = async <T>(query: string, variables: any) => {
   type Response = {
     data: T;
   };
 
-  const { data } = await axios.post<Response>(GRAPHQL_URL, {
+  const { data } = await client.post<Response>(GRAPHQL_URL, {
     query,
     variables,
   });
@@ -133,7 +137,6 @@ export const getMediaDetails = async (
   } else {
     translations = await getTranslations(media);
   }
-
 
   return {
     ...media,

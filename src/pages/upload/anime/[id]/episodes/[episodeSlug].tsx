@@ -49,6 +49,7 @@ const UploadEpisodeEditPage: NextPage<UploadEpisodeEditPageProps> = ({
     data?.video?.[0]?.video?.id,
     data?.video?.[0]?.hostingId
   );
+
   const router = useRouter();
   const queryClient = useQueryClient();
 
