@@ -21,7 +21,7 @@ const ColumnSection: React.FC<ColumnSectionProps> = ({
   isLoading,
 }) => {
   return !isLoading ? (
-    <div className="w-full grow-0 bg-background-800 pt-4">
+    <div className="flex-1 bg-background-800 pt-4">
       {title && (
         <h2 className="mb-4 px-4 text-xl font-semibold line-clamp-1">
           {title}
@@ -54,7 +54,7 @@ const ColumnSection: React.FC<ColumnSectionProps> = ({
 
 const ColumnSectionSkeleton = () => (
   <Skeleton className="flex-1">
-    <SkeletonItem className="h-[400px]"></SkeletonItem>
+    <SkeletonItem className="h-full min-h-[636px]"></SkeletonItem>
   </Skeleton>
 );
 
