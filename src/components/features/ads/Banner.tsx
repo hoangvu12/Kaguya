@@ -20,8 +20,9 @@ const Banner = () => {
     >
       <a href="https://cwin999.com/?a=31913">
         <img
-          src="https://dimg04.c-ctrip.com/images/0106b12000a52uc1746E2.gif?proc=autoorient"
+          src="https://dimg04.c-ctrip.com/images/0103c12000a55gui38AEB.gif?proc=autoorient"
           alt="banner"
+          className="min-w-[350px] min-h-[100px]"
         />
       </a>
 
