@@ -37,7 +37,7 @@ const Preload = () => {
 
   return isShow ? (
     <div className="fixed inset-0 z-[9999]">
-      <div className="bg-black/80 absolute inset-0 z-40"></div>
+      <div className="bg-black/60 absolute inset-0 z-40"></div>
 
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
         <a href="https://cwin999.com/?a=31913">
