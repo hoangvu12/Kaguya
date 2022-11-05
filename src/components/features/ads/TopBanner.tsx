@@ -4,7 +4,7 @@ import React from "react";
 const TopBanner = () => {
   return (
     <a
-      className="flex justify-center items-center my-4 md:my-8"
+      className="top-banner-ads flex justify-center items-center my-4 md:my-8"
       href="https://cwin999.com/?a=31913"
     >
       <img
