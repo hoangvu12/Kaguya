@@ -31,18 +31,15 @@ import {
 } from "./queries";
 
 import axios from "axios";
-import rateLimit from "axios-rate-limit";
 
 const GRAPHQL_URL = "https://graphql.anilist.co";
-
-const client = rateLimit(axios.create(), { maxRPS: 1 });
 
 export const anilistFetcher = async <T>(query: string, variables: any) => {
   type Response = {
     data: T;
   };
 
-  const { data } = await client.post<Response>(GRAPHQL_URL, {
+  const { data } = await axios.post<Response>(GRAPHQL_URL, {
     query,
     variables,
   });
