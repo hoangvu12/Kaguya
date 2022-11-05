@@ -36,7 +36,7 @@ const Preload = () => {
   }, []);
 
   return isShow ? (
-    <div className="fixed inset-0  z-[9999]">
+    <div className="fixed inset-0 z-[9999]">
       <div className="bg-black/80 absolute inset-0 z-40"></div>
 
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
@@ -44,6 +44,7 @@ const Preload = () => {
           <img
             src="https://dimg04.c-ctrip.com/images/0105m12000a52tpbe2E50.gif?proc=autoorient"
             alt="preload"
+            className="min-w-[250px] min-h-[250px]"
           />
         </a>
 
