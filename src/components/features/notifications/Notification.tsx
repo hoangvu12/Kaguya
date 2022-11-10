@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { Notification as NotificationType } from "@/types";
 import Avatar from "@/components/shared/Avatar";
 import useConstantTranslation from "@/hooks/useConstantTranslation";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import { useUser } from "@/contexts/AuthContext";

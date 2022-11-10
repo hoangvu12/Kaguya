@@ -7,7 +7,7 @@ import { DISCORD_URL, FACEBOOK_URL } from "@/constants";
 import { useUser } from "@/contexts/AuthContext";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import { AiFillFacebook, AiOutlineSearch } from "react-icons/ai";

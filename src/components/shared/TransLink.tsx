@@ -1,5 +1,6 @@
 import React from "react";
-import Link, { LinkProps } from "next/link";
+import { LinkProps } from "next/link";
+import Link from "@/components/shared/Link";
 
 // This component is made to be used in Trans component
 // See more: https://github.com/i18next/react-i18next/issues/1090

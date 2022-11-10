@@ -4,7 +4,7 @@ import { useThemePlayer } from "@/contexts/ThemePlayerContext";
 import { download, getFileNameFromUrl } from "@/utils";
 import classNames from "classnames";
 import { useInteract } from "netplayer";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { useRouter } from "next/router";
 import React from "react";
 import { AiOutlineDownload, AiOutlineInfoCircle } from "react-icons/ai";

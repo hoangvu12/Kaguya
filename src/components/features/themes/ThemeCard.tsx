@@ -1,5 +1,5 @@
 import { AnimeThemeAPI } from "@/hooks/useThemeSearch";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import React, { useState } from "react";
 import { BiChevronDown } from "react-icons/bi";
 

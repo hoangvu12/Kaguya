@@ -7,7 +7,7 @@ import { MediaType } from "@/types/anilist";
 import { createMediaDetailsUrl } from "@/utils";
 import { getTitle } from "@/utils/data";
 import { useTranslation } from "next-i18next";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { useRouter } from "next/router";
 import React from "react";
 import Editor from "../features/comment/Editor";

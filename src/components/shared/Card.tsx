@@ -10,7 +10,7 @@ import {
 import { convert, getDescription, getTitle } from "@/utils/data";
 import { Options } from "@popperjs/core";
 import classNames from "classnames";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { AiFillHeart } from "react-icons/ai";

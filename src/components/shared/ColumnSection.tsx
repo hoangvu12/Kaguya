@@ -1,5 +1,5 @@
 import { Media, MediaType } from "@/types/anilist";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import React from "react";
 import { MdArrowForwardIos } from "react-icons/md";
 import HorizontalCard from "./HorizontalCard";

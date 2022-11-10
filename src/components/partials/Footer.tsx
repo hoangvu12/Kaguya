@@ -3,7 +3,8 @@ import React from "react";
 import { AiFillFacebook } from "react-icons/ai";
 import { FaDiscord } from "react-icons/fa";
 import Logo from "@/components/shared/Logo";
-import NextLink, { LinkProps } from "next/link";
+import NextLink from "@/components/shared/Link";
+import { LinkProps } from "next/link";
 import { useTranslation } from "next-i18next";
 
 interface FooterItemProps {

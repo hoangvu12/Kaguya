@@ -4,7 +4,7 @@ import { Chapter } from "@/types";
 import { groupBy } from "@/utils";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import React, { useEffect, useMemo, useState } from "react";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 

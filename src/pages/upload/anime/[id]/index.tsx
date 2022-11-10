@@ -18,7 +18,7 @@ import { MediaType } from "@/types/anilist";
 import { getDescription, getTitle, sortMediaUnit } from "@/utils/data";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { NextPage } from "next";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { useMemo } from "react";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { useQueryClient } from "react-query";

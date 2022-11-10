@@ -8,7 +8,7 @@ import { TraceImageResponse } from "@/hooks/useTraceImage";
 import { createMediaDetailsUrl, numberWithCommas } from "@/utils";
 import { convert, getDescription, getTitle } from "@/utils/data";
 import { useTranslation } from "next-i18next";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { useRouter } from "next/router";
 import React, { useCallback, useMemo, useState } from "react";
 import { AiFillHeart } from "react-icons/ai";

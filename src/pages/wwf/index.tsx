@@ -7,7 +7,7 @@ import Section from "@/components/shared/Section";
 import RoomListSkeleton from "@/components/skeletons/RoomListSkeleton";
 import useRooms from "@/hooks/useRooms";
 import { useTranslation } from "next-i18next";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import React from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 

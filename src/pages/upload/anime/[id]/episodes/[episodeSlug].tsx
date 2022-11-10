@@ -22,7 +22,7 @@ import useVideoStatus from "@/hooks/useVideoStatus";
 import { AdditionalUser, Source } from "@/types";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { NextPage } from "next";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { useQueryClient } from "react-query";

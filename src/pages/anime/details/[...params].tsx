@@ -35,7 +35,7 @@ import { useUser } from "@/contexts/AuthContext";
 import classNames from "classnames";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { useRouter } from "next/router";
 import { useEffect, useMemo } from "react";
 import { isMobile } from "react-device-detect";

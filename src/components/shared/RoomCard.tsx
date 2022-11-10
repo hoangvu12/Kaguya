@@ -2,7 +2,7 @@ import dayjs from "@/lib/dayjs";
 import { Room } from "@/types";
 import { getTitle } from "@/utils/data";
 import { useTranslation } from "next-i18next";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { AiFillEye } from "react-icons/ai";

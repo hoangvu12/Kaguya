@@ -4,7 +4,7 @@ import NavItem from "@/components/shared/NavItem";
 import useDevice from "@/hooks/useDevice";
 import classNames from "classnames";
 import { AnimatePresence, motion, Variants } from "framer-motion";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import React, { useState } from "react";
 import {
   AiOutlineHome,

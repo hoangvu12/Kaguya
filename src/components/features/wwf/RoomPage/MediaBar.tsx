@@ -9,7 +9,7 @@ import { convert, getDescription, getTitle } from "@/utils/data";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import { useTranslation } from "next-i18next";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { useRouter } from "next/router";
 import { useCallback, useMemo } from "react";
 import { MobileView } from "react-device-detect";

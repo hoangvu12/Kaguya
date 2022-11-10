@@ -1,7 +1,7 @@
 import Image from "@/components/shared/Image";
 import { CharacterEdge } from "@/types/anilist";
 import { convert } from "@/utils/data";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { useRouter } from "next/router";
 import React from "react";
 

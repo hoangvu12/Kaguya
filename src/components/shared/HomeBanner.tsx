@@ -9,7 +9,7 @@ import { createMediaDetailsUrl, isValidUrl, numberWithCommas } from "@/utils";
 import { convert, getDescription, getTitle } from "@/utils/data";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { useRouter } from "next/router";
 import React, {
   useCallback,

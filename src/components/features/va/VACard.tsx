@@ -1,6 +1,6 @@
 import Image from "@/components/shared/Image";
 import React from "react";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { Staff } from "@/types/anilist";
 import { createVoiceActorDetailsUrl } from "@/utils";
 

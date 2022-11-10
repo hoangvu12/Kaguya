@@ -2,11 +2,12 @@ import ArrowSwiper, {
   SwiperProps,
   SwiperSlide,
 } from "@/components/shared/ArrowSwiper";
+import Link from "@/components/shared/Link";
 import useDevice from "@/hooks/useDevice";
 import { Episode } from "@/types";
 import { chunk, groupBy, parseNumberFromString } from "@/utils";
 import classNames from "classnames";
-import Link, { LinkProps } from "next/link";
+import { LinkProps } from "next/link";
 import React, { useMemo } from "react";
 
 export interface EpisodeSelectorProps {

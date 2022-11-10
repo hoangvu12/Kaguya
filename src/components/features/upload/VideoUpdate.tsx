@@ -4,7 +4,7 @@ import { useUploadMediaInfo } from "@/contexts/UploadMediaContext";
 import { useUpdateVideo } from "@/hooks/useUpdateVideo";
 import { FileInfo } from "@/services/upload";
 import { humanFileSize } from "@/utils";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import React, { useMemo, useState } from "react";
 import VideoUpload, { VideoState, VideoUploadOnChange } from "./VideoUpload";
 

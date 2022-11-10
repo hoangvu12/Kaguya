@@ -16,7 +16,7 @@ import { MediaType } from "@/types/anilist";
 import { getTitle } from "@/utils/data";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { NextPage } from "next";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { useEffect, useState } from "react";
 import { AiOutlineEdit } from "react-icons/ai";
 import { useQueryClient } from "react-query";

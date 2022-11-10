@@ -5,7 +5,7 @@ import TextIcon from "@/components/shared/TextIcon";
 import { Media, MediaType } from "@/types/anilist";
 import { createMediaDetailsUrl, numberWithCommas } from "@/utils";
 import { convert, getDescription, getTitle } from "@/utils/data";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { AiFillHeart, AiFillPlayCircle } from "react-icons/ai";

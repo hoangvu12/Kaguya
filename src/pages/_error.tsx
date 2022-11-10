@@ -5,7 +5,7 @@ import * as Sentry from "@sentry/nextjs";
 import { NextPage } from "next";
 import { Trans, useTranslation } from "next-i18next";
 import NextErrorComponent, { ErrorProps } from "next/error";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 
 interface CustomErrorProps extends ErrorProps {
   hasGetInitialPropsRun: boolean;
@@ -14,7 +14,7 @@ interface CustomErrorProps extends ErrorProps {
   };
 }
 
-const isDev = process.env.NODE_ENV === 'development'
+const isDev = process.env.NODE_ENV === "development";
 
 // @ts-ignore
 const ErrorPage: NextPage<CustomErrorProps, CustomErrorProps> = ({

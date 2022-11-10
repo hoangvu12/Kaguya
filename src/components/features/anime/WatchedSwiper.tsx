@@ -2,7 +2,7 @@ import EpisodeCard from "@/components/features/anime/EpisodeCard";
 import Swiper, { SwiperProps, SwiperSlide } from "@/components/shared/Swiper";
 import { Watched } from "@/types";
 import { getTitle } from "@/utils/data";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { useRouter } from "next/router";
 import React from "react";
 

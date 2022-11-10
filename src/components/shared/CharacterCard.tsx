@@ -1,7 +1,7 @@
 import Image from "@/components/shared/Image";
 import { Character } from "@/types/anilist";
 import { createCharacterDetailsUrl } from "@/utils";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import React from "react";
 
 interface CharacterCardProps {

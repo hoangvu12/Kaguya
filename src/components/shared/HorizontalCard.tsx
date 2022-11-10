@@ -2,7 +2,7 @@ import { Media, MediaType } from "@/types/anilist";
 import { createMediaDetailsUrl } from "@/utils";
 import { convert, getTitle } from "@/utils/data";
 import classNames from "classnames";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import DotList from "./DotList";

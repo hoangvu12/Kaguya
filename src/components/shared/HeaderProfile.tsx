@@ -7,7 +7,7 @@ import supabaseClient from "@/lib/supabase";
 import { useTranslation } from "next-i18next";
 import React from "react";
 import { HiOutlineLogout } from "react-icons/hi";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import { AiOutlineUpload } from "react-icons/ai";
 
 const HeaderProfile = () => {

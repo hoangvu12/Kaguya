@@ -3,7 +3,7 @@ import Swiper, { SwiperProps, SwiperSlide } from "@/components/shared/Swiper";
 import useConstantTranslation from "@/hooks/useConstantTranslation";
 import useDevice from "@/hooks/useDevice";
 import classNames from "classnames";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 import React from "react";
 
 interface GenresSwiperProps extends SwiperProps {

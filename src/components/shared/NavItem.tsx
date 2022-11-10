@@ -1,9 +1,10 @@
 import { useRouter } from "next/dist/client/router";
-import Link, { LinkProps } from "next/link";
+import { LinkProps } from "next/link";
 import React, { useMemo } from "react";
+import Link from "./Link";
 
 interface NavItemProps extends LinkProps {
-  children({ isActive: boolean }): React.ReactNode;
+  children({ isActive }: { isActive: boolean }): React.ReactNode;
   className?: string;
   onClick?: () => void;
 }

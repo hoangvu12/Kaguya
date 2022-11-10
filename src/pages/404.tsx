@@ -2,7 +2,7 @@ import Button from "@/components/shared/Button";
 import Head from "@/components/shared/Head";
 import Section from "@/components/shared/Section";
 import { Trans, useTranslation } from "next-i18next";
-import Link from "next/link";
+import Link from "@/components/shared/Link";
 
 function ErrorPage() {
   const { t } = useTranslation("404_page");
