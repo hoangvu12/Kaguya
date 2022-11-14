@@ -52,8 +52,8 @@ export const initPopunder = () => {
     window.focus();
 
     nookies.set(null, POPUNDER_COOKIE, "1", {
-      // 2 days
-      maxAge: 2 * 24 * 60 * 60,
+      // 7 days
+      maxAge: 7 * 24 * 60 * 60,
       path: "/",
     });
   });
