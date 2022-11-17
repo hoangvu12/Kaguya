@@ -20,6 +20,8 @@ const textStyles = {
 
 const BASE_FONT_SIZE = 16;
 const LINE_HEIHT_RATIO = 1.333;
+const PADDING_X_RATIO = 0.5;
+const PADDING_Y_RATIO = 0.25;
 
 const M3U8_SUBTITLE_REGEX = /.*\.(vtt|srt)/g;
 
@@ -121,6 +123,13 @@ const Subtitle = () => {
     return fontSize * LINE_HEIHT_RATIO;
   }, [fontSize]);
 
+  const padding = useMemo(() => {
+    return {
+      horizontal: fontSize * PADDING_X_RATIO,
+      vertical: fontSize * PADDING_Y_RATIO,
+    };
+  }, [fontSize]);
+
   if (isLoading || !subtitle?.file || !currentText || state.isSubtitleDisabled)
     return null;
 
@@ -132,8 +141,12 @@ const Subtitle = () => {
       )}
     >
       <p
-        className="w-fit text-white bg-black/80 rounded-sm leading-7 text-center py-1 px-2 whitespace-pre-wrap"
+        className="w-fit text-white bg-black/80 rounded-sm leading-7 text-center whitespace-pre-wrap"
         style={{
+          paddingLeft: padding.horizontal + "px",
+          paddingRight: padding.horizontal + "px",
+          paddingTop: padding.vertical + "px",
+          paddingBottom: padding.vertical + "px",
           fontSize: fontSize + "px",
           lineHeight: lineHeight + "px",
           backgroundColor: `rgba(0, 0, 0, ${subtitleSettings.backgroundOpacity})`,
