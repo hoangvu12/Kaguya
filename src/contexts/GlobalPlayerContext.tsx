@@ -44,17 +44,6 @@ interface ContextProps {
   isBackground: boolean;
 }
 
-const playerVariants: Variants = {
-  watch: {
-    width: "100vw",
-    height: "100vh",
-  },
-  background: {
-    width: 400,
-    height: 225,
-  },
-};
-
 const PlayerContext = createContext<ContextProps>(null);
 
 const GlobalPlayerContextProvider: React.FC = ({ children }) => {
@@ -72,7 +61,7 @@ const GlobalPlayerContextProvider: React.FC = ({ children }) => {
   }, [router?.pathname]);
 
   useEffect(() => {
-    if (shouldPlayInBackground) return;
+    if (shouldPlayInBackground && !isMobile) return;
 
     // Set the player position just in case it is dragged
     x.set(0);
@@ -84,13 +73,6 @@ const GlobalPlayerContextProvider: React.FC = ({ children }) => {
       return {
         width: "100vw",
         height: "100vh",
-      };
-    }
-
-    if (isMobile) {
-      return {
-        width: 320,
-        height: 180,
       };
     }
 
