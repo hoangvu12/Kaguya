@@ -1,8 +1,23 @@
 /* eslint-disable @next/next/no-img-element */
-import React from "react";
+import React, { useEffect, useState } from "react";
+import nookies from "nookies";
+
+const USER_COOKIE = "sb-access-token";
 
 const TopBanner = () => {
-  return (
+  const [isShow, setIsShow] = useState(true);
+
+  useEffect(() => {
+    const cookies = nookies.get(null);
+
+    if (cookies?.[USER_COOKIE]) {
+      setIsShow(false);
+
+      return;
+    }
+  }, []);
+
+  return isShow ? (
     <a
       className="top-banner-ads flex justify-center items-center my-4 md:my-8"
       href="https://cwin999.com/?a=31913"
@@ -12,7 +27,7 @@ const TopBanner = () => {
         alt="top-banner"
       />
     </a>
-  );
+  ) : null;
 };
 
 export default TopBanner;

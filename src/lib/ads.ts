@@ -2,8 +2,11 @@ import nookies from "nookies";
 
 const BANNER_CODES = ["1944246", "1944247", "1944543", "1944544", "1944545"];
 const POPUNDER_COOKIE = "kaguya_popunder";
+const USER_COOKIE = "sb-access-token";
 
 export const initBanners = () => {
+  const cookies = nookies.get(null, "");
+
   const initBanner = (code: string, isShown: boolean) => {
     const scriptId = `__clb-${code}`;
 
@@ -31,6 +34,10 @@ export const initBanners = () => {
     }
   };
 
+  if (cookies[USER_COOKIE]) {
+    return;
+  }
+
   BANNER_CODES.forEach((code, index) => initBanner(code, index === 0));
 };
 
@@ -38,7 +45,7 @@ export const initPopunder = () => {
   window.addEventListener("click", () => {
     const cookies = nookies.get(null, "");
 
-    if (cookies[POPUNDER_COOKIE]) {
+    if (cookies[POPUNDER_COOKIE] || cookies[USER_COOKIE]) {
       return;
     }
 

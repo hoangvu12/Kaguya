@@ -5,6 +5,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import nookies from "nookies";
 
 const PRELOAD_COOKIE = "kaguya_preload";
+const USER_COOKIE = "sb-access-token";
 
 const Preload = () => {
   const [isShow, setIsShow] = useState(true);
@@ -14,11 +15,14 @@ const Preload = () => {
   };
 
   useEffect(() => {
-    let shownTime = Number(nookies.get(null)?.[PRELOAD_COOKIE]);
+    const cookies = nookies.get(null);
+    let shownTime = 0;
+
+    shownTime = Number(cookies?.[PRELOAD_COOKIE]);
 
     shownTime = isNaN(shownTime) ? 0 : shownTime;
 
-    if (shownTime >= 3) {
+    if (shownTime >= 3 || cookies?.[USER_COOKIE]) {
       setIsShow(false);
 
       return;
