@@ -19,6 +19,7 @@ const textStyles = {
 };
 
 const BASE_FONT_SIZE = 16;
+const LINE_HEIHT_RATIO = 1.333;
 
 const M3U8_SUBTITLE_REGEX = /.*\.(vtt|srt)/g;
 
@@ -112,6 +113,14 @@ const Subtitle = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subtitleText]);
 
+  const fontSize = useMemo(() => {
+    return moderateScale(subtitleSettings.fontSize * BASE_FONT_SIZE);
+  }, [moderateScale, subtitleSettings.fontSize]);
+
+  const lineHeight = useMemo(() => {
+    return fontSize * LINE_HEIHT_RATIO;
+  }, [fontSize]);
+
   if (isLoading || !subtitle?.file || !currentText || state.isSubtitleDisabled)
     return null;
 
@@ -125,7 +134,8 @@ const Subtitle = () => {
       <p
         className="w-fit text-white bg-black/80 rounded-sm leading-7 text-center py-1 px-2 whitespace-pre-wrap"
         style={{
-          fontSize: moderateScale(subtitleSettings.fontSize * BASE_FONT_SIZE),
+          fontSize: fontSize + "px",
+          lineHeight: lineHeight + "px",
           backgroundColor: `rgba(0, 0, 0, ${subtitleSettings.backgroundOpacity})`,
           color: `rgba(255, 255, 255, ${subtitleSettings.fontOpacity})`,
           textShadow: textStyles[subtitleSettings.textStyle],
