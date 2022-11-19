@@ -23,7 +23,7 @@ const TopBanner = () => {
       href="https://cwin999.com/?a=31913"
     >
       <img
-        src="https://dimg04.c-ctrip.com/images/0106b12000a52uc1746E2.gif?proc=autoorient"
+        src="https://dimg04.c-ctrip.com/images/0105112000a6gnddmBD7E.gif?proc=autoorient"
         alt="top-banner"
       />
     </a>

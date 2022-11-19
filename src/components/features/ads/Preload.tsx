@@ -45,7 +45,7 @@ const Preload = () => {
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
         <a href="https://cwin999.com/?a=31913">
           <img
-            src="https://dimg04.c-ctrip.com/images/0105m12000a52tpbe2E50.gif?proc=autoorient"
+            src="https://dimg04.c-ctrip.com/images/0103g12000a6gnn1o868B.gif?proc=autoorient"
             alt="preload"
             className="min-w-[250px] min-h-[250px]"
           />
