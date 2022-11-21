@@ -37,21 +37,44 @@ const PlayerControls = React.memo(() => {
   } = useGlobalPlayer();
   const { isInteracting } = useInteract();
 
-  const sourceEpisodes = useMemo(
+  const sourceEpisodes = React.useMemo(
     () => episodes.filter((episode) => episode.sourceId === sourceId),
     [episodes, sourceId]
   );
 
-  const nextEpisode = useMemo(
-    () => sourceEpisodes[currentEpisodeIndex + 1],
-    [currentEpisodeIndex, sourceEpisodes]
+  const sectionEpisodes = React.useMemo(
+    () =>
+      sourceEpisodes.filter(
+        (episode) => episode.section === currentEpisode.section
+      ),
+    [currentEpisode.section, sourceEpisodes]
+  );
+
+  const currentSectionEpisodeIndex = React.useMemo(
+    () =>
+      sectionEpisodes.findIndex(
+        (episode) => episode.sourceEpisodeId === currentEpisode.sourceEpisodeId
+      ),
+    [currentEpisode.sourceEpisodeId, sectionEpisodes]
+  );
+
+  const nextEpisode = React.useMemo(
+    () =>
+      sectionEpisodes[currentSectionEpisodeIndex + 1] ||
+      sourceEpisodes[currentEpisodeIndex + 1],
+    [
+      currentEpisodeIndex,
+      currentSectionEpisodeIndex,
+      sectionEpisodes,
+      sourceEpisodes,
+    ]
   );
 
   return !isBackground ? (
     <Controls
       rightControlsSlot={
         <React.Fragment>
-          {currentEpisodeIndex < sourceEpisodes.length - 1 && (
+          {currentSectionEpisodeIndex < sectionEpisodes.length - 1 && (
             <NextEpisodeButton onClick={() => setEpisode(nextEpisode)} />
           )}
 
@@ -98,14 +121,37 @@ const PlayerMobileControls = React.memo(() => {
     isBackground,
   } = useGlobalPlayer();
 
-  const sourceEpisodes = useMemo(
+  const sourceEpisodes = React.useMemo(
     () => episodes.filter((episode) => episode.sourceId === sourceId),
     [episodes, sourceId]
   );
 
-  const nextEpisode = useMemo(
-    () => sourceEpisodes[currentEpisodeIndex + 1],
-    [currentEpisodeIndex, sourceEpisodes]
+  const sectionEpisodes = React.useMemo(
+    () =>
+      sourceEpisodes.filter(
+        (episode) => episode.section === currentEpisode.section
+      ),
+    [currentEpisode.section, sourceEpisodes]
+  );
+
+  const currentSectionEpisodeIndex = React.useMemo(
+    () =>
+      sectionEpisodes.findIndex(
+        (episode) => episode.sourceEpisodeId === currentEpisode.sourceEpisodeId
+      ),
+    [currentEpisode.sourceEpisodeId, sectionEpisodes]
+  );
+
+  const nextEpisode = React.useMemo(
+    () =>
+      sectionEpisodes[currentSectionEpisodeIndex + 1] ||
+      sourceEpisodes[currentEpisodeIndex + 1],
+    [
+      currentEpisodeIndex,
+      currentSectionEpisodeIndex,
+      sectionEpisodes,
+      sourceEpisodes,
+    ]
   );
 
   return !isBackground ? (
@@ -140,7 +186,7 @@ const PlayerMobileControls = React.memo(() => {
             }
           </MobileEpisodesButton>
 
-          {currentEpisodeIndex < sourceEpisodes.length - 1 && (
+          {currentSectionEpisodeIndex < sectionEpisodes.length - 1 && (
             <MobileNextEpisode onClick={() => setEpisode(nextEpisode)} />
           )}
         </React.Fragment>
@@ -287,23 +333,53 @@ PlayerMobileOverlay.displayName = "PlayerMobileOverlay";
 
 const WatchPlayer: React.FC<WatchPlayerProps> = ({ videoRef, ...props }) => {
   const {
-    playerProps: { episodes, currentEpisodeIndex, setEpisode, sourceId },
+    playerProps: {
+      episodes,
+      currentEpisodeIndex,
+      setEpisode,
+      sourceId,
+      currentEpisode,
+    },
   } = useGlobalPlayer();
-  const sourceEpisodes = useMemo(
+
+  const sourceEpisodes = React.useMemo(
     () => episodes.filter((episode) => episode.sourceId === sourceId),
     [episodes, sourceId]
   );
 
-  const nextEpisode = useMemo(
-    () => sourceEpisodes[currentEpisodeIndex + 1],
-    [currentEpisodeIndex, sourceEpisodes]
+  const sectionEpisodes = React.useMemo(
+    () =>
+      sourceEpisodes.filter(
+        (episode) => episode.section === currentEpisode.section
+      ),
+    [currentEpisode.section, sourceEpisodes]
+  );
+
+  const currentSectionEpisodeIndex = React.useMemo(
+    () =>
+      sectionEpisodes.findIndex(
+        (episode) => episode.sourceEpisodeId === currentEpisode.sourceEpisodeId
+      ),
+    [currentEpisode.sourceEpisodeId, sectionEpisodes]
+  );
+
+  const nextEpisode = React.useMemo(
+    () =>
+      sectionEpisodes[currentSectionEpisodeIndex + 1] ||
+      sourceEpisodes[currentEpisodeIndex + 1],
+    [
+      currentEpisodeIndex,
+      currentSectionEpisodeIndex,
+      sectionEpisodes,
+      sourceEpisodes,
+    ]
   );
 
   const hotkeys = useMemo(
     () => [
       {
         fn: () => {
-          if (currentEpisodeIndex < sourceEpisodes.length - 1) {
+          if (currentSectionEpisodeIndex < sectionEpisodes.length - 1) {
             setEpisode(nextEpisode);
           }
         },
@@ -311,7 +387,12 @@ const WatchPlayer: React.FC<WatchPlayerProps> = ({ videoRef, ...props }) => {
         name: "next-episode",
       },
     ],
-    [currentEpisodeIndex, nextEpisode, setEpisode, sourceEpisodes.length]
+    [
+      currentSectionEpisodeIndex,
+      nextEpisode,
+      sectionEpisodes.length,
+      setEpisode,
+    ]
   );
 
   const components = useMemo(

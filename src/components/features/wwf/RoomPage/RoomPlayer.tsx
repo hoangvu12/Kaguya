@@ -90,12 +90,49 @@ const RoomPlayer = () => {
     [basicRoomUser?.userId, room?.hostUserId]
   );
 
-  const sourceEpisodes = useMemo(
+  // const sourceEpisodes = useMemo(
+  //   () =>
+  //     room.episodes.filter(
+  //       (episode) => episode.sourceId === room.episode.sourceId
+  //     ),
+  //   [room.episodes, room.episode.sourceId]
+  // );
+
+  // const currentEpisodeIndex = useMemo(
+  //   () =>
+  //     sourceEpisodes.findIndex(
+  //       (episode) => episode.sourceEpisodeId === room.episode.sourceEpisodeId
+  //     ),
+  //   [sourceEpisodes, room.episode.sourceEpisodeId]
+  // );
+
+  // const nextEpisode = useMemo(
+  //   () => sourceEpisodes[currentEpisodeIndex + 1],
+  //   [currentEpisodeIndex, sourceEpisodes]
+  // );
+
+  const sourceEpisodes = React.useMemo(
     () =>
       room.episodes.filter(
         (episode) => episode.sourceId === room.episode.sourceId
       ),
-    [room.episodes, room.episode.sourceId]
+    [room.episode.sourceId, room.episodes]
+  );
+
+  const sectionEpisodes = React.useMemo(
+    () =>
+      sourceEpisodes.filter(
+        (episode) => episode.section === room.episode.section
+      ),
+    [room.episode.section, sourceEpisodes]
+  );
+
+  const currentSectionEpisodeIndex = React.useMemo(
+    () =>
+      sectionEpisodes.findIndex(
+        (episode) => episode.sourceEpisodeId === room.episode.sourceEpisodeId
+      ),
+    [room.episode.sourceEpisodeId, sectionEpisodes]
   );
 
   const currentEpisodeIndex = useMemo(
@@ -106,9 +143,16 @@ const RoomPlayer = () => {
     [sourceEpisodes, room.episode.sourceEpisodeId]
   );
 
-  const nextEpisode = useMemo(
-    () => sourceEpisodes[currentEpisodeIndex + 1],
-    [currentEpisodeIndex, sourceEpisodes]
+  const nextEpisode = React.useMemo(
+    () =>
+      sectionEpisodes[currentSectionEpisodeIndex + 1] ||
+      sourceEpisodes[currentEpisodeIndex + 1],
+    [
+      currentEpisodeIndex,
+      currentSectionEpisodeIndex,
+      sectionEpisodes,
+      sourceEpisodes,
+    ]
   );
 
   const sortedEpisodes = useMemo(
@@ -139,7 +183,7 @@ const RoomPlayer = () => {
     () => [
       {
         fn: () => {
-          if (currentEpisodeIndex < sourceEpisodes.length - 1) {
+          if (currentSectionEpisodeIndex < sectionEpisodes.length - 1) {
             handleNavigateEpisode(nextEpisode);
           }
         },
@@ -148,10 +192,10 @@ const RoomPlayer = () => {
       },
     ],
     [
-      currentEpisodeIndex,
+      currentSectionEpisodeIndex,
       handleNavigateEpisode,
       nextEpisode,
-      sourceEpisodes.length,
+      sectionEpisodes.length,
     ]
   );
 

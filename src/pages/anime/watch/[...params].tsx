@@ -129,6 +129,22 @@ const WatchPage: NextPage<WatchPageProps> = ({ episodes }) => {
     [sourceEpisodes, episodeId]
   );
 
+  const sectionEpisodes = useMemo(
+    () =>
+      sourceEpisodes.filter(
+        (episode) => episode.section === currentEpisode.section
+      ),
+    [currentEpisode.section, sourceEpisodes]
+  );
+
+  const currentSectionEpisodeIndex = useMemo(
+    () =>
+      sectionEpisodes.findIndex(
+        (episode) => episode.sourceEpisodeId === episodeId
+      ),
+    [episodeId, sectionEpisodes]
+  );
+
   const currentEpisodeIndex = useMemo(
     () =>
       sourceEpisodes.findIndex(
@@ -138,8 +154,15 @@ const WatchPage: NextPage<WatchPageProps> = ({ episodes }) => {
   );
 
   const nextEpisode = useMemo(
-    () => sourceEpisodes[currentEpisodeIndex + 1],
-    [currentEpisodeIndex, sourceEpisodes]
+    () =>
+      sectionEpisodes[currentSectionEpisodeIndex + 1] ||
+      sourceEpisodes[currentEpisodeIndex + 1],
+    [
+      currentEpisodeIndex,
+      currentSectionEpisodeIndex,
+      sectionEpisodes,
+      sourceEpisodes,
+    ]
   );
 
   const handleNavigateEpisode = useCallback(

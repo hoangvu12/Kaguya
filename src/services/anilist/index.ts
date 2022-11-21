@@ -116,8 +116,6 @@ export const getMediaDetails = async (
     args
   );
 
-  console.log(response);
-
   let translations: Translation[] = [];
   const media = response?.Media;
 

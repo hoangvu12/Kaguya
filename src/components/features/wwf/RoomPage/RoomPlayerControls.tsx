@@ -44,9 +44,32 @@ const RoomPlayerControls: React.FC<RoomPlayerControlsProps> = ({
     [episodes, sourceId]
   );
 
+  const sectionEpisodes = React.useMemo(
+    () =>
+      sourceEpisodes.filter(
+        (episode) => episode.section === currentEpisode.section
+      ),
+    [currentEpisode.section, sourceEpisodes]
+  );
+
+  const currentSectionEpisodeIndex = React.useMemo(
+    () =>
+      sectionEpisodes.findIndex(
+        (episode) => episode.sourceEpisodeId === currentEpisode.sourceEpisodeId
+      ),
+    [currentEpisode.sourceEpisodeId, sectionEpisodes]
+  );
+
   const nextEpisode = React.useMemo(
-    () => sourceEpisodes[currentEpisodeIndex + 1],
-    [currentEpisodeIndex, sourceEpisodes]
+    () =>
+      sectionEpisodes[currentSectionEpisodeIndex + 1] ||
+      sourceEpisodes[currentEpisodeIndex + 1],
+    [
+      currentEpisodeIndex,
+      currentSectionEpisodeIndex,
+      sectionEpisodes,
+      sourceEpisodes,
+    ]
   );
 
   const { isInteracting } = useInteract();
@@ -85,7 +108,7 @@ const RoomPlayerControls: React.FC<RoomPlayerControlsProps> = ({
         <div className="flex items-center space-x-4">
           {isHost ? (
             <React.Fragment>
-              {currentEpisodeIndex < sourceEpisodes.length - 1 && (
+              {currentSectionEpisodeIndex < sectionEpisodes.length - 1 && (
                 <NextEpisodeButton onClick={() => setEpisode(nextEpisode)} />
               )}
 
