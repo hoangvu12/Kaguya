@@ -124,7 +124,7 @@ const EpisodeSelector: React.FC<EpisodeSelectorProps> = (props) => {
             <div className="space-y-1" key={section}>
               {Object.keys(sections)?.length > 1 && (
                 <p className="font-semibold text-gray-300">
-                  {section || "Default"}
+                  {section === "null" || !section ? "Default" : section}
                 </p>
               )}
 
