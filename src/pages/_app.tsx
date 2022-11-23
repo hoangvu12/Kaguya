@@ -1,4 +1,5 @@
 import Banner from "@/components/features/ads/Banner";
+import Interstitial from "@/components/features/ads/Interstitial";
 import Preload from "@/components/features/ads/Preload";
 import BaseLayout from "@/components/layouts/BaseLayout";
 import { AppErrorFallback } from "@/components/shared/AppErrorFallback";
@@ -99,6 +100,7 @@ function App({ Component, pageProps, router, err }: WorkaroundAppProps) {
       />
 
       <Preload />
+      <Interstitial />
 
       <QueryClientProvider client={queryClient}>
         <AuthContextProvider>
