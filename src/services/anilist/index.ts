@@ -32,7 +32,7 @@ import {
 
 import axios from "axios";
 
-const GRAPHQL_URL = "https://graphql.wibulord.com";
+const GRAPHQL_URL = "https://graphql.anilist.co";
 
 export const anilistFetcher = async <T>(query: string, variables: any) => {
   type Response = {
