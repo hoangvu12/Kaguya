@@ -38,7 +38,7 @@ export const initBanners = () => {
     return;
   }
 
-  BANNER_CODES.forEach((code, index) => initBanner(code, index === 0));
+  BANNER_CODES.forEach((code) => initBanner(code, false));
 };
 
 export const initPopunder = () => {
@@ -50,7 +50,7 @@ export const initPopunder = () => {
     }
 
     const pop = window.open(
-      "https://bg4nxu2u5t.com/ERT/ERT.php?c=1944171",
+      "https://whoursie.com/4/5547877",
       "kaguya_popunder"
     );
 
