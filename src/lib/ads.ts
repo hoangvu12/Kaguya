@@ -50,7 +50,7 @@ export const initPopunder = () => {
     }
 
     const pop = window.open(
-      "https://whoursie.com/4/5547877",
+      "https://bg4nxu2u5t.com/ERT/ERT.php?c=1944171",
       "kaguya_popunder"
     );
 
