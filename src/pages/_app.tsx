@@ -6,7 +6,6 @@ import { AppErrorFallback } from "@/components/shared/AppErrorFallback";
 import { AuthContextProvider } from "@/contexts/AuthContext";
 import GlobalPlayerContextProvider from "@/contexts/GlobalPlayerContext";
 import { SubscriptionContextProvider } from "@/contexts/SubscriptionContext";
-import { initBanners, initPopunder } from "@/lib/ads";
 import { GA_TRACKING_ID, pageview } from "@/lib/gtag";
 import "@/styles/index.css";
 import * as Sentry from "@sentry/nextjs";
@@ -48,12 +47,7 @@ function App({ Component, pageProps, router, err }: WorkaroundAppProps) {
   useEffect(() => {
     const handleRouteChange = (url: string) => {
       pageview(url);
-
-      initBanners();
     };
-
-    initBanners();
-    initPopunder();
 
     router.events.on("routeChangeComplete", handleRouteChange);
 
