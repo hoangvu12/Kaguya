@@ -1,8 +1,14 @@
 import React from "react";
 import NextLink, { LinkProps } from "next/link";
 
-const Link: React.FC<LinkProps> = (props) => {
-  return (
+interface CustomLinkProps extends LinkProps {
+  disabled?: boolean;
+}
+
+const Link: React.FC<CustomLinkProps> = ({ disabled, ...props }) => {
+  return disabled ? (
+    <React.Fragment>{props.children}</React.Fragment>
+  ) : (
     <NextLink prefetch={false} {...props}>
       {props.children}
     </NextLink>

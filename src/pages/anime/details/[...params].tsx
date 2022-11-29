@@ -23,7 +23,7 @@ import withRedirect from "@/hocs/withRedirect";
 import useEpisodes from "@/hooks/useEpisodes";
 import dayjs from "@/lib/dayjs";
 import { getMediaDetails } from "@/services/anilist";
-import { Media, MediaType } from "@/types/anilist";
+import { Media, MediaStatus, MediaType } from "@/types/anilist";
 import {
   createStudioDetailsUrl,
   numberWithCommas,
@@ -75,6 +75,11 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
     [anime, locale]
   );
 
+  const watchDisabled = useMemo(
+    () => anime.status === MediaStatus.Not_yet_released || !episodes?.length,
+    [anime.status, episodes?.length]
+  );
+
   useEffect(() => {
     if (!anime) return;
 
@@ -116,7 +121,10 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
             <div className="flex flex-col justify-between md:py-4 ml-4 text-left items-start md:-mt-16 space-y-4">
               <div className="flex flex-col items-start space-y-4 md:no-scrollbar">
                 <div className="hidden md:flex items-center flex-wrap gap-2 mb-4">
-                  <Link href={`/anime/watch/${anime.id}`}>
+                  <Link
+                    disabled={watchDisabled}
+                    href={`/anime/watch/${anime.id}`}
+                  >
                     <a>
                       <Button primary LeftIcon={BsFillPlayFill}>
                         <p>{t("common:watch_now")}</p>
