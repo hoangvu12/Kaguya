@@ -5,3 +5,6 @@
 
 [[plugins]]
     package = "@netlify/plugin-nextjs"
+
+[[plugins]]
+    package = "netlify-purge-cloudflare-on-deploy"
