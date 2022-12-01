@@ -14,7 +14,7 @@ import ListSwiperSkeleton from "@/components/skeletons/ListSwiperSkeleton";
 import useDevice from "@/hooks/useDevice";
 import useMedia from "@/hooks/useMedia";
 import useRecommendations from "@/hooks/useRecommendations";
-import { MediaSort, MediaType } from "@/types/anilist";
+import { MediaSort, MediaStatus, MediaType } from "@/types/anilist";
 import { randomElement } from "@/utils";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
@@ -51,6 +51,13 @@ const Home = () => {
       perPage: isMobile ? 5 : 10,
     }
   );
+
+  const { data: upcoming, isLoading: upcomingLoading } = useMedia({
+    status: MediaStatus.Not_yet_released,
+    sort: [MediaSort.Trending_desc],
+    perPage: isMobile ? 5 : 10,
+    type: MediaType.Manga,
+  });
 
   const randomTrendingManga = useMemo(() => {
     return randomElement(trendingManga || []);
@@ -109,6 +116,14 @@ const Home = () => {
             ) : (
               <Section title={t("common:newly_added")}>
                 <CardSwiper data={recentlyUpdated} />
+              </Section>
+            )}
+
+            {upcomingLoading ? (
+              <ListSwiperSkeleton />
+            ) : (
+              <Section title={t("anime_home:upcoming")}>
+                <CardSwiper data={upcoming} />
               </Section>
             )}
 
