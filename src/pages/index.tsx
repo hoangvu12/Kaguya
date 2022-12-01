@@ -16,7 +16,7 @@ import useDevice from "@/hooks/useDevice";
 import useMedia from "@/hooks/useMedia";
 import useRecentlyUpdated from "@/hooks/useRecentlyUpdated";
 import useRecommendations from "@/hooks/useRecommendations";
-import { MediaSort, MediaType } from "@/types/anilist";
+import { MediaSort, MediaStatus, MediaType } from "@/types/anilist";
 import { getSeason, randomElement } from "@/utils";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
@@ -68,6 +68,13 @@ const Home = () => {
   const { data: recentlyUpdated, isLoading: recentlyUpdatedLoading } =
     useRecentlyUpdated();
 
+  const { data: upcoming, isLoading: upcomingLoading } = useMedia({
+    status: MediaStatus.Not_yet_released,
+    sort: [MediaSort.Trending_desc],
+    perPage: isMobile ? 5 : 10,
+    type: MediaType.Anime,
+  });
+
   const randomTrendingAnime = useMemo(() => {
     return randomElement(trendingAnime || []);
   }, [trendingAnime]);
@@ -103,28 +110,28 @@ const Home = () => {
 
             <Section className="md:space-between flex flex-col items-center space-y-4 space-x-0 md:flex-row md:space-y-0 md:space-x-4">
               <ColumnSection
-                title={t("most_popular_season", { ns: "common" })}
+                title={t("common:most_popular_season")}
                 type={MediaType.Anime}
                 data={popularSeason}
                 viewMoreHref={`/browse?sort=popularity&type=anime&season=${currentSeason.season}&seasonYear=${currentSeason.year}`}
                 isLoading={popularSeasonLoading}
               />
               <ColumnSection
-                title={t("most_popular", { ns: "common" })}
+                title={t("common:most_popular")}
                 type={MediaType.Anime}
                 data={popularAllTime}
                 viewMoreHref="/browse?sort=popularity&type=anime"
                 isLoading={popularAllTimeLoading}
               />
               <ColumnSection
-                title={t("most_favourite_season", { ns: "common" })}
+                title={t("common:most_favourite_season")}
                 type={MediaType.Anime}
                 data={favouriteSeason}
                 viewMoreHref={`/browse?sort=favourites&type=anime&season=${currentSeason.season}&seasonYear=${currentSeason.year}`}
                 isLoading={favouriteSeasonLoading}
               />
               <ColumnSection
-                title={t("most_favourite", { ns: "common" })}
+                title={t("common:most_favourite")}
                 type={MediaType.Anime}
                 data={favouriteAllTime}
                 viewMoreHref="/browse?sort=favourites&type=anime"
@@ -137,8 +144,16 @@ const Home = () => {
             {recentlyUpdatedLoading ? (
               <ListSwiperSkeleton />
             ) : (
-              <Section title={t("newly_added", { ns: "common" })}>
+              <Section title={t("common:newly_added")}>
                 <CardSwiper data={recentlyUpdated} />
+              </Section>
+            )}
+
+            {upcomingLoading ? (
+              <ListSwiperSkeleton />
+            ) : (
+              <Section title={t("anime_home:upcoming")}>
+                <CardSwiper data={upcoming} />
               </Section>
             )}
 
@@ -149,7 +164,7 @@ const Home = () => {
               )}
             >
               <Section
-                title={t("should_watch_today", { ns: "anime_home" })}
+                title={t("anime_home:should_watch_today")}
                 className="w-full md:w-[80%] md:!pr-0"
               >
                 {randomAnime && (
@@ -158,14 +173,14 @@ const Home = () => {
               </Section>
 
               <Section
-                title={t("genres", { ns: "common" })}
+                title={t("common:genres")}
                 className="w-full md:w-[20%] md:!pl-0"
               >
                 <GenreSwiper className="md:h-[500px]" />
               </Section>
             </div>
 
-            <Section title={t("airing_schedule", { ns: "anime_home" })}>
+            <Section title={t("anime_home:airing_schedule")}>
               <AnimeScheduling />
             </Section>
           </div>
