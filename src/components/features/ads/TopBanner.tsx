@@ -5,29 +5,32 @@ import nookies from "nookies";
 const USER_COOKIE = "sb-access-token";
 
 const TopBanner = () => {
-  const [isShow, setIsShow] = useState(true);
+  // const [isShow, setIsShow] = useState(true);
 
-  useEffect(() => {
-    const cookies = nookies.get(null);
+  // useEffect(() => {
+  //   const cookies = nookies.get(null);
 
-    if (cookies?.[USER_COOKIE]) {
-      setIsShow(false);
+  //   if (cookies?.[USER_COOKIE]) {
+  //     setIsShow(false);
 
-      return;
-    }
-  }, []);
+  //     return;
+  //   }
+  // }, []);
 
-  return isShow ? (
-    <a
-      className="top-banner-ads flex justify-center items-center my-4 md:my-8"
-      href="https://cwin999.com/?a=31913"
-    >
-      <img
-        src="https://dimg04.c-ctrip.com/images/0105112000a6gnddmBD7E.gif?proc=autoorient"
-        alt="top-banner"
-      />
-    </a>
-  ) : null;
+  // return isShow ? (
+  //   <a
+  //     className="top-banner-ads flex justify-center items-center my-4 md:my-8"
+  //     href="https://cwin999.com/?a=31913"
+  //   >
+  //     <img
+  //       src="https://dimg04.c-ctrip.com/images/0105112000a6gnddmBD7E.gif?proc=autoorient"
+  //       alt="top-banner"
+  //     />
+  //   </a>
+  // ) : null;
+
+  // Currently no active ads
+  return null;
 };
 
 export default TopBanner;
