@@ -1,36 +1,34 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useState } from "react";
 import nookies from "nookies";
+import Script from "next/script";
 
 const USER_COOKIE = "sb-access-token";
 
 const TopBanner = () => {
-  // const [isShow, setIsShow] = useState(true);
+  const [isShow, setIsShow] = useState(true);
 
-  // useEffect(() => {
-  //   const cookies = nookies.get(null);
+  useEffect(() => {
+    const cookies = nookies.get(null);
 
-  //   if (cookies?.[USER_COOKIE]) {
-  //     setIsShow(false);
+    if (cookies?.[USER_COOKIE]) {
+      setIsShow(false);
 
-  //     return;
-  //   }
-  // }, []);
+      return;
+    }
+  }, []);
 
-  // return isShow ? (
-  //   <a
-  //     className="top-banner-ads flex justify-center items-center my-4 md:my-8"
-  //     href="https://cwin999.com/?a=31913"
-  //   >
-  //     <img
-  //       src="https://dimg04.c-ctrip.com/images/0105112000a6gnddmBD7E.gif?proc=autoorient"
-  //       alt="top-banner"
-  //     />
-  //   </a>
-  // ) : null;
+  return isShow ? (
+    <React.Fragment>
+      <div id="zone18629245"></div>
 
-  // Currently no active ads
-  return null;
+      <Script id="banner-pustimize">
+        {`
+         if (!window.PSTBanners) {(function() {var s = document.createElement("script");s.async = true;s.type = "text/javascript";s.src = 'https://api.trackpush.com/sdk/banner/v1.js?pid=QyD0YhFH-RJxSHM4XHVISQ';var n = document.getElementsByTagName("script")[0];n.parentNode.insertBefore(s, n);}());}var PSTBanners = window.PSTBanners || [];PSTBanners.push({zone:'zone18629245'});
+        `}
+      </Script>
+    </React.Fragment>
+  ) : null;
 };
 
 export default TopBanner;
