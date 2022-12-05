@@ -6,35 +6,31 @@ const INTERSTITIAL_COOKIE = "kaguya_interstitial";
 const USER_COOKIE = "sb-access-token";
 
 const Interstitial = () => {
-  const [isShow, setIsShow] = useState(false);
+  // const [isShow, setIsShow] = useState(false);
 
-  useEffect(() => {
-    const cookies = nookies.get(null);
-    let shownTime = 0;
+  // useEffect(() => {
+  //   const cookies = nookies.get(null);
+  //   let shownTime = 0;
 
-    shownTime = Number(cookies?.[INTERSTITIAL_COOKIE]);
+  //   shownTime = Number(cookies?.[INTERSTITIAL_COOKIE]);
 
-    shownTime = isNaN(shownTime) ? 0 : shownTime;
+  //   shownTime = isNaN(shownTime) ? 0 : shownTime;
 
-    if (shownTime >= 3 || cookies?.[USER_COOKIE]) {
-      return;
-    }
+  //   if (shownTime >= 3 || cookies?.[USER_COOKIE]) {
+  //     return;
+  //   }
 
-    nookies.set(null, INTERSTITIAL_COOKIE, String(shownTime + 1), {
-      // 3 hours
-      maxAge: 3 * 60 * 60,
-      path: "/",
-    });
+  //   nookies.set(null, INTERSTITIAL_COOKIE, String(shownTime + 1), {
+  //     // 3 hours
+  //     maxAge: 3 * 60 * 60,
+  //     path: "/",
+  //   });
 
-    setIsShow(true);
-  }, []);
+  //   setIsShow(true);
+  // }, []);
 
-  return isShow ? (
-    <Script
-      src="//arsnivyr.com/1?z=5547899"
-      strategy="afterInteractive"
-    ></Script>
-  ) : null;
+  // No ads
+  return null;
 };
 
 export default Interstitial;
