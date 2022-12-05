@@ -40,7 +40,7 @@ const Banner = () => {
     >
       <div id="zone37727689"></div>
 
-      <Script id="banner-pustimize">
+      <Script id="banner-pustimize-zone37727689">
         {`
           if (!window.PSTBanners) {(function() {var s = document.createElement("script");s.async = true;s.type = "text/javascript";s.src = 'https://api.trackpush.com/sdk/banner/v1.js?pid=QyD0YhFH-RJxSHM4XHVISQ';var n = document.getElementsByTagName("script")[0];n.parentNode.insertBefore(s, n);}());}var PSTBanners = window.PSTBanners || [];PSTBanners.push({zone:'zone37727689'});
         `}
