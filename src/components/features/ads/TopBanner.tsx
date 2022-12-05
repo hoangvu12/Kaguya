@@ -20,7 +20,7 @@ const TopBanner = () => {
 
   return isShow ? (
     <React.Fragment>
-      <div id="zone18629245"></div>
+      <div id="zone13156172"></div>
 
       <Script id="banner-pustimize">
         {`
