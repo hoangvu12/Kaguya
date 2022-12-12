@@ -31,4 +31,4 @@ const Section = React.forwardRef<HTMLDivElement, SectionProps>(
 
 Section.displayName = "Section";
 
-export default React.memo(Section);
+export default Section;

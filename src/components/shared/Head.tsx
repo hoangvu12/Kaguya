@@ -2,7 +2,7 @@ import React from "react";
 import NextHead from "next/head";
 import { WEBSITE_URL } from "@/constants";
 import { useRouter } from "next/router";
-import locales from "@/locales.json";
+import config from "@/config";
 
 interface HeadProps {
   title?: string;
@@ -23,6 +23,15 @@ const Head: React.FC<HeadProps> = (props) => {
     <NextHead>
       <title>{title}</title>
       <link rel="manifest" href="/manifest.json" />
+
+      <link rel="preconnect" href={config.supabaseUrl} />
+      <link rel="dns-prefetch" href={config.supabaseUrl} />
+
+      <link rel="preconnect" href="https://fonts.googleapis.com/" />
+      <link rel="dns-prefetch" href="https://fonts.googleapis.com/" />
+
+      <link rel="preconnect" href="https://www.google-analytics.com" />
+      <link rel="dns-prefetch" href="https://www.google-analytics.com" />
 
       <meta name="title" content={title} />
       <meta name="description" content={description} />

@@ -36,6 +36,9 @@ const moduleExports = withPWA({
     runtimeCaching: defaultRuntimeCaching,
   },
   i18n,
+  expermental: {
+    nextScriptWorkers: true,
+  },
 });
 
 const sentryWebpackPluginOptions = {

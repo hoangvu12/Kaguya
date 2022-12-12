@@ -38,11 +38,7 @@ const Image: React.FC<ImageProps> = ({ onLoadingComplete, ...props }) => {
       animate={isLoaded ? "visible" : "hidden"}
       className={containerClassName}
     >
-      <NextImage
-        onLoadingComplete={handleLoadingComplete}
-        unoptimized
-        {...props}
-      />
+      <NextImage onLoadingComplete={handleLoadingComplete} {...props} />
     </motion.div>
   );
 };

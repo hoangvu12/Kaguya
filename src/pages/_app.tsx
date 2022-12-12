@@ -22,6 +22,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
+import { Partytown } from "@builder.io/partytown/react";
 
 Router.events.on("routeChangeStart", NProgress.start);
 Router.events.on("routeChangeComplete", NProgress.done);
@@ -67,20 +68,29 @@ function App({ Component, pageProps, router, err }: WorkaroundAppProps) {
       <script id="syncData" type="application/json"></script>
 
       <Script
-        strategy="afterInteractive"
+        strategy="worker"
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
       />
 
-      <Script id="google-analytics" strategy="afterInteractive">
+      <Script id="google-analytics" strategy="worker">
         {`
+
+        `}
+      </Script>
+
+      <script
+        type="text/partytown"
+        dangerouslySetInnerHTML={{
+          __html: `
             window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
+            window.gtag = function gtag(){window.dataLayer.push(arguments);}
             gtag('js', new Date());
             gtag('config', '${GA_TRACKING_ID}', {
               page_path: window.location.pathname,
             });
-        `}
-      </Script>
+            `,
+        }}
+      />
 
       <ToastContainer
         position="bottom-left"
