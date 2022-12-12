@@ -36,7 +36,7 @@ const moduleExports = withPWA({
     runtimeCaching: defaultRuntimeCaching,
   },
   i18n,
-  expermental: {
+  experimental: {
     nextScriptWorkers: true,
   },
 });
