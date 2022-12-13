@@ -114,31 +114,31 @@ const Home: NextPage<HomeProps> = ({ isMobile, isDesktop }) => {
           <WatchedSection />
           <RecommendedAnimeSection />
 
-          <Section className="md:space-between flex flex-col items-center space-y-4 space-x-0 md:flex-row md:space-y-0 md:space-x-4">
+          <Section
+            // For some reason, this className doesn't render on server side, so we need to render it on client-side
+            clientOnly
+            className="md:space-between flex flex-col items-center space-y-4 space-x-0 md:flex-row md:space-y-0 md:space-x-4"
+          >
             <ColumnSection
               title={t("common:most_popular_season")}
-              type={MediaType.Anime}
               data={popularSeason}
               viewMoreHref={`/browse?sort=popularity&type=anime&season=${currentSeason.season}&seasonYear=${currentSeason.year}`}
               isLoading={popularSeasonLoading}
             />
             <ColumnSection
               title={t("common:most_popular")}
-              type={MediaType.Anime}
               data={popularAllTime}
               viewMoreHref="/browse?sort=popularity&type=anime"
               isLoading={popularAllTimeLoading}
             />
             <ColumnSection
               title={t("common:most_favourite_season")}
-              type={MediaType.Anime}
               data={favouriteSeason}
               viewMoreHref={`/browse?sort=favourites&type=anime&season=${currentSeason.season}&seasonYear=${currentSeason.year}`}
               isLoading={favouriteSeasonLoading}
             />
             <ColumnSection
               title={t("common:most_favourite")}
-              type={MediaType.Anime}
               data={favouriteAllTime}
               viewMoreHref="/browse?sort=favourites&type=anime"
               isLoading={favouriteAllTimeLoading}

@@ -9,7 +9,6 @@ interface ColumnSectionProps {
   data: Media[];
   title?: string;
   viewMoreHref?: string;
-  type: MediaType;
   isLoading?: boolean;
 }
 
@@ -17,7 +16,6 @@ const ColumnSection: React.FC<ColumnSectionProps> = ({
   data,
   title,
   viewMoreHref,
-  type,
   isLoading,
 }) => {
   return !isLoading ? (

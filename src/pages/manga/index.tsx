@@ -98,17 +98,19 @@ const Home: NextPage<HomeProps> = ({ isMobile, isDesktop }) => {
           <ReadSection />
           <RecommendedMangaSection />
 
-          <Section className="md:space-between flex flex-col items-center space-y-4 space-x-0 md:flex-row md:space-y-0 md:space-x-4">
+          <Section
+            // For some reason, this className doesn't render on server side, so we need to render it on client-side
+            clientOnly
+            className="md:space-between flex flex-col items-center space-y-4 space-x-0 md:flex-row md:space-y-0 md:space-x-4"
+          >
             <ColumnSection
               title={t("common:most_popular")}
-              type={MediaType.Manga}
               data={popularManga}
               viewMoreHref="/browse?sort=popularity&type=manga"
               isLoading={popularMangaLoading}
             />
             <ColumnSection
               title={t("common:most_favourite")}
-              type={MediaType.Manga}
               data={favouriteManga}
               viewMoreHref="/browse?sort=favourites&type=manga"
               isLoading={favouriteMangaLoading}

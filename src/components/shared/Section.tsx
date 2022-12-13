@@ -1,5 +1,6 @@
 import classNames from "classnames";
 import React from "react";
+import ClientOnly from "./ClientOnly";
 
 export interface SectionProps {
   title?: string;
@@ -7,11 +8,12 @@ export interface SectionProps {
   children?: React.ReactNode;
   isLoading?: boolean;
   hasPadding?: boolean;
+  clientOnly?: boolean;
 }
 
 const Section = React.forwardRef<HTMLDivElement, SectionProps>(
-  ({ children, title, className, hasPadding = true }, ref) => {
-    return (
+  ({ children, title, className, hasPadding = true, clientOnly }, ref) => {
+    const element = (
       <div
         ref={ref}
         className={classNames(
@@ -26,6 +28,8 @@ const Section = React.forwardRef<HTMLDivElement, SectionProps>(
         {children}
       </div>
     );
+
+    return clientOnly ? <ClientOnly>{element}</ClientOnly> : element;
   }
 );
 
