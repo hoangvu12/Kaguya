@@ -49,7 +49,7 @@ const HomeBanner: React.FC<HomeBannerProps> = ({
 }) => {
   return (
     <React.Fragment>
-      {isMobile ? (
+      {!isMobile ? (
         <div>
           {isLoading ? (
             <DesktopHomeBannerSkeleton />
