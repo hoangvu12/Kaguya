@@ -3,7 +3,6 @@ import AnimeScheduling from "@/components/features/anime/AnimeScheduling";
 import RecommendedAnimeSection from "@/components/features/anime/RecommendedAnimeSection";
 import WatchedSection from "@/components/features/anime/WatchedSection";
 import CardSwiper from "@/components/shared/CardSwiper";
-import ClientOnly from "@/components/shared/ClientOnly";
 import ColumnSection from "@/components/shared/ColumnSection";
 import GenreSwiper from "@/components/shared/GenreSwiper";
 import Head from "@/components/shared/Head";

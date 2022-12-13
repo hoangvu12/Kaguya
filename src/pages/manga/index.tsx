@@ -2,7 +2,6 @@ import TopBanner from "@/components/features/ads/TopBanner";
 import ReadSection from "@/components/features/manga/ReadSection";
 import RecommendedMangaSection from "@/components/features/manga/RecommendedMangaSection";
 import CardSwiper from "@/components/shared/CardSwiper";
-import ClientOnly from "@/components/shared/ClientOnly";
 import ColumnSection from "@/components/shared/ColumnSection";
 import GenreSwiper from "@/components/shared/GenreSwiper";
 import Head from "@/components/shared/Head";
@@ -82,75 +81,73 @@ const Home = () => {
         description="Đọc truyện manga hay tại Kaguya, cập nhật nhanh chóng, không quảng cáo và nhiều tính năng thú vị."
       />
 
-      <ClientOnly>
-        <div className="pb-8">
-          <HomeBanner data={trendingManga} isLoading={trendingLoading} />
+      <div className="pb-8">
+        <HomeBanner data={trendingManga} isLoading={trendingLoading} />
 
-          <TopBanner />
+        <TopBanner />
 
-          <div className="space-y-8">
-            <ReadSection />
-            <RecommendedMangaSection />
+        <div className="space-y-8">
+          <ReadSection />
+          <RecommendedMangaSection />
 
-            <Section className="md:space-between flex flex-col items-center space-y-4 space-x-0 md:flex-row md:space-y-0 md:space-x-4">
-              <ColumnSection
-                title={t("common:most_popular")}
-                type={MediaType.Manga}
-                data={popularManga}
-                viewMoreHref="/browse?sort=popularity&type=manga"
-                isLoading={popularMangaLoading}
-              />
-              <ColumnSection
-                title={t("common:most_favourite")}
-                type={MediaType.Manga}
-                data={favouriteManga}
-                viewMoreHref="/browse?sort=favourites&type=manga"
-                isLoading={favouriteMangaLoading}
-              />
+          <Section className="md:space-between flex flex-col items-center space-y-4 space-x-0 md:flex-row md:space-y-0 md:space-x-4">
+            <ColumnSection
+              title={t("common:most_popular")}
+              type={MediaType.Manga}
+              data={popularManga}
+              viewMoreHref="/browse?sort=popularity&type=manga"
+              isLoading={popularMangaLoading}
+            />
+            <ColumnSection
+              title={t("common:most_favourite")}
+              type={MediaType.Manga}
+              data={favouriteManga}
+              viewMoreHref="/browse?sort=favourites&type=manga"
+              isLoading={favouriteMangaLoading}
+            />
+          </Section>
+
+          <NewestComments type={MediaType.Manga} />
+
+          {recentlyUpdatedLoading ? (
+            <ListSwiperSkeleton />
+          ) : (
+            <Section title={t("common:newly_added")}>
+              <CardSwiper data={recentlyUpdated} />
             </Section>
+          )}
 
-            <NewestComments type={MediaType.Manga} />
+          {upcomingLoading ? (
+            <ListSwiperSkeleton />
+          ) : (
+            <Section title={t("anime_home:upcoming")}>
+              <CardSwiper data={upcoming} />
+            </Section>
+          )}
 
-            {recentlyUpdatedLoading ? (
-              <ListSwiperSkeleton />
-            ) : (
-              <Section title={t("common:newly_added")}>
-                <CardSwiper data={recentlyUpdated} />
-              </Section>
+          <div
+            className={classNames(
+              "flex gap-8",
+              isDesktop ? "flex-row" : "flex-col"
             )}
-
-            {upcomingLoading ? (
-              <ListSwiperSkeleton />
-            ) : (
-              <Section title={t("anime_home:upcoming")}>
-                <CardSwiper data={upcoming} />
-              </Section>
-            )}
-
-            <div
-              className={classNames(
-                "flex gap-8",
-                isDesktop ? "flex-row" : "flex-col"
-              )}
+          >
+            <Section
+              title={t("manga_home:should_read_today")}
+              className="w-full md:w-[80%] md:!pr-0"
             >
-              <Section
-                title={t("manga_home:should_read_today")}
-                className="w-full md:w-[80%] md:!pr-0"
-              >
-                {randomManga && (
-                  <ShouldWatch data={randomManga} isLoading={!randomManga} />
-                )}
-              </Section>
-              <Section
-                title={t("common:genres")}
-                className="w-full md:w-[20%] md:!pl-0"
-              >
-                <GenreSwiper className="md:h-[500px]" />
-              </Section>
-            </div>
+              {randomManga && (
+                <ShouldWatch data={randomManga} isLoading={!randomManga} />
+              )}
+            </Section>
+            <Section
+              title={t("common:genres")}
+              className="w-full md:w-[20%] md:!pl-0"
+            >
+              <GenreSwiper className="md:h-[500px]" />
+            </Section>
           </div>
         </div>
-      </ClientOnly>
+      </div>
     </React.Fragment>
   );
 };
