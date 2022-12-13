@@ -11,20 +11,24 @@ import NewestComments from "@/components/shared/NewestComments";
 import Section from "@/components/shared/Section";
 import ShouldWatch from "@/components/shared/ShouldWatch";
 import ListSwiperSkeleton from "@/components/skeletons/ListSwiperSkeleton";
-import useDevice from "@/hooks/useDevice";
 import useMedia from "@/hooks/useMedia";
 import useRecentlyUpdated from "@/hooks/useRecentlyUpdated";
 import useRecommendations from "@/hooks/useRecommendations";
 import { MediaSort, MediaStatus, MediaType } from "@/types/anilist";
 import { getSeason, randomElement } from "@/utils";
 import classNames from "classnames";
+import { NextPage } from "next";
 import { useTranslation } from "next-i18next";
 import React, { useMemo } from "react";
-import { isMobile } from "react-device-detect";
+import { getSelectorsByUserAgent } from "react-device-detect";
 
-const Home = () => {
+interface HomeProps {
+  isMobile: boolean;
+  isDesktop: boolean;
+}
+
+const Home: NextPage<HomeProps> = ({ isMobile, isDesktop }) => {
   const currentSeason = useMemo(getSeason, []);
-  const { isDesktop } = useDevice();
   const { t } = useTranslation();
 
   const { data: trendingAnime, isLoading: trendingLoading } = useMedia({
@@ -98,7 +102,11 @@ const Home = () => {
       />
 
       <div className="pb-8">
-        <HomeBanner data={trendingAnime} isLoading={trendingLoading} />
+        <HomeBanner
+          isMobile={isMobile}
+          data={trendingAnime}
+          isLoading={trendingLoading}
+        />
 
         <TopBanner />
 
@@ -174,7 +182,7 @@ const Home = () => {
               title={t("common:genres")}
               className="w-full md:w-[20%] md:!pl-0"
             >
-              <GenreSwiper className="md:h-[500px]" />
+              <GenreSwiper isMobile={isMobile} className="md:h-[500px]" />
             </Section>
           </div>
 
@@ -185,6 +193,17 @@ const Home = () => {
       </div>
     </React.Fragment>
   );
+};
+
+Home.getInitialProps = async ({ req }) => {
+  const userAgent = req ? req.headers["user-agent"] : navigator.userAgent;
+
+  const { isMobile, isDesktop } = getSelectorsByUserAgent(userAgent);
+
+  return {
+    isMobile,
+    isDesktop,
+  };
 };
 
 export default Home;

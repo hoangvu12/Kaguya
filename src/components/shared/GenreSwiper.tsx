@@ -8,13 +8,14 @@ import React from "react";
 
 interface GenresSwiperProps extends SwiperProps {
   type?: "anime" | "manga";
+  isMobile: boolean;
 }
 
 const GenreSwiper: React.FC<GenresSwiperProps> = ({
   type = "anime",
+  isMobile,
   ...props
 }) => {
-  const { isMobile } = useDevice();
   const { GENRES } = useConstantTranslation();
 
   return (

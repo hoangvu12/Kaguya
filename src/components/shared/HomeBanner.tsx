@@ -2,6 +2,7 @@ import BannerSwiper from "@/components/shared/BannerSwiper";
 import CircleButton from "@/components/shared/CircleButton";
 import DotList from "@/components/shared/DotList";
 import Image from "@/components/shared/Image";
+import Link from "@/components/shared/Link";
 import Swiper, { SwiperProps, SwiperSlide } from "@/components/shared/Swiper";
 import TextIcon from "@/components/shared/TextIcon";
 import { Media, MediaType } from "@/types/anilist";
@@ -9,7 +10,6 @@ import { createMediaDetailsUrl, isValidUrl, numberWithCommas } from "@/utils";
 import { convert, getDescription, getTitle } from "@/utils/data";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
-import Link from "@/components/shared/Link";
 import { useRouter } from "next/router";
 import React, {
   useCallback,
@@ -18,7 +18,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { BrowserView, MobileView } from "react-device-detect";
 import { AiFillHeart, AiFillPlayCircle } from "react-icons/ai";
 import { BsFillVolumeMuteFill, BsFillVolumeUpFill } from "react-icons/bs";
 import { MdTagFaces } from "react-icons/md";
@@ -32,6 +31,7 @@ import Skeleton, { SkeletonItem } from "./Skeleton";
 interface HomeBannerProps {
   data: Media[];
   isLoading?: boolean;
+  isMobile: boolean;
 }
 
 const bannerVariants = {
@@ -42,24 +42,30 @@ const bannerVariants = {
 
 const transition = [0.33, 1, 0.68, 1];
 
-const HomeBanner: React.FC<HomeBannerProps> = ({ data, isLoading }) => {
+const HomeBanner: React.FC<HomeBannerProps> = ({
+  data,
+  isLoading,
+  isMobile,
+}) => {
   return (
     <React.Fragment>
-      <BrowserView>
-        {isLoading ? (
-          <DesktopHomeBannerSkeleton />
-        ) : (
-          <DesktopHomeBanner data={data} />
-        )}
-      </BrowserView>
-
-      <MobileView className="overflow-hidden px-4 pt-20 pb-8 md:px-12">
-        {isLoading ? (
-          <MobileHomeBannerSkeleton />
-        ) : (
-          <MobileHomeBanner data={data} />
-        )}
-      </MobileView>
+      {isMobile ? (
+        <div>
+          {isLoading ? (
+            <DesktopHomeBannerSkeleton />
+          ) : (
+            <DesktopHomeBanner isMobile={isMobile} data={data} />
+          )}
+        </div>
+      ) : (
+        <div className="overflow-hidden px-4 pt-20 pb-8 md:px-12">
+          {isLoading ? (
+            <MobileHomeBannerSkeleton />
+          ) : (
+            <MobileHomeBanner isMobile={isMobile} data={data} />
+          )}
+        </div>
+      )}
     </React.Fragment>
   );
 };
