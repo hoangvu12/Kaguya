@@ -9,7 +9,6 @@ import GlobalPlayerContextProvider from "@/contexts/GlobalPlayerContext";
 import { SubscriptionContextProvider } from "@/contexts/SubscriptionContext";
 import { GA_TRACKING_ID, pageview } from "@/lib/gtag";
 import "@/styles/index.css";
-import * as Sentry from "@sentry/nextjs";
 import { appWithTranslation } from "next-i18next";
 import nextI18nextConfig from "next-i18next.config";
 import { AppProps } from "next/app";
@@ -22,7 +21,6 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
-import { Partytown } from "@builder.io/partytown/react";
 
 Router.events.on("routeChangeStart", NProgress.start);
 Router.events.on("routeChangeComplete", NProgress.done);
@@ -119,10 +117,7 @@ function App({ Component, pageProps, router, err }: WorkaroundAppProps) {
           <SubscriptionContextProvider>
             <GlobalPlayerContextProvider>
               <ErrorBoundary
-                onError={(error, info) => {
-                  if (process.env.NODE_ENV === "production") {
-                    Sentry.captureException(error);
-                  }
+                onError={(_, info) => {
                   setErrorInfo(info);
                 }}
                 fallbackRender={(fallbackProps) => {

@@ -98,94 +98,92 @@ const Home = () => {
         description="Xem anime hay tại Kaguya, cập nhật nhanh chóng, không quảng cáo và nhiều tính năng thú vị."
       />
 
-      <ClientOnly>
-        <div className="pb-8">
-          <HomeBanner data={trendingAnime} isLoading={trendingLoading} />
+      <div className="pb-8">
+        <HomeBanner data={trendingAnime} isLoading={trendingLoading} />
 
-          <TopBanner />
+        <TopBanner />
 
-          <div className="space-y-8">
-            <WatchedSection />
-            <RecommendedAnimeSection />
+        <div className="space-y-8">
+          <WatchedSection />
+          <RecommendedAnimeSection />
 
-            <Section className="md:space-between flex flex-col items-center space-y-4 space-x-0 md:flex-row md:space-y-0 md:space-x-4">
-              <ColumnSection
-                title={t("common:most_popular_season")}
-                type={MediaType.Anime}
-                data={popularSeason}
-                viewMoreHref={`/browse?sort=popularity&type=anime&season=${currentSeason.season}&seasonYear=${currentSeason.year}`}
-                isLoading={popularSeasonLoading}
-              />
-              <ColumnSection
-                title={t("common:most_popular")}
-                type={MediaType.Anime}
-                data={popularAllTime}
-                viewMoreHref="/browse?sort=popularity&type=anime"
-                isLoading={popularAllTimeLoading}
-              />
-              <ColumnSection
-                title={t("common:most_favourite_season")}
-                type={MediaType.Anime}
-                data={favouriteSeason}
-                viewMoreHref={`/browse?sort=favourites&type=anime&season=${currentSeason.season}&seasonYear=${currentSeason.year}`}
-                isLoading={favouriteSeasonLoading}
-              />
-              <ColumnSection
-                title={t("common:most_favourite")}
-                type={MediaType.Anime}
-                data={favouriteAllTime}
-                viewMoreHref="/browse?sort=favourites&type=anime"
-                isLoading={favouriteAllTimeLoading}
-              />
+          <Section className="md:space-between flex flex-col items-center space-y-4 space-x-0 md:flex-row md:space-y-0 md:space-x-4">
+            <ColumnSection
+              title={t("common:most_popular_season")}
+              type={MediaType.Anime}
+              data={popularSeason}
+              viewMoreHref={`/browse?sort=popularity&type=anime&season=${currentSeason.season}&seasonYear=${currentSeason.year}`}
+              isLoading={popularSeasonLoading}
+            />
+            <ColumnSection
+              title={t("common:most_popular")}
+              type={MediaType.Anime}
+              data={popularAllTime}
+              viewMoreHref="/browse?sort=popularity&type=anime"
+              isLoading={popularAllTimeLoading}
+            />
+            <ColumnSection
+              title={t("common:most_favourite_season")}
+              type={MediaType.Anime}
+              data={favouriteSeason}
+              viewMoreHref={`/browse?sort=favourites&type=anime&season=${currentSeason.season}&seasonYear=${currentSeason.year}`}
+              isLoading={favouriteSeasonLoading}
+            />
+            <ColumnSection
+              title={t("common:most_favourite")}
+              type={MediaType.Anime}
+              data={favouriteAllTime}
+              viewMoreHref="/browse?sort=favourites&type=anime"
+              isLoading={favouriteAllTimeLoading}
+            />
+          </Section>
+
+          <NewestComments type={MediaType.Anime} />
+
+          {recentlyUpdatedLoading ? (
+            <ListSwiperSkeleton />
+          ) : (
+            <Section title={t("common:newly_added")}>
+              <CardSwiper data={recentlyUpdated} />
+            </Section>
+          )}
+
+          {upcomingLoading ? (
+            <ListSwiperSkeleton />
+          ) : (
+            <Section title={t("anime_home:upcoming")}>
+              <CardSwiper data={upcoming} />
+            </Section>
+          )}
+
+          <div
+            className={classNames(
+              "flex gap-8",
+              isDesktop ? "flex-row" : "flex-col"
+            )}
+          >
+            <Section
+              title={t("anime_home:should_watch_today")}
+              className="w-full md:w-[80%] md:!pr-0"
+            >
+              {randomAnime && (
+                <ShouldWatch data={randomAnime} isLoading={!randomAnime} />
+              )}
             </Section>
 
-            <NewestComments type={MediaType.Anime} />
-
-            {recentlyUpdatedLoading ? (
-              <ListSwiperSkeleton />
-            ) : (
-              <Section title={t("common:newly_added")}>
-                <CardSwiper data={recentlyUpdated} />
-              </Section>
-            )}
-
-            {upcomingLoading ? (
-              <ListSwiperSkeleton />
-            ) : (
-              <Section title={t("anime_home:upcoming")}>
-                <CardSwiper data={upcoming} />
-              </Section>
-            )}
-
-            <div
-              className={classNames(
-                "flex gap-8",
-                isDesktop ? "flex-row" : "flex-col"
-              )}
+            <Section
+              title={t("common:genres")}
+              className="w-full md:w-[20%] md:!pl-0"
             >
-              <Section
-                title={t("anime_home:should_watch_today")}
-                className="w-full md:w-[80%] md:!pr-0"
-              >
-                {randomAnime && (
-                  <ShouldWatch data={randomAnime} isLoading={!randomAnime} />
-                )}
-              </Section>
-
-              <Section
-                title={t("common:genres")}
-                className="w-full md:w-[20%] md:!pl-0"
-              >
-                <GenreSwiper className="md:h-[500px]" />
-              </Section>
-            </div>
-
-            <Section title={t("anime_home:airing_schedule")}>
-              <AnimeScheduling />
+              <GenreSwiper className="md:h-[500px]" />
             </Section>
           </div>
+
+          <Section title={t("anime_home:airing_schedule")}>
+            <AnimeScheduling />
+          </Section>
         </div>
-      </ClientOnly>
+      </div>
     </React.Fragment>
   );
 };

@@ -48,17 +48,5 @@ yarn-error.log*
 **/public/worker-*.js.map
 **/public/fallback-*.js
 
-# Sentry
-.sentryclirc
-
-# Sentry
-.sentryclirc
-
-# Sentry
-.sentryclirc
-
-# Sentry
-.sentryclirc
-
 public/robots.txt
 public/sitemap*.xml

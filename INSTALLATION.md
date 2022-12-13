@@ -158,10 +158,6 @@ There are 3 things that needed to run the website.
 
    # Public web push key (https://github.com/hoangvu12/kaguya-scraper) (Optional)
    NEXT_PUBLIC_WEB_PUSH=
-
-   # Sentry (Optional)
-   SENTRY_AUTH_TOKEN=
-   SENTRY_DSN=
    ```
 
    `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` : Get these on step 1.
@@ -173,8 +169,6 @@ There are 3 things that needed to run the website.
    `NEXT_PUBLIC_PROXY_SERVER_URL`: The URL of the proxy server, if you running on local machine then it should be `http://localhost:3002` (Optional, you should change the port to avoid port already use)
 
    `NEXT_PUBLIC_WEB_PUSH`: The public web push key, you can get this one on scraping server by running `yarn webPush:generate` (Optional)
-
-   `SENTRY_AUTH_TOKEN` and `SENTRY_DSN`: Get these from Sentry (Optional)
 
    Then start the website by running:
 

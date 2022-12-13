@@ -11,7 +11,13 @@ const Logo: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
       className={classNames("relative flex mx-auto h-24 w-24 mb-8", className)}
       {...props}
     >
-      <Image src="/logo.png" layout="fill" objectFit="contain" alt="logo" />
+      <Image
+        src="/logo.png"
+        width={40}
+        height={40}
+        objectFit="contain"
+        alt="logo"
+      />
     </div>
   );
 };
