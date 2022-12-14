@@ -67,11 +67,13 @@ function App({ Component, pageProps, router, err }: WorkaroundAppProps) {
 
       <Script
         strategy="worker"
+        id="google-analytics"
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
       />
 
-      <script
-        type="text/partytown"
+      <Script
+        id="google-analytics-init"
+        strategy="worker"
         dangerouslySetInnerHTML={{
           __html: `
             window.dataLayer = window.dataLayer || [];
@@ -80,18 +82,6 @@ function App({ Component, pageProps, router, err }: WorkaroundAppProps) {
             gtag('config', '${GA_TRACKING_ID}', {
               page_path: window.location.pathname,
             });
-          `,
-        }}
-      />
-
-      <script
-        data-partytown-config
-        dangerouslySetInnerHTML={{
-          __html: `
-            partytown = {
-              lib: "/_next/static/~partytown/",
-              forward: ["gtag"]           
-            };
           `,
         }}
       />

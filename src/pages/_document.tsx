@@ -17,7 +17,8 @@ class MyDocument extends Document {
               __html: `
                 partytown = {
                   lib: "/_next/static/~partytown/",
-                  forward: ["gtag"]           
+                  forward: ["gtag", "dataLayer.push"],
+                  debug: true           
                 };
               `,
             }}
