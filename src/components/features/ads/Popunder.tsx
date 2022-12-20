@@ -23,8 +23,8 @@ const Popunder = () => {
       window.focus();
 
       nookies.set(null, POPUNDER_COOKIE, "1", {
-        // 7 days
-        maxAge: 7 * 24 * 60 * 60,
+        // 1 days
+        maxAge: 1 * 24 * 60 * 60,
         path: "/",
       });
     });
