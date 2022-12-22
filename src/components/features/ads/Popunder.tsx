@@ -14,7 +14,7 @@ const Popunder = () => {
       }
 
       const pop = window.open(
-        "https://bg4nxu2u5t.com/ERT/ERT.php?c=1944171",
+        "https://txzaazmdhtw.com/SWC/SWC.php?c=1957946",
         "kaguya_popunder"
       );
 
