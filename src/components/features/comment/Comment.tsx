@@ -14,7 +14,6 @@ import useRemoveReaction from "@/hooks/useRemoveReaction";
 import useUpdateComment from "@/hooks/useUpdateComment";
 import { Comment } from "@/types";
 import { getMentionedUserIds } from "@/utils/editor";
-import { userEvent } from "@storybook/testing-library";
 import { useUser } from "@/contexts/AuthContext";
 import classNames from "classnames";
 import dayjs from "dayjs";
