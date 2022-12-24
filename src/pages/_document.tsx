@@ -10,7 +10,6 @@ class MyDocument extends Document {
           <link rel="shortcut icon" href="/favicon.ico" />
           <link rel="icon" href="/favicon.ico" type="image/ico" />
 
-          <script src="https://costranchill.com/verification/q0slCjDAF539su90BXaG" />
 
           <script
             data-partytown-config
