@@ -13,7 +13,6 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
-import * as Sentry from "@sentry/nextjs";
 import { ErrorBoundary } from "react-error-boundary";
 import { AppErrorFallback } from "@/components/shared/AppErrorFallback";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
@@ -98,9 +97,6 @@ function App({ Component, pageProps, router, err }: WorkaroundAppProps) {
             <GlobalPlayerContextProvider>
               <ErrorBoundary
                 onError={(error, info) => {
-                  if (process.env.NODE_ENV === "production") {
-                    Sentry.captureException(error);
-                  }
                   setErrorInfo(info);
                 }}
                 fallbackRender={(fallbackProps) => {
