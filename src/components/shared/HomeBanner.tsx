@@ -5,24 +5,14 @@ import Image from "@/components/shared/Image";
 import Link from "@/components/shared/Link";
 import Swiper, { SwiperProps, SwiperSlide } from "@/components/shared/Swiper";
 import TextIcon from "@/components/shared/TextIcon";
-import { Media, MediaType } from "@/types/anilist";
+import { Media } from "@/types/anilist";
 import { createMediaDetailsUrl, isValidUrl, numberWithCommas } from "@/utils";
 import { convert, getDescription, getTitle } from "@/utils/data";
-import classNames from "classnames";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useRouter } from "next/router";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { AiFillHeart, AiFillPlayCircle } from "react-icons/ai";
-import { BsFillVolumeMuteFill, BsFillVolumeUpFill } from "react-icons/bs";
 import { MdTagFaces } from "react-icons/md";
-import YouTube from "react-youtube";
-import {} from "youtube-player/dist/types";
 import ListSwiperSkeleton from "../skeletons/ListSwiperSkeleton";
 import Description from "./Description";
 import Section from "./Section";
@@ -148,11 +138,6 @@ const MobileHomeBannerSkeleton = () => (
 
 const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data }) => {
   const [index, setIndex] = useState<number>(0);
-  const [showTrailer, setShowTrailer] = useState(false);
-  const [player, setPlayer] =
-    useState<ReturnType<YouTube["getInternalPlayer"]>>();
-  const [isMuted, setIsMuted] = useState(true);
-  const isRanOnce = useRef(false);
   const { locale } = useRouter();
 
   const activeSlide = useMemo(() => data[index], [data, index]);
@@ -166,22 +151,6 @@ const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data }) => {
     []
   );
 
-  const mute = useCallback(() => {
-    if (!player) return;
-
-    player.mute();
-
-    setIsMuted(true);
-  }, [player]);
-
-  const unMute = useCallback(() => {
-    if (!player) return;
-
-    player.unMute();
-
-    setIsMuted(false);
-  }, [player]);
-
   const title = useMemo(
     () => getTitle(activeSlide, locale),
     [activeSlide, locale]
@@ -191,80 +160,27 @@ const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data }) => {
     [activeSlide, locale]
   );
 
-  useEffect(() => {
-    setShowTrailer(false);
-  }, [activeSlide]);
-
   return (
     <React.Fragment>
       <div className="group relative w-full overflow-hidden md:h-[450px] xl:h-[500px] 2xl:h-[550px]">
-        <AnimatePresence>
-          {isValidUrl(activeSlide.bannerImage) && !showTrailer && (
-            <motion.div
-              variants={bannerVariants}
-              animate="animate"
-              exit="exit"
-              initial="initial"
-              className="h-0 w-full"
-              key={title}
-            >
-              <Image
-                src={activeSlide.bannerImage}
-                layout="fill"
-                objectFit="cover"
-                objectPosition="50% 35%"
-                alt={title}
-              />
-            </motion.div>
-          )}
-
-          {activeSlide?.type === MediaType.Anime &&
-            activeSlide?.trailer?.id &&
-            activeSlide.trailer?.site === "youtube" && (
-              <YouTube
-                videoId={activeSlide.trailer.id}
-                onReady={({ target }) => {
-                  setPlayer(target);
-                }}
-                onPlay={({ target }) => {
-                  setShowTrailer(true);
-
-                  if (!isRanOnce.current) {
-                    setIsMuted(true);
-                  } else if (!isMuted) {
-                    setIsMuted(false);
-
-                    target.unMute();
-                  }
-
-                  isRanOnce.current = true;
-                }}
-                onPause={() => {
-                  setShowTrailer(false);
-                }}
-                onEnd={() => {
-                  setShowTrailer(false);
-                }}
-                onError={() => {
-                  setShowTrailer(false);
-                }}
-                className="absolute inset-0 h-full w-full"
-                opts={{
-                  playerVars: {
-                    autoplay: 1,
-                    modestbranding: 1,
-                    controls: 0,
-                    mute: 1,
-                    origin: "https://kaguya.live",
-                  },
-                }}
-                containerClassName={classNames(
-                  "relative w-full overflow-hidden aspect-w-16 aspect-h-9 h-[300%] -top-[100%]",
-                  !showTrailer && "hidden"
-                )}
-              />
-            )}
-        </AnimatePresence>
+        {isValidUrl(activeSlide.bannerImage) && (
+          <motion.div
+            variants={bannerVariants}
+            animate="animate"
+            exit="exit"
+            initial="initial"
+            className="h-0 w-full"
+            key={title}
+          >
+            <Image
+              src={activeSlide.bannerImage}
+              layout="fill"
+              objectFit="cover"
+              objectPosition="50% 35%"
+              alt={title}
+            />
+          </motion.div>
+        )}
 
         <div className="banner__overlay absolute inset-0 flex flex-col justify-center px-4 md:px-12"></div>
 
@@ -314,16 +230,6 @@ const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data }) => {
             />
           </a>
         </Link>
-
-        {showTrailer && player && (
-          <CircleButton
-            LeftIcon={isMuted ? BsFillVolumeMuteFill : BsFillVolumeUpFill}
-            outline
-            className="absolute bottom-20 right-12"
-            iconClassName="w-6 h-6"
-            onClick={isMuted ? unMute : mute}
-          />
-        )}
 
         <div className="banner__overlay--down absolute bottom-0 h-16 w-full"></div>
       </div>
