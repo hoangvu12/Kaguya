@@ -51,6 +51,7 @@ const Banner = () => {
             src="/catfish.gif"
             className="w-full h-full"
             unoptimized
+            alt="Catfish banner"
           />
         </a>
       </div>
@@ -61,6 +62,7 @@ const Banner = () => {
         secondary
         iconClassName="w-8 h-8"
         LeftIcon={AiOutlineClose}
+        title="Close banner ad"
       />
     </div>
   ) : null;

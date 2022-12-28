@@ -227,6 +227,7 @@ const DesktopHomeBanner: React.FC<HomeBannerProps> = ({ data }) => {
               outline
               className="absolute left-2/3 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 md:block"
               iconClassName="w-16 h-16"
+              title="Watch now"
             />
           </a>
         </Link>
