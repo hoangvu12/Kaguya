@@ -29,14 +29,14 @@ const Interstitial = () => {
     setIsShow(true);
   }, []);
 
-  return (
+  return isShow ? (
     <Script
       async
       strategy="afterInteractive"
       data-cfasync="false"
       src="//arsnivyr.com/1?z=5547899"
     ></Script>
-  );
+  ) : null;
 };
 
 export default Interstitial;
