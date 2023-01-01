@@ -1,11 +1,10 @@
+import LocaleEpisodeSelector from "@/components/features/anime/Player/LocaleEpisodeSelector";
 import { WatchPlayerProps } from "@/components/features/anime/WatchPlayer";
+import EpisodesIcon from "@/components/icons/EpisodesIcon";
+import CircleButton from "@/components/shared/CircleButton";
+import Popup from "@/components/shared/Popup";
 import classNames from "classnames";
-import {
-  AnimatePresence,
-  motion,
-  useMotionValue,
-  Variants,
-} from "framer-motion";
+import { AnimatePresence, motion, useMotionValue } from "framer-motion";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import React, {
@@ -16,6 +15,9 @@ import React, {
   useState,
 } from "react";
 import { isMobile } from "react-device-detect";
+import { AiOutlineClose, AiOutlineExpandAlt } from "react-icons/ai";
+import { BsArrowLeft } from "react-icons/bs";
+import { toast } from "react-toastify";
 import { WatchPlayerContextProps } from "./WatchContext";
 
 const WatchPlayer = dynamic(
@@ -50,6 +52,7 @@ const GlobalPlayerContextProvider: React.FC = ({ children }) => {
   const constraintsRef = useRef<HTMLDivElement>(null);
   const [playerState, setPlayerState] = useState<PlayerProps>(null);
   const [playerProps, setPlayerProps] = useState<WatchPlayerContextProps>(null);
+  const alertRef = useRef<Boolean>(false);
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -81,6 +84,22 @@ const GlobalPlayerContextProvider: React.FC = ({ children }) => {
       height: 225,
     };
   }, [shouldPlayInBackground]);
+
+  const playerSource = useMemo(() => {
+    return playerProps?.sources[0];
+  }, [playerProps?.sources]);
+
+  const isEmbed = useMemo(() => {
+    return playerSource?.isEmbed;
+  }, [playerSource?.isEmbed]);
+
+  useEffect(() => {
+    if (isEmbed && !alertRef.current) {
+      toast.info("Embed videos might contain ads.");
+
+      alertRef.current = true;
+    }
+  }, [isEmbed]);
 
   return (
     <PlayerContext.Provider
@@ -118,7 +137,78 @@ const GlobalPlayerContextProvider: React.FC = ({ children }) => {
                 y,
               }}
             >
-              <ForwardRefPlayer {...playerState} />
+              {!isEmbed ? (
+                <ForwardRefPlayer {...playerState} />
+              ) : (
+                <React.Fragment>
+                  {!shouldPlayInBackground && (
+                    <BsArrowLeft
+                      className={classNames(
+                        "transition-al absolute top-10 left-10 h-10 w-10 cursor-pointer duration-300 hover:text-gray-200"
+                      )}
+                      onClick={router.back}
+                    />
+                  )}
+
+                  {!shouldPlayInBackground && playerProps?.anime?.id && (
+                    // I have no idea why Tailwind doesn't work, have to use inline styles instead.
+                    <div
+                      className="absolute"
+                      style={{ top: "2.5rem", right: "2.5rem" }}
+                    >
+                      <Popup
+                        reference={
+                          <EpisodesIcon
+                            className={classNames(
+                              "transition-al h-10 w-10 cursor-pointer duration-300 hover:text-gray-200"
+                            )}
+                          />
+                        }
+                        placement="top"
+                        type="click"
+                      >
+                        <div className="w-[70vw] overflow-hidden bg-background-900 p-4">
+                          <LocaleEpisodeSelector
+                            mediaId={playerProps.anime.id}
+                            episodes={playerProps.episodes}
+                            activeEpisode={playerProps.currentEpisode}
+                            episodeLinkProps={{ shallow: true, replace: true }}
+                          />
+                        </div>
+                      </Popup>
+                    </div>
+                  )}
+
+                  {shouldPlayInBackground && (
+                    <div className="flex items-center gap-2 absolute top-4 left-4">
+                      <div className="w-8 h-8">
+                        <CircleButton
+                          secondary
+                          iconClassName="w-6 h-6"
+                          className={"visible opacity-100"}
+                          onClick={() =>
+                            router.push(
+                              `/anime/watch/${playerProps?.anime?.id}/${playerProps?.currentEpisode?.sourceId}/${playerProps?.currentEpisode?.sourceEpisodeId}`
+                            )
+                          }
+                          LeftIcon={AiOutlineExpandAlt}
+                        />
+                      </div>
+                      <div className="w-8 h-8">
+                        <CircleButton
+                          secondary
+                          iconClassName="w-6 h-6"
+                          className={"visible opacity-100"}
+                          onClick={() => setPlayerState(null)}
+                          LeftIcon={AiOutlineClose}
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  <iframe className="w-full h-full" src={playerSource?.file} />
+                </React.Fragment>
+              )}
             </motion.div>
           </div>
         </AnimatePresence>

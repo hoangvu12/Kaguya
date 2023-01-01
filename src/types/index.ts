@@ -185,6 +185,7 @@ export type VideoSource = {
   useProxy?: boolean;
   usePublicProxy?: boolean;
   proxy?: Proxy;
+  isEmbed?: boolean;
 };
 
 export type ImageSource = {
