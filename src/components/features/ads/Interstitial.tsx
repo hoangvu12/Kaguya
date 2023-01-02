@@ -21,8 +21,8 @@ const Interstitial = () => {
     }
 
     nookies.set(null, INTERSTITIAL_COOKIE, String(shownTime + 1), {
-      // 3 hours
-      maxAge: 3 * 60 * 60,
+      // 30 minutes
+      maxAge: 30 * 60,
       path: "/",
     });
 

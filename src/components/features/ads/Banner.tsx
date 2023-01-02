@@ -2,6 +2,7 @@
 import CircleButton from "@/components/shared/CircleButton";
 import Image from "@/components/shared/Image";
 import classNames from "classnames";
+import Script from "next/script";
 import nookies from "nookies";
 import React, { useEffect, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
@@ -15,27 +16,10 @@ const Banner = () => {
     setIsShow(false);
   };
 
-  useEffect(() => {
-    const cookies = nookies.get(null, "");
-
-    const willShow = !cookies[BANNER_COOKIE];
-
-    setIsShow(willShow);
-
-    if (willShow) {
-      nookies.set(null, BANNER_COOKIE, "1", {
-        // 6 hours
-        maxAge: 60 * 60 * 6,
-        path: "/",
-      });
-    }
-  }, []);
-
   return isShow ? (
     <div
       className={classNames(
-        "z-[9000] banner-ads catfish fixed bottom-4 left-1/2 -translate-x-1/2",
-        !isShow && "hidden"
+        "z-[9000] banner-ads catfish fixed bottom-4 left-1/2 -translate-x-1/2"
       )}
     >
       <div className="relative w-[90vw] h-[50px] md:w-[728px] md:h-[90px]">
@@ -54,6 +38,28 @@ const Banner = () => {
             alt="Catfish banner"
           />
         </a>
+      </div>
+
+      <div className="w-[90vw] h-[50px] md:w-[728px] md:h-[90px]">
+        <script
+          type="text/javascript"
+          dangerouslySetInnerHTML={{
+            __html: `
+            atOptions = {
+              'key' : 'ca1799991e38f241a2d0c28782278d0e',
+              'format' : 'iframe',
+              'height' : 90,
+		          'width' : 728,
+              'params' : {}
+            };
+          `,
+          }}
+        />
+
+        <script
+          type="text/javascript"
+          src="https://www.effectivecreativeformat.com/ca1799991e38f241a2d0c28782278d0e/invoke.js"
+        />
       </div>
 
       <CircleButton

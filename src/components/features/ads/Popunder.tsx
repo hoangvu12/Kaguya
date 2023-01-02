@@ -16,7 +16,7 @@ const Popunder = () => {
 
       if (!cookies[POPUNDER_COOKIE]) {
         const pop = window.open(
-          "https://www.highcpmrevenuenetwork.com/s0dzhz43?key=00598fec8df5e116c292f9f8bc3a7ae9",
+          "https://www.highcpmrevenuenetwork.com/ix11ckfx?key=74c92179396e4e64485963798b0f0996",
           "kaguya_popunder"
         );
 
@@ -25,8 +25,8 @@ const Popunder = () => {
         window.focus();
 
         nookies.set(null, POPUNDER_COOKIE, "1", {
-          // 30 minutes
-          maxAge: 30 * 60,
+          // 3 hours
+          maxAge: 3 * 60 * 60,
           path: "/",
         });
       }
