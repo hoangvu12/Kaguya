@@ -16,7 +16,7 @@ const Popunder = () => {
 
       if (!cookies[POPUNDER_COOKIE]) {
         const pop = window.open(
-          "https://www.highcpmrevenuenetwork.com/ix11ckfx?key=74c92179396e4e64485963798b0f0996",
+          "https://augailou.com/4/5547870",
           "kaguya_popunder"
         );
 
