@@ -1,5 +1,6 @@
 import Banner from "@/components/features/ads/Banner";
 import Interstitial from "@/components/features/ads/Interstitial";
+import NativeFloater from "@/components/features/ads/NativeFloater";
 import Popunder from "@/components/features/ads/Popunder";
 import Preload from "@/components/features/ads/Preload";
 import BaseLayout from "@/components/layouts/BaseLayout";
@@ -101,6 +102,7 @@ function App({ Component, pageProps, router, err }: WorkaroundAppProps) {
       <Preload />
       <Interstitial />
       <Popunder />
+      <NativeFloater />
 
       <QueryClientProvider client={queryClient}>
         <AuthContextProvider>

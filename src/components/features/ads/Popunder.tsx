@@ -1,3 +1,4 @@
+import Script from "next/script";
 import nookies from "nookies";
 import { useEffect } from "react";
 
@@ -33,7 +34,12 @@ const Popunder = () => {
     });
   }, []);
 
-  return null;
+  return (
+    <Script
+      data-cfasync="false"
+      src="//dnks065sb0ww6.cloudfront.net/?ssknd=974102"
+    ></Script>
+  );
 };
 
 export default Popunder;
