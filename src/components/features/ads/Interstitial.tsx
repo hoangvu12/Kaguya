@@ -30,6 +30,7 @@ const Interstitial = () => {
   //     src="//arsnivyr.com/1?z=5547899"
   //   ></Script>
   // ) : null;
+  return null;
 };
 
 export default Interstitial;
