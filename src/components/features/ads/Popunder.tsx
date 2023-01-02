@@ -17,7 +17,7 @@ const Popunder = () => {
 
       if (!cookies[POPUNDER_COOKIE]) {
         const pop = window.open(
-          "https://expressalike.com/s0dzhz43?key=00598fec8df5e116c292f9f8bc3a7ae9",
+          "https://expressalike.com/ix11ckfx?key=74c92179396e4e64485963798b0f0996",
           "kaguya_popunder"
         );
 
