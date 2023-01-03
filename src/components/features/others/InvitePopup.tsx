@@ -14,6 +14,11 @@ const InvitePopup = () => {
 
   const handleClose = () => {
     setIsShow(false);
+
+    nookies.set(null, INVITE_COOKIE, "1", {
+      maxAge: NEVER_EXPIRE_TIME,
+      path: "/",
+    });
   };
 
   useEffect(() => {
@@ -21,14 +26,7 @@ const InvitePopup = () => {
 
     if (cookies?.[INVITE_COOKIE]) {
       setIsShow(false);
-
-      return;
     }
-
-    nookies.set(null, INVITE_COOKIE, "1", {
-      maxAge: NEVER_EXPIRE_TIME,
-      path: "/",
-    });
   }, []);
 
   return isShow ? (
