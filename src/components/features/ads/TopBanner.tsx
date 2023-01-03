@@ -1,34 +1,47 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useState } from "react";
 import nookies from "nookies";
-import Script from "next/script";
+import { useEffect, useState } from "react";
 
 const USER_COOKIE = "sb-access-token";
 
 const TopBanner = () => {
-  // const [isShow, setIsShow] = useState(true);
+  const [isShow, setIsShow] = useState(true);
 
-  // useEffect(() => {
-  //   const cookies = nookies.get(null);
+  useEffect(() => {
+    const cookies = nookies.get(null);
 
-  //   if (cookies?.[USER_COOKIE]) {
-  //     setIsShow(false);
+    if (cookies?.[USER_COOKIE]) {
+      setIsShow(false);
 
-  //     return;
-  //   }
-  // }, []);
+      return;
+    }
+  }, []);
 
-  // return isShow ? (
-  //   <React.Fragment>
-  //     <div id="zone13156172"></div>
+  return isShow ? (
+    <div className="w-full flex items-center justify-center">
+      <div className="my-8 w-[90vw] h-[50px] md:w-[728px] md:h-[90px]">
+        <script
+          type="text/javascript"
+          dangerouslySetInnerHTML={{
+            __html: `
+            atOptions = {
+              'key' : 'ca1799991e38f241a2d0c28782278d0e',
+              'format' : 'iframe',
+              'height' : 90,
+		          'width' : 728,
+              'params' : {}
+            };
+          `,
+          }}
+        />
 
-  //     <Script id="banner-pustimize-zone13156172">
-  //       {`
-  //         if (!window.PSTBanners) {(function() {var s = document.createElement("script");s.async = true;s.type = "text/javascript";s.src = 'https://api.trackpush.com/sdk/banner/v1.js?pid=QyD0YhFH-RJxSHM4XHVISQ';var n = document.getElementsByTagName("script")[0];n.parentNode.insertBefore(s, n);}());}var PSTBanners = window.PSTBanners || [];PSTBanners.push({zone:'zone13156172'});
-  //       `}
-  //     </Script>
-  //   </React.Fragment>
-  // ) : null;
+        <script
+          type="text/javascript"
+          src="https://www.effectivecreativeformat.com/ca1799991e38f241a2d0c28782278d0e/invoke.js"
+        />
+      </div>
+    </div>
+  ) : null;
 
   return null;
 };
