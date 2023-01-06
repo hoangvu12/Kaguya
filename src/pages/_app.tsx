@@ -14,7 +14,7 @@ import "@/styles/index.css";
 import { appWithTranslation } from "next-i18next";
 import nextI18nextConfig from "next-i18next.config";
 import { AppProps } from "next/app";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import Script from "next/script";
 import NProgress from "nprogress";
 import React, { useEffect, useState } from "react";
@@ -43,15 +43,29 @@ interface WorkaroundAppProps extends AppProps {
   err: any;
 }
 
+const noAdsRoutes = ["/anime/watch", "/manga/read"];
+
 function App({ Component, pageProps, router, err }: WorkaroundAppProps) {
   const [errorInfo, setErrorInfo] = useState<React.ErrorInfo>(null);
+  const [showAds, setShowAds] = useState(true);
 
   useEffect(() => {
+    const handleAdShowing = (url: string) => {
+      if (noAdsRoutes.some((route) => url.includes(route))) {
+        setShowAds(false);
+      } else {
+        setShowAds(true);
+      }
+    };
+
     const handleRouteChange = (url: string) => {
       pageview(url);
+      handleAdShowing(url);
     };
 
     router.events.on("routeChangeComplete", handleRouteChange);
+
+    handleAdShowing(router.asPath);
 
     return () => {
       router.events.off("routeChangeComplete", handleRouteChange);
@@ -100,11 +114,16 @@ function App({ Component, pageProps, router, err }: WorkaroundAppProps) {
         theme="dark"
       />
 
-      <Preload />
-      <Interstitial />
-      <Popunder />
-      <NativeFloater />
-      <InvitePopup />
+      {showAds && (
+        <React.Fragment>
+          <Preload />
+          <Interstitial />
+          <Popunder />
+          <NativeFloater />
+          <InvitePopup />
+          <Banner />
+        </React.Fragment>
+      )}
 
       <QueryClientProvider client={queryClient}>
         <AuthContextProvider>
@@ -131,8 +150,6 @@ function App({ Component, pageProps, router, err }: WorkaroundAppProps) {
 
         {process.env.NODE_ENV === "development" && <ReactQueryDevtools />}
       </QueryClientProvider>
-
-      <Banner />
     </React.Fragment>
   );
 }
