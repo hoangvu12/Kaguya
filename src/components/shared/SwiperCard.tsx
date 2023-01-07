@@ -112,10 +112,11 @@ const Card: React.FC<AnimeCardProps> = (props) => {
                 >
                   <Image
                     src={data.coverImage?.extraLarge}
-                    layout="fill"
                     objectFit="cover"
                     className="rounded-sm"
                     alt={title}
+                    width={193}
+                    height={290}
                   />
                 </motion.div>
               ) : (
@@ -128,14 +129,15 @@ const Card: React.FC<AnimeCardProps> = (props) => {
                   exit={{
                     opacity: 0,
                   }}
-                  className="absolute h-full w-full"
+                  className="overflow-hidden absolute h-full w-full"
                 >
                   <Image
                     src={data.bannerImage || data.coverImage?.extraLarge}
-                    layout="fill"
                     objectFit="cover"
                     className="rounded-sm"
                     alt={title}
+                    width={data.bannerImage ? 772 : 193}
+                    height={data.bannerImage ? 434 : 290}
                   />
 
                   <div className="absolute inset-0 bg-black/60"></div>
