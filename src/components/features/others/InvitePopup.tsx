@@ -10,7 +10,7 @@ const INVITE_COOKIE = "kaguya_discord_invite";
 const NEVER_EXPIRE_TIME = 2147483647;
 
 const InvitePopup = () => {
-  const [isShow, setIsShow] = useState(true);
+  const [isShow, setIsShow] = useState(false);
 
   const handleClose = () => {
     setIsShow(false);
@@ -24,8 +24,8 @@ const InvitePopup = () => {
   useEffect(() => {
     const cookies = nookies.get(null);
 
-    if (cookies?.[INVITE_COOKIE]) {
-      setIsShow(false);
+    if (!cookies?.[INVITE_COOKIE]) {
+      setIsShow(true);
     }
   }, []);
 

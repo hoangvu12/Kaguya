@@ -20,11 +20,6 @@ class MyDocument extends Document {
               `,
             }}
           />
-
-          <script
-            type="text/javascript"
-            src="//expressalike.com/ab/73/8d/ab738d9f9003841b413e28025e7ac496.js"
-          ></script>
         </Head>
         <body>
           <Main />
