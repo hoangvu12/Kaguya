@@ -2,9 +2,7 @@
 import CircleButton from "@/components/shared/CircleButton";
 import Image from "@/components/shared/Image";
 import classNames from "classnames";
-import Script from "next/script";
-import nookies from "nookies";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 
 const BANNER_COOKIE = "kaguya_banner";
@@ -38,28 +36,6 @@ const Banner = () => {
             alt="Catfish banner"
           />
         </a>
-      </div>
-
-      <div className="w-[90vw] h-[50px] md:w-[728px] md:h-[90px]">
-        <script
-          type="text/javascript"
-          dangerouslySetInnerHTML={{
-            __html: `
-            atOptions = {
-              'key' : 'ca1799991e38f241a2d0c28782278d0e',
-              'format' : 'iframe',
-              'height' : 90,
-		          'width' : 728,
-              'params' : {}
-            };
-          `,
-          }}
-        />
-
-        <script
-          type="text/javascript"
-          src="https://www.effectivecreativeformat.com/ca1799991e38f241a2d0c28782278d0e/invoke.js"
-        />
       </div>
 
       <CircleButton
