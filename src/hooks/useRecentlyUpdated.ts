@@ -6,9 +6,11 @@ import { isMobile } from "react-device-detect";
 import useAiringSchedules from "./useAiringSchedules";
 
 const useRecentlyUpdated = () => {
+  const airingAt_lesser = useMemo(() => dayjs().unix() - 1000, []);
+
   const { data, isLoading, ...rest } = useAiringSchedules({
     airingAt_greater: 0,
-    airingAt_lesser: dayjs().unix() - 1000,
+    airingAt_lesser,
     perPage: isMobile ? 5 : 15,
     sort: [AiringSort.Time_desc],
   });

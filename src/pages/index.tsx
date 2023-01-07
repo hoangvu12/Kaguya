@@ -1,9 +1,7 @@
 import TopBanner from "@/components/features/ads/TopBanner";
 import AnimeScheduling from "@/components/features/anime/AnimeScheduling";
-import RecommendedAnimeSection from "@/components/features/anime/RecommendedAnimeSection";
 import WatchedSection from "@/components/features/anime/WatchedSection";
 import CardSwiper from "@/components/shared/CardSwiper";
-import ColumnSection from "@/components/shared/ColumnSection";
 import GenreSwiper from "@/components/shared/GenreSwiper";
 import Head from "@/components/shared/Head";
 import HomeBanner from "@/components/shared/HomeBanner";
@@ -13,9 +11,8 @@ import ShouldWatch from "@/components/shared/ShouldWatch";
 import ListSwiperSkeleton from "@/components/skeletons/ListSwiperSkeleton";
 import useMedia from "@/hooks/useMedia";
 import useRecentlyUpdated from "@/hooks/useRecentlyUpdated";
-import useRecommendations from "@/hooks/useRecommendations";
 import { MediaSort, MediaStatus, MediaType } from "@/types/anilist";
-import { getSeason, randomElement } from "@/utils";
+import { randomElement } from "@/utils";
 import classNames from "classnames";
 import { NextPage } from "next";
 import { useTranslation } from "next-i18next";
@@ -28,7 +25,6 @@ interface HomeProps {
 }
 
 const Home: NextPage<HomeProps> = ({ isMobile, isDesktop }) => {
-  const currentSeason = useMemo(getSeason, []);
   const { t } = useTranslation();
 
   const { data: trendingAnime, isLoading: trendingLoading } = useMedia({
@@ -36,37 +32,6 @@ const Home: NextPage<HomeProps> = ({ isMobile, isDesktop }) => {
     sort: [MediaSort.Trending_desc, MediaSort.Popularity_desc],
     perPage: isMobile ? 5 : 10,
   });
-
-  const { data: popularSeason, isLoading: popularSeasonLoading } = useMedia({
-    type: MediaType.Anime,
-    sort: [MediaSort.Popularity_desc],
-    season: currentSeason.season,
-    seasonYear: currentSeason.year,
-    perPage: 5,
-  });
-
-  const { data: popularAllTime, isLoading: popularAllTimeLoading } = useMedia({
-    type: MediaType.Anime,
-    sort: [MediaSort.Popularity_desc],
-    perPage: 5,
-  });
-
-  const { data: favouriteSeason, isLoading: favouriteSeasonLoading } = useMedia(
-    {
-      type: MediaType.Anime,
-      sort: [MediaSort.Favourites_desc],
-      season: currentSeason.season,
-      seasonYear: currentSeason.year,
-      perPage: 5,
-    }
-  );
-
-  const { data: favouriteAllTime, isLoading: favouriteAllTimeLoading } =
-    useMedia({
-      type: MediaType.Anime,
-      sort: [MediaSort.Favourites_desc],
-      perPage: 5,
-    });
 
   const { data: recentlyUpdated, isLoading: recentlyUpdatedLoading } =
     useRecentlyUpdated();
@@ -82,23 +47,11 @@ const Home: NextPage<HomeProps> = ({ isMobile, isDesktop }) => {
     return randomElement(trendingAnime || []);
   }, [trendingAnime]);
 
-  const { data: recommendationsAnime } = useRecommendations(
-    {
-      mediaId: randomTrendingAnime?.id,
-    },
-    { enabled: !!randomTrendingAnime }
-  );
-
-  const randomAnime = useMemo(
-    () => randomElement(recommendationsAnime || [])?.media,
-    [recommendationsAnime]
-  );
-
   return (
     <React.Fragment>
       <Head
-        title="Trang chủ (Anime) - Kaguya"
-        description="Xem anime hay tại Kaguya, cập nhật nhanh chóng, không quảng cáo và nhiều tính năng thú vị."
+        title="Home (Anime) - Kaguya"
+        description="Watch Anime Online for Free in High Quality and Fast Streaming, Watch and Download Anime Free on Kaguya"
       />
 
       <div className="pb-8">
@@ -112,40 +65,6 @@ const Home: NextPage<HomeProps> = ({ isMobile, isDesktop }) => {
 
         <div className="space-y-8">
           <WatchedSection />
-          <RecommendedAnimeSection />
-
-          <Section
-            // For some reason, this className doesn't render on server side, so we need to render it on client-side
-            clientOnly
-            className="md:space-between flex flex-col items-center space-y-4 space-x-0 md:flex-row md:space-y-0 md:space-x-4"
-          >
-            <ColumnSection
-              title={t("common:most_popular_season")}
-              data={popularSeason}
-              viewMoreHref={`/browse?sort=popularity&type=anime&season=${currentSeason.season}&seasonYear=${currentSeason.year}`}
-              isLoading={popularSeasonLoading}
-            />
-            <ColumnSection
-              title={t("common:most_popular")}
-              data={popularAllTime}
-              viewMoreHref="/browse?sort=popularity&type=anime"
-              isLoading={popularAllTimeLoading}
-            />
-            <ColumnSection
-              title={t("common:most_favourite_season")}
-              data={favouriteSeason}
-              viewMoreHref={`/browse?sort=favourites&type=anime&season=${currentSeason.season}&seasonYear=${currentSeason.year}`}
-              isLoading={favouriteSeasonLoading}
-            />
-            <ColumnSection
-              title={t("common:most_favourite")}
-              data={favouriteAllTime}
-              viewMoreHref="/browse?sort=favourites&type=anime"
-              isLoading={favouriteAllTimeLoading}
-            />
-          </Section>
-
-          <NewestComments type={MediaType.Anime} />
 
           {recentlyUpdatedLoading ? (
             <ListSwiperSkeleton />
@@ -163,6 +82,8 @@ const Home: NextPage<HomeProps> = ({ isMobile, isDesktop }) => {
             </Section>
           )}
 
+          <NewestComments type={MediaType.Anime} />
+
           <div
             className={classNames(
               "flex gap-8",
@@ -173,8 +94,11 @@ const Home: NextPage<HomeProps> = ({ isMobile, isDesktop }) => {
               title={t("anime_home:should_watch_today")}
               className="w-full md:w-[80%] md:!pr-0"
             >
-              {randomAnime && (
-                <ShouldWatch data={randomAnime} isLoading={!randomAnime} />
+              {randomTrendingAnime && (
+                <ShouldWatch
+                  data={randomTrendingAnime}
+                  isLoading={!randomTrendingAnime}
+                />
               )}
             </Section>
 

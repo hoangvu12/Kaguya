@@ -2,7 +2,6 @@ import TopBanner from "@/components/features/ads/TopBanner";
 import ReadSection from "@/components/features/manga/ReadSection";
 import RecommendedMangaSection from "@/components/features/manga/RecommendedMangaSection";
 import CardSwiper from "@/components/shared/CardSwiper";
-import ColumnSection from "@/components/shared/ColumnSection";
 import GenreSwiper from "@/components/shared/GenreSwiper";
 import Head from "@/components/shared/Head";
 import HomeBanner from "@/components/shared/HomeBanner";
@@ -11,7 +10,6 @@ import Section from "@/components/shared/Section";
 import ShouldWatch from "@/components/shared/ShouldWatch";
 import ListSwiperSkeleton from "@/components/skeletons/ListSwiperSkeleton";
 import useMedia from "@/hooks/useMedia";
-import useRecommendations from "@/hooks/useRecommendations";
 import { MediaSort, MediaStatus, MediaType } from "@/types/anilist";
 import { randomElement } from "@/utils";
 import classNames from "classnames";
@@ -34,18 +32,6 @@ const Home: NextPage<HomeProps> = ({ isMobile, isDesktop }) => {
     perPage: isMobile ? 5 : 10,
   });
 
-  const { data: popularManga, isLoading: popularMangaLoading } = useMedia({
-    type: MediaType.Manga,
-    sort: [MediaSort.Popularity_desc],
-    perPage: 5,
-  });
-
-  const { data: favouriteManga, isLoading: favouriteMangaLoading } = useMedia({
-    type: MediaType.Manga,
-    sort: [MediaSort.Favourites_desc],
-    perPage: 5,
-  });
-
   const { data: recentlyUpdated, isLoading: recentlyUpdatedLoading } = useMedia(
     {
       type: MediaType.Manga,
@@ -66,23 +52,11 @@ const Home: NextPage<HomeProps> = ({ isMobile, isDesktop }) => {
     return randomElement(trendingManga || []);
   }, [trendingManga]);
 
-  const { data: recommendationsManga } = useRecommendations(
-    {
-      mediaId: randomTrendingManga?.id,
-    },
-    { enabled: !!randomTrendingManga }
-  );
-
-  const randomManga = useMemo(
-    () => randomElement(recommendationsManga || [])?.media,
-    [recommendationsManga]
-  );
-
   return (
     <React.Fragment>
       <Head
-        title="Trang chủ (Manga) - Kaguya"
-        description="Đọc truyện manga hay tại Kaguya, cập nhật nhanh chóng, không quảng cáo và nhiều tính năng thú vị."
+        title="Home (Manga) - Kaguya"
+        description="Read Manga Online for Free in High Quality and Fast Updating, Read Manga Online, Absolutely Free and Updated Daily on Kaguya"
       />
 
       <div className="pb-8">
@@ -97,27 +71,6 @@ const Home: NextPage<HomeProps> = ({ isMobile, isDesktop }) => {
         <div className="space-y-8">
           <ReadSection />
           <RecommendedMangaSection />
-
-          <Section
-            // For some reason, this className doesn't render on server side, so we need to render it on client-side
-            clientOnly
-            className="md:space-between flex flex-col items-center space-y-4 space-x-0 md:flex-row md:space-y-0 md:space-x-4"
-          >
-            <ColumnSection
-              title={t("common:most_popular")}
-              data={popularManga}
-              viewMoreHref="/browse?sort=popularity&type=manga"
-              isLoading={popularMangaLoading}
-            />
-            <ColumnSection
-              title={t("common:most_favourite")}
-              data={favouriteManga}
-              viewMoreHref="/browse?sort=favourites&type=manga"
-              isLoading={favouriteMangaLoading}
-            />
-          </Section>
-
-          <NewestComments type={MediaType.Manga} />
 
           {recentlyUpdatedLoading ? (
             <ListSwiperSkeleton />
@@ -135,6 +88,8 @@ const Home: NextPage<HomeProps> = ({ isMobile, isDesktop }) => {
             </Section>
           )}
 
+          <NewestComments type={MediaType.Manga} />
+
           <div
             className={classNames(
               "flex gap-8",
@@ -145,8 +100,11 @@ const Home: NextPage<HomeProps> = ({ isMobile, isDesktop }) => {
               title={t("manga_home:should_read_today")}
               className="w-full md:w-[80%] md:!pr-0"
             >
-              {randomManga && (
-                <ShouldWatch data={randomManga} isLoading={!randomManga} />
+              {randomTrendingManga && (
+                <ShouldWatch
+                  data={randomTrendingManga}
+                  isLoading={!randomTrendingManga}
+                />
               )}
             </Section>
             <Section

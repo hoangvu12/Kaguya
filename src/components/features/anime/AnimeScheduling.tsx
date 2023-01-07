@@ -9,26 +9,36 @@ import { AiringSchedule, AiringSort } from "@/types/anilist";
 import { removeArrayOfObjectDup } from "@/utils";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 
-interface AnimeSchedulingProps {}
-
-const AnimeScheduling: React.FC<AnimeSchedulingProps> = () => {
+const AnimeScheduling = () => {
   const { t } = useTranslation("anime_home");
   const { DAYSOFWEEK } = useConstantTranslation();
 
-  const today = dayjs();
-  const todayIndex = today.day();
+  const today = useMemo(() => dayjs(), []);
+  const todayIndex = useMemo(() => today.day(), []);
 
   const [selectedTab, setSelectedTab] = useState(todayIndex);
 
-  const selectedDayOfWeek = dayjs().day(selectedTab);
+  const selectedDayOfWeek = useMemo(
+    () => dayjs().day(selectedTab),
+    [selectedTab]
+  );
+
+  const airingAt_greater = useMemo(
+    () => selectedDayOfWeek.startOf("day").unix(),
+    [selectedDayOfWeek]
+  );
+  const airingAt_lesser = useMemo(
+    () => selectedDayOfWeek.endOf("day").unix(),
+    [selectedDayOfWeek]
+  );
 
   const { data: schedules, isLoading: schedulesLoading } = useAiringSchedules({
-    airingAt_greater: selectedDayOfWeek.startOf("day").unix(),
-    airingAt_lesser: selectedDayOfWeek.endOf("day").unix(),
+    airingAt_greater,
+    airingAt_lesser,
     perPage: isMobile ? 10 : 20,
     sort: [AiringSort.Time_desc],
   });
@@ -117,4 +127,4 @@ const AnimeScheduling: React.FC<AnimeSchedulingProps> = () => {
   );
 };
 
-export default AnimeScheduling;
+export default React.memo(AnimeScheduling);
