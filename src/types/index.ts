@@ -12,6 +12,11 @@ export interface MediaTitle extends Partial<ALMediaTitle> {
 export type AdditionalUser = User & {
   authRole: string;
   isVerified: boolean;
+  name: string;
+  avatarUrl: string;
+  bannerUrl: string;
+  bio: string;
+  username: string;
 };
 
 export type MediaDescription = Record<string, string>;
