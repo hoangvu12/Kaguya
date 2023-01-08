@@ -54,6 +54,10 @@ trailer {
   id
   site 
 }
+nextAiringEpisode {
+  airingAt
+  episode
+}
 `;
 
 export const mediaQuery = (fields: string = mediaDefaultFields) => `

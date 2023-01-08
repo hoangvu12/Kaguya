@@ -23,7 +23,6 @@ import { AiFillHeart, AiFillPlayCircle } from "react-icons/ai";
 import { BsFillVolumeMuteFill, BsFillVolumeUpFill } from "react-icons/bs";
 import { MdTagFaces } from "react-icons/md";
 import YouTube from "react-youtube";
-import {} from "youtube-player/dist/types";
 import ListSwiperSkeleton from "../skeletons/ListSwiperSkeleton";
 import Description from "./Description";
 import Section from "./Section";
