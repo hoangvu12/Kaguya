@@ -5,14 +5,15 @@ import useConstantTranslation from "@/hooks/useConstantTranslation";
 import { MediaType } from "@/types/anilist";
 import classNames from "classnames";
 import React from "react";
-import { isMobile } from "react-device-detect";
 
 interface GenresSwiperProps extends SwiperProps {
   type?: MediaType.Anime | MediaType.Manga;
+  isMobile: boolean;
 }
 
 const GenreSwiper: React.FC<GenresSwiperProps> = ({
   type = MediaType.Anime,
+  isMobile,
   ...props
 }) => {
   const { GENRES } = useConstantTranslation();
