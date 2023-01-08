@@ -3,7 +3,7 @@ import { Attachment, FileInfo } from "@/services/upload";
 import { SupabaseQueryFunction, SupabaseQueryOptions } from "@/utils/supabase";
 import { User } from "@supabase/gotrue-js";
 import { QueryKey } from "react-query";
-import { Media, MediaTitle as ALMediaTitle } from "./anilist";
+import { Media, MediaTitle as ALMediaTitle, MediaType } from "./anilist";
 
 export interface MediaTitle extends Partial<ALMediaTitle> {
   [key: string]: string;
@@ -262,7 +262,7 @@ export type Noop = () => void;
 export type WatchStatus = "WATCHING" | "COMPLETED" | "PLANNING";
 export type ReadStatus = "READING" | "COMPLETED" | "PLANNING";
 
-export type SourceStatus<T> = (T extends "anime"
+export type SourceStatus<T> = (T extends MediaType.Anime
   ? {
       status?: WatchStatus;
       mediaId?: number;
@@ -273,7 +273,7 @@ export type SourceStatus<T> = (T extends "anime"
       mediaId?: number;
       media?: Media;
     }) & {
-  user_id?: number;
+  userId?: number;
   user?: User;
 };
 

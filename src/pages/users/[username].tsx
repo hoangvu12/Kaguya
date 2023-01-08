@@ -8,15 +8,24 @@ import Section from "@/components/shared/Section";
 import { useUser } from "@/contexts/AuthContext";
 import useUserProfile from "@/hooks/useUserProfile";
 import supabaseClient from "@/lib/supabase";
-import { AdditionalUser } from "@/types";
+import { AdditionalUser, SourceStatus } from "@/types";
 import { GetServerSideProps, NextPage } from "next";
 import React, { useMemo } from "react";
+import WatchList from "@/components/features/users/WatchList";
+import { MediaType } from "@/types/anilist";
+import ReadList from "@/components/features/users/ReadList";
 
 interface UserPageProps {
   user: AdditionalUser;
+  watchStatus: SourceStatus<MediaType.Anime>[];
+  readStatus: SourceStatus<MediaType.Manga>[];
 }
 
-const UserPage: NextPage<UserPageProps> = ({ user }) => {
+const UserPage: NextPage<UserPageProps> = ({
+  user,
+  watchStatus,
+  readStatus,
+}) => {
   const currentUser = useUser();
   const { data: userProfile } = useUserProfile(user);
 
@@ -87,9 +96,13 @@ const UserPage: NextPage<UserPageProps> = ({ user }) => {
           )}
         </Section>
 
-        {/* <Section title="Watch list" className="w-full">
-        <WatchList />
-      </Section> */}
+        <Section title="Watch list" className="mt-8 w-full">
+          <WatchList user={user} sourceStatus={watchStatus} />
+        </Section>
+
+        <Section title="Read list" className="mt-8 w-full">
+          <ReadList user={user} sourceStatus={readStatus} />
+        </Section>
       </div>
     </React.Fragment>
   );
@@ -110,9 +123,26 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
+  const watchStatusPromise = supabaseClient
+    .from<SourceStatus<MediaType.Anime>>("kaguya_watch_status")
+    .select("mediaId, userId, status, created_at")
+    .eq("userId", user.id);
+
+  const readStatusPromise = supabaseClient
+    .from<SourceStatus<MediaType.Manga>>("kaguya_read_status")
+    .select("mediaId, userId, status, created_at")
+    .eq("userId", user.id);
+
+  const [{ data: watchStatus }, { data: readStatus }] = await Promise.all([
+    watchStatusPromise,
+    readStatusPromise,
+  ]);
+
   return {
     props: {
       user,
+      watchStatus,
+      readStatus,
     },
   };
 };
