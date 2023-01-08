@@ -22,15 +22,13 @@ const HeaderProfile = () => {
       placement="bottom-start"
       offset={[3.5, 10]}
       showArrow
-      reference={<Avatar src={user.user_metadata.avatar_url} />}
+      reference={<Avatar src={user.avatarUrl} />}
     >
       <div className="flex items-center mb-8 space-x-2">
-        <Avatar src={user.user_metadata.avatar_url} className="!w-14 !h-14" />
+        <Avatar src={user.avatarUrl} className="!w-14 !h-14" />
 
         <div>
-          <p className="font-semibold">
-            {user.user_metadata.full_name || user.user_metadata.name}
-          </p>
+          <p className="font-semibold">{user.name}</p>
           <p className="text-gray-300 text-sm">{t("user")}</p>
         </div>
       </div>

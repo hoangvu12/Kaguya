@@ -61,10 +61,7 @@ const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
           </div>
 
           <div className="flex gap-2">
-            <Avatar
-              className="shrink-0"
-              src={room.hostUser?.user_metadata?.avatar_url}
-            />
+            <Avatar className="shrink-0" src={room.hostUser?.avatarUrl} />
 
             <div>
               {!room.title ? (
@@ -88,7 +85,7 @@ const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
 
               <DotList className="text-sm w-full">
                 <span className="font-medium text-gray-300">
-                  {room.hostUser?.user_metadata?.name}
+                  {room.hostUser?.name}
                 </span>
                 <span className="text-gray-400">
                   {dayjs(new Date(room.created_at), { locale }).fromNow()}

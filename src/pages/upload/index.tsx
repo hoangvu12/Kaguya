@@ -34,7 +34,7 @@ const UploadPage: NextPage<UploadPageProps> = ({
 }) => {
   return (
     <UploadContainer
-      title={`Hi, ${user.user_metadata.full_name || user.user_metadata.name}!`}
+      title={`Hi, ${user.name}!`}
       isVerified={user.isVerified}
       className="space-y-8"
     >

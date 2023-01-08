@@ -2,7 +2,6 @@ import { Comment } from "@/types";
 import { MediaType } from "@/types/anilist";
 import { useSupabaseQuery } from "@/utils/supabase";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import { useUser } from "@/contexts/AuthContext";
 import { useQueryClient } from "react-query";
 
 interface UseCommentsQuery {
