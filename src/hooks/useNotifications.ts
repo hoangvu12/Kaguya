@@ -12,7 +12,7 @@ const useNotifications = () => {
       return supabaseClient
         .from<Notification>("kaguya_notifications")
         .select(
-          "*, sender:senderId(user_metadata), notificationUsers:kaguya_notification_users(*)"
+          "*, sender:senderId(*), notificationUsers:kaguya_notification_users(*)"
         )
         .eq("receiverId", user.id)
         .order("created_at", { ascending: false })

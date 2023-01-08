@@ -1,15 +1,15 @@
-import supabase from "@/lib/supabase";
-import { User } from "@supabase/gotrue-js";
-import React, { useEffect, useState } from "react";
+import { default as supabase, default as supabaseClient } from "@/lib/supabase";
+import { AdditionalUser } from "@/types";
 import nookies from "nookies";
+import React, { useEffect, useState } from "react";
 
-const AuthContext = React.createContext(supabase.auth.user());
+const AuthContext = React.createContext<AdditionalUser>(null);
 
 const accessTokenCookieName = "sb-access-token";
 const refreshTokenCookieName = "sb-refresh-token";
 
 export const AuthContextProvider: React.FC<{}> = ({ children }) => {
-  const [user, setUser] = useState<User>(supabase.auth.user());
+  const [user, setUser] = useState<AdditionalUser>(null);
 
   // Check if user session is invalid
   useEffect(() => {
@@ -26,14 +26,8 @@ export const AuthContextProvider: React.FC<{}> = ({ children }) => {
 
   // Set cookies on auth state change
   useEffect(() => {
-    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data } = supabase.auth.onAuthStateChange(async (event, session) => {
       const user = supabase.auth.user();
-
-      if (event === "SIGNED_OUT") {
-        setUser(null);
-      } else if (event === "SIGNED_IN") {
-        setUser(user);
-      }
 
       if (!session) {
         setUser(null);
@@ -42,6 +36,18 @@ export const AuthContextProvider: React.FC<{}> = ({ children }) => {
         nookies.destroy(null, refreshTokenCookieName);
 
         return;
+      }
+
+      if (event === "SIGNED_OUT") {
+        setUser(null);
+      } else if (event === "SIGNED_IN") {
+        const { data: profileUser } = await supabaseClient
+          .from<AdditionalUser>("users")
+          .select("*")
+          .eq("id", user.id)
+          .single();
+
+        setUser(profileUser);
       }
 
       const token = session.access_token;

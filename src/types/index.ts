@@ -12,6 +12,11 @@ export interface MediaTitle extends Partial<ALMediaTitle> {
 export type AdditionalUser = User & {
   authRole: string;
   isVerified: boolean;
+  avatarUrl: string;
+  bannerUrl: string;
+  name: string;
+  username: string;
+  bio: string;
 };
 
 export type MediaDescription = Record<string, string>;
@@ -220,7 +225,7 @@ export type Translation = {
 
 export type Room = {
   id: number;
-  hostUser: User;
+  hostUser: AdditionalUser;
   hostUserId: string;
   mediaId: number;
   media: Media;
@@ -327,7 +332,7 @@ export type NotificationUser = {
 export type Notification = {
   id: number;
   senderId: string;
-  sender: User;
+  sender: AdditionalUser;
   receiverId: string;
   entityId: string;
   parentEntityId: string;

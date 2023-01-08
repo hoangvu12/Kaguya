@@ -53,10 +53,7 @@ const MediaBar = () => {
         </h1>
 
         <div className="flex flex-col gap-2">
-          <Avatar
-            className="!h-16 !w-16"
-            src={room.hostUser.user_metadata.avatar_url}
-          />
+          <Avatar className="!h-16 !w-16" src={room.hostUser.avatarUrl} />
 
           <div className="space-y-1">
             <h1 className="text-xl font-semibold line-clamp-1 md:line-clamp-none">
@@ -65,8 +62,7 @@ const MediaBar = () => {
 
             <DotList>
               <span className="text-lg font-medium text-gray-200">
-                {room.hostUser.user_metadata.full_name ||
-                  room.hostUser.user_metadata.name}
+                {room.hostUser.name}
               </span>
 
               <span className="text-sm text-gray-300">

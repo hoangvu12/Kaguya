@@ -56,8 +56,8 @@ const useCreateComment = () => {
               id: randomString(9),
               replies_count: 0,
               user: {
-                avatar: user?.user_metadata.avatar_url,
-                name: user?.user_metadata.full_name || user?.user_metadata.name,
+                avatar: user?.avatarUrl,
+                name: user?.name,
                 id: user?.id,
               },
               reactions_metadata: [],
