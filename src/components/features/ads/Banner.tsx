@@ -26,6 +26,7 @@ const Banner = () => {
             "https://affpa.top/L?tag=d_1947233m_97c__[]general[]_d85116_l87833_catfish&site=1947233&ad=97&r=line/Football/"
           }
           target="_blank"
+          rel="noreferrer"
         >
           <Image
             layout="fill"

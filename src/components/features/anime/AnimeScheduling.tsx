@@ -18,7 +18,7 @@ const AnimeScheduling = () => {
   const { DAYSOFWEEK } = useConstantTranslation();
 
   const today = useMemo(() => dayjs(), []);
-  const todayIndex = useMemo(() => today.day(), []);
+  const todayIndex = useMemo(() => today.day(), [today]);
 
   const [selectedTab, setSelectedTab] = useState(todayIndex);
 

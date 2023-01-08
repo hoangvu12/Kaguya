@@ -70,7 +70,7 @@ function App({ Component, pageProps, router, err }: WorkaroundAppProps) {
     return () => {
       router.events.off("routeChangeComplete", handleRouteChange);
     };
-  }, [router.events]);
+  }, [router.asPath, router.events]);
 
   const getLayout =
     // @ts-ignore

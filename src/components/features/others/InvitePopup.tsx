@@ -45,6 +45,7 @@ const InvitePopup = () => {
                 layout="fill"
                 className="w-full h-full object-cover"
                 unoptimized
+                alt="invite hero"
               />
 
               <div className="bg-gradient-to-b from-transparent via-background-700/60 to-background-700 absolute bottom-0 h-12 w-full"></div>
@@ -53,15 +54,21 @@ const InvitePopup = () => {
 
             <div className="flex flex-col justify-between p-4">
               <div>
-                <h1 className="text-4xl font-bold mb-4">Don't miss out!</h1>
+                <h1 className="text-4xl font-bold mb-4">
+                  Don&apos;t miss out!
+                </h1>
                 <p className="text-lg font-medium mb-8">
                   Need help? <b>Join</b> our Discord server now to get your
                   problems done. We are waiting for you!
                 </p>
               </div>
               <div className="w-full min-h-[5rem]">
-                <a href={DISCORD_URL} target="_blank">
-                  <img src="https://discordapp.com/api/guilds/906042713688928257/widget.png?style=banner2" />
+                <a href={DISCORD_URL} target="_blank" rel="noreferrer">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    alt="invite link"
+                    src="https://discordapp.com/api/guilds/906042713688928257/widget.png?style=banner2"
+                  />
                 </a>
               </div>
             </div>
