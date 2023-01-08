@@ -8,7 +8,7 @@ import { useTranslation } from "next-i18next";
 import React from "react";
 import { HiOutlineLogout } from "react-icons/hi";
 import Link from "@/components/shared/Link";
-import { AiOutlineUpload } from "react-icons/ai";
+import { AiOutlineUpload, AiOutlineUser } from "react-icons/ai";
 
 const HeaderProfile = () => {
   const user = useUser();
@@ -23,6 +23,7 @@ const HeaderProfile = () => {
       offset={[3.5, 10]}
       showArrow
       reference={<Avatar src={user.avatarUrl} />}
+      className="min-w-[14rem] rounded-lg"
     >
       <div className="flex items-center mb-8 space-x-2">
         <Avatar src={user.avatarUrl} className="!w-14 !h-14" />
@@ -34,8 +35,18 @@ const HeaderProfile = () => {
       </div>
 
       <div className="space-y-2">
+        {user && (
+          <Link href={`/users/${user.username}`}>
+            <a className="block">
+              <Button className="w-full" secondary>
+                <TextIcon LeftIcon={AiOutlineUser}>Profile</TextIcon>
+              </Button>
+            </a>
+          </Link>
+        )}
+
         <Link href="/upload">
-          <a>
+          <a className="block">
             <Button className="w-full" secondary>
               <TextIcon LeftIcon={AiOutlineUpload}>Upload</TextIcon>
             </Button>
