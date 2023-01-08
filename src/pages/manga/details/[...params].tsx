@@ -79,8 +79,8 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
 
               {user && !isMobile && (
                 <div className="flex items-center space-x-1">
-                  <SourceStatus type="manga" source={manga} />
-                  <NotificationButton type="manga" source={manga} />
+                  <SourceStatus type={MediaType.Manga} source={manga} />
+                  <NotificationButton type={MediaType.Manga} source={manga} />
                 </div>
               )}
             </div>
@@ -181,7 +181,9 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
           />
 
           <div className="flex md:hidden items-center space-x-2 mb-4">
-            {user && isMobile && <SourceStatus type="manga" source={manga} />}
+            {user && isMobile && (
+              <SourceStatus type={MediaType.Manga} source={manga} />
+            )}
 
             <Link href={`/manga/read/${manga.id}`}>
               <a className={classNames(!user && "flex-1")}>
@@ -202,7 +204,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
             </Link>
 
             {user && isMobile && (
-              <NotificationButton type="manga" source={manga} />
+              <NotificationButton type={MediaType.Manga} source={manga} />
             )}
 
             <Popup

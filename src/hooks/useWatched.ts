@@ -3,9 +3,8 @@ import supabaseClient from "@/lib/supabase";
 
 import { getMedia } from "@/services/anilist";
 import { Watched } from "@/types";
-import { fulfilledPromises } from "@/utils";
-import { useQuery } from "react-query";
 import { isMobile } from "react-device-detect";
+import { useQuery } from "react-query";
 
 const useWatched = () => {
   const user = useUser();

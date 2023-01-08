@@ -1,19 +1,18 @@
 import Image from "@/components/shared/Image";
+import Link from "@/components/shared/Link";
 import Swiper, { SwiperProps, SwiperSlide } from "@/components/shared/Swiper";
 import useConstantTranslation from "@/hooks/useConstantTranslation";
-import useDevice from "@/hooks/useDevice";
+import { MediaType } from "@/types/anilist";
 import classNames from "classnames";
-import Link from "@/components/shared/Link";
 import React from "react";
+import { isMobile } from "react-device-detect";
 
 interface GenresSwiperProps extends SwiperProps {
-  type?: "anime" | "manga";
-  isMobile: boolean;
+  type?: MediaType.Anime | MediaType.Manga;
 }
 
 const GenreSwiper: React.FC<GenresSwiperProps> = ({
-  type = "anime",
-  isMobile,
+  type = MediaType.Anime,
   ...props
 }) => {
   const { GENRES } = useConstantTranslation();
