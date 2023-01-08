@@ -7,21 +7,21 @@ const POPUNDER_COOKIE = "kaguya_popunder";
 const USER_COOKIE = "sb-access-token";
 
 const Popunder = () => {
-  const [isShow, setIsShow] = useState(false);
+  // const [isShow, setIsShow] = useState(false);
 
-  useEffect(() => {
-    const cookies = nookies.get(null);
+  // useEffect(() => {
+  //   const cookies = nookies.get(null);
 
-    if (cookies[USER_COOKIE]) return;
+  //   if (cookies[USER_COOKIE]) return;
 
-    nookies.set(null, POPUNDER_COOKIE, "1", {
-      // 1 hour
-      maxAge: 1 * 60 * 60,
-      path: "/",
-    });
+  //   nookies.set(null, POPUNDER_COOKIE, "1", {
+  //     // 1 hour
+  //     maxAge: 1 * 60 * 60,
+  //     path: "/",
+  //   });
 
-    setIsShow(true);
-  }, []);
+  //   setIsShow(true);
+  // }, []);
 
   // useEffect(() => {
   //   window.addEventListener("click", () => {
@@ -50,14 +50,19 @@ const Popunder = () => {
   //   });
   // }, []);
 
-  return isShow ? (
-    <Script
-      data-cfasync="false"
-      src="//dnks065sb0ww6.cloudfront.net/?ssknd=974102"
-    ></Script>
-  ) : null;
+  // return isShow ? (
+  //   <Script
+  //     data-cfasync="false"
+  //     src="//dnks065sb0ww6.cloudfront.net/?ssknd=974102"
+  //   ></Script>
+  // ) : null;
 
-  return null;
+  return (
+    <Script
+      type="text/javascript"
+      src="https://popunderstar.com/integration/lib.js?w=1447&frequency=1800"
+    ></Script>
+  );
 };
 
 export default Popunder;
