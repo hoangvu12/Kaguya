@@ -40,15 +40,15 @@ export const AuthContextProvider: React.FC<{}> = ({ children }) => {
 
       if (event === "SIGNED_OUT") {
         setUser(null);
-      } else if (event === "SIGNED_IN") {
-        const { data: profileUser } = await supabaseClient
-          .from<AdditionalUser>("users")
-          .select("*")
-          .eq("id", user.id)
-          .single();
-
-        setUser(profileUser);
       }
+
+      const { data: profileUser } = await supabaseClient
+        .from<AdditionalUser>("users")
+        .select("*")
+        .eq("id", user?.id)
+        .single();
+
+      setUser(profileUser);
 
       const token = session.access_token;
       const refreshToken = session.refresh_token;
