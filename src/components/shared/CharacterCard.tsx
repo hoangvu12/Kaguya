@@ -17,8 +17,7 @@ const CharacterCard: React.FC<CharacterCardProps> = ({ character }) => {
             <Image
               src={character.image.large}
               alt={character.name.userPreferred}
-              width={193}
-              height={290}
+              layout="fill"
               objectFit="cover"
             />
           </div>

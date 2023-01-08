@@ -17,9 +17,8 @@ const VACard: React.FC<VACardProps> = ({ voiceActor }) => {
             <Image
               src={voiceActor.image.large}
               alt={voiceActor.name.userPreferred}
-              width={193}
-              height={290}
               objectFit="cover"
+              layout="fill"
             />
           </div>
           <p>{voiceActor.name.userPreferred}</p>

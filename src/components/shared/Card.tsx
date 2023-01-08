@@ -92,8 +92,7 @@ const Card: React.FC<CardProps> = (props) => {
               >
                 <Image
                   src={data.coverImage?.extraLarge}
-                  width={193}
-                  height={290}
+                  layout="fill"
                   objectFit="cover"
                   className="rounded-sm"
                   alt={title}
@@ -120,8 +119,7 @@ const Card: React.FC<CardProps> = (props) => {
             objectFit="cover"
             className="rounded-sm shadow-2xl"
             alt={title}
-            width={772}
-            height={434}
+            layout="fill"
             quality={35}
           />
 

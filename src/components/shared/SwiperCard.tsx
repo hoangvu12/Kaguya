@@ -115,8 +115,7 @@ const Card: React.FC<AnimeCardProps> = (props) => {
                     objectFit="cover"
                     className="rounded-sm"
                     alt={title}
-                    width={193}
-                    height={290}
+                    layout="fill"
                     quality={35}
                   />
                 </motion.div>
@@ -138,8 +137,7 @@ const Card: React.FC<AnimeCardProps> = (props) => {
                     className="rounded-sm"
                     alt={title}
                     quality={35}
-                    width={data.bannerImage ? 772 : 193}
-                    height={data.bannerImage ? 434 : 290}
+                    layout="fill"
                   />
 
                   <div className="absolute inset-0 bg-black/60"></div>
