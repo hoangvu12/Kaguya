@@ -24,6 +24,22 @@ export const AuthContextProvider: React.FC<{}> = ({ children }) => {
     }
   }, []);
 
+  useEffect(() => {
+    const getData = async () => {
+      const user = supabase.auth.user();
+
+      const { data: profileUser } = await supabaseClient
+        .from<AdditionalUser>("users")
+        .select("*")
+        .eq("id", user.id)
+        .single();
+
+      setUser(profileUser);
+    };
+
+    getData();
+  }, []);
+
   // Set cookies on auth state change
   useEffect(() => {
     const { data } = supabase.auth.onAuthStateChange(async (event, session) => {
