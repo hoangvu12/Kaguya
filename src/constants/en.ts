@@ -317,7 +317,7 @@ export const NOTIFICATION_ENTITIES: Record<
     const [mediaType, mediaId] = notification.parentEntityId.split("-");
 
     return {
-      message: `${notification?.sender?.user_metadata?.name} mentioned you in a comment`,
+      message: `${notification?.sender?.name} mentioned you in a comment`,
       redirectUrl: `/${mediaType}/details/${mediaId}?commentId=${notification.entityId}`,
     };
   },
@@ -325,7 +325,7 @@ export const NOTIFICATION_ENTITIES: Record<
     const [mediaType, mediaId] = notification.parentEntityId.split("-");
 
     return {
-      message: `${notification?.sender?.user_metadata?.name} reacted to your comment`,
+      message: `${notification?.sender?.name} reacted to your comment`,
       redirectUrl: `/${mediaType}/details/${mediaId}?commentId=${notification.entityId}`,
     };
   },

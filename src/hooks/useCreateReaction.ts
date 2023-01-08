@@ -95,8 +95,8 @@ const useCreateReaction = () => {
               id: randomString(9),
               reaction_type: data.reactionType,
               user: {
-                avatar: user?.user_metadata.avatar_url,
-                name: user?.user_metadata.name,
+                avatar: user?.avatarUrl,
+                name: user?.name,
                 id: user?.id,
               },
               user_id: user.id,
