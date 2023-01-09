@@ -28,6 +28,8 @@ export const AuthContextProvider: React.FC<{}> = ({ children }) => {
     const getData = async () => {
       const user = supabase.auth.user();
 
+      if (!user) return;
+
       const { data: profileUser } = await supabaseClient
         .from<AdditionalUser>("users")
         .select("*")
