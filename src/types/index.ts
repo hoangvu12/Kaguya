@@ -273,7 +273,7 @@ export type SourceStatus<T> = (T extends MediaType.Anime
       mediaId?: number;
       media?: Media;
     }) & {
-  userId?: number;
+  userId?: string;
   user?: User;
 };
 

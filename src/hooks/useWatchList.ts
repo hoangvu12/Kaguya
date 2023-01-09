@@ -2,8 +2,8 @@ import supabaseClient from "@/lib/supabase";
 import { getMedia } from "@/services/anilist";
 import { AdditionalUser, SourceStatus, Watched } from "@/types";
 import { Media, MediaType } from "@/types/anilist";
-import { parseNumberFromString } from "@/utils";
-import { useQuery } from "react-query";
+import { getPagination, parseNumberFromString } from "@/utils";
+import { useInfiniteQuery } from "react-query";
 
 export const STATUS = {
   All: "ALL",
@@ -19,14 +19,29 @@ interface MediaWithWatchedTime extends Media {
   watchedEpisode: number;
 }
 
-const useWatchList = (
-  sourceStatus: SourceStatus<MediaType.Anime>[],
-  sourceType: Status,
-  user: AdditionalUser
-) => {
-  return useQuery<MediaWithWatchedTime[]>(
+const LIST_LIMIT = 30;
+
+const useWatchList = (sourceType: Status, user: AdditionalUser) => {
+  return useInfiniteQuery(
     ["watch-list", sourceType],
-    async () => {
+    async ({ pageParam = 1 }) => {
+      const { from, to } = getPagination(pageParam, LIST_LIMIT);
+
+      const sourceStatusQuery = supabaseClient
+        .from<SourceStatus<MediaType.Anime>>("kaguya_watch_status")
+        .select("mediaId, userId, status, created_at")
+        .eq("userId", user.id)
+        .order("mediaId", { ascending: false })
+        .range(from, to);
+
+      if (sourceType !== STATUS.All) {
+        sourceStatusQuery.eq("status", sourceType);
+      }
+
+      const { data: sourceStatus, error } = await sourceStatusQuery;
+
+      if (error) throw error;
+
       const ids = sourceStatus
         .filter((s) => {
           if (sourceType === STATUS.All) return true;
@@ -47,7 +62,10 @@ const useWatchList = (
         .in("mediaId", ids)
         .order("updated_at", { ascending: false });
 
-      return media.map((m) => {
+      const hasNextPage =
+        sourceStatus?.length && sourceStatus?.length === LIST_LIMIT;
+
+      const list: MediaWithWatchedTime[] = media.map((m) => {
         const watchedData = watched.find((w) => w.mediaId === m.id);
 
         return {
@@ -58,6 +76,14 @@ const useWatchList = (
           ),
         };
       });
+
+      return {
+        data: list,
+        nextPage: hasNextPage ? pageParam + 1 : null,
+      };
+    },
+    {
+      getNextPageParam: (lastPage) => lastPage.nextPage,
     }
   );
 };

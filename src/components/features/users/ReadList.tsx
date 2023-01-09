@@ -1,30 +1,44 @@
 import Button from "@/components/shared/Button";
 import Card from "@/components/shared/Card";
+import InView from "@/components/shared/InView";
 import List from "@/components/shared/List";
 import Loading from "@/components/shared/Loading";
+import ListSkeleton from "@/components/skeletons/ListSkeleton";
 import useReadList, { STATUS, Status } from "@/hooks/useReadList";
-import { AdditionalUser, SourceStatus } from "@/types";
-import { MediaType } from "@/types/anilist";
+import { AdditionalUser } from "@/types";
 import classNames from "classnames";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 interface ReadListProps {
-  sourceStatus: SourceStatus<MediaType.Manga>[];
   user: AdditionalUser;
 }
 
-const ReadList: React.FC<ReadListProps> = ({ sourceStatus, user }) => {
+const ReadList: React.FC<ReadListProps> = ({ user }) => {
   const [activeTab, setActiveTab] = useState<Status>(STATUS.All);
 
-  const { data: readList, isLoading } = useReadList(
-    sourceStatus,
-    activeTab,
-    user
-  );
+  const {
+    data: readList,
+    isError,
+    isLoading,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+  } = useReadList(activeTab, user);
+
+  const handleFetch = () => {
+    if (isFetchingNextPage || !hasNextPage) return;
+
+    fetchNextPage();
+  };
 
   const handleChangeTab = (status: Status) => () => {
     setActiveTab(status);
   };
+
+  const totalData = useMemo(
+    () => readList?.pages.map((el) => el.data).flat(),
+    [readList?.pages]
+  );
 
   return (
     <div>
@@ -75,28 +89,46 @@ const ReadList: React.FC<ReadListProps> = ({ sourceStatus, user }) => {
             <Loading />
           </div>
         ) : (
-          <List data={readList}>
-            {(node) => {
-              return (
-                <Card
-                  imageEndSlot={
-                    <React.Fragment>
-                      <div className="z-[5] flex flex-col justify-end absolute inset-0">
-                        <p className="w-max ml-2 mb-2 px-1 py-0.5 rounded-md bg-background-700">
-                          {node.readChapter} / {node.chapters || "??"}
-                        </p>
-                      </div>
+          <React.Fragment>
+            <List data={totalData}>
+              {(node) => {
+                return (
+                  <Card
+                    imageEndSlot={
+                      <React.Fragment>
+                        <div className="z-[5] flex flex-col justify-end absolute inset-0">
+                          <p className="w-max ml-2 mb-2 px-1 py-0.5 rounded-md bg-background-700">
+                            {node.readChapter} / {node.chapters || "??"}
+                          </p>
+                        </div>
 
-                      <div className="z-0 flex flex-col justify-end absolute inset-0">
-                        <div className="h-32 bg-gradient-to-t from-black/80 to-transparent z-40"></div>
-                      </div>
-                    </React.Fragment>
-                  }
-                  data={node}
-                />
-              );
-            }}
-          </List>
+                        <div className="z-0 flex flex-col justify-end absolute inset-0">
+                          <div className="h-32 bg-gradient-to-t from-black/80 to-transparent z-40"></div>
+                        </div>
+                      </React.Fragment>
+                    }
+                    data={node}
+                  />
+                );
+              }}
+            </List>
+
+            {isFetchingNextPage && !isError && (
+              <div className="mt-4">
+                <ListSkeleton />
+              </div>
+            )}
+
+            {((totalData.length && !isFetchingNextPage) || hasNextPage) && (
+              <InView onInView={handleFetch} />
+            )}
+
+            {!hasNextPage && !!totalData.length && (
+              <p className="mt-8 text-2xl text-center">
+                There is nothing left...
+              </p>
+            )}
+          </React.Fragment>
         )}
       </div>
     </div>
