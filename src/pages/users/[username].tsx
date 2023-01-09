@@ -77,7 +77,7 @@ const UserPage: NextPage<UserPageProps> = ({ user }) => {
                 className="mx-auto !w-full !h-full"
               />
 
-              <UpdateAvatar user={user} />
+              {isOwnProfile && <UpdateAvatar user={user} />}
             </div>
 
             <div className="md:pt-16 space-y-2">
