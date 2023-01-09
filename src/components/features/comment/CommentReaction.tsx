@@ -4,6 +4,7 @@ import Modal from "@/components/shared/Modal";
 import useCommentReactions from "@/hooks/useCommentReactions";
 import { CommentReactionMetadata } from "@/types";
 import clsx from "clsx";
+import Link from "next/link";
 import { FC, useState } from "react";
 import Reaction from "./Reaction";
 
@@ -34,10 +35,14 @@ const CommentReactionsModal = ({
           )}
           {data?.map((commentReaction) => (
             <div className="flex items-center gap-2" key={commentReaction.id}>
-              <Avatar
-                className="shrink-0"
-                src={commentReaction?.user?.avatar}
-              />
+              <Link href={`/users/${commentReaction?.user?.username}`}>
+                <a>
+                  <Avatar
+                    className="shrink-0"
+                    src={commentReaction?.user?.avatar}
+                  />
+                </a>
+              </Link>
 
               <p>{commentReaction?.user?.name || "Unknown"}</p>
             </div>

@@ -159,6 +159,8 @@ export interface DisplayUser {
   id: string;
   name: string;
   avatar: string;
+  username: string;
+  role: string;
 }
 
 export interface Comment {

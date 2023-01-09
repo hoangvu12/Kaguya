@@ -61,7 +61,11 @@ const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
           </div>
 
           <div className="flex gap-2">
-            <Avatar className="shrink-0" src={room.hostUser?.avatarUrl} />
+            <Link href={`/users/${room.hostUser?.username}`}>
+              <a>
+                <Avatar className="shrink-0" src={room.hostUser?.avatarUrl} />
+              </a>
+            </Link>
 
             <div>
               {!room.title ? (
