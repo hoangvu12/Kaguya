@@ -59,6 +59,8 @@ const useCreateComment = () => {
                 avatar: user?.avatarUrl,
                 name: user?.name,
                 id: user?.id,
+                role: user?.role,
+                username: user?.username,
               },
               reactions_metadata: [],
             });
