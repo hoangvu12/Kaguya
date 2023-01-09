@@ -42,7 +42,7 @@ const ReadList: React.FC<ReadListProps> = ({ user }) => {
 
   return (
     <div>
-      <div className="flex items-center gap-3">
+      <div className="snap-x overflow-x-auto flex items-center gap-3">
         <Button
           className={classNames(
             activeTab === STATUS.All ? "bg-primary-600" : "bg-background-600"
