@@ -57,12 +57,14 @@ const Popunder = () => {
   //   ></Script>
   // ) : null;
 
-  return (
-    <Script
-      type="text/javascript"
-      src="https://popunderstar.com/integration/lib.js?w=1447&frequency=1800"
-    ></Script>
-  );
+  // return (
+  //   <Script
+  //     type="text/javascript"
+  //     src="https://popunderstar.com/integration/lib.js?w=1447&frequency=1800"
+  //   ></Script>
+  // );
+
+  return null;
 };
 
 export default Popunder;
