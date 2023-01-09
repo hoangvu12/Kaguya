@@ -45,7 +45,13 @@ const UserPage: NextPage<UserPageProps> = ({ user }) => {
 
   return (
     <React.Fragment>
-      <Head title={`${userProfile.name} (@${userProfile.username}) - Kaguya`} />
+      <Head
+        title={`${user.name} (@${user.username}) - Kaguya`}
+        image={user.bannerUrl}
+        description={`Profile page of ${user.name} (@${user.username}) ${
+          user.bio ? ` - "${user.bio}"` : ""
+        }`}
+      />
 
       <div className="w-full min-h-screen">
         <div className="pt-16 md:pt-0 bg-background-800 w-full flex items-center">
