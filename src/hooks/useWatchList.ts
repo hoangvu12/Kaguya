@@ -23,7 +23,7 @@ const LIST_LIMIT = 30;
 
 const useWatchList = (sourceType: Status, user: AdditionalUser) => {
   return useInfiniteQuery(
-    ["watch-list", sourceType],
+    ["watch-list", user.id, sourceType],
     async ({ pageParam = 1 }) => {
       const { from, to } = getPagination(pageParam, LIST_LIMIT);
 
