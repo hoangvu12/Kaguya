@@ -135,8 +135,14 @@ const WatchList: React.FC<WatchListProps> = ({ user }) => {
                           <div className="flex justify-between">
                             <p className="ml-2 mb-2 px-1 py-0.5 rounded-md bg-background-700">
                               {airedEpisodes
-                                ? `${node.watchedEpisode} / ${airedEpisodes} / ${node.episodes}`
-                                : `${node.watchedEpisode} / ${node.episodes}`}
+                                ? `${
+                                    node.watchedEpisode
+                                  } / ${airedEpisodes} / ${
+                                    node.episodes || "??"
+                                  }`
+                                : `${node.watchedEpisode} / ${
+                                    node.episodes || "??"
+                                  }`}
                             </p>
 
                             <p className="mr-2 mb-2 px-1 py-0.5 rounded-md bg-background-700">
