@@ -50,21 +50,12 @@ const Popunder = () => {
   //   });
   // }, []);
 
-  // return isShow ? (
-  //   <Script
-  //     data-cfasync="false"
-  //     src="//dnks065sb0ww6.cloudfront.net/?ssknd=974102"
-  //   ></Script>
-  // ) : null;
-
-  // return (
-  //   <Script
-  //     type="text/javascript"
-  //     src="https://popunderstar.com/integration/lib.js?w=1447&frequency=1800"
-  //   ></Script>
-  // );
-
-  return null;
+  return (
+    <Script
+      data-cfasync="false"
+      src="//dnks065sb0ww6.cloudfront.net/?ssknd=974102"
+    ></Script>
+  );
 };
 
 export default Popunder;
