@@ -87,7 +87,9 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ studio: initialStudio }) => {
           )}
 
           {!hasNextPage && !!anime.length && (
-            <p className="mt-8 text-2xl text-center">Hết rồi...</p>
+            <p className="mt-8 text-2xl text-center">
+              There is nothing left...
+            </p>
           )}
         </Section>
       </div>

@@ -65,7 +65,11 @@ const NewestComments: React.FC<NewestCommentsProps> = (props) => {
                 <div className="flex h-full w-full flex-col justify-between space-y-2 p-4 md:space-y-4">
                   <div className="space-y-4">
                     <div className="flex shrink-0 items-center space-x-2">
-                      <Avatar src={user?.avatar} />
+                      <Link href={`/users/${user.username}`}>
+                        <a>
+                          <Avatar src={user?.avatar} />
+                        </a>
+                      </Link>
 
                       <div className="space-y-1 text-sm">
                         <p className="line-clamp-1">{user?.name}</p>

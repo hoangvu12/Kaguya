@@ -159,6 +159,8 @@ export interface DisplayUser {
   id: string;
   name: string;
   avatar: string;
+  username: string;
+  role: string;
 }
 
 export interface Comment {
@@ -274,7 +276,7 @@ export type SourceStatus<T> = (T extends MediaType.Anime
       mediaId?: number;
       media?: Media;
     }) & {
-  userId?: number;
+  userId?: string;
   user?: User;
 };
 

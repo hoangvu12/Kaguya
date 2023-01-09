@@ -2,8 +2,8 @@ import supabaseClient from "@/lib/supabase";
 import { getMedia } from "@/services/anilist";
 import { AdditionalUser, Read, SourceStatus } from "@/types";
 import { Media, MediaType } from "@/types/anilist";
-import { parseNumberFromString } from "@/utils";
-import { useQuery } from "react-query";
+import { getPagination, parseNumberFromString } from "@/utils";
+import { useInfiniteQuery } from "react-query";
 
 export const STATUS = {
   All: "ALL",
@@ -19,41 +19,70 @@ interface MediaWithReadTime extends Media {
   readChapter: number;
 }
 
-const useWatchList = (
-  sourceStatus: SourceStatus<MediaType.Manga>[],
-  sourceType: Status,
-  user: AdditionalUser
-) => {
-  return useQuery<MediaWithReadTime[]>(["read-list", sourceType], async () => {
-    const ids = sourceStatus
-      .filter((s) => {
-        if (sourceType === STATUS.All) return true;
+const LIST_LIMIT = 30;
 
-        return s.status === sourceType;
-      })
-      .map((s) => s.mediaId);
+const useWatchList = (sourceType: Status, user: AdditionalUser) => {
+  return useInfiniteQuery(
+    ["read-list", sourceType],
+    async ({ pageParam = 1 }) => {
+      const { from, to } = getPagination(pageParam, LIST_LIMIT);
 
-    const media = await getMedia({
-      type: MediaType.Manga,
-      id_in: ids,
-    });
+      const sourceStatusQuery = supabaseClient
+        .from<SourceStatus<MediaType.Manga>>("kaguya_read_status")
+        .select("mediaId, userId, status, created_at")
+        .eq("userId", user.id)
+        .order("mediaId", { ascending: false })
+        .range(from, to);
 
-    const { data: read } = await supabaseClient
-      .from<Read>("kaguya_read")
-      .select("mediaId, chapter:kaguya_chapters!chapterId(name)")
-      .eq("userId", user.id)
-      .in("mediaId", ids)
-      .order("updated_at", { ascending: false });
+      if (sourceType !== STATUS.All) {
+        sourceStatusQuery.eq("status", sourceType);
+      }
 
-    return media.map((m) => {
-      const readData = read.find((w) => w.mediaId === m.id);
+      const { data: sourceStatus, error } = await sourceStatusQuery;
+
+      if (error) throw error;
+
+      const ids = sourceStatus
+        .filter((s) => {
+          if (sourceType === STATUS.All) return true;
+
+          return s.status === sourceType;
+        })
+        .map((s) => s.mediaId);
+
+      const media = await getMedia({
+        type: MediaType.Manga,
+        id_in: ids,
+      });
+
+      const { data: read } = await supabaseClient
+        .from<Read>("kaguya_read")
+        .select("mediaId, chapter:kaguya_chapters!chapterId(name)")
+        .eq("userId", user.id)
+        .in("mediaId", ids)
+        .order("updated_at", { ascending: false });
+
+      const hasNextPage =
+        sourceStatus?.length && sourceStatus?.length === LIST_LIMIT;
+
+      const list: MediaWithReadTime[] = media.map((m) => {
+        const readData = read.find((w) => w.mediaId === m.id);
+
+        return {
+          ...m,
+          readChapter: parseNumberFromString(readData?.chapter?.name || "0"),
+        };
+      });
 
       return {
-        ...m,
-        readChapter: parseNumberFromString(readData?.chapter?.name || "0"),
+        data: list,
+        nextPage: hasNextPage ? pageParam + 1 : null,
       };
-    });
-  });
+    },
+    {
+      getNextPageParam: (lastPage) => lastPage.nextPage,
+    }
+  );
 };
 
 export default useWatchList;

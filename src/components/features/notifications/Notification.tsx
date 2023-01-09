@@ -34,10 +34,14 @@ const Notification: React.FC<NotificationProps> = ({ notification }) => {
       <a>
         <div className="flex items-center justify-between p-2 hover:bg-white/10 transition duration-300">
           <div className="rounded-md flex gap-2">
-            <Avatar
-              src={notification.sender?.user_metadata?.avatar_url}
-              className="w-10 h-10 shrink-0"
-            />
+            <Link href={`/users/${notification.sender.username}`}>
+              <a>
+                <Avatar
+                  src={notification.sender.avatarUrl}
+                  className="w-10 h-10 shrink-0"
+                />
+              </a>
+            </Link>
 
             <div className="space-y-1">
               <p>{notificationEntity.message}</p>
