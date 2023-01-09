@@ -184,6 +184,10 @@ export const TYPES = [
     value: "voice_actors",
     label: "Актеры озвучки",
   },
+  {
+    value: "users",
+    label: "пользователь",
+  },
 ];
 
 export const COUNTRIES = [

@@ -10,12 +10,14 @@ import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import Section from "@/components/shared/Section";
+import UserBrowseList from "@/components/features/users/UserBrowseList";
 
 const components = {
   anime: AnimeBrowseList,
   manga: MangaBrowseList,
   characters: CharacterBrowseList,
   voice_actors: VABrowseList,
+  users: UserBrowseList,
 };
 
 const convertQueryToArray = <T,>(query: T[]) => {
@@ -107,8 +109,8 @@ const BrowsePage = ({ query: baseQuery }) => {
   return (
     <Section className="py-20">
       <Head
-        title={`Tìm kiếm ${chosenType.label} - Kaguya`}
-        description={`Tìm kiếm ${chosenType.label} ở trang Kaguya`}
+        title={`Search ${chosenType.label} - Kaguya`}
+        description={`Search ${chosenType.label} in Kaguya`}
       />
 
       <div className="mb-8 flex items-center space-x-2">
