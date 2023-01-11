@@ -21,7 +21,7 @@ interface MediaWithReadTime extends Media {
 
 const LIST_LIMIT = 30;
 
-const useWatchList = (sourceType: Status, user: AdditionalUser) => {
+const useReadList = (sourceType: Status, user: AdditionalUser) => {
   return useInfiniteQuery(
     ["read-list", user.id, sourceType],
     async ({ pageParam = 1 }) => {
@@ -65,14 +65,35 @@ const useWatchList = (sourceType: Status, user: AdditionalUser) => {
       const hasNextPage =
         sourceStatus?.length && sourceStatus?.length === LIST_LIMIT;
 
-      const list: MediaWithReadTime[] = media.map((m) => {
-        const readData = read.find((w) => w.mediaId === m.id);
+      const list: MediaWithReadTime[] = media
+        .sort((mediaA, mediaB) => {
+          const readDataA = read.find((w) => w.mediaId === mediaA.id);
+          const readDataB = read.find((w) => w.mediaId === mediaB.id);
+          const sourceStatusA = sourceStatus.find(
+            (s) => s.mediaId === mediaA.id
+          );
+          const sourceStatusB = sourceStatus.find(
+            (s) => s.mediaId === mediaB.id
+          );
 
-        return {
-          ...m,
-          readChapter: parseNumberFromString(readData?.chapter?.name || "0"),
-        };
-      });
+          const readUpdatedA =
+            readDataA?.updated_at || sourceStatusA?.created_at;
+          const readUpdatedB =
+            readDataB?.updated_at || sourceStatusB?.created_at;
+
+          const readUpdatedATime = new Date(readUpdatedA).getTime();
+          const readUpdatedBTime = new Date(readUpdatedB).getTime();
+
+          return readUpdatedBTime - readUpdatedATime;
+        })
+        .map((m) => {
+          const readData = read.find((w) => w.mediaId === m.id);
+
+          return {
+            ...m,
+            readChapter: parseNumberFromString(readData?.chapter?.name || "0"),
+          };
+        });
 
       return {
         data: list,
@@ -85,4 +106,4 @@ const useWatchList = (sourceType: Status, user: AdditionalUser) => {
   );
 };
 
-export default useWatchList;
+export default useReadList;
