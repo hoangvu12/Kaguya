@@ -277,6 +277,8 @@ export type SourceStatus<T> = (T extends MediaType.Anime
     }) & {
   userId?: string;
   user?: User;
+  updated_at?: string;
+  created_at?: string;
 };
 
 export type SkipType = "ed" | "op" | "mixed-ed" | "mixed-op" | "recap";

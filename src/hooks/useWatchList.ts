@@ -57,7 +57,9 @@ const useWatchList = (sourceType: Status, user: AdditionalUser) => {
 
       const { data: watched } = await supabaseClient
         .from<Watched>("kaguya_watched")
-        .select("mediaId, episode:kaguya_episodes!episodeId(name), watchedTime")
+        .select(
+          "mediaId, episode:kaguya_episodes!episodeId(name), watchedTime, updated_at"
+        )
         .eq("userId", user.id)
         .in("mediaId", ids)
         .order("updated_at", { ascending: false });
@@ -65,17 +67,38 @@ const useWatchList = (sourceType: Status, user: AdditionalUser) => {
       const hasNextPage =
         sourceStatus?.length && sourceStatus?.length === LIST_LIMIT;
 
-      const list: MediaWithWatchedTime[] = media.map((m) => {
-        const watchedData = watched.find((w) => w.mediaId === m.id);
+      const list: MediaWithWatchedTime[] = media
+        .sort((mediaA, mediaB) => {
+          const watchedDataA = watched.find((w) => w.mediaId === mediaA.id);
+          const watchedDataB = watched.find((w) => w.mediaId === mediaB.id);
+          const sourceStatusA = sourceStatus.find(
+            (s) => s.mediaId === mediaA.id
+          );
+          const sourceStatusB = sourceStatus.find(
+            (s) => s.mediaId === mediaB.id
+          );
 
-        return {
-          ...m,
-          watchedTime: watchedData?.watchedTime || 0,
-          watchedEpisode: parseNumberFromString(
-            watchedData?.episode?.name || "0"
-          ),
-        };
-      });
+          const watchedUpdatedA =
+            watchedDataA?.updated_at || sourceStatusA?.created_at;
+          const watchedUpdatedB =
+            watchedDataB?.updated_at || sourceStatusB?.created_at;
+
+          const watchedUpdatedATime = new Date(watchedUpdatedA).getTime();
+          const watchedUpdatedBTime = new Date(watchedUpdatedB).getTime();
+
+          return watchedUpdatedBTime - watchedUpdatedATime;
+        })
+        .map((m) => {
+          const watchedData = watched.find((w) => w.mediaId === m.id);
+
+          return {
+            ...m,
+            watchedTime: watchedData?.watchedTime || 0,
+            watchedEpisode: parseNumberFromString(
+              watchedData?.episode?.name || "0"
+            ),
+          };
+        });
 
       return {
         data: list,
