@@ -1,35 +1,38 @@
 import ButtonTooltip from "@/components/shared/ButtonTooltip";
 import CircleButton from "@/components/shared/CircleButton";
+import Input from "@/components/shared/Input";
 import Kbd from "@/components/shared/Kbd";
+import Select from "@/components/shared/Select";
 import { useReadInfo } from "@/contexts/ReadContext";
 import { useReadPanel } from "@/contexts/ReadPanelContext";
-import Input from "@/components/shared/Input";
 import {
-  fitModes,
   directions,
+  fitModes,
   useReadSettings,
 } from "@/contexts/ReadSettingsContext";
 import useDevice from "@/hooks/useDevice";
-import { groupBy } from "@/utils";
+import { groupBy, sortObjectByValue } from "@/utils";
 import { getTitle } from "@/utils/data";
 import classNames from "classnames";
 import { motion, Variants } from "framer-motion";
+import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { BsArrowLeft } from "react-icons/bs";
 import {
+  CgArrowDown,
+  CgArrowLeft,
+  CgArrowRight,
   CgArrowsShrinkH,
   CgArrowsShrinkV,
-  CgArrowDown,
-  CgArrowRight,
-  CgArrowLeft,
 } from "react-icons/cg";
 import { HiOutlineArrowsExpand } from "react-icons/hi";
-import { useTranslation } from "next-i18next";
-import useHorizontalScroll from "@/hooks/useHorizontalScroll";
+
+const sourcesToOptions = (sources: string[]) =>
+  sources.map((source) => ({ value: source, label: source }));
 
 const sidebarVariants: Variants = {
   initial: {
@@ -90,6 +93,39 @@ const Sidebar = () => {
     [chapters]
   );
 
+  const verifiedSources = useMemo(() => {
+    const verifiedChapters = chapters.filter(
+      (chapter) => chapter.source.isCustomSource
+    );
+
+    const sources = groupBy(verifiedChapters, (chapter) => chapter.source.name);
+
+    const sortedSources = sortObjectByValue(
+      sources,
+      (a, b) => b.length - a.length
+    );
+
+    return sortedSources;
+  }, [chapters]);
+
+  const nonVerifiedSources = useMemo(() => {
+    const nonVerifiedChapters = chapters.filter(
+      (chapter) => !chapter.source.isCustomSource
+    );
+
+    const sources = groupBy(
+      nonVerifiedChapters,
+      (chapter) => chapter.source.name
+    );
+
+    const sortedSources = sortObjectByValue(
+      sources,
+      (a, b) => b.length - a.length
+    );
+
+    return sortedSources;
+  }, [chapters]);
+
   const handleChangeChapterIndex = (index: number) => () => {
     setChapter(sourceChapters[index]);
   };
@@ -101,8 +137,6 @@ const Sidebar = () => {
 
     currentChapterEl.scrollIntoView();
   }, [currentChapter]);
-
-  const horizontalScrollRef = useHorizontalScroll<HTMLDivElement>();
 
   return (
     <motion.div
@@ -279,24 +313,30 @@ const Sidebar = () => {
             }
           />
 
-          <div
-            ref={horizontalScrollRef}
-            className="flex space-x-2 w-full px-2 overflow-x-scroll no-scrollbar [&>*]:shrink-0"
-          >
-            {Object.keys(sources).map((source) => (
-              <div
-                className={classNames(
-                  "text-gray-300 cursor-pointer rounded-[18px] px-2 py-1 w-[max-content] duration-300 transition",
-                  activeSource === source
-                    ? "bg-white text-black"
-                    : "hover:text-white"
-                )}
-                key={source}
-                onClick={() => setActiveSource(source)}
-              >
-                {source}
-              </div>
-            ))}
+          <div className="flex items-center gap-2 mb-4">
+            <label htmlFor="source-selector" className="font-medium">
+              Sources:{" "}
+            </label>
+
+            <Select
+              id="source-selector"
+              options={[
+                {
+                  label: "Verified",
+                  options: sourcesToOptions(Object.keys(verifiedSources)),
+                },
+                {
+                  label: "Not verified",
+                  options: sourcesToOptions(Object.keys(nonVerifiedSources)),
+                },
+              ]}
+              onChange={({ value }) => {
+                setActiveSource(value);
+              }}
+              defaultValue={{ value: activeSource, label: activeSource }}
+              isClearable={false}
+              isSearchable={false}
+            />
           </div>
         </BrowserView>
 

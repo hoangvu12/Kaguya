@@ -1,7 +1,8 @@
 import ArrowSwiper, { SwiperSlide } from "@/components/shared/ArrowSwiper";
 import CircleButton from "@/components/shared/CircleButton";
+import Select from "@/components/shared/Select";
 import { Chapter } from "@/types";
-import { groupBy } from "@/utils";
+import { groupBy, sortObjectByValue } from "@/utils";
 import classNames from "classnames";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
@@ -12,6 +13,9 @@ export interface ChapterSelectorProps {
   chapters: Chapter[];
   mediaId: number;
 }
+
+const sourcesToOptions = (sources: string[]) =>
+  sources.map((source) => ({ value: source, label: source }));
 
 const ChapterSelector: React.FC<ChapterSelectorProps> = ({
   chapters,
@@ -35,6 +39,39 @@ const ChapterSelector: React.FC<ChapterSelectorProps> = ({
     [chapters]
   );
 
+  const verifiedSources = useMemo(() => {
+    const verifiedChapters = chapters.filter(
+      (chapter) => chapter.source.isCustomSource
+    );
+
+    const sources = groupBy(verifiedChapters, (chapter) => chapter.source.name);
+
+    const sortedSources = sortObjectByValue(
+      sources,
+      (a, b) => b.length - a.length
+    );
+
+    return sortedSources;
+  }, [chapters]);
+
+  const nonVerifiedSources = useMemo(() => {
+    const nonVerifiedChapters = chapters.filter(
+      (chapter) => !chapter.source.isCustomSource
+    );
+
+    const sources = groupBy(
+      nonVerifiedChapters,
+      (chapter) => chapter.source.name
+    );
+
+    const sortedSources = sortObjectByValue(
+      sources,
+      (a, b) => b.length - a.length
+    );
+
+    return sortedSources;
+  }, [chapters]);
+
   useEffect(() => {
     const sourceKeys = Object.keys(sources);
 
@@ -47,24 +84,33 @@ const ChapterSelector: React.FC<ChapterSelectorProps> = ({
 
   return (
     <React.Fragment>
-      <ArrowSwiper isOverflowHidden={false} className="w-11/12 mx-auto mb-8">
-        {Object.keys(sources).map((source, i) => {
-          return (
-            <SwiperSlide onClick={() => setActiveSource(source)} key={i}>
-              <div
-                className={classNames(
-                  "text-gray-300 cursor-pointer mx-auto rounded-[18px] px-2 py-1 w-[max-content] duration-300 transition",
-                  activeSource === source
-                    ? "bg-white text-black"
-                    : "hover:text-white"
-                )}
-              >
-                {source}
-              </div>
-            </SwiperSlide>
-          );
-        })}
-      </ArrowSwiper>
+      <div className="flex justify-end w-full mx-auto mb-8">
+        <div className="flex items-center gap-2">
+          <label htmlFor="source-selector" className="font-medium">
+            Sources:{" "}
+          </label>
+
+          <Select
+            id="source-selector"
+            options={[
+              {
+                label: "Verified",
+                options: sourcesToOptions(Object.keys(verifiedSources)),
+              },
+              {
+                label: "Not verified",
+                options: sourcesToOptions(Object.keys(nonVerifiedSources)),
+              },
+            ]}
+            onChange={({ value }) => {
+              setActiveSource(value);
+            }}
+            defaultValue={{ value: activeSource, label: activeSource }}
+            isClearable={false}
+            isSearchable={false}
+          />
+        </div>
+      </div>
 
       <motion.div
         className="space-y-2 overflow-hidden"
@@ -80,7 +126,7 @@ const ChapterSelector: React.FC<ChapterSelectorProps> = ({
         transition={{ ease: "linear" }}
         animate={isChapterExpanded ? "animate" : "initial"}
       >
-        {sourceChapters.map((chapter, index) => (
+        {sourceChapters.map((chapter) => (
           <Link
             href={`/manga/read/${mediaId}/${chapter.sourceId}/${chapter.sourceChapterId}`}
             key={chapter.sourceChapterId}
