@@ -12,13 +12,10 @@ import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import useConstantTranslation from "./useConstantTranslation";
 
-const useModifySourceStatus = <T extends MediaType.Anime | MediaType.Manga>(
-  type: T,
-  source: Media
-) => {
+const useModifySourceStatus = <T extends MediaType>(type: T, source: Media) => {
   const { WATCH_STATUS, READ_STATUS } = useConstantTranslation();
 
-  type StatusInput = T extends "anime"
+  type StatusInput = T extends MediaType.Anime
     ? typeof WATCH_STATUS[number]["value"]
     : typeof READ_STATUS[number]["value"];
 

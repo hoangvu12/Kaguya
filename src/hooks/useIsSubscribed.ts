@@ -4,10 +4,7 @@ import supabaseClient from "@/lib/supabase";
 import { Media, MediaType } from "@/types/anilist";
 import { useQuery } from "react-query";
 
-const useIsSubscribed = <T extends MediaType.Anime | MediaType.Manga>(
-  type: T,
-  source: Media
-) => {
+const useIsSubscribed = <T extends MediaType>(type: T, source: Media) => {
   const user = useUser();
   const tableName =
     type === MediaType.Anime

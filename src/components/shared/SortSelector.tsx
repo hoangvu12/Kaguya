@@ -7,15 +7,13 @@ import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { RiArrowUpDownFill } from "react-icons/ri";
 
-interface SortSelectorProps<T> {
+interface SortSelectorProps<T extends MediaType> {
   type: T;
   onChange?: (item: string) => void;
   defaultValue?: string;
 }
 
-const SortSelector = <T extends MediaType.Anime | MediaType.Manga>(
-  props: SortSelectorProps<T>
-) => {
+const SortSelector = <T extends MediaType>(props: SortSelectorProps<T>) => {
   const { onChange, defaultValue = "averageScore", type } = props;
   const [activeItem, setActiveItem] = useState(defaultValue);
   const { ANIME_SORTS, MANGA_SORTS } = useConstantTranslation();

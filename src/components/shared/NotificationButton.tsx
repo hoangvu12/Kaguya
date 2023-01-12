@@ -10,12 +10,12 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { MdNotificationsActive, MdNotificationsNone } from "react-icons/md";
 import { toast } from "react-toastify";
 
-interface NotificationButtonProps<T> {
+interface NotificationButtonProps<T extends MediaType> {
   type: T;
   source: Media;
 }
 
-const NotificationButton = <T extends MediaType.Anime | MediaType.Manga>(
+const NotificationButton = <T extends MediaType>(
   props: NotificationButtonProps<T>
 ) => {
   const { type, source } = props;

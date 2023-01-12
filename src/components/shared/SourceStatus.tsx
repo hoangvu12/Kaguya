@@ -56,13 +56,12 @@ interface SourceStatusProps<T> {
   source: Media;
 }
 
-const SourceStatus = <T extends MediaType.Anime | MediaType.Manga>(
-  props: SourceStatusProps<T>
-) => {
-  const { source, type } = props;
-
+const SourceStatus = <T extends MediaType>({
+  source,
+  type,
+}: SourceStatusProps<T>) => {
   const { t } = useTranslation("source_status");
-  const { data: status, isLoading } = useSourceStatus(type, source);
+  const { data: status, isLoading } = useSourceStatus(type, source.id);
   const statusMutation = useModifySourceStatus(type, source);
   const { WATCH_STATUS, READ_STATUS } = useConstantTranslation();
 

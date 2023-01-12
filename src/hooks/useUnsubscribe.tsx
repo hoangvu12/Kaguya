@@ -10,10 +10,7 @@ import { useMemo } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 
-const useUnsubscribe = <T extends MediaType.Anime | MediaType.Manga>(
-  type: T,
-  source: Media
-) => {
+const useUnsubscribe = <T extends MediaType>(type: T, source: Media) => {
   const user = useUser();
   const queryClient = useQueryClient();
   const { locale } = useRouter();
