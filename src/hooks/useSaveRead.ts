@@ -23,13 +23,11 @@ const useSaveRead = () => {
     >(["kaguya_read_status", media_id]);
 
     if (sourceStatus?.status !== "COMPLETED") {
-      await supabaseClient
-        .from("kaguya_read_status")
-        .update({ status: "READING" }, { returning: "minimal" })
-        .match({
-          userId: user.id,
-          mediaId: media_id,
-        });
+      await supabaseClient.from("kaguya_read_status").upsert({
+        userId: user.id,
+        mediaId: media_id,
+        status: "READING",
+      });
     }
 
     const { error: upsertError } = await supabaseClient
