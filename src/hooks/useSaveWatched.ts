@@ -25,13 +25,11 @@ const useSaveWatched = () => {
     >(["kaguya_watch_status", media_id]);
 
     if (sourceStatus?.status !== "COMPLETED") {
-      await supabaseClient
-        .from("kaguya_watch_status")
-        .update({ status: "WATCHING" }, { returning: "minimal" })
-        .match({
-          userId: user.id,
-          mediaId: media_id,
-        });
+      await supabaseClient.from("kaguya_watch_status").upsert({
+        userId: user.id,
+        mediaId: media_id,
+        status: "WATCHING",
+      });
     }
 
     const { error: upsertError } = await supabaseClient
