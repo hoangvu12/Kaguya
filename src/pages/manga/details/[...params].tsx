@@ -73,7 +73,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
               {user && !isMobile && (
                 <div className="flex items-center space-x-1">
                   <SourceStatus type={MediaType.Manga} source={manga} />
-                  <NotificationButton type="manga" source={manga} />
+                  <NotificationButton type={MediaType.Manga} source={manga} />
                 </div>
               )}
             </div>
@@ -194,7 +194,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
             </Link>
 
             {user && isMobile && (
-              <NotificationButton type="manga" source={manga} />
+              <NotificationButton type={MediaType.Manga} source={manga} />
             )}
 
             <Popup

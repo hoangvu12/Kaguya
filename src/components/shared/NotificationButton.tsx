@@ -3,19 +3,19 @@ import { useSubscription } from "@/contexts/SubscriptionContext";
 import useIsSubscribed from "@/hooks/useIsSubscribed";
 import useSubscribe from "@/hooks/useSubscribe";
 import useUnsubscribe from "@/hooks/useUnsubscribe";
-import { Media } from "@/types/anilist";
+import { Media, MediaType } from "@/types/anilist";
 import { useTranslation } from "next-i18next";
 import React, { useCallback } from "react";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { MdNotificationsActive, MdNotificationsNone } from "react-icons/md";
 import { toast } from "react-toastify";
 
-interface NotificationButtonProps<T> {
+interface NotificationButtonProps<T extends MediaType> {
   type: T;
   source: Media;
 }
 
-const NotificationButton = <T extends "anime" | "manga">(
+const NotificationButton = <T extends MediaType>(
   props: NotificationButtonProps<T>
 ) => {
   const { type, source } = props;

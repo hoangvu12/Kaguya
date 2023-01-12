@@ -10,7 +10,7 @@ import ListSkeleton from "@/components/skeletons/ListSkeleton";
 import { SEASON_YEARS } from "@/constants";
 import useBrowse, { UseBrowseOptions } from "@/hooks/useBrowseAnime";
 import useConstantTranslation from "@/hooks/useConstantTranslation";
-import { MediaSort } from "@/types/anilist";
+import { MediaSort, MediaType } from "@/types/anilist";
 import { debounce } from "@/utils";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
@@ -253,7 +253,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
             defaultValue={defaultQuery.sort}
             render={({ field: { value, onChange } }) => (
               <SortSelector
-                type="anime"
+                type={MediaType.Anime}
                 defaultValue={value}
                 onChange={onChange}
               />

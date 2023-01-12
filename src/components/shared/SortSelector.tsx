@@ -1,34 +1,37 @@
 import Popup from "@/components/shared/Popup";
 import TextIcon from "@/components/shared/TextIcon";
 import useConstantTranslation from "@/hooks/useConstantTranslation";
+import { MediaType } from "@/types/anilist";
 import { convert } from "@/utils/data";
 import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { RiArrowUpDownFill } from "react-icons/ri";
 
-interface SortSelectorProps<T> {
+interface SortSelectorProps<T extends MediaType> {
   type: T;
   onChange?: (item: string) => void;
   defaultValue?: string;
 }
 
-const SortSelector = <T extends "anime" | "manga">(
-  props: SortSelectorProps<T>
-) => {
+const SortSelector = <T extends MediaType>(props: SortSelectorProps<T>) => {
   const { onChange, defaultValue = "averageScore", type } = props;
   const [activeItem, setActiveItem] = useState(defaultValue);
   const { ANIME_SORTS, MANGA_SORTS } = useConstantTranslation();
   const { locale } = useRouter();
 
   const SORTS = useMemo(
-    () => (type === "anime" ? ANIME_SORTS : MANGA_SORTS),
+    () => (type === MediaType.Anime ? ANIME_SORTS : MANGA_SORTS),
     [ANIME_SORTS, MANGA_SORTS, type]
   );
   const placeholder = useMemo(
     () =>
-      convert(activeItem, type === "anime" ? "animeSort" : "mangaSort", {
-        locale,
-      }),
+      convert(
+        activeItem,
+        type === MediaType.Anime ? "animeSort" : "mangaSort",
+        {
+          locale,
+        }
+      ),
     [activeItem, locale, type]
   );
 
