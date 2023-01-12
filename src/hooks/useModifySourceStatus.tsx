@@ -2,7 +2,7 @@ import { useUser } from "@/contexts/AuthContext";
 import supabaseClient from "@/lib/supabase";
 
 import { SourceStatus } from "@/types";
-import { Media } from "@/types/anilist";
+import { Media, MediaType } from "@/types/anilist";
 import { getTitle } from "@/utils/data";
 import { PostgrestError } from "@supabase/supabase-js";
 import { useTranslation } from "next-i18next";
@@ -12,13 +12,10 @@ import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import useConstantTranslation from "./useConstantTranslation";
 
-const useModifySourceStatus = <T extends "anime" | "manga">(
-  type: T,
-  source: Media
-) => {
+const useModifySourceStatus = <T extends MediaType>(type: T, source: Media) => {
   const { WATCH_STATUS, READ_STATUS } = useConstantTranslation();
 
-  type StatusInput = T extends "anime"
+  type StatusInput = T extends MediaType.Anime
     ? typeof WATCH_STATUS[number]["value"]
     : typeof READ_STATUS[number]["value"];
 
@@ -29,7 +26,7 @@ const useModifySourceStatus = <T extends "anime" | "manga">(
   const mediaTitle = useMemo(() => getTitle(source, locale), [locale, source]);
 
   const tableName =
-    type === "anime" ? "kaguya_watch_status" : "kaguya_read_status";
+    type === MediaType.Anime ? "kaguya_watch_status" : "kaguya_read_status";
   const queryKey = [tableName, source.id];
 
   return useMutation<any, PostgrestError, StatusInput, any>(
@@ -60,7 +57,7 @@ const useModifySourceStatus = <T extends "anime" | "manga">(
       },
       onSuccess: (_, status) => {
         const { label } =
-          type === "anime"
+          type === MediaType.Anime
             ? WATCH_STATUS.find(({ value }) => value === status)
             : READ_STATUS.find(({ value }) => value === status);
 

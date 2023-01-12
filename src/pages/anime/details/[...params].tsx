@@ -19,6 +19,7 @@ import Section from "@/components/shared/Section";
 import SourceStatus from "@/components/shared/SourceStatus";
 import Spinner from "@/components/shared/Spinner";
 import { REVALIDATE_TIME } from "@/constants";
+import { useUser } from "@/contexts/AuthContext";
 import withRedirect from "@/hocs/withRedirect";
 import useEpisodes from "@/hooks/useEpisodes";
 import dayjs from "@/lib/dayjs";
@@ -31,7 +32,6 @@ import {
 } from "@/utils";
 import { convert, getDescription, getTitle } from "@/utils/data";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import { useUser } from "@/contexts/AuthContext";
 import classNames from "classnames";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
@@ -106,7 +106,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
 
               {user && !isMobile && (
                 <div className="hidden md:flex items-center space-x-1">
-                  <SourceStatus type="anime" source={anime} />
+                  <SourceStatus type={MediaType.Anime} source={anime} />
                   <NotificationButton type="anime" source={anime} />
                 </div>
               )}
@@ -235,7 +235,9 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
           />
 
           <div className="flex md:hidden items-center space-x-2 mb-4">
-            {user && isMobile && <SourceStatus type="anime" source={anime} />}
+            {user && isMobile && (
+              <SourceStatus type={MediaType.Anime} source={anime} />
+            )}
 
             <Link href={`/anime/watch/${anime.id}`}>
               <a className={classNames(!user && "flex-1")}>
