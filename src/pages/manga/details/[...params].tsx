@@ -19,15 +19,14 @@ import Section from "@/components/shared/Section";
 import SourceStatus from "@/components/shared/SourceStatus";
 import Spinner from "@/components/shared/Spinner";
 import { REVALIDATE_TIME } from "@/constants";
+import { useUser } from "@/contexts/AuthContext";
 import withRedirect from "@/hocs/withRedirect";
 import useChapters from "@/hooks/useChapters";
 import { getMediaDetails } from "@/services/anilist";
-import { Translation } from "@/types";
 import { Media, MediaType } from "@/types/anilist";
 import { numberWithCommas, vietnameseSlug } from "@/utils";
 import { convert, getDescription, getTitle } from "@/utils/data";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
-import { useUser } from "@/contexts/AuthContext";
 import classNames from "classnames";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useTranslation } from "next-i18next";
@@ -247,7 +246,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
 
         <Section className="w-full min-h-screen gap-8 mt-2 md:mt-8 space-y-8 md:space-y-0 md:grid md:grid-cols-10 sm:px-12">
           <div className="md:col-span-2 h-[max-content] space-y-4">
-            <div className="flex flex-row md:flex-col overflow-x-auto bg-background-900 rounded-md gap-4 [&>*]:shrink-0 md:no-scrollbar">
+            <div className="p-4 flex flex-row md:flex-col overflow-x-auto bg-background-900 rounded-md gap-4 [&>*]:shrink-0 md:no-scrollbar">
               <InfoItem title="English" value={manga.title.english} />
               <InfoItem title="Native" value={manga.title.native} />
               <InfoItem title="Romanji" value={manga.title.romaji} />
