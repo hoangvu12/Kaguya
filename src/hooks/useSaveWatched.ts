@@ -8,6 +8,7 @@ interface MutationInput {
   media_id: number;
   episode_id: string;
   watched_time?: number;
+  episode_number: number;
 }
 
 const useSaveWatched = () => {
@@ -17,7 +18,7 @@ const useSaveWatched = () => {
   return useMutation(async (data: MutationInput) => {
     if (!user) return;
 
-    const { episode_id, media_id, watched_time } = data;
+    const { episode_id, media_id, watched_time, episode_number } = data;
 
     const sourceStatus = queryClient.getQueryData<
       SourceStatus<MediaType.Anime>
@@ -41,6 +42,7 @@ const useSaveWatched = () => {
           episodeId: episode_id,
           userId: user.id,
           watchedTime: watched_time,
+          episodeNumber: episode_number,
         },
         { returning: "minimal" }
       );

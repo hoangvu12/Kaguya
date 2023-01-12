@@ -100,6 +100,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ episodes }) => {
     data: watchedEpisodeData,
     isLoading: isSavedDataLoading,
     isError: isSavedDataError,
+    refetch: refetchWatchedData,
   } = useSavedWatched(Number(animeId));
 
   const watchedEpisode = useMemo(
@@ -203,6 +204,7 @@ const WatchPage: NextPage<WatchPageProps> = ({ episodes }) => {
           media_id: Number(animeId),
           episode_id: `${currentEpisode.sourceId}-${currentEpisode.sourceEpisodeId}`,
           watched_time: videoRef.current?.currentTime,
+          episode_number: parseNumberFromString(currentEpisode?.name, 0),
         });
       }, 30000);
     };
@@ -222,24 +224,40 @@ const WatchPage: NextPage<WatchPageProps> = ({ episodes }) => {
     if (!videoEl) return;
     if (isSavedDataLoading) return;
     if (!watchedEpisodeData?.watchedTime) return;
+    if (!currentEpisode?.name) return;
 
-    if (watchedEpisode?.sourceEpisodeId !== currentEpisode?.sourceEpisodeId)
-      return;
+    const currentEpisodeNumber = parseNumberFromString(currentEpisode.name, 0);
+
+    if (currentEpisodeNumber !== watchedEpisodeData.episodeNumber) return;
 
     const handleVideoPlay = () => {
       videoEl.currentTime = watchedEpisodeData.watchedTime;
 
       videoEl.removeEventListener("canplay", handleVideoPlay);
+      videoEl.removeEventListener("timeupdate", handleVideoPlay);
     };
 
     // Only set the video time if the video is ready
     videoEl.addEventListener("canplay", handleVideoPlay);
+    // Just in case the video is already played.
+    videoEl.addEventListener("timeupdate", handleVideoPlay);
 
     return () => {
       videoEl.removeEventListener("canplay", handleVideoPlay);
+      videoEl.removeEventListener("timeupdate", handleVideoPlay);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [watchedEpisode?.sourceEpisodeId, videoRef.current]);
+  }, [
+    watchedEpisode.sourceEpisodeId,
+    watchedEpisodeData.watchedTime,
+    currentEpisode.name,
+    isSavedDataLoading,
+    watchedEpisodeData.episodeNumber,
+  ]);
+
+  // Refetch watched data when episode changes
+  useEffect(() => {
+    refetchWatchedData();
+  }, [currentEpisode.slug, refetchWatchedData]);
 
   const title = useMemo(
     () => getTitle(anime, router.locale),

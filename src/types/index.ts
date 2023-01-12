@@ -115,6 +115,7 @@ export interface Watched {
   updated_at?: string;
   created_at?: string;
   watchedTime?: number;
+  episodeNumber?: number;
 }
 
 export interface Read {
