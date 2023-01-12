@@ -247,11 +247,11 @@ const WatchPage: NextPage<WatchPageProps> = ({ episodes }) => {
       videoEl.removeEventListener("timeupdate", handleVideoPlay);
     };
   }, [
-    watchedEpisode.sourceEpisodeId,
-    watchedEpisodeData.watchedTime,
-    currentEpisode.name,
+    watchedEpisode?.sourceEpisodeId,
+    watchedEpisodeData?.watchedTime,
+    currentEpisode?.name,
     isSavedDataLoading,
-    watchedEpisodeData.episodeNumber,
+    watchedEpisodeData?.episodeNumber,
   ]);
 
   // Refetch watched data when episode changes
