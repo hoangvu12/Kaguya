@@ -1,19 +1,28 @@
 import { Episode } from "@/types";
-import React from "react";
+import React, { useMemo } from "react";
 import Image from "@/components/shared/Image";
 
 interface EpisodeCardProps {
   episode: Episode;
   isActive?: boolean;
   title?: string;
+  watchedTime?: number;
+  duration?: number;
 }
 
 const EpisodeCard: React.FC<EpisodeCardProps> = ({
   episode,
   isActive,
   title,
+  watchedTime,
+  duration = 0,
   ...props
 }) => {
+  const watchProgressPercent = useMemo(
+    () => (duration === 0 ? 0 : (watchedTime / duration) * 100),
+    [watchedTime, duration]
+  );
+
   return (
     <div
       className="relative h-40 w-full hover:bg-white/20 cursor-pointer"
@@ -37,6 +46,11 @@ const EpisodeCard: React.FC<EpisodeCardProps> = ({
           </p>
         )}
       </div>
+
+      <div
+        className="absolute bottom-0 h-1 bg-primary-500"
+        style={{ width: `${watchProgressPercent}%` }}
+      />
     </div>
   );
 };
