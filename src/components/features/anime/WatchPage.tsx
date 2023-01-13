@@ -241,37 +241,35 @@ const WatchPage: NextPage<WatchPageProps> = ({ episodes, media: anime }) => {
     const videoEl = videoRef.current;
 
     if (!videoEl) return;
-    if (isSavedDataLoading) return;
+
     if (!watchedEpisodeData?.watchedTime) return;
+
     if (!currentEpisode?.name) return;
 
     const currentEpisodeNumber = parseNumberFromString(currentEpisode.name, 0);
 
     if (currentEpisodeNumber !== watchedEpisodeData.episodeNumber) return;
 
-    const handleVideoPlay = () => {
-      videoEl.currentTime = watchedEpisodeData.watchedTime;
+    const handleCanPlay = () => {
+      const handleVideoPlay = () => {
+        setTimeout(() => {
+          videoEl.currentTime = watchedEpisodeData.watchedTime;
+        }, 1000);
 
-      videoEl.removeEventListener("canplay", handleVideoPlay);
-      videoEl.removeEventListener("timeupdate", handleVideoPlay);
+        videoEl.removeEventListener("timeupdate", handleVideoPlay);
+      };
+
+      // Just in case the video is already played.
+      videoEl.addEventListener("timeupdate", handleVideoPlay);
     };
 
-    // Only set the video time if the video is ready
-    videoEl.addEventListener("canplay", handleVideoPlay);
-    // Just in case the video is already played.
-    videoEl.addEventListener("timeupdate", handleVideoPlay);
+    videoEl.addEventListener("loadedmetadata", handleCanPlay, { once: true });
 
     return () => {
-      videoEl.removeEventListener("canplay", handleVideoPlay);
-      videoEl.removeEventListener("timeupdate", handleVideoPlay);
+      videoEl.removeEventListener("loadedmetadata", handleCanPlay);
     };
-  }, [
-    watchedEpisode?.sourceEpisodeId,
-    watchedEpisodeData?.watchedTime,
-    currentEpisode?.name,
-    isSavedDataLoading,
-    watchedEpisodeData?.episodeNumber,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watchedEpisodeData, currentEpisode?.slug, videoRef.current]);
 
   // Refetch watched data when episode changes
   useEffect(() => {
