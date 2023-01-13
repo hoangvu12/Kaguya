@@ -1,13 +1,13 @@
-/* eslint-disable @next/next/no-img-element */
-
+import { useRouter } from "next/router";
 import Script from "next/script";
-import React, { useEffect, useState } from "react";
 import nookies from "nookies";
+import { useEffect, useState } from "react";
 
 const USER_COOKIE = "sb-access-token";
 
 const TopBanner = () => {
   const [isShow, setIsShow] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const cookies = nookies.get(null);
@@ -19,14 +19,26 @@ const TopBanner = () => {
     }
   }, []);
 
+  useEffect(() => {
+    // @ts-ignore
+    const PSTBanners = (window.PSTBanners = window.PSTBanners || []);
+
+    PSTBanners.push({
+      zone: "zone18629245",
+      options: { gamClick: "%%CLICK_URL_UNESC%%" },
+    });
+  }, [router.asPath]);
+
   return isShow ? (
     <div className="my-4">
       <div id="zone18629245"></div>
-      <Script id="pushtimize-banner">
-        {`
-          if (!window.PSTBanners) {(function() {var s = document.createElement("script");s.async = true;s.type = "text/javascript";s.src = 'https://api.trackpush.com/sdk/banner/v1.js?pid=QyD0YhFH-RJxSHM4XHVISQ';var n = document.getElementsByTagName("script")[0];n.parentNode.insertBefore(s, n);}());}var PSTBanners = window.PSTBanners || [];PSTBanners.push({zone:'zone18629245',options:{gamClick:'%%CLICK_URL_UNESC%%'}});
-        `}
-      </Script>
+
+      <Script
+        id="pushtimize-banner-src"
+        async
+        type="text/javascript"
+        src="https://api.trackpush.com/sdk/banner/v1.js?pid=QyD0YhFH-RJxSHM4XHVISQ"
+      />
     </div>
   ) : null;
 };
