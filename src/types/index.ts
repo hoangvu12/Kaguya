@@ -200,6 +200,7 @@ export type ImageSource = {
   image: string;
   useProxy?: boolean;
   proxy?: Proxy;
+  usePublicProxy?: boolean;
 };
 
 export type BasicRoomUser = {

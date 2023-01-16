@@ -48,7 +48,9 @@ const ReadImage: React.FC<ReadImageProps> = ({
 
   const src = useMemo(
     () =>
-      image.useProxy ? createProxyUrl(image.image, image.proxy) : image.image,
+      image.useProxy
+        ? createProxyUrl(image.image, image.proxy, image.usePublicProxy)
+        : image.image,
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [image.image]
   );
