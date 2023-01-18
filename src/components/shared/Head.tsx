@@ -59,6 +59,10 @@ const Head: React.FC<HeadProps> = (props) => {
         content="black-translucent"
       />
       <meta name="msapplication-starturl" content="/" />
+
+      <link rel="canonical" href={WEBSITE_URL + asPath} />
+
+      {props.children}
     </NextHead>
   );
 };
