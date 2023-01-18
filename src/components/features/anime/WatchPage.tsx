@@ -122,16 +122,17 @@ const WatchPage: NextPage<WatchPageProps> = ({ episodes, media: anime }) => {
 
   const currentEpisode = useMemo(
     () =>
-      sourceEpisodes.find((episode) => episode.sourceEpisodeId === episodeId),
+      sourceEpisodes.find((episode) => episode.sourceEpisodeId === episodeId) ||
+      sourceEpisodes[0],
     [sourceEpisodes, episodeId]
   );
 
   const sectionEpisodes = useMemo(
     () =>
       sourceEpisodes.filter(
-        (episode) => episode.section === currentEpisode.section
+        (episode) => episode.section === currentEpisode?.section
       ),
-    [currentEpisode.section, sourceEpisodes]
+    [currentEpisode?.section, sourceEpisodes]
   );
 
   const currentSectionEpisodeIndex = useMemo(
