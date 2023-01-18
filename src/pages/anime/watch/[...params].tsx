@@ -1,4 +1,5 @@
 import WatchPage from "@/components/features/anime/WatchPage";
+import Button from "@/components/shared/Button";
 import Head from "@/components/shared/Head";
 import Loading from "@/components/shared/Loading";
 import { REVALIDATE_TIME } from "@/constants";
@@ -16,13 +17,15 @@ interface WatchPageContainerProps {
 
 const WatchPageContainer: NextPage<WatchPageContainerProps> = ({ media }) => {
   const { data: episodes, isLoading } = useEpisodes(media.id);
-  const { locale } = useRouter();
+  const { locale, back } = useRouter();
 
   const title = useMemo(() => getTitle(media, locale), [media, locale]);
   const description = useMemo(
     () => getDescription(media, locale),
     [media, locale]
   );
+
+  const hasEpisodes = useMemo(() => episodes?.length > 0, [episodes]);
 
   return (
     <React.Fragment>
@@ -34,6 +37,16 @@ const WatchPageContainer: NextPage<WatchPageContainerProps> = ({ media }) => {
       {isLoading ? (
         <div className="flex relative w-full min-h-screen">
           <Loading />
+        </div>
+      ) : !hasEpisodes ? (
+        <div className="flex flex-col items-center absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 space-y-4">
+          <p className="text-4xl font-semibold text-center">｡゜(｀Д´)゜｡</p>
+          <p className="text-xl text-center">
+            Something went wrong (There are no episodes)
+          </p>
+          <Button className="w-[max-content]" primary onClick={back}>
+            Go back
+          </Button>
         </div>
       ) : (
         <WatchPage episodes={episodes} media={media} />
