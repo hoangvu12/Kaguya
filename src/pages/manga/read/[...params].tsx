@@ -1,4 +1,5 @@
 import ReadPage from "@/components/features/manga/ReadPage";
+import Button from "@/components/shared/Button";
 import Head from "@/components/shared/Head";
 import Loading from "@/components/shared/Loading";
 import { REVALIDATE_TIME } from "@/constants";
@@ -17,7 +18,7 @@ interface ReadPageContainerProps {
 
 const ReadPageContainer: NextPage<ReadPageContainerProps> = ({ media }) => {
   const { data: chapters, isLoading } = useChapters(media.id);
-  const { locale } = useRouter();
+  const { locale, back } = useRouter();
   const { t } = useTranslation("manga_read");
 
   const title = useMemo(() => getTitle(media, locale), [media, locale]);
@@ -25,6 +26,8 @@ const ReadPageContainer: NextPage<ReadPageContainerProps> = ({ media }) => {
     () => getDescription(media, locale),
     [media, locale]
   );
+
+  const hasChapters = useMemo(() => chapters?.length > 0, [chapters]);
 
   return (
     <React.Fragment>
@@ -38,6 +41,16 @@ const ReadPageContainer: NextPage<ReadPageContainerProps> = ({ media }) => {
       {isLoading ? (
         <div className="flex relative w-full min-h-screen">
           <Loading />
+        </div>
+      ) : !hasChapters ? (
+        <div className="flex flex-col items-center absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 space-y-4">
+          <p className="text-4xl font-semibold text-center">｡゜(｀Д´)゜｡</p>
+          <p className="text-xl text-center">
+            Something went wrong (There are no chapters)
+          </p>
+          <Button className="w-[max-content]" primary onClick={back}>
+            Go back
+          </Button>
         </div>
       ) : (
         <ReadPage chapters={chapters} media={media} />
