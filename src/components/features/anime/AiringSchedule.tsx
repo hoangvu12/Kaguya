@@ -10,10 +10,10 @@ import { removeArrayOfObjectDup } from "@/utils";
 import classNames from "classnames";
 import { useTranslation } from "next-i18next";
 import React, { useMemo, useState } from "react";
-import { isMobile } from "react-device-detect";
+import { isMobileOnly } from "react-device-detect";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 
-const AnimeScheduling = () => {
+const AnimeSchedule = () => {
   const { t } = useTranslation("anime_home");
   const { DAYSOFWEEK } = useConstantTranslation();
 
@@ -39,7 +39,7 @@ const AnimeScheduling = () => {
   const { data: schedules, isLoading: schedulesLoading } = useAiringSchedules({
     airingAt_greater,
     airingAt_lesser,
-    perPage: isMobile ? 10 : 20,
+    perPage: isMobileOnly ? 5 : 15,
     sort: [AiringSort.Time_desc],
   });
 
@@ -127,4 +127,4 @@ const AnimeScheduling = () => {
   );
 };
 
-export default React.memo(AnimeScheduling);
+export default React.memo(AnimeSchedule);

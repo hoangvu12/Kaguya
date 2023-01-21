@@ -10,6 +10,7 @@ import Section from "@/components/shared/Section";
 import ShouldWatch from "@/components/shared/ShouldWatch";
 import ListSwiperSkeleton from "@/components/skeletons/ListSwiperSkeleton";
 import useMedia from "@/hooks/useMedia";
+import { DeviceSelectors } from "@/types";
 import { MediaSort, MediaStatus, MediaType } from "@/types/anilist";
 import { randomElement } from "@/utils";
 import classNames from "classnames";
@@ -19,17 +20,18 @@ import React, { useMemo } from "react";
 import { getSelectorsByUserAgent } from "react-device-detect";
 
 interface HomeProps {
-  isMobile: boolean;
-  isDesktop: boolean;
+  selectors: DeviceSelectors;
 }
 
-const Home: NextPage<HomeProps> = ({ isMobile, isDesktop }) => {
+const Home: NextPage<HomeProps> = ({ selectors }) => {
   const { t } = useTranslation();
+
+  const { isMobileOnly } = selectors;
 
   const { data: trendingManga, isLoading: trendingLoading } = useMedia({
     type: MediaType.Manga,
     sort: [MediaSort.Trending_desc, MediaSort.Popularity_desc],
-    perPage: isMobile ? 5 : 10,
+    perPage: isMobileOnly ? 5 : 10,
   });
 
   const { data: recentlyUpdated, isLoading: recentlyUpdatedLoading } = useMedia(
@@ -37,14 +39,14 @@ const Home: NextPage<HomeProps> = ({ isMobile, isDesktop }) => {
       type: MediaType.Manga,
       sort: [MediaSort.Updated_at_desc],
       isAdult: false,
-      perPage: isMobile ? 5 : 10,
+      perPage: isMobileOnly ? 5 : 10,
     }
   );
 
   const { data: upcoming, isLoading: upcomingLoading } = useMedia({
     status: MediaStatus.Not_yet_released,
     sort: [MediaSort.Trending_desc],
-    perPage: isMobile ? 5 : 10,
+    perPage: isMobileOnly ? 5 : 10,
     type: MediaType.Manga,
   });
 
@@ -61,7 +63,7 @@ const Home: NextPage<HomeProps> = ({ isMobile, isDesktop }) => {
 
       <div className="pb-8">
         <HomeBanner
-          isMobile={isMobile}
+          selectors={selectors}
           data={trendingManga}
           isLoading={trendingLoading}
         />
@@ -93,7 +95,7 @@ const Home: NextPage<HomeProps> = ({ isMobile, isDesktop }) => {
           <div
             className={classNames(
               "flex gap-8",
-              isDesktop ? "flex-row" : "flex-col"
+              isMobileOnly ? "flex-col" : "flex-row"
             )}
           >
             <Section
@@ -111,7 +113,7 @@ const Home: NextPage<HomeProps> = ({ isMobile, isDesktop }) => {
               title={t("common:genres")}
               className="w-full md:w-[20%] md:!pl-0"
             >
-              <GenreSwiper isMobile={isMobile} className="md:h-[500px]" />
+              <GenreSwiper selectors={selectors} className="md:h-[500px]" />
             </Section>
           </div>
         </div>
@@ -123,11 +125,10 @@ const Home: NextPage<HomeProps> = ({ isMobile, isDesktop }) => {
 Home.getInitialProps = async ({ req }) => {
   const userAgent = req ? req.headers["user-agent"] : navigator.userAgent;
 
-  const { isMobile, isDesktop } = getSelectorsByUserAgent(userAgent);
+  const selectors = getSelectorsByUserAgent(userAgent);
 
   return {
-    isMobile,
-    isDesktop,
+    selectors,
   };
 };
 

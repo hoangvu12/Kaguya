@@ -5,6 +5,7 @@ import Image from "@/components/shared/Image";
 import Link from "@/components/shared/Link";
 import Swiper, { SwiperProps, SwiperSlide } from "@/components/shared/Swiper";
 import TextIcon from "@/components/shared/TextIcon";
+import { DeviceSelectors } from "@/types";
 import { Media } from "@/types/anilist";
 import { createMediaDetailsUrl, isValidUrl, numberWithCommas } from "@/utils";
 import { convert, getDescription, getTitle } from "@/utils/data";
@@ -21,7 +22,7 @@ import Skeleton, { SkeletonItem } from "./Skeleton";
 interface HomeBannerProps {
   data: Media[];
   isLoading?: boolean;
-  isMobile: boolean;
+  selectors: DeviceSelectors;
 }
 
 const bannerVariants = {
@@ -35,16 +36,18 @@ const transition = [0.33, 1, 0.68, 1];
 const HomeBanner: React.FC<HomeBannerProps> = ({
   data,
   isLoading,
-  isMobile,
+  selectors,
 }) => {
+  const { isMobileOnly } = selectors;
+
   return (
     <React.Fragment>
-      {!isMobile ? (
+      {!isMobileOnly ? (
         <div>
           {isLoading ? (
             <DesktopHomeBannerSkeleton />
           ) : (
-            <DesktopHomeBanner isMobile={isMobile} data={data} />
+            <DesktopHomeBanner selectors={selectors} data={data} />
           )}
         </div>
       ) : (
@@ -52,7 +55,7 @@ const HomeBanner: React.FC<HomeBannerProps> = ({
           {isLoading ? (
             <MobileHomeBannerSkeleton />
           ) : (
-            <MobileHomeBanner isMobile={isMobile} data={data} />
+            <MobileHomeBanner selectors={selectors} data={data} />
           )}
         </div>
       )}

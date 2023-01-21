@@ -2,25 +2,28 @@ import Image from "@/components/shared/Image";
 import Link from "@/components/shared/Link";
 import Swiper, { SwiperProps, SwiperSlide } from "@/components/shared/Swiper";
 import useConstantTranslation from "@/hooks/useConstantTranslation";
+import { DeviceSelectors } from "@/types";
 import { MediaType } from "@/types/anilist";
 import classNames from "classnames";
 import React from "react";
 
 interface GenresSwiperProps extends SwiperProps {
   type?: MediaType.Anime | MediaType.Manga;
-  isMobile: boolean;
+  selectors: DeviceSelectors;
 }
 
 const GenreSwiper: React.FC<GenresSwiperProps> = ({
   type = MediaType.Anime,
-  isMobile,
+  selectors,
   ...props
 }) => {
   const { GENRES } = useConstantTranslation();
 
+  const { isMobileOnly } = selectors;
+
   return (
     <Swiper
-      direction={isMobile ? "horizontal" : "vertical"}
+      direction={isMobileOnly ? "horizontal" : "vertical"}
       spaceBetween={20}
       breakpoints={{
         1280: {
@@ -44,7 +47,7 @@ const GenreSwiper: React.FC<GenresSwiperProps> = ({
           slidesPerGroup: 2,
         },
       }}
-      isOverflowHidden={!isMobile}
+      isOverflowHidden={!isMobileOnly}
       freeMode
       {...props}
     >
@@ -55,8 +58,8 @@ const GenreSwiper: React.FC<GenresSwiperProps> = ({
               <div
                 className={classNames(
                   "group relative w-full",
-                  isMobile && "aspect-w-16 aspect-h-9",
-                  !isMobile && "h-full"
+                  isMobileOnly && "aspect-w-16 aspect-h-9",
+                  !isMobileOnly && "h-full"
                 )}
               >
                 <Image

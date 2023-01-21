@@ -3,12 +3,12 @@ import ArrowSwiper, {
   SwiperSlide,
 } from "@/components/shared/ArrowSwiper";
 import Link from "@/components/shared/Link";
-import useDevice from "@/hooks/useDevice";
 import { Episode } from "@/types";
 import { chunk, groupBy, parseNumberFromString } from "@/utils";
 import classNames from "classnames";
 import { LinkProps } from "next/link";
 import React, { useMemo } from "react";
+import { isMobileOnly } from "react-device-detect";
 
 export interface EpisodeSelectorProps {
   episodes: Episode[];
@@ -21,14 +21,12 @@ export interface EpisodeSelectorProps {
 }
 
 const EpisodeSelector: React.FC<EpisodeSelectorProps> = (props) => {
-  const { isMobile } = useDevice();
-
   const {
     episodes,
     activeEpisode,
     chunkSwiperProps,
     episodeLinkProps,
-    episodeChunk = isMobile ? 6 : 18,
+    episodeChunk = isMobileOnly ? 6 : 18,
     onEachEpisode = (episode) => (
       <Link
         href={`/anime/watch/${props.mediaId}/${episode.sourceId}/${episode.sourceEpisodeId}`}
