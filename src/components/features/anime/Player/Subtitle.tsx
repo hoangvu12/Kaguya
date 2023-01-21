@@ -11,6 +11,7 @@ import {
 } from "netplayer";
 import { useEffect, useMemo, useState } from "react";
 import { isDesktop } from "react-device-detect";
+import { toast } from "react-toastify";
 import { buildAbsoluteURL } from "url-toolkit";
 
 const textStyles = {
@@ -96,22 +97,29 @@ const Subtitle = () => {
     if (!subtitleText) return;
     if (!videoEl) return;
 
-    const { entries = [] } = parse(subtitleText);
+    try {
+      const { entries = [] } = parse(subtitleText);
 
-    const handleSubtitle = () => {
-      const currentTime = videoEl.currentTime * 1000;
-      const currentEntry = entries.find(
-        (entry) => entry.from <= currentTime && entry.to >= currentTime
+      const handleSubtitle = () => {
+        const currentTime = videoEl.currentTime * 1000;
+        const currentEntry = entries.find(
+          (entry) => entry.from <= currentTime && entry.to >= currentTime
+        );
+
+        setCurrentText(currentEntry?.text || "");
+      };
+
+      videoEl.addEventListener("timeupdate", handleSubtitle);
+
+      return () => {
+        videoEl.removeEventListener("timeupdate", handleSubtitle);
+      };
+    } catch (err) {
+      toast.error(
+        `Failed to parse subtitle [${subtitle.lang} - ${subtitle.language}]`
       );
+    }
 
-      setCurrentText(currentEntry?.text || "");
-    };
-
-    videoEl.addEventListener("timeupdate", handleSubtitle);
-
-    return () => {
-      videoEl.removeEventListener("timeupdate", handleSubtitle);
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subtitleText]);
 
