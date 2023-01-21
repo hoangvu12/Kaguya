@@ -12,8 +12,8 @@ import {
   VolumeButton,
 } from "netplayer";
 import * as React from "react";
+import PiPButton from "./PiPButton";
 import ProgressSlider from "./ProgressSlider";
-// import ScreenshotButton from "./ScreenshotButton";
 import SkipButton from "./SkipButton";
 import TimestampsButton from "./TimestampsButton";
 
@@ -56,7 +56,7 @@ const Controls: React.FC<ControlsProps> = ({
           <TimestampsButton />
           <SkipButton />
           <SubtitleButton />
-          {/* <ScreenshotButton /> */}
+          <PiPButton />
           <SettingsButton />
           <FullscreenButton />
         </div>
