@@ -3,6 +3,7 @@ import { WatchPlayerProps } from "@/components/features/anime/WatchPlayer";
 import EpisodesIcon from "@/components/icons/EpisodesIcon";
 import CircleButton from "@/components/shared/CircleButton";
 import Popup from "@/components/shared/Popup";
+import { createProxyUrl } from "@/utils";
 import classNames from "classnames";
 import { AnimatePresence, motion, useMotionValue } from "framer-motion";
 import dynamic from "next/dynamic";
@@ -100,6 +101,25 @@ const GlobalPlayerContextProvider: React.FC = ({ children }) => {
       alertRef.current = true;
     }
   }, [isEmbed]);
+
+  useEffect(() => {
+    import("@/lib/x-frame-bypass");
+  }, []);
+
+  const playerSrc = useMemo(() => {
+    return playerSource?.useProxy || playerSource?.usePublicProxy
+      ? createProxyUrl(
+          playerSource?.file,
+          playerSource?.proxy,
+          playerSource?.usePublicProxy
+        )
+      : playerSource?.file;
+  }, [
+    playerSource?.file,
+    playerSource?.proxy,
+    playerSource?.useProxy,
+    playerSource?.usePublicProxy,
+  ]);
 
   return (
     <PlayerContext.Provider
@@ -206,7 +226,15 @@ const GlobalPlayerContextProvider: React.FC = ({ children }) => {
                     </div>
                   )}
 
-                  <iframe className="w-full h-full" src={playerSource?.file} />
+                  <iframe
+                    is="x-frame-bypass"
+                    className="w-full h-full"
+                    // @ts-ignore
+                    // Custom attribute
+                    target={playerSource?.file}
+                    proxy={playerSource.useProxy || playerSource.usePublicProxy}
+                    src={playerSrc}
+                  />
                 </React.Fragment>
               )}
             </motion.div>

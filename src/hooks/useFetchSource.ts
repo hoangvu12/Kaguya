@@ -21,7 +21,7 @@ interface ReturnFailType {
 
 const convertSources = (sources: VideoSource[]) =>
   sources.map((source) => {
-    if (source.useProxy) {
+    if (source.useProxy && !source.isEmbed) {
       source.file = createProxyUrl(source.file, source.proxy);
     }
 

@@ -6529,6 +6529,11 @@ ws@~8.2.3:
   resolved "https://registry.yarnpkg.com/ws/-/ws-8.2.3.tgz#63a56456db1b04367d0b721a0b80cae6d8becbba"
   integrity sha512-wBuoj1BDpC6ZQ1B7DWQBYVLphPWkm8i9Y0/3YdHjHKHiohOJ1ws+3OccDWtH+PoC9DZD5WOTrJvNbWvjS6JWaA==
 
+x-frame-bypass@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/x-frame-bypass/-/x-frame-bypass-1.0.2.tgz#62c39313b1be75088d183e2189f2f8c2f955cfaa"
+  integrity sha512-9NQ/DZABhyIST8uO9p4oXwJjfkAlwrW4jz2m/jNMXKSm6er+BLAf3QwqQDBm8xg6DDry+73WUTSr/ly2165k9A==
+
 xmlhttprequest-ssl@~2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/xmlhttprequest-ssl/-/xmlhttprequest-ssl-2.0.0.tgz#91360c86b914e67f44dce769180027c0da618c67"
