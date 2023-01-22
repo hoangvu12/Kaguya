@@ -190,14 +190,12 @@ const ReadPage: NextPage<ReadPageProps> = ({ chapters, media: manga }) => {
                 <div className="space-y-4 text-center">
                   <p className="text-4xl font-semibold">｡゜(｀Д´)゜｡</p>
                   <p className="text-xl">
-                    Something went wrong{" "}
-                    {error?.response?.data?.error &&
-                      `(${error?.response?.data?.error})`}
+                    {t("error_message", {
+                      error: error?.response?.data?.error || error.message,
+                    })}
                   </p>
 
-                  <p className="text-lg">
-                    Try to refresh the page or choose another source.
-                  </p>
+                  <p className="text-lg">{t("error_fallback_suggest")}</p>
                 </div>
               </div>
             ) : !isLoading ? (

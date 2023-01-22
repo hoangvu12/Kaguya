@@ -1,1 +1,20 @@
-{"error_goback":"Trở về trang trước","error_message":"Đã có lỗi xảy ra ({{error}})","fit_mode":"Chế độ ảnh","head_description":"Đọc truyện {{title}} ({{chapterName}}) tại Kaguya. Hoàn toàn miễn phí, không quảng cáo","layout_direction":"Hướng đọc","next_chapter":"Chương sau","next_image":"Ảnh tiếp theo","previous_chapter":"Chương trước","previous_image":"Ảnh trước","reading":"Đang đọc","reread_description":"Hệ thống ghi nhận bạn đã đọc {{chapterName}}","reread_heading":"Đọc {{chapterName}}","reread_no":"Không","reread_question":"Bạn có muốn đọc {{chapterName}} không?","reread_yes":"Đọc","search_chapter_placeholder":"Nhập chapter muốn tìm"}
+{
+  "fit_mode": "Chế độ ảnh",
+  "head_description": "Đọc truyện {{title}} ({{chapterName}}) tại Kaguya. Hoàn toàn miễn phí, không quảng cáo",
+  "layout_direction": "Hướng đọc",
+  "next_chapter": "Chương sau",
+  "next_image": "Ảnh tiếp theo",
+  "previous_chapter": "Chương trước",
+  "previous_image": "Ảnh trước",
+  "reading": "Đang đọc",
+  "reread_description": "Hệ thống ghi nhận bạn đã đọc {{chapterName}}",
+  "reread_heading": "Đọc {{chapterName}}",
+  "reread_no": "Không",
+  "reread_question": "Bạn có muốn đọc {{chapterName}} không?",
+  "reread_yes": "Đọc",
+  "search_chapter_placeholder": "Nhập chapter muốn tìm",
+  "error_message": "Đã có lỗi xảy ra ({{error}})",
+  "error_fallback_suggest": "Hãy thử tải lại trang hoặc chọn source khác.",
+  "no_chapters_message": "Không có chương nào",
+  "error_goback": "Quay lại trang chủ"
+}

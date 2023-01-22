@@ -45,11 +45,15 @@ const ReadPageContainer: NextPage<ReadPageContainerProps> = ({ media }) => {
       ) : !hasChapters ? (
         <div className="flex flex-col items-center absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 space-y-4">
           <p className="text-4xl font-semibold text-center">｡゜(｀Д´)゜｡</p>
+
           <p className="text-xl text-center">
-            Something went wrong (There are no chapters)
+            {t("error_message", {
+              error: t("no_chapters_message"),
+            })}
           </p>
+
           <Button className="w-[max-content]" primary onClick={back}>
-            Go back
+            {t("error_goback")}
           </Button>
         </div>
       ) : (
