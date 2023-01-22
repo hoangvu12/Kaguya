@@ -184,27 +184,28 @@ const ReadPage: NextPage<ReadPageProps> = ({ chapters, media: manga }) => {
             image={manga.bannerImage || manga.coverImage.extraLarge}
           />
 
-          {isError ? (
-            <div className="w-full h-full flex flex-col items-center justify-center space-y-8">
-              <div className="space-y-4">
-                <p className="text-4xl font-semibold">｡゜(｀Д´)゜｡</p>
-                <p className="text-xl">
-                  {t("error_message", { error: error?.response?.data?.error })}
-                </p>
-              </div>
+          <ReadPanel>
+            {isError ? (
+              <div className="w-full h-full flex flex-col items-center justify-center space-y-8">
+                <div className="space-y-4 text-center">
+                  <p className="text-4xl font-semibold">｡゜(｀Д´)゜｡</p>
+                  <p className="text-xl">
+                    Something went wrong{" "}
+                    {error?.response?.data?.error &&
+                      `(${error?.response?.data?.error})`}
+                  </p>
 
-              <Button primary onClick={router.back}>
-                <p>
-                  {" "}
-                  {t("error_goback", { error: error?.response?.data?.error })}
-                </p>
-              </Button>
-            </div>
-          ) : (
-            <ReadPanel>
-              {!isLoading ? <ReadContainer /> : <Loading />}
-            </ReadPanel>
-          )}
+                  <p className="text-lg">
+                    Try to refresh the page or choose another source.
+                  </p>
+                </div>
+              </div>
+            ) : !isLoading ? (
+              <ReadContainer />
+            ) : (
+              <Loading />
+            )}
+          </ReadPanel>
 
           {showReadOverlay && !declinedReread && (
             <Portal>
