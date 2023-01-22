@@ -1,6 +1,7 @@
 import Button from "@/components/shared/Button";
 import useUpdateAvatar from "@/hooks/useUpdateAvatar";
 import { AdditionalUser } from "@/types";
+import { useTranslation } from "next-i18next";
 import React, { useRef, useState } from "react";
 import { AiFillCamera } from "react-icons/ai";
 import { IoMdCheckmark } from "react-icons/io";
@@ -17,6 +18,8 @@ const UpdateAvatar: React.FC<UpdateAvatarProps> = ({ user }) => {
   const fileRef = useRef<File>(null);
 
   const queryClient = useQueryClient();
+
+  const { t } = useTranslation("user_profile");
 
   const { mutate: updateAvatar, isLoading: updateAvatarLoading } =
     useUpdateAvatar();
@@ -94,7 +97,7 @@ const UpdateAvatar: React.FC<UpdateAvatarProps> = ({ user }) => {
             className="shrink-0 bg-background-300 text-white"
             onClick={handleCancelPreview}
           >
-            Cancel
+            {t("avatar_edit_cancel")}
           </Button>
 
           <Button
@@ -104,7 +107,7 @@ const UpdateAvatar: React.FC<UpdateAvatarProps> = ({ user }) => {
             LeftIcon={IoMdCheckmark}
             onClick={handleUpdateAvatar}
           >
-            Save changes
+            {t("avatar_edit_save")}
           </Button>
         </div>
       )}

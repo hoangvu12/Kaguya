@@ -4,6 +4,7 @@ import InView from "@/components/shared/InView";
 import List from "@/components/shared/List";
 import Loading from "@/components/shared/Loading";
 import ListSkeleton from "@/components/skeletons/ListSkeleton";
+import useConstantTranslation from "@/hooks/useConstantTranslation";
 import useWatchList, { STATUS, Status } from "@/hooks/useWatchList";
 import { AdditionalUser } from "@/types";
 import { parseTime } from "@/utils";
@@ -17,7 +18,17 @@ interface WatchListProps {
 }
 
 const WatchList: React.FC<WatchListProps> = ({ user }) => {
-  const [activeTab, setActiveTab] = useState<Status>(STATUS.All);
+  const { WATCH_STATUS } = useConstantTranslation();
+
+  type WatchStatus = typeof WATCH_STATUS[number];
+
+  const getStatus = (status: Status) => {
+    return WATCH_STATUS.find((watchStatus) => watchStatus.value === status);
+  };
+
+  const [activeTab, setActiveTab] = useState<WatchStatus>(
+    getStatus(STATUS.Watching)
+  );
   const { t } = useTranslation("common");
 
   const {
@@ -27,7 +38,7 @@ const WatchList: React.FC<WatchListProps> = ({ user }) => {
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
-  } = useWatchList(activeTab, user);
+  } = useWatchList(activeTab.value as Status, user);
 
   const handleFetch = () => {
     if (isFetchingNextPage || !hasNextPage) return;
@@ -36,7 +47,7 @@ const WatchList: React.FC<WatchListProps> = ({ user }) => {
   };
 
   const handleChangeTab = (status: Status) => () => {
-    setActiveTab(status);
+    setActiveTab(getStatus(status));
   };
 
   const totalData = useMemo(
@@ -49,41 +60,33 @@ const WatchList: React.FC<WatchListProps> = ({ user }) => {
       <div className="snap-x overflow-x-auto flex items-center gap-3">
         <Button
           className={classNames(
-            activeTab === STATUS.All ? "bg-primary-600" : "bg-background-600"
-          )}
-          onClick={handleChangeTab(STATUS.All)}
-        >
-          All
-        </Button>
-        <Button
-          className={classNames(
-            activeTab === STATUS.Watching
+            activeTab.value === STATUS.Watching
               ? "bg-primary-600"
               : "bg-background-500"
           )}
           onClick={handleChangeTab(STATUS.Watching)}
         >
-          Watching
+          {getStatus(STATUS.Watching).label}
         </Button>
         <Button
           className={classNames(
-            activeTab === STATUS.Completed
+            activeTab.value === STATUS.Completed
               ? "bg-primary-600"
               : "bg-background-500"
           )}
           onClick={handleChangeTab(STATUS.Completed)}
         >
-          Completed
+          {getStatus(STATUS.Completed).label}
         </Button>
         <Button
           className={classNames(
-            activeTab === STATUS.Planning
+            activeTab.value === STATUS.Planning
               ? "bg-primary-600"
               : "bg-background-500"
           )}
           onClick={handleChangeTab(STATUS.Planning)}
         >
-          Planned
+          {getStatus(STATUS.Planning).label}
         </Button>
       </div>
 

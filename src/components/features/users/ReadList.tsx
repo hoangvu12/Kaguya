@@ -4,6 +4,7 @@ import InView from "@/components/shared/InView";
 import List from "@/components/shared/List";
 import Loading from "@/components/shared/Loading";
 import ListSkeleton from "@/components/skeletons/ListSkeleton";
+import useConstantTranslation from "@/hooks/useConstantTranslation";
 import useReadList, { STATUS, Status } from "@/hooks/useReadList";
 import { AdditionalUser } from "@/types";
 import classNames from "classnames";
@@ -15,7 +16,18 @@ interface ReadListProps {
 }
 
 const ReadList: React.FC<ReadListProps> = ({ user }) => {
-  const [activeTab, setActiveTab] = useState<Status>(STATUS.All);
+  const { READ_STATUS } = useConstantTranslation();
+
+  type ReadStatus = typeof READ_STATUS[number];
+
+  const getStatus = (status: Status) => {
+    return READ_STATUS.find((watchStatus) => watchStatus.value === status);
+  };
+
+  const [activeTab, setActiveTab] = useState<ReadStatus>(
+    getStatus(STATUS.Reading)
+  );
+
   const { t } = useTranslation("common");
 
   const {
@@ -25,7 +37,7 @@ const ReadList: React.FC<ReadListProps> = ({ user }) => {
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
-  } = useReadList(activeTab, user);
+  } = useReadList(activeTab.value as Status, user);
 
   const handleFetch = () => {
     if (isFetchingNextPage || !hasNextPage) return;
@@ -34,7 +46,7 @@ const ReadList: React.FC<ReadListProps> = ({ user }) => {
   };
 
   const handleChangeTab = (status: Status) => () => {
-    setActiveTab(status);
+    setActiveTab(getStatus(status));
   };
 
   const totalData = useMemo(
@@ -47,41 +59,33 @@ const ReadList: React.FC<ReadListProps> = ({ user }) => {
       <div className="snap-x overflow-x-auto flex items-center gap-3">
         <Button
           className={classNames(
-            activeTab === STATUS.All ? "bg-primary-600" : "bg-background-600"
-          )}
-          onClick={handleChangeTab(STATUS.All)}
-        >
-          All
-        </Button>
-        <Button
-          className={classNames(
-            activeTab === STATUS.Reading
+            activeTab.value === STATUS.Reading
               ? "bg-primary-600"
               : "bg-background-500"
           )}
           onClick={handleChangeTab(STATUS.Reading)}
         >
-          Reading
+          {getStatus(STATUS.Reading).label}
         </Button>
         <Button
           className={classNames(
-            activeTab === STATUS.Completed
+            activeTab.value === STATUS.Completed
               ? "bg-primary-600"
               : "bg-background-500"
           )}
           onClick={handleChangeTab(STATUS.Completed)}
         >
-          Completed
+          {getStatus(STATUS.Completed).label}
         </Button>
         <Button
           className={classNames(
-            activeTab === STATUS.Planning
+            activeTab.value === STATUS.Planning
               ? "bg-primary-600"
               : "bg-background-500"
           )}
           onClick={handleChangeTab(STATUS.Planning)}
         >
-          Planned
+          {getStatus(STATUS.Planning).label}
         </Button>
       </div>
 

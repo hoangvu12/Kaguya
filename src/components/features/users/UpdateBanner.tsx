@@ -1,6 +1,7 @@
 import Button from "@/components/shared/Button";
 import useUpdateBanner from "@/hooks/useUpdateBanner";
 import { AdditionalUser } from "@/types";
+import { useTranslation } from "next-i18next";
 import React, { useRef, useState } from "react";
 import { AiFillCamera } from "react-icons/ai";
 import { IoMdCheckmark } from "react-icons/io";
@@ -15,6 +16,8 @@ const UpdateBanner: React.FC<UpdateBannerProps> = ({ user }) => {
   const [isPreviewing, setIsPreviewing] = useState(false);
   const bannerUrlRef = useRef<string>("");
   const fileRef = useRef<File>(null);
+
+  const { t } = useTranslation("user_profile");
 
   const queryClient = useQueryClient();
 
@@ -87,7 +90,7 @@ const UpdateBanner: React.FC<UpdateBannerProps> = ({ user }) => {
             className="bg-background-300 text-white"
             onClick={handleCancelPreview}
           >
-            Cancel
+            {t("banner_edit_cancel")}
           </Button>
 
           <Button
@@ -97,7 +100,7 @@ const UpdateBanner: React.FC<UpdateBannerProps> = ({ user }) => {
             LeftIcon={IoMdCheckmark}
             onClick={handleUpdateBanner}
           >
-            Save changes
+            {t("banner_edit_save")}
           </Button>
         </div>
       ) : (
@@ -107,7 +110,7 @@ const UpdateBanner: React.FC<UpdateBannerProps> = ({ user }) => {
         >
           <AiFillCamera className="w-6 h-6" />
 
-          <p>Edit banner</p>
+          <p>{t("banner_edit_label")}</p>
         </label>
       )}
 

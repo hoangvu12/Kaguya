@@ -6,7 +6,6 @@ import { getPagination, parseNumberFromString } from "@/utils";
 import { useInfiniteQuery } from "react-query";
 
 export const STATUS = {
-  All: "ALL",
   Reading: "READING",
   Completed: "COMPLETED",
   Planning: "PLANNING",
@@ -32,23 +31,22 @@ const useReadList = (sourceType: Status, user: AdditionalUser) => {
         .select("mediaId, userId, status, created_at")
         .eq("userId", user.id)
         .order("mediaId", { ascending: false })
+        .eq("status", sourceType)
         .range(from, to);
-
-      if (sourceType !== STATUS.All) {
-        sourceStatusQuery.eq("status", sourceType);
-      }
 
       const { data: sourceStatus, error } = await sourceStatusQuery;
 
       if (error) throw error;
 
       const ids = sourceStatus
-        .filter((s) => {
-          if (sourceType === STATUS.All) return true;
-
-          return s.status === sourceType;
-        })
+        .filter((s) => s.status === sourceType)
         .map((s) => s.mediaId);
+
+      if (!ids?.length)
+        return {
+          data: [],
+          nextPage: null,
+        };
 
       const media = await getMedia({
         type: MediaType.Manga,

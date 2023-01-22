@@ -1,14 +1,14 @@
 import Button from "@/components/shared/Button";
 import Input from "@/components/shared/Input";
 import Modal, { ModalRef } from "@/components/shared/Modal";
+import useUpdateProfile from "@/hooks/useUpdateProfile";
 import { AdditionalUser } from "@/types";
+import { Editor as EditorType } from "@tiptap/react";
+import { useTranslation } from "next-i18next";
 import React, { useRef } from "react";
 import { BiPencil } from "react-icons/bi";
-import { Editor as EditorType } from "@tiptap/react";
-import Editor from "../comment/Editor";
-import { useQueryClient } from "react-query";
-import useUpdateProfile from "@/hooks/useUpdateProfile";
 import { toast } from "react-toastify";
+import Editor from "../comment/Editor";
 
 interface EditProfileModalProps {
   user: AdditionalUser;
@@ -19,27 +19,11 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ user }) => {
   const nameInputRef = useRef<HTMLInputElement>();
   const usernameInputRef = useRef<HTMLInputElement>();
   const editorRef = useRef<EditorType>();
-  const queryClient = useQueryClient();
+
+  const { t } = useTranslation("user_profile");
 
   const { mutate: updateProfile, isLoading: updateProfileLoading } =
     useUpdateProfile();
-
-  const optimisticUpdate = (
-    updateFn: (oldData: AdditionalUser) => Partial<AdditionalUser>
-  ) => {
-    queryClient.setQueryData<AdditionalUser>(
-      ["user-profile", user.id],
-
-      (old) => {
-        const newData = updateFn(old);
-
-        return {
-          ...old,
-          ...newData,
-        };
-      }
-    );
-  };
 
   const handleSaveEdit = () => {
     const name = nameInputRef.current.value;
@@ -81,7 +65,7 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ user }) => {
         LeftIcon={BiPencil}
         className="font-semibold bg-background-500"
       >
-        Edit profile
+        {t("profile_edit_label")}
       </Button>
 
       <Modal className="w-full md:w-2/3" ref={modalRef}>
@@ -116,14 +100,14 @@ const EditProfileModal: React.FC<EditProfileModalProps> = ({ user }) => {
 
         <div className="flex items-center justify-end gap-2">
           <Button secondary onClick={handleModalState("close")}>
-            <p>Cancel</p>
+            <p> {t("profile_edit_cancel")}</p>
           </Button>
           <Button
             isLoading={updateProfileLoading}
             primary
             onClick={handleSaveEdit}
           >
-            <p>Save</p>
+            <p> {t("profile_edit_save")}</p>
           </Button>
         </div>
       </Modal>

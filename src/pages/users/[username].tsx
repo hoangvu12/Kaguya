@@ -16,14 +16,16 @@ import { MediaType } from "@/types/anilist";
 import ReadList from "@/components/features/users/ReadList";
 import Button from "@/components/shared/Button";
 import classNames from "classnames";
+import useConstantTranslation from "@/hooks/useConstantTranslation";
+import { useTranslation } from "next-i18next";
 
 interface UserPageProps {
   user: AdditionalUser;
 }
 
 const LISTS = {
-  Watch: "Watch",
-  Read: "Read",
+  Watch: "WATCH",
+  Read: "READ",
 } as const;
 
 type ListKey = keyof typeof LISTS;
@@ -31,15 +33,26 @@ type List = typeof LISTS[ListKey];
 
 const UserPage: NextPage<UserPageProps> = ({ user }) => {
   const currentUser = useUser();
+
+  const { USER_LIST } = useConstantTranslation();
+
+  const { t } = useTranslation("user_profile");
+
+  type UserList = typeof USER_LIST[number];
+
+  const getList = (list: List) => {
+    return USER_LIST.find((userList) => userList.value === list);
+  };
+
   const { data: userProfile } = useUserProfile(user);
-  const [listTab, setListTab] = useState<List>(LISTS.Watch);
+  const [listTab, setListTab] = useState<UserList>(getList(LISTS.Watch));
 
   const isOwnProfile = useMemo(
     () => currentUser?.id === user.id,
     [currentUser?.id, user?.id]
   );
 
-  const handleListTabChange = (list: List) => () => {
+  const handleListTabChange = (list: UserList) => () => {
     setListTab(list);
   };
 
@@ -95,12 +108,7 @@ const UserPage: NextPage<UserPageProps> = ({ user }) => {
                 </h3>
               </div>
 
-              <Description
-                description={
-                  userProfile.bio ||
-                  "This user is busy watching anime so hasn't written anything here yet."
-                }
-              />
+              <Description description={userProfile.bio || t("no_bio")} />
             </div>
           </div>
 
@@ -111,28 +119,32 @@ const UserPage: NextPage<UserPageProps> = ({ user }) => {
           )}
         </Section>
 
-        <Section title="List" className="mt-8 w-full">
+        <Section title={t("list_heading")} className="mt-8 w-full">
           <div className="flex items-center gap-3">
             <Button
               className={classNames(
-                listTab === LISTS.Watch ? "bg-primary-600" : "bg-background-600"
+                listTab.value === LISTS.Watch
+                  ? "bg-primary-600"
+                  : "bg-background-600"
               )}
-              onClick={handleListTabChange(LISTS.Watch)}
+              onClick={handleListTabChange(getList(LISTS.Watch))}
             >
-              Watch
+              {getList(LISTS.Watch).label}
             </Button>
             <Button
               className={classNames(
-                listTab === LISTS.Read ? "bg-primary-600" : "bg-background-600"
+                listTab.value === LISTS.Read
+                  ? "bg-primary-600"
+                  : "bg-background-600"
               )}
-              onClick={handleListTabChange(LISTS.Read)}
+              onClick={handleListTabChange(getList(LISTS.Read))}
             >
-              Read
+              {getList(LISTS.Read).label}
             </Button>
           </div>
 
           <div className="mt-8">
-            {listTab === LISTS.Watch ? (
+            {listTab.value === LISTS.Watch ? (
               <WatchList user={user} />
             ) : (
               <ReadList user={user} />

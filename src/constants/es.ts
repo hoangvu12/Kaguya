@@ -337,6 +337,17 @@ export const NOTIFICATION_ENTITIES: Record<
 
 const DAYSOFWEEK = ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"];
 
+const USER_LIST = [
+  {
+    value: "WATCH",
+    label: "Watch",
+  },
+  {
+    value: "READ",
+    label: "Read",
+  },
+];
+
 const translations = {
   SEASONS,
   FORMATS,
@@ -356,6 +367,7 @@ const translations = {
   PLAYER_TRANSLATIONS,
   DAYSOFWEEK,
   NOTIFICATION_ENTITIES,
+  USER_LIST,
 };
 
 export default translations;
