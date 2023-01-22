@@ -4,6 +4,7 @@ import { convert } from "@/utils/data";
 import Link from "@/components/shared/Link";
 import { useRouter } from "next/router";
 import React from "react";
+import { createCharacterDetailsUrl } from "@/utils";
 
 interface CharacterCardProps {
   characterEdge: CharacterEdge;
@@ -15,7 +16,7 @@ const CharacterConnectionCard: React.FC<CharacterCardProps> = ({
   const { locale } = useRouter();
 
   return (
-    <Link href={`/characters/details/${characterEdge.node.id}`}>
+    <Link href={createCharacterDetailsUrl(characterEdge.node)}>
       <a>
         <div className="text-gray-300 space-x-4 col-span-1 flex w-full h-24 bg-background-900 hover:bg-white/20 transtion duration-300">
           <div className="relative h-full w-16">
