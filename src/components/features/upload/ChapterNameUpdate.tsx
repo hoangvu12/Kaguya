@@ -35,7 +35,7 @@ const ChapterNameUpdate: React.FC<ChapterNameUpdateProps> = ({
         primary
         onClick={handleUpdateClick}
       >
-        Cập nhật
+        Update
       </Button>
     </div>
   );

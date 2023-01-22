@@ -25,7 +25,7 @@ export interface UseBrowseOptions {
 const useBrowse = (options: UseBrowseOptions) => {
   const {
     format,
-    genres,
+    genres = [],
     keyword,
     sort,
     limit = 30,

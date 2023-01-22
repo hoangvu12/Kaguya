@@ -75,7 +75,7 @@ const VideoUpdate: React.FC<VideoUpdateProps> = ({
           onClick={handleStartUpdating}
           className="w-max text-left hover:text-primary-300 hover:underline"
         >
-          Upload video khác
+          Upload another video
         </button>
       </div>
     </div>
@@ -85,10 +85,10 @@ const VideoUpdate: React.FC<VideoUpdateProps> = ({
 
       <div className="flex items-center justify-end gap-2">
         <Button isLoading={isLoading} onClick={handleCancelUpdating} secondary>
-          Hủy bỏ
+          Cancel
         </Button>
         <Button isLoading={isLoading} onClick={handleUpdate} primary>
-          Cập nhật
+          Update
         </Button>
       </div>
     </div>

@@ -30,7 +30,7 @@ interface UploadAnimePageProps {
 
 const columns: Column<MediaWithMediaUnit<MediaType.Anime>>[] = [
   {
-    Header: "Ảnh",
+    Header: "Image",
     Cell: ({ cell }) => {
       const originalCell = cell.row.original;
       const title = getTitle(originalCell);
@@ -44,7 +44,7 @@ const columns: Column<MediaWithMediaUnit<MediaType.Anime>>[] = [
     accessor: "coverImage",
   },
   {
-    Header: "Tên",
+    Header: "Title",
     Cell: ({ cell }) => {
       const originalCell = cell.row.original;
 
@@ -59,7 +59,7 @@ const columns: Column<MediaWithMediaUnit<MediaType.Anime>>[] = [
     accessor: "title",
   },
   {
-    Header: "Nội dung",
+    Header: "Description",
     accessor: "description",
     Cell: ({ cell }) => {
       return (
@@ -73,7 +73,7 @@ const columns: Column<MediaWithMediaUnit<MediaType.Anime>>[] = [
     },
   },
   {
-    Header: "Tập đã đăng",
+    Header: "Uploaded episodes",
     accessor: "episodes",
     Cell: ({ cell }) => {
       const originalCell = cell.row.original;
@@ -88,7 +88,7 @@ const columns: Column<MediaWithMediaUnit<MediaType.Anime>>[] = [
     },
   },
   {
-    Header: "Hành động",
+    Header: "Action",
     Cell: ({ cell }) => {
       return (
         <div className="w-full flex items-center justify-center">
@@ -142,13 +142,13 @@ const UploadAnimePage: NextPage<UploadAnimePageProps> = ({
   };
 
   return (
-    <UploadContainer
-      title="Danh sách Anime đã upload"
-      isVerified={user.isVerified}
-    >
-      <Button primary className="absolute -top-2 right-4 md:right-12">
+    <UploadContainer title="Uploaded Anime list" isVerified={user.isVerified}>
+      <Button
+        primary
+        className="absolute -top-2 right-4 md:right-12 lg:right-20 xl:right-28 2xl:right-36"
+      >
         <Link href="/upload/anime/create">
-          <a>Tìm anime</a>
+          <a>Search Anime</a>
         </Link>
       </Button>
 
@@ -165,7 +165,9 @@ const UploadAnimePage: NextPage<UploadAnimePageProps> = ({
           onPageIndexChange={handlePageIndexChange}
         />
       ) : (
-        <h1 className="text-3xl text-center">Bạn chưa đăng Anime nào</h1>
+        <h1 className="text-3xl text-center">
+          You haven&apos;t uploaded any Anime.
+        </h1>
       )}
     </UploadContainer>
   );

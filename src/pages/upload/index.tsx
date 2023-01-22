@@ -40,19 +40,19 @@ const UploadPage: NextPage<UploadPageProps> = ({
     >
       <div className="flex flex-col md:flex-row gap-4">
         <StatisticBox
-          title="Số Anime đã upload"
+          title="Uploaded Anime"
           Icon={AiOutlineVideoCamera}
           value={totalAnime}
         />
         <StatisticBox
-          title="Số Manga đã upload"
+          title="Uploaded Manga"
           Icon={BiImage}
           value={totalManga}
         />
       </div>
 
       <div className="flex flex-col md:flex-row gap-8 md:gap-4">
-        <Section hasPadding={false} className="flex-1" title="Anime gần đây">
+        <Section hasPadding={false} className="flex-1" title="Recently Anime">
           <div className="bg-background-900 p-4">
             {recentlyUpdatedAnime.length ? (
               recentlyUpdatedAnime.map((media) => (
@@ -63,11 +63,11 @@ const UploadPage: NextPage<UploadPageProps> = ({
                 />
               ))
             ) : (
-              <p className="text-center text-gray-300">Không có dữ liệu</p>
+              <p className="text-center text-gray-300">No data</p>
             )}
           </div>
         </Section>
-        <Section hasPadding={false} className="flex-1" title="Manga gần đây">
+        <Section hasPadding={false} className="flex-1" title="Recently Manga">
           <div className="bg-background-900 p-4">
             {recentlyUpdatedManga.length ? (
               recentlyUpdatedManga.map((media) => (
@@ -78,7 +78,7 @@ const UploadPage: NextPage<UploadPageProps> = ({
                 />
               ))
             ) : (
-              <p className="text-center text-gray-300">Không có dữ liệu</p>
+              <p className="text-center text-gray-300">No data</p>
             )}
           </div>
         </Section>

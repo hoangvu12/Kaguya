@@ -58,7 +58,7 @@ const SubtitleUpdate: React.FC<SubtitleUpdateProps> = ({
         primary
         onClick={handleUpdateClick}
       >
-        Cập nhật
+        Update
       </Button>
     </div>
   );

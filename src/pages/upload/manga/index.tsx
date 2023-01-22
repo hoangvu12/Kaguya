@@ -29,7 +29,7 @@ interface UploadAnimePageProps {
 
 const columns: Column<MediaWithMediaUnit<MediaType.Manga>>[] = [
   {
-    Header: "Ảnh",
+    Header: "Image",
     Cell: ({ cell }) => {
       const originalCell = cell.row.original;
       const title = getTitle(originalCell);
@@ -43,7 +43,7 @@ const columns: Column<MediaWithMediaUnit<MediaType.Manga>>[] = [
     accessor: "coverImage",
   },
   {
-    Header: "Tên",
+    Header: "Title",
     Cell: ({ cell }) => {
       const originalCell = cell.row.original;
 
@@ -58,7 +58,7 @@ const columns: Column<MediaWithMediaUnit<MediaType.Manga>>[] = [
     accessor: "title",
   },
   {
-    Header: "Nội dung",
+    Header: "Description",
     accessor: "description",
     Cell: ({ cell }) => {
       return (
@@ -72,7 +72,7 @@ const columns: Column<MediaWithMediaUnit<MediaType.Manga>>[] = [
     },
   },
   {
-    Header: "Chapter đã đăng",
+    Header: "Uploaded chapters",
     accessor: "chapters",
     Cell: ({ cell }) => {
       const originalCell = cell.row.original;
@@ -87,7 +87,7 @@ const columns: Column<MediaWithMediaUnit<MediaType.Manga>>[] = [
     },
   },
   {
-    Header: "Hành động",
+    Header: "Action",
     Cell: ({ cell }) => {
       return (
         <div className="w-full flex items-center justify-center">
@@ -141,13 +141,13 @@ const UploadAnimePage: NextPage<UploadAnimePageProps> = ({
   };
 
   return (
-    <UploadContainer
-      title="Danh sách Manga đã upload"
-      isVerified={user.isVerified}
-    >
-      <Button primary className="absolute -top-2 right-4 md:right-12">
+    <UploadContainer title="Uploaded Manga list" isVerified={user.isVerified}>
+      <Button
+        primary
+        className="absolute -top-2 right-4 md:right-12 lg:right-20 xl:right-28 2xl:right-36"
+      >
         <Link href="/upload/manga/create">
-          <a>Tìm manga</a>
+          <a>Search Manga</a>
         </Link>
       </Button>
 
@@ -164,7 +164,9 @@ const UploadAnimePage: NextPage<UploadAnimePageProps> = ({
           onPageIndexChange={handlePageIndexChange}
         />
       ) : (
-        <h1 className="text-3xl text-center">Bạn chưa đăng Manga nào</h1>
+        <h1 className="text-3xl text-center">
+          You haven&apos;t uploaded any Manga.
+        </h1>
       )}
     </UploadContainer>
   );

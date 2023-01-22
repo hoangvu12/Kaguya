@@ -49,7 +49,7 @@ const ImageUpdate: React.FC<ImageUpdateProps> = ({
         onClick={handleUpdate}
         primary
       >
-        Cập nhật
+        Upload
       </Button>
     </div>
   );

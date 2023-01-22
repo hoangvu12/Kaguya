@@ -21,7 +21,7 @@ interface Props {
 
 const CreateUploadAnimePage: React.FC<Props> = ({ user }) => {
   const [keyword, setKeyword] = useState("");
-  const { t } = useTranslation("wwf");
+  const { t } = useTranslation("common");
 
   const {
     data,
@@ -59,7 +59,7 @@ const CreateUploadAnimePage: React.FC<Props> = ({ user }) => {
         LeftIcon={AiOutlineSearch}
         onChange={handleInputChange}
         defaultValue={keyword}
-        label={t("common:search")}
+        label={t("search")}
         containerClassName="w-full md:w-1/3 mb-8"
       />
 
@@ -77,14 +77,12 @@ const CreateUploadAnimePage: React.FC<Props> = ({ user }) => {
             </div>
           )}
 
-          {((totalData.length && !isFetchingNextPage) || hasNextPage) && (
+          {((totalData?.length && !isFetchingNextPage) || hasNextPage) && (
             <InView onInView={handleFetch} />
           )}
 
-          {!hasNextPage && !!totalData.length && (
-            <p className="mt-8 text-2xl text-center">
-              {t("common:no_list_results")}
-            </p>
+          {!hasNextPage && !!totalData?.length && (
+            <p className="mt-8 text-2xl text-center">{t("no_list_results")}</p>
           )}
         </React.Fragment>
       ) : (

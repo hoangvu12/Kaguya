@@ -14,10 +14,10 @@ const ChapterNameUpload: React.FC<ChapterNameUploadProps> = ({
 
   return (
     <div className="space-y-2">
-      <label>Tên chương</label>
+      <label>Chapter name</label>
 
       <Input
-        placeholder="Chương 1: Tôi yêu em"
+        placeholder="Chapter 1"
         className="px-3 py-2"
         onChange={(e) => {
           const target = e.target as HTMLInputElement;

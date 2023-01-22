@@ -24,6 +24,7 @@ import { IoIosAddCircleOutline } from "react-icons/io";
 import { useQueryClient } from "react-query";
 import AddTranslationModal from "@/components/shared/AddTranslationModal";
 import { useRouter } from "next/router";
+import { AiFillDelete } from "react-icons/ai";
 
 interface UploadAnimePageProps {
   user: AdditionalUser;
@@ -92,7 +93,7 @@ const UploadAnimePage: NextPage<UploadAnimePageProps> = ({
                   <Link href={`/upload/anime/${mediaId}/episodes/create`}>
                     <a>
                       <Button LeftIcon={IoIosAddCircleOutline} primary>
-                        Tập mới
+                        New episode
                       </Button>
                     </a>
                   </Link>
@@ -118,7 +119,7 @@ const UploadAnimePage: NextPage<UploadAnimePageProps> = ({
 
                         {!episode.published && (
                           <span className="rounded-md top-1/2 -translate-y-1/2 px-2 py-1 bg-primary-700 absolute right-5">
-                            Chưa đăng tải
+                            Not yet published
                           </span>
                         )}
                       </a>
@@ -137,15 +138,23 @@ const UploadAnimePage: NextPage<UploadAnimePageProps> = ({
             onConfirm={handleConfirm}
             className="space-y-4"
             confirmString={anime.title.userPreferred}
-            isLoading={deleteLoading}
+            reference={
+              <Button
+                LeftIcon={AiFillDelete}
+                isLoading={deleteLoading}
+                className="text-red-500 bg-red-500/20 hover:text-white hover:bg-red-500/80"
+              >
+                Delete
+              </Button>
+            }
           >
             <h1 className="text-2xl font-semibold">
-              Bạn có chắc chắn xóa không?
+              Are you sure to delete the Anime?
             </h1>
 
             <p>
-              Một khi đã xóa, bạn sẽ không thể khôi phục lại. Điều này sẽ xóa
-              hoàn toàn bất kỳ dữ liệu nào liên quan đến anime này.
+              Once deleted, you cannot restore it. This will delete absolutely
+              any data related to this Anime.
             </p>
           </DeleteConfirmation>
         </Section>

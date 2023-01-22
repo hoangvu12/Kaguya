@@ -1,14 +1,16 @@
-import React from "react";
 import MediaDetails from "@/components/features/upload/MediaDetails";
 import UploadContainer from "@/components/features/upload/UploadContainer";
 import UploadLayout from "@/components/layouts/UploadLayout";
+import AddTranslationModal from "@/components/shared/AddTranslationModal";
 import BaseButton from "@/components/shared/BaseButton";
 import Button from "@/components/shared/Button";
 import DeleteConfirmation from "@/components/shared/DeleteConfirmation";
+import Link from "@/components/shared/Link";
 import Loading from "@/components/shared/Loading";
 import Section from "@/components/shared/Section";
 import { UploadMediaProvider } from "@/contexts/UploadMediaContext";
 import withAdditionalUser from "@/hocs/withAdditionalUser";
+import useMangaSourceDelete from "@/hooks/useMangaSourceDelete";
 import useMediaDetails from "@/hooks/useMediaDetails";
 import useUploadedChapters from "@/hooks/useUploadedChapters";
 import { AdditionalUser, Source } from "@/types";
@@ -16,15 +18,11 @@ import { MediaType } from "@/types/anilist";
 import { getDescription, getTitle, sortMediaUnit } from "@/utils/data";
 import { supabaseClient } from "@supabase/auth-helpers-nextjs";
 import { NextPage } from "next";
-import Link from "@/components/shared/Link";
-import { useMemo } from "react";
-import { IoIosAddCircleOutline } from "react-icons/io";
-import useMangaSourceDelete from "@/hooks/useMangaSourceDelete";
-import { useQueryClient } from "react-query";
-import AddTranslationModal from "@/components/shared/AddTranslationModal";
-import { locale } from "dayjs";
-import anime from "../../anime";
 import { useRouter } from "next/router";
+import React, { useMemo } from "react";
+import { AiFillDelete } from "react-icons/ai";
+import { IoIosAddCircleOutline } from "react-icons/io";
+import { useQueryClient } from "react-query";
 
 interface UploadMangaPageProps {
   user: AdditionalUser;
@@ -93,7 +91,7 @@ const UploadMangaPage: NextPage<UploadMangaPageProps> = ({
                   <Link href={`/upload/manga/${mediaId}/chapters/create`}>
                     <a>
                       <Button LeftIcon={IoIosAddCircleOutline} primary>
-                        Chapter mới
+                        New chapter
                       </Button>
                     </a>
                   </Link>
@@ -132,14 +130,23 @@ const UploadMangaPage: NextPage<UploadMangaPageProps> = ({
             onConfirm={handleConfirm}
             className="space-y-4"
             confirmString={manga.title.userPreferred}
+            reference={
+              <Button
+                LeftIcon={AiFillDelete}
+                isLoading={deleteLoading}
+                className="text-red-500 bg-red-500/20 hover:text-white hover:bg-red-500/80"
+              >
+                Delete
+              </Button>
+            }
           >
             <h1 className="text-2xl font-semibold">
-              Bạn có chắc chắn xóa không?
+              Are you sure to delete the Manga?
             </h1>
 
             <p>
-              Một khi đã xóa, bạn sẽ không thể khôi phục lại. Điều này sẽ xóa
-              hoàn toàn bất kỳ dữ liệu nào liên quan đến manga này.
+              Once deleted, you cannot restore it. This will delete absolutely
+              any data related to this Manga.
             </p>
           </DeleteConfirmation>
         </Section>

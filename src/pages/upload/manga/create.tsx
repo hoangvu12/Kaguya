@@ -20,8 +20,8 @@ interface Props {
 }
 
 const CreateUploadMangaPage: React.FC<Props> = ({ user }) => {
-  const [keyword, setKeyword] = useState("");
-  const { t } = useTranslation("wwf");
+  const [keyword, setKeyword] = useState(null);
+  const { t } = useTranslation("common");
 
   const {
     data,
@@ -44,7 +44,7 @@ const CreateUploadMangaPage: React.FC<Props> = ({ user }) => {
   );
 
   const totalData = useMemo(
-    () => data?.pages.flatMap((el) => el.media),
+    () => data?.pages?.flatMap((el) => el.media),
     [data?.pages]
   );
 
@@ -59,7 +59,7 @@ const CreateUploadMangaPage: React.FC<Props> = ({ user }) => {
         LeftIcon={AiOutlineSearch}
         onChange={handleInputChange}
         defaultValue={keyword}
-        label={t("common:search")}
+        label={t("search")}
         containerClassName="w-full md:w-1/3 mb-8"
       />
 
@@ -82,9 +82,7 @@ const CreateUploadMangaPage: React.FC<Props> = ({ user }) => {
           )}
 
           {!hasNextPage && !!totalData.length && (
-            <p className="mt-8 text-2xl text-center">
-              {t("common:no_list_results")}.
-            </p>
+            <p className="mt-8 text-2xl text-center">{t("no_list_results")}.</p>
           )}
         </React.Fragment>
       ) : (

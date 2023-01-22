@@ -56,7 +56,7 @@ const UploadChapterEditPage: NextPage<UploadChapterEditPageProps> = ({
           <div className="space-y-16">
             <UploadSection>
               <UploadSection.Left>
-                <label className="font-semibold text-2xl">Tập phim</label>
+                <label className="font-semibold text-2xl">Chapter</label>
               </UploadSection.Left>
 
               <UploadSection.Right>
@@ -69,9 +69,9 @@ const UploadChapterEditPage: NextPage<UploadChapterEditPageProps> = ({
 
             <UploadSection>
               <UploadSection.Left>
-                <label className="font-semibold text-2xl">Hình ảnh</label>
+                <label className="font-semibold text-2xl">Images</label>
                 <p className="text-sm text-gray-300">
-                  Hỗ trợ {supportedUploadImageFormats.join(", ")}
+                  Support {supportedUploadImageFormats.join(", ")}
                 </p>
               </UploadSection.Left>
 
@@ -95,25 +95,25 @@ const UploadChapterEditPage: NextPage<UploadChapterEditPageProps> = ({
             confirmString={data.name}
           >
             <h1 className="text-2xl font-semibold">
-              Bạn có chắc chắn xóa không?
+              Are you sure to delete the Anime?
             </h1>
 
             <p>
-              Một khi đã xóa, bạn sẽ không thể khôi phục lại. Điều này sẽ xóa
-              hoàn toàn bất kỳ dữ liệu nào liên quan đến chương này.
+              Once deleted, you cannot restore it. This will delete absolutely
+              any data related to this chapter.
             </p>
           </DeleteConfirmation>
 
           <div className="flex gap-2 items-center">
             <Link href={`/upload/manga/${mediaId}/chapters/create`}>
               <a>
-                <Button secondary>Tạo chương mới</Button>
+                <Button secondary>Create new chapter</Button>
               </a>
             </Link>
 
             <Link href={`/manga/read/${mediaId}/${sourceId}/${chapterId}`}>
               <a>
-                <Button primary>Xem chương</Button>
+                <Button primary>Read chapter</Button>
               </a>
             </Link>
           </div>

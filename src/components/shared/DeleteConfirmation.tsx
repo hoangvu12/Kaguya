@@ -29,7 +29,7 @@ const DeleteConfirmation: React.FC<DeleteConfirmationProps> = (props) => {
         isLoading={isLoading}
         className="text-red-500 bg-red-500/20 hover:text-white hover:bg-red-500/80"
       >
-        Xóa
+        Delete
       </Button>
     ),
     className,

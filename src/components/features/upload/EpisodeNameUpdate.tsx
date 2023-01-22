@@ -35,7 +35,7 @@ const EpisodeNameUpdate: React.FC<EpisodeNameUpdateProps> = ({
         primary
         onClick={handleUpdateClick}
       >
-        Cập nhật
+        Update
       </Button>
     </div>
   );

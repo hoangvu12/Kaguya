@@ -44,12 +44,12 @@ const FontUpdate: React.FC<FontUpdateProps> = ({
       <FontUpload onChange={setFiles} initialFiles={initialFiles} />
 
       <Button
-        isLoading={false}
+        isLoading={updateLoading}
         className="ml-auto"
         primary
         onClick={handleUpdateClick}
       >
-        Cập nhật
+        Update
       </Button>
     </div>
   );

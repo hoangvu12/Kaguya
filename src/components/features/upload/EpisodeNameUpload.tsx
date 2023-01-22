@@ -14,10 +14,10 @@ const EpisodeNameUpload: React.FC<EpisodeNameUploadProps> = ({
 
   return (
     <div className="space-y-2">
-      <label>Tên tập</label>
+      <label>Episode name</label>
 
       <Input
-        placeholder="Tập 1"
+        placeholder="Episode 1"
         className="px-3 py-2"
         onChange={(e) => {
           const target = e.target as HTMLInputElement;
