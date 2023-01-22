@@ -1,8 +1,12 @@
 {
-    "blur_heading": "Estas viendo",
-    "rewatch_description": "El sistema reconoce que has visto {{episodeName}}",
-    "rewatch_heading": "Ver de nuevo {{episodeName}}",
-    "rewatch_no": "No",
-    "rewatch_question": "¿Quieres volver a ver {{episodeName}}?",
-    "rewatch_yes": "Si"
+  "blur_heading": "Estas viendo",
+  "rewatch_description": "El sistema reconoce que has visto {{episodeName}}",
+  "rewatch_heading": "Ver de nuevo {{episodeName}}",
+  "rewatch_no": "No",
+  "rewatch_question": "¿Quieres volver a ver {{episodeName}}?",
+  "rewatch_yes": "Si",
+  "error_message": "An error has occured ({{error}})",
+  "error_fallback_suggest": "Try to refresh the page or choose another source.",
+  "no_episodes_message": "There are no episodes",
+  "error_goback": "Go back"
 }

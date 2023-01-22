@@ -8,6 +8,7 @@ import { getMediaDetails } from "@/services/anilist";
 import { Media, MediaType } from "@/types/anilist";
 import { getDescription, getTitle } from "@/utils/data";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 
@@ -18,6 +19,7 @@ interface WatchPageContainerProps {
 const WatchPageContainer: NextPage<WatchPageContainerProps> = ({ media }) => {
   const { data: episodes, isLoading } = useEpisodes(media.id);
   const { locale, back } = useRouter();
+  const { t } = useTranslation("anime_watch");
 
   const title = useMemo(() => getTitle(media, locale), [media, locale]);
   const description = useMemo(
@@ -41,11 +43,15 @@ const WatchPageContainer: NextPage<WatchPageContainerProps> = ({ media }) => {
       ) : !hasEpisodes ? (
         <div className="flex flex-col items-center absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 space-y-4">
           <p className="text-4xl font-semibold text-center">｡゜(｀Д´)゜｡</p>
+
           <p className="text-xl text-center">
-            Something went wrong (There are no episodes)
+            {t("error_message", {
+              error: t("no_episodes_message"),
+            })}
           </p>
+
           <Button className="w-[max-content]" primary onClick={back}>
-            Go back
+            {t("error_goback")}
           </Button>
         </div>
       ) : (

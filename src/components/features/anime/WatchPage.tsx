@@ -25,6 +25,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import ErrorMessage from "./ErrorMessage";
 
 const WatchPlayer = dynamic(
   () => import("@/components/features/anime/WatchPlayer"),
@@ -352,35 +353,13 @@ const WatchPage: NextPage<WatchPageProps> = ({ episodes, media: anime }) => {
       )}
 
       {isError ? (
-        <Portal selector=".netplayer-container">
-          <div className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 space-y-4">
-            <p className="text-4xl font-semibold text-center">｡゜(｀Д´)゜｡</p>
-            <p className="text-xl text-center">
-              Something went wrong{" "}
-              {error?.response?.data?.error &&
-                `(${error?.response?.data?.error})`}
-            </p>
-            <p className="text-lg text-center">
-              Try to refresh the page or choose another source.
-            </p>
-          </div>
-        </Portal>
+        <ErrorMessage
+          errorMessage={error?.response?.data?.error || error.message}
+        />
       ) : (
         !isLoading &&
         !data?.sources?.length && (
-          <Portal selector=".netplayer-container">
-            <div className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 space-y-4">
-              <p className="text-4xl font-semibold text-center">｡゜(｀Д´)゜｡</p>
-              <p className="text-xl text-center">
-                Something went wrong{" "}
-                {error?.response?.data?.error &&
-                  `(${error?.response?.data?.error})`}
-              </p>
-              <p className="text-lg text-center">
-                Try to refresh the page or choose another source.
-              </p>
-            </div>
-          </Portal>
+          <ErrorMessage errorMessage={"Failed to extract streams"} />
         )
       )}
 

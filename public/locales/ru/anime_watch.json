@@ -1,1 +1,12 @@
-{"blur_heading":"Вы смотрите","rewatch_description":"Вы смотрели {{episodeName}}","rewatch_heading":"Пересмотреть {{episodeName}}","rewatch_no":"Неа","rewatch_question":"Вы хотите пересмотреть {{episodeName}}?","rewatch_yes":"Ага"}
+{
+  "blur_heading": "Вы смотрите",
+  "rewatch_description": "Вы смотрели {{episodeName}}",
+  "rewatch_heading": "Пересмотреть {{episodeName}}",
+  "rewatch_no": "Неа",
+  "rewatch_question": "Вы хотите пересмотреть {{episodeName}}?",
+  "rewatch_yes": "Ага",
+  "error_message": "An error has occured ({{error}})",
+  "error_fallback_suggest": "Try to refresh the page or choose another source.",
+  "no_episodes_message": "There are no episodes",
+  "error_goback": "Go back"
+}
