@@ -81,7 +81,7 @@ const ChooseAnimePage = () => {
 
           {!hasNextPage && !!totalData.length && (
             <p className="mt-8 text-2xl text-center">
-              There is nothing left...
+              {t("common:no_list_results")}
             </p>
           )}
         </React.Fragment>

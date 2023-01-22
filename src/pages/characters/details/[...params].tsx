@@ -29,13 +29,17 @@ import { BiCake } from "react-icons/bi";
 const KeyValue: React.FC<{ property: string; value: string }> = ({
   property,
   value,
-}) => (
-  <div>
-    <b>{property}: </b>
+}) => {
+  const { t } = useTranslation("common");
 
-    <span>{value || "Không rõ"}</span>
-  </div>
-);
+  return (
+    <div>
+      <b>{property}: </b>
+
+      <span>{value || t("unknown")}</span>
+    </div>
+  );
+};
 
 interface DetailsPageProps {
   character: Character;

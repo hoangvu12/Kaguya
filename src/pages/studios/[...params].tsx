@@ -14,6 +14,7 @@ import { getStudioDetails } from "@/services/anilist";
 import { Studio } from "@/types/anilist";
 import { groupBy, numberWithCommas, vietnameseSlug } from "@/utils";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import { useTranslation } from "next-i18next";
 import { useMemo } from "react";
 import { AiFillHeart } from "react-icons/ai";
 
@@ -29,6 +30,8 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ studio: initialStudio }) => {
     hasNextPage,
     fetchNextPage,
   } = useStudio(initialStudio.id, initialStudio);
+
+  const { t } = useTranslation("common");
 
   const anime = useMemo(
     () =>
@@ -87,9 +90,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ studio: initialStudio }) => {
           )}
 
           {!hasNextPage && !!anime.length && (
-            <p className="mt-8 text-2xl text-center">
-              There is nothing left...
-            </p>
+            <p className="mt-8 text-2xl text-center">{t("no_list_results")}</p>
           )}
         </Section>
       </div>

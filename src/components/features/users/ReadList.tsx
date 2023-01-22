@@ -7,6 +7,7 @@ import ListSkeleton from "@/components/skeletons/ListSkeleton";
 import useReadList, { STATUS, Status } from "@/hooks/useReadList";
 import { AdditionalUser } from "@/types";
 import classNames from "classnames";
+import { useTranslation } from "next-i18next";
 import React, { useMemo, useState } from "react";
 
 interface ReadListProps {
@@ -15,6 +16,7 @@ interface ReadListProps {
 
 const ReadList: React.FC<ReadListProps> = ({ user }) => {
   const [activeTab, setActiveTab] = useState<Status>(STATUS.All);
+  const { t } = useTranslation("common");
 
   const {
     data: readList,
@@ -125,7 +127,7 @@ const ReadList: React.FC<ReadListProps> = ({ user }) => {
 
             {!hasNextPage && !!totalData.length && (
               <p className="mt-8 text-2xl text-center">
-                There is nothing left...
+                {t("no_list_results")}
               </p>
             )}
           </React.Fragment>

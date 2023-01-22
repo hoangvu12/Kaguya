@@ -279,7 +279,7 @@ const BrowseList: React.FC<BrowseListProps> = ({
 
             {!hasNextPage && !!totalData.length && (
               <p className="mt-8 text-2xl text-center">
-                There is nothing left...
+                {t("no_list_results")}
               </p>
             )}
           </React.Fragment>

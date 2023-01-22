@@ -18,7 +18,7 @@ interface BrowseListProps {
 
 const BrowseList: React.FC<BrowseListProps> = ({ defaultQuery }) => {
   const [keyword, setKeyword] = useState(defaultQuery.keyword || "");
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
 
   const {
     data: searchResult,
@@ -58,9 +58,9 @@ const BrowseList: React.FC<BrowseListProps> = ({ defaultQuery }) => {
           LeftIcon={AiOutlineSearch}
           onChange={handleInputChange}
           defaultValue={keyword}
-          label={t("common:search")}
+          label={t("search")}
           containerClassName="w-full md:w-96"
-          placeholder={t("common:voice_actor_name")}
+          placeholder={t("voice_actor_name")}
         />
       </form>
 
@@ -84,7 +84,7 @@ const BrowseList: React.FC<BrowseListProps> = ({ defaultQuery }) => {
 
               {!hasNextPage && !!totalData.length && (
                 <p className="mt-8 text-2xl text-center">
-                  There is nothing left...
+                  {t("no_list_results")}
                 </p>
               )}
             </React.Fragment>
@@ -94,7 +94,7 @@ const BrowseList: React.FC<BrowseListProps> = ({ defaultQuery }) => {
         ) : (
           <div className="space-y-8">
             <div className="space-y-4">
-              <h2 className="text-3xl font-semibold">{t("common:birthday")}</h2>
+              <h2 className="text-3xl font-semibold">{t("birthday")}</h2>
 
               {birthdayIsLoading ? (
                 <ListSkeleton />
@@ -106,10 +106,7 @@ const BrowseList: React.FC<BrowseListProps> = ({ defaultQuery }) => {
             </div>
 
             <div className="space-y-4">
-              <h2 className="text-3xl font-semibold">
-                {" "}
-                {t("common:most_favourite")}
-              </h2>
+              <h2 className="text-3xl font-semibold"> {t("most_favourite")}</h2>
 
               {favouritesIsLoading ? (
                 <ListSkeleton />

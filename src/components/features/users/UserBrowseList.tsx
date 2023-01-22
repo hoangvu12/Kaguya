@@ -16,7 +16,7 @@ interface UseBrowseListProps {
 
 const UserBrowseList: React.FC<UseBrowseListProps> = ({ defaultQuery }) => {
   const [keyword, setKeyword] = useState(defaultQuery.keyword || "");
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
 
   const {
     data: searchResult,
@@ -51,7 +51,7 @@ const UserBrowseList: React.FC<UseBrowseListProps> = ({ defaultQuery }) => {
           LeftIcon={AiOutlineSearch}
           onChange={handleInputChange}
           defaultValue={keyword}
-          label={t("common:search")}
+          label={t("search")}
           containerClassName="w-full md:w-96"
           placeholder="Username"
         />
@@ -80,7 +80,7 @@ const UserBrowseList: React.FC<UseBrowseListProps> = ({ defaultQuery }) => {
 
               {!hasNextPage && !!totalData.length && (
                 <p className="mt-8 text-2xl text-center">
-                  There is nothing left...
+                  {t("no_list_results")}
                 </p>
               )}
             </React.Fragment>
