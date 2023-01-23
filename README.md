@@ -1,13 +1,13 @@
 <div style="text-align: center;">
-<h1>Kaguya</h1>
+<h1>CrowsNest</h1>
 
-[![Kaguya Discord server](https://discordapp.com/api/guilds/906042713688928257/widget.png?style=banner2)](https://discord.gg/382BEFfER6)
+[![CrowsNest Discord server](https://discord.com/api/guilds/974615672183193600/widget.png?style=banner2)](https://discord.gg/3YrabTybpp)
 
-### Kaguya is a multi-language website that provides you anime, manga and related resources.
+### CrowsNest is a multi-language website that provides you anime, manga and related resources.
 
 Since it is an open-source project, there won't be any ads in this website.
 
-The official website is [kaguya.live](https://kaguya.live)
+The official website is [crowsnest.live](https://crowsnest.live)
 
 </div>
 
@@ -28,19 +28,13 @@ The official website is [kaguya.live](https://kaguya.live)
 
 ## Screenshots
 
-![Home page](https://user-images.githubusercontent.com/68330291/157863755-42d7cf8e-d300-43f5-beff-9e8f2e15de00.png)
+![Home page](https://cdn.discordapp.com/attachments/1062512166986580038/1062559091358171167/chrome_roMmxiIKtI.jpg)
 
-![Details page](https://user-images.githubusercontent.com/68330291/157862659-4ecbe0e7-9f5f-463e-80d0-d40828b28c77.png)
+![Details page](https://cdn.discordapp.com/attachments/1062512166986580038/1062559081019232347/chrome_GTjvVe3HBV.png)
 
-![Search page](https://user-images.githubusercontent.com/68330291/157862791-811553da-b799-4629-addf-f3392dca8de4.png)
+![Search page](https://cdn.discordapp.com/attachments/1062512166986580038/1062559062107099176/chrome_urwTLWrQox.png)
 
-![Watch page](https://user-images.githubusercontent.com/68330291/157862978-da411ae9-fefb-4c78-beb2-81c503f389d2.png)
-
-![Read page](https://user-images.githubusercontent.com/68330291/157863159-08a1f117-e81f-4284-838f-2dc90e1b439f.png)
-
-![Character page](https://user-images.githubusercontent.com/68330291/157863295-d1f6e16b-3e4c-4435-87a3-9bd0ef1c74fb.png)
-
-![Voice actor page](https://user-images.githubusercontent.com/68330291/157863365-59851e7e-0367-4c6c-b084-564fb8496f80.png)
+![Voice actor page](https://cdn.discordapp.com/attachments/1062512166986580038/1062559131199873034/chrome_kgggY8tspr.png)
 
 ## Todo
 
@@ -55,7 +49,4 @@ The official website is [kaguya.live](https://kaguya.live)
 - Video player design is heavily inspired by [Netflix](https://netflix.com)
 - Reader is heavily inspired by [danke.moe](https://danke.moe)
 - Info from [Anilist](anilist.co)
-
-## Installation
-
-See [INSTALLATION.md](INSTALLATION.md)
+- Forked from Kaguya

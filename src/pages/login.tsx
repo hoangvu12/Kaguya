@@ -35,7 +35,7 @@ const LoginPage: NextPage<LoginPageProps> = ({ quotes }) => {
 
   const signInMutation = useSignIn({
     redirectTo: isDev
-      ? `http://localhost:3000${redirectedFrom}`
+      ? `https://crowsnest.live${redirectedFrom}`
       : redirectedFrom,
   });
 
@@ -46,7 +46,7 @@ const LoginPage: NextPage<LoginPageProps> = ({ quotes }) => {
   return (
     <React.Fragment>
       <Head
-        title={`${t("login_heading")} - Kaguya`}
+        title={`${t("login_heading")} - CrowsNest`}
         description={t("login_description")}
       />
 
@@ -85,14 +85,6 @@ const LoginPage: NextPage<LoginPageProps> = ({ quotes }) => {
                 onClick={handleSignIn("google")}
               >
                 <p>{t("login_with_google")}</p>
-              </Button>
-              <Button
-                className="shadow-lg relative bg-[#2D88FF] !hover:bg-white/20 text-white font-bold flex items-center justify-center w-full hover:!bg-opacity-90"
-                LeftIcon={FaFacebookF}
-                iconClassName="absolute left-6"
-                onClick={handleSignIn("facebook")}
-              >
-                <p>{t("login_with_facebook")}</p>
               </Button>
               <Button
                 className="shadow-lg relative bg-[#5865F2] !hover:bg-white/20 text-white font-bold flex items-center justify-center w-full hover:!bg-opacity-90"

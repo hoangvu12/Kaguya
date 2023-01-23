@@ -57,7 +57,7 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ manga }) => {
   return (
     <>
       <Head
-        title={`${title} - Kaguya`}
+        title={`${title} - CrowsNest`}
         description={description}
         image={manga.bannerImage}
       />

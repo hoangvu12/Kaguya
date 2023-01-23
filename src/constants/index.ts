@@ -3,9 +3,9 @@ import dayjs from "@/lib/dayjs";
 const START_YEAR = 1940;
 const CURRENT_YEAR = dayjs().year();
 
-export const WEBSITE_URL = "https://www.kaguya.live";
-export const DISCORD_URL = "https://discord.gg/382BEFfER6";
-export const FACEBOOK_URL = "https://www.facebook.com/kaguyaa.live";
+export const WEBSITE_URL = "https://www.crowsnest.live";
+export const DISCORD_URL = "https://discord.gg/MQHjNaHddh";
+export const FACEBOOK_URL = "";
 
 export const DISCORD_REG_URL = "https://discord.gg/62RkwWkvkP";
 

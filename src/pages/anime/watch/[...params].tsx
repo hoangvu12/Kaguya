@@ -330,8 +330,8 @@ const WatchPage: NextPage<WatchPageProps> = ({ episodes }) => {
   return (
     <React.Fragment>
       <Head
-        title={`${title} (${currentEpisode.name}) - Kaguya`}
-        description={`Xem phim ${title} (${currentEpisode.name}) tại Kaguya. Hoàn toàn miễn phí, không quảng cáo`}
+        title={`${title} (${currentEpisode.name}) - CrowsNest`}
+        description={`Xem phim ${title} (${currentEpisode.name}) tại CrowsNest. Hoàn toàn miễn phí, không quảng cáo`}
         image={anime.bannerImage}
       />
 

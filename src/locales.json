@@ -1,9 +1,9 @@
 [
   {
-    "locale": "vi",
-    "name": "Tiếng Việt"
+    "locale": "en",
+    "name": "English"
   },
-  { "locale": "en", "name": "English" },
+  { "locale": "vi", "name": "Viatnemese" },
   { "locale": "ru", "name": "Русский" },
   { "locale": "es", "name": "Español" }
 ]

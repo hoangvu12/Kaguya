@@ -49,7 +49,7 @@ const UploadLayout: React.FC = ({ children }) => {
 
   return (
     <div className="w-full min-h-screen flex justify-end">
-      <Head title="Upload - Kaguya" />
+      <Head title="Upload - CrowsNest" />
 
       {isMobile && isMenuOpen && (
         <div

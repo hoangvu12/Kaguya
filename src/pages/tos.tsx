@@ -5,45 +5,45 @@ const tos = () => {
   return (
     <div className="pt-20 px-4 md:px-12 space-y-4">
       <Head
-        title="Điều khoản dịch vụ - Kaguya"
-        description="Điều khoản dịch vụ tại Kaguya"
+        title="Terms of Service - CrowsNest"
+        description="Terms of Service at CrowsNest"
       />
 
-      <h1 className="text-2xl font-bold">Điều khoản dịch vụ</h1>
+      <h1 className="text-2xl font-bold">Terms of Service</h1>
 
-      <h4 className="text-lg font-semibold">1. Điều Kiện</h4>
+      <h4 className="text-lg font-semibold">1. Condition</h4>
       <p>
-        Bằng cách truy cập trang web này, bạn đồng ý bị ràng buộc bởi những Điều
-        khoản và Điều kiện Sử dụng trang web và đồng ý rằng bạn chịu trách nhiệm
-        về thỏa thuận với bất kỳ luật địa phương hiện hành nào. Nếu bạn không
-        đồng ý với bất kỳ điều khoản nào trong số này, bạn bị cấm truy cập trang
-        web này. Các tài liệu trong trang web này có thể đã đã được bảo vệ bởi
-        bản quyền và luật thương hiệu.
+      By accessing this website, you agree to be bound by these Terms
+        Terms and Conditions of Use of the Site and agree that you are responsible for
+        agreement with any applicable local laws. If you do not
+        If you agree to any of these terms, you are prohibited from accessing the site
+        this web. The materials in this website may have been protected by
+        copyright and trademark law.
       </p>
-      <h4 className="text-lg font-semibold">2. Sửa Đổi và lỗi in, lỗi viết</h4>
+      <h4 className="text-lg font-semibold">2. Modifications and typographical and writing errors</h4>
       <p>
-        Các tài liệu xuất hiện trên Kaguya có thể bao gồm các lỗi kỹ thuật, đánh
-        máy hoặc nhiếp ảnh. Kaguya sẽ không hứa rằng bất kỳ tài liệu nào trong
-        trang web này là chính xác, đầy đủ hoặc hiện tại. Kaguya có thể thay đổi
-        các tài liệu có trên trang web của mình bất cứ lúc nào mà không cần
-        thông báo. Kaguya không đưa ra bất kỳ cam kết nào để cập nhật các tài
-        liệu.
+      Materials appearing on CrowsNest may include technical errors, typos,
+        camera or photography. CrowsNest will not promise that any material in
+        This website is accurate, complete or current. CrowsNest is subject to change
+        materials available on its website at any time without
+        Notification. CrowsNest does not make any commitment to update the accounts
+        Whether.
       </p>
       <h4 className="text-lg font-semibold">
-        3. Sửa đổi điều khoản sử dụng trang web
+        3. Modify website terms of use
       </h4>
       <p>
-        Kaguya có thể sửa đổi các Điều khoản sử dụng này cho trang web của mình
-        bất cứ lúc nào mà không cần thông báo trước. Bằng cách sử dụng trang web
-        này, bạn đồng ý bị ràng buộc bởi phiên bản hiện tại của các Điều khoản
-        và Điều kiện sử dụng này.
+      CrowsNest may modify these Terms of Use for its website
+        at any time without prior notice. By using the website
+        herein, you agree to be bound by the current version of the Terms
+        and these Conditions of Usey.
       </p>
-      <h4 className="text-lg font-semibold">4. Quyền riêng tư của bạn</h4>
-      <p>Vui lòng đọc chính sách bảo mật của chúng tôi. .</p>
-      <h4 className="text-lg font-semibold">5. Luật quản lý</h4>
+      <h4 className="text-lg font-semibold">4. Your privacy</h4>
+      <p>Please read our privacy policy. .</p>
+      <h4 className="text-lg font-semibold">5. Management Law</h4>
       <p>
-        Bất kỳ khiếu nại nào liên quan đến Kaguya sẽ được điều chỉnh bởi luật
-        của BQ mà không liên quan đến xung đột của các quy định pháp luật.
+       Any claim regarding CrowsNest will be governed by law
+        of the BQ without regard to the conflict of law provisions.
       </p>
     </div>
   );

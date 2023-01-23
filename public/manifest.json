@@ -1,12 +1,12 @@
-{
+{ "name": "CrowsNest",
   "theme_color": "#EF4444",
   "background_color": "#000000",
   "display": "standalone",
   "scope": "/",
   "start_url": "/",
-  "name": "Kaguya",
-  "short_name": "Kaguya",
-  "description": "Web xem anime mi\u1ec5n ph\u00ed, ho\u00e0n to\u00e0n kh\u00f4ng c\u00f3 qu\u1ea3ng c\u00e1o! Mang \u0111\u1ebfn cho ng\u01b0\u1eddi xem tr\u1ea3i nghi\u1ec7m t\u1ed1t nh\u1ea5t.",
+  "name": "CrowsNest",
+  "short_name": "CrowsNest",
+  "description": "Latest Anime and Manga, just one click away. No ads, new and exiting features and many more only on CrowsNest.",
   "icons": [
     {
       "src": "windows11/SmallTile.scale-100.png",

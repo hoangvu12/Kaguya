@@ -5,14 +5,14 @@ import React from "react";
 const DeletionPrivacy = () => {
   return (
     <Section className="space-y-8 pt-20">
-      <Head title="Privacy - Kaguya" />
+      <Head title="Privacy - CrowsNest" />
 
-      <h1>Privacy Policy for Kaguya</h1>
+      <h1>Privacy Policy for CrowsNest</h1>
 
       <p>
-        At Kaguya, accessible from https://kaguya.live, one of our main
+        At CrowsNest, accessible from https://crowsnest.live, one of our main
         priorities is the privacy of our visitors. This Privacy Policy document
-        contains types of information that is collected and recorded by Kaguya
+        contains types of information that is collected and recorded by CrowsNest
         and how we use it.
       </p>
 
@@ -29,21 +29,21 @@ const DeletionPrivacy = () => {
       <p>We are a Data Controller of your information.</p>
 
       <p>
-        Kaguya legal basis for collecting and using the personal information
+        CrowsNest legal basis for collecting and using the personal information
         described in this Privacy Policy depends on the Personal Information we
         collect and the specific context in which we collect the information:
       </p>
       <ul>
-        <li>Kaguya needs to perform a contract with you</li>
-        <li>You have given Kaguya permission to do so</li>
+        <li>CrowsNest needs to perform a contract with you</li>
+        <li>You have given CrowsNest permission to do so</li>
         <li>
-          Processing your personal information is in Kaguya legitimate interests
+          Processing your personal information is in CrowsNest legitimate interests
         </li>
-        <li>Kaguya needs to comply with the law</li>
+        <li>CrowsNest needs to comply with the law</li>
       </ul>
 
       <p>
-        Kaguya will retain your personal information only for as long as is
+        CrowsNest will retain your personal information only for as long as is
         necessary for the purposes set out in this Privacy Policy. We will
         retain and use your information to the extent necessary to comply with
         our legal obligations, resolve disputes, and enforce our policies.
@@ -73,7 +73,7 @@ const DeletionPrivacy = () => {
       <h2>Log Files</h2>
 
       <p>
-        Kaguya follows a standard procedure of using log files. These files log
+        CrowsNest follows a standard procedure of using log files. These files log
         visitors when they visit websites. All hosting companies do this and a
         part of hosting services&apos; analytics. The information collected by
         log files include internet protocol (IP) addresses, browser type,
@@ -88,7 +88,7 @@ const DeletionPrivacy = () => {
       <h2>Cookies and Web Beacons</h2>
 
       <p>
-        Like any other website, Kaguya uses &apos;cookies&apos;. These cookies
+        Like any other website, CrowsNest uses &apos;cookies&apos;. These cookies
         are used to store information including visitors&apos; preferences, and
         the pages on the website that the visitor accessed or visited. The
         information is used to optimize the users&apos; experience by
@@ -100,13 +100,13 @@ const DeletionPrivacy = () => {
 
       <p>
         You may consult this list to find the Privacy Policy for each of the
-        advertising partners of Kaguya.
+        advertising partners of CrowsNest.
       </p>
 
       <p>
         Third-party ad servers or ad networks uses technologies like cookies,
         JavaScript, or Web Beacons that are used in their respective
-        advertisements and links that appear on Kaguya, which are sent directly
+        advertisements and links that appear on CrowsNest, which are sent directly
         to users&apos; browser. They automatically receive your IP address when
         this occurs. These technologies are used to measure the effectiveness of
         their advertising campaigns and/or to personalize the advertising
@@ -114,14 +114,14 @@ const DeletionPrivacy = () => {
       </p>
 
       <p>
-        Note that Kaguya has no access to or control over these cookies that are
+        Note that CrowsNest has no access to or control over these cookies that are
         used by third-party advertisers.
       </p>
 
       <h2>Third Party Privacy Policies</h2>
 
       <p>
-        Kaguya&apos;s Privacy Policy does not apply to other advertisers or
+        CrowsNest&apos;s Privacy Policy does not apply to other advertisers or
         websites. Thus, we are advising you to consult the respective Privacy
         Policies of these third-party ad servers for more detailed information.
         It may include their practices and instructions about how to opt-out of
@@ -144,7 +144,7 @@ const DeletionPrivacy = () => {
       </p>
 
       <p>
-        Kaguya does not knowingly collect any Personal Identifiable Information
+        CrowsNest does not knowingly collect any Personal Identifiable Information
         from children under the age of 13. If you think that your child provided
         this kind of information on our website, we strongly encourage you to
         contact us immediately and we will do our best efforts to promptly
@@ -156,7 +156,7 @@ const DeletionPrivacy = () => {
       <p>
         Our Privacy Policy applies only to our online activities and is valid
         for visitors to our website with regards to the information that they
-        shared and/or collect in Kaguya. This policy is not applicable to any
+        shared and/or collect in CrowsNest. This policy is not applicable to any
         information collected offline or via channels other than this website.
       </p>
 

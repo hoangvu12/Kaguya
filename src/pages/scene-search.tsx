@@ -38,8 +38,8 @@ const TracePage = () => {
   return (
     <React.Fragment>
       <Head
-        title={`${t("tab_title")} - Kaguya`}
-        description="Tìm kiếm Anime, số tập mà khoảnh khắc trong ảnh đó xuất hiện."
+        title={`${t("tab_title")} - CrowsNest`}
+        description="It tells you the anime, episode and moment in which that image appeared!"
       />
 
       <Section className="pt-20 space-y-16 flex flex-col items-center justify-center">
@@ -64,10 +64,10 @@ const TracePage = () => {
         <div className="w-full hidden md:flex items-center justify-center gap-4">
           <div className="border border-white/60 relative h-64 w-full">
             <Image
-              src="https://i.ibb.co/rGRC9vw/www-kaguya-live-trace.png"
+              src="https://cdn.discordapp.com/attachments/1062512166986580038/1062512288839499786/chrome_Q2qs2Ry8MK.avif"
               alt="example image"
               objectFit="cover"
-              layout="fill"
+              layout="responsive"
             />
           </div>
 
@@ -75,10 +75,10 @@ const TracePage = () => {
 
           <div className="border border-white/60 relative h-64 w-full">
             <Image
-              src="https://i.ibb.co/cg7TwWR/www-kaguya-live-trace-1.png"
+              src="https://cdn.discordapp.com/attachments/1062512166986580038/1062513480105742446/chrome_PA8lzc6QYk.avif"
               alt="example image"
               objectFit="cover"
-              layout="fill"
+              layout="responsive"
             />
           </div>
         </div>

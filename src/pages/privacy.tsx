@@ -5,7 +5,7 @@ import React from "react";
 const privacy = () => {
   return (
     <Section className="space-y-8 pt-20">
-      <Head title="Privacy - Kaguya" />
+      <Head title="Privacy - CrowsNest" />
 
       <h1 className="text-2xl font-bold">Privacy Policy</h1>
       <p>Last updated: March 03, 2022</p>
@@ -50,7 +50,7 @@ const privacy = () => {
           <p>
             <strong>Company</strong> (referred to as either &quot;the
             Company&quot;, &quot;We&quot;, &quot;Us&quot; or &quot;Our&quot; in
-            this Agreement) refers to Kaguya.
+            this Agreement) refers to CrowsNest.
           </p>
         </li>
         <li>
@@ -109,13 +109,13 @@ const privacy = () => {
         </li>
         <li>
           <p>
-            <strong>Website</strong> refers to Kaguya, accessible from{" "}
+            <strong>Website</strong> refers to CrowsNest, accessible from{" "}
             <a
-              href="https://kaguya.live"
+              href="https://CrowsNest.live"
               rel="external nofollow noopener noreferrer"
               target="_blank"
             >
-              https://kaguya.live
+              https://CrowsNest.live
             </a>
           </p>
         </li>
@@ -545,11 +545,11 @@ const privacy = () => {
           <p>
             By visiting this page on our website:{" "}
             <a
-              href="https://kaguya.live/contact"
+              href="https://crowsnest.live/contact"
               rel="external nofollow noopener noreferrer"
               target="_blank"
             >
-              https://kaguya.live/contact
+              https://crowsnest.live/contact
             </a>
           </p>
         </li>

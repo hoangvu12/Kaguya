@@ -70,8 +70,8 @@ const Home = () => {
   return (
     <React.Fragment>
       <Head
-        title="Trang chủ (Manga) - Kaguya"
-        description="Đọc truyện manga hay tại Kaguya, cập nhật nhanh chóng, không quảng cáo và nhiều tính năng thú vị."
+        title="Trang chủ (Manga) - CrowsNest"
+        description="Đọc truyện manga hay tại CrowsNest, cập nhật nhanh chóng, không quảng cáo và nhiều tính năng thú vị."
       />
 
       <ClientOnly>
