@@ -28,13 +28,13 @@ The official website is [crowsnest.live](https://crowsnest.live)
 
 ## Screenshots
 
-![Home page](https://cdn.discordapp.com/attachments/1062512166986580038/1062559091358171167/chrome_roMmxiIKtI.jpg)
+![Home page](https://cdn.discordapp.com/attachments/1062512166986580038/1065800102565912646/chrome_UilCMqMlNb.jpg)
 
-![Details page](https://cdn.discordapp.com/attachments/1062512166986580038/1062559081019232347/chrome_GTjvVe3HBV.png)
+![Details page](https://cdn.discordapp.com/attachments/1062512166986580038/1065801336479809606/chrome_zfy8bufg7E.jpg)
 
-![Search page](https://cdn.discordapp.com/attachments/1062512166986580038/1062559062107099176/chrome_urwTLWrQox.png)
+![Search page](https://cdn.discordapp.com/attachments/1062512166986580038/1065801097203175454/chrome_4EEx9ijlex.jpg)
 
-![Voice actor page](https://cdn.discordapp.com/attachments/1062512166986580038/1062559131199873034/chrome_kgggY8tspr.png)
+![Voice actor page](https://cdn.discordapp.com/attachments/1062512166986580038/1065801066886737951/chrome_A18J1vhKKX.jpg)
 
 ## Todo
 
@@ -49,4 +49,4 @@ The official website is [crowsnest.live](https://crowsnest.live)
 - Video player design is heavily inspired by [Netflix](https://netflix.com)
 - Reader is heavily inspired by [danke.moe](https://danke.moe)
 - Info from [Anilist](anilist.co)
-- Forked from Kaguya
+- Base from Kaguya
