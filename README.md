@@ -7,7 +7,7 @@
 
 Since it is an open-source project, there won't be any ads in this website.
 
-The official website is [kaguya.live](https://kaguya.live)
+The official website is [kaguya.live](https://kaguya.app)
 
 </div>
 
