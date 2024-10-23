@@ -1,4 +1,3 @@
-import LocaleEpisodeSelector from "@/components/features/anime/Player/LocaleEpisodeSelector";
 import Comments from "@/components/features/comment/Comments";
 import AddTranslationModal from "@/components/shared/AddTranslationModal";
 import Button from "@/components/shared/Button";
@@ -17,11 +16,9 @@ import PlainCard from "@/components/shared/PlainCard";
 import Popup from "@/components/shared/Popup";
 import Section from "@/components/shared/Section";
 import SourceStatus from "@/components/shared/SourceStatus";
-import Spinner from "@/components/shared/Spinner";
 import { REVALIDATE_TIME } from "@/constants";
 import { useUser } from "@/contexts/AuthContext";
 import withRedirect from "@/hocs/withRedirect";
-import useEpisodes from "@/hooks/useEpisodes";
 import dayjs from "@/lib/dayjs";
 import { getMediaDetails } from "@/services/anilist";
 import { Media, MediaType } from "@/types/anilist";
@@ -51,8 +48,6 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
   const user = useUser();
   const { locale } = useRouter();
   const { t } = useTranslation("anime_details");
-
-  const { data: episodes, isLoading } = useEpisodes(anime.id);
 
   const nextAiringSchedule = useMemo(
     () =>
@@ -413,19 +408,6 @@ const DetailsPage: NextPage<DetailsPageProps> = ({ anime }) => {
             </div>
           </div>
           <div className="space-y-12 md:col-span-8">
-            <DetailsSection
-              title={t("episodes_section")}
-              className="overflow-hidden"
-            >
-              {isLoading ? (
-                <div className="h-full w-full flex items-center justify-center">
-                  <Spinner />
-                </div>
-              ) : (
-                <LocaleEpisodeSelector mediaId={anime.id} episodes={episodes} />
-              )}
-            </DetailsSection>
-
             {!!anime?.characters?.edges?.length && (
               <DetailsSection
                 title={t("characters_section")}

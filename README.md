@@ -5,10 +5,6 @@
 
 ### Kaguya is a multi-language website that provides you anime, manga and related resources.
 
-Since it is an open-source project, there won't be any ads in this website.
-
-The official website is [kaguya.live](https://kaguya.app)
-
 </div>
 
 ## Table of contents
@@ -34,26 +30,12 @@ The official website is [kaguya.live](https://kaguya.app)
 
 ![Search page](https://user-images.githubusercontent.com/68330291/157862791-811553da-b799-4629-addf-f3392dca8de4.png)
 
-![Watch page](https://user-images.githubusercontent.com/68330291/157862978-da411ae9-fefb-4c78-beb2-81c503f389d2.png)
-
-![Read page](https://user-images.githubusercontent.com/68330291/157863159-08a1f117-e81f-4284-838f-2dc90e1b439f.png)
-
 ![Character page](https://user-images.githubusercontent.com/68330291/157863295-d1f6e16b-3e4c-4435-87a3-9bd0ef1c74fb.png)
 
 ![Voice actor page](https://user-images.githubusercontent.com/68330291/157863365-59851e7e-0367-4c6c-b084-564fb8496f80.png)
 
-## Todo
-
-- <s>Comments</s> ✔
-- <s>Push Notifications</s> ✔
-- Notifications
-- Forum
-- User profile
-
 ## Sources
 
-- Video player design is heavily inspired by [Netflix](https://netflix.com)
-- Reader is heavily inspired by [danke.moe](https://danke.moe)
 - Info from [Anilist](anilist.co)
 
 ## Installation
